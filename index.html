@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="version" content="2026.11.04.3">
+<meta name="version" content="2026.11.05">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mobile Network Architecture Navigator · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
+<title>Mobile Network Navigator · 2G · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
 <style>
 :root{
   --bg:#0e1319; --bg2:#121922; --panel:#151d27; --panel2:#1b2531; --node:#19222d; --ink:#e6edf3; --muted:#8d9aa8; --faint:#5b6876;
   --line:#2a3644; --zone:#141c25; --zoneLine:#263240; --accent:#e6edf3;
-  --g3g:#f59e0b; --ghspa:#ec4899; --g4g:#3b82f6; --gnsa:#06b6d4; --gsa:#a78bfa; --giw:#22c55e; --gall:#94a3b8;
+  --g2g:#f87171; --g3g:#f59e0b; --ghspa:#ec4899; --g4g:#3b82f6; --gnsa:#06b6d4; --gsa:#a78bfa; --giw:#22c55e; --gall:#94a3b8;
   --k-nas:#7c3aed; --k-rrc:#be185d; --k-radio:#c2410c; --k-ap:#4f46e5; --k-tun:#047857; --k-tr:#1d4ed8; --k-ip:#0e7490; --k-phy:#475569; --k-ss7:#92400e; --k-appl:#334155;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   --sans: Inter, "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
@@ -17,7 +17,7 @@
 body.light{
   --bg:#f3f5f8; --bg2:#ffffff; --panel:#ffffff; --panel2:#f1f4f8; --node:#ffffff; --ink:#18212b; --muted:#5c6b7a; --faint:#94a1ae;
   --line:#d5dde6; --zone:#f8fafc; --zoneLine:#dbe3ec;
-  --g3g:#d97706; --ghspa:#db2777; --g4g:#2563eb; --gnsa:#0891b2; --gsa:#7c3aed; --giw:#16a34a; --gall:#64748b;
+  --g2g:#dc2626; --g3g:#d97706; --ghspa:#db2777; --g4g:#2563eb; --gnsa:#0891b2; --gsa:#7c3aed; --giw:#16a34a; --gall:#64748b;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px}
@@ -205,7 +205,7 @@ table.qr td:first-child{font-family:var(--mono)}
 </head>
 <body>
 <header id="hdr">
-  <h1 title="3G · HSPA · 4G LTE/EPC · 5G NSA (EN-DC) · 5G SA — network elements, interfaces and protocol stacks">Mobile Network Architecture Navigator<span class="ver" id="ver"></span></h1>
+  <h1 title="2G GSM/GPRS/EDGE · 3G · HSPA · 4G LTE/EPC · 5G NSA (EN-DC) · 5G SA — network elements, interfaces and protocol stacks">Mobile Network Navigator<span class="ver" id="ver"></span></h1>
   <div class="chips" id="genchips"></div>
   <div class="tabs" id="tabs">
     <button data-view="arch" class="on">Architecture</button>
@@ -244,21 +244,29 @@ table.qr td:first-child{font-family:var(--mono)}
 <div id="tip"></div>
 <script>
 'use strict';
-const VERSION = '2026.11.04.3';
+const VERSION = '2026.11.05';
 /* =====================================================================
    DATA
    ===================================================================== */
 const GENS = {
+  '2g':  {n:'2G GSM', s:'GPRS · EDGE', v:'--g2g'},
   '3g':  {n:'3G UMTS', s:'R99 / R4', v:'--g3g'},
   'hspa':{n:'HSPA / HSPA+', s:'R5–R8+', v:'--ghspa'},
   '4g':  {n:'4G LTE / EPC', s:'R8+', v:'--g4g'},
-  'nsa': {n:'5G NSA', s:'EN-DC · Opt. 3/3a/3x', v:'--gnsa'},
-  'sa':  {n:'5G SA', s:'5GC · Opt. 2 (4/5/7)', v:'--gsa'},
-  'iw':  {n:'Interworking', s:'inter-system', v:'--giw'}
+  'nsa': {n:'5G NSA', s:'EN-DC · 3/3a/3x', v:'--gnsa'},
+  'sa':  {n:'5G SA', s:'5GC · 2/4/5/7', v:'--gsa'},
+  'iw':  {n:'Interworking', s:'', v:'--giw'}
 };
-const GENORDER = ['3g','hspa','4g','nsa','sa','iw'];
+const GENORDER = ['2g','3g','hspa','4g','nsa','sa','iw'];
 
 const GENINFO = {
+ '2g':{rel:'GSM Phase 1 (1991) / Phase 2 (1995) · GPRS R97 · EDGE R99 · EDGE Evolution R7',sum:'TDMA radio (200 kHz carriers, 8 timeslots) with a BTS/BSC access network. The circuit-switched core (MSC/VLR, HLR/AuC) existed from the start; GPRS added the packet core (SGSN/GGSN) and EDGE raised packet data rates. 2G and 3G normally share one CS and PS core.',pts:[
+  'BSS: BTS (radio, channel coding, A5 ciphering for CS) + BSC (radio resource management, handover) + TRAU (transcoder, part of the BSS but usually at the MSC site) + PCU (GPRS/EDGE RLC/MAC, usually at the BSC).',
+  'CS: A interface to the MSC (Server) – BSSAP over SS7, or SIGTRAN (R8); user plane 64 kbit/s TDM after the TRAU, or RTP with A over IP (R8, transcoder in the BSS or in the MGW).',
+  'PS: Gb interface to the SGSN – BSSGP / Network Service over Frame Relay or UDP/IP (R4). LLC and SNDCP run between MS and SGSN, and GPRS ciphering (GEA) terminates in the SGSN.',
+  'Data rates: GPRS CS-1…CS-4 up to 21.4 kbit/s per timeslot; EDGE (8-PSK) MCS-1…MCS-9 up to 59.2 kbit/s per timeslot (≈ 236 kbit/s with 4 downlink timeslots). EDGE Evolution adds higher-order modulation and downlink dual carrier.',
+  'Security: one-way authentication (triplets RAND/SRES/Kc); ciphering A5/1 or A5/3 for CS and GEA3/GEA4 for PS. A5/2 and GEA1 are prohibited in current specifications.',
+  'With modern networks: CSFB and SRVCC from LTE can target GERAN (SGs, Sv), LTE ↔ GERAN reselection/redirection/NACC, and an S4-SGSN can anchor 2G data in the EPC. There is no direct 5GS ↔ GERAN mobility.'],specs:'TS 43.051 · 23.060 · 44.018 · 44.060 · 48.008 · 48.018'},
  '3g':{rel:'3GPP R99 (2000) · R4 (2001)',sum:'WCDMA radio access (5 MHz, 3.84 Mcps) with an RNC-based hierarchical UTRAN and a core network split into circuit-switched (CS) and packet-switched (PS) domains.',pts:[
   'UTRAN: Node B (mainly Layer 1) controlled by the RNC, which terminates RRC, RLC, MAC-d and PDCP and performs RRM and ciphering.',
   'CS domain: R99 MSC/VLR; R4 splits it into MSC Server (call control) and CS-MGW (bearer), with BICC or SIP-I on Nc between servers.',
@@ -301,13 +309,16 @@ const GENINFO = {
   'A legacy Gn/Gp SGSN interworks with MME and PGW over Gn (GTPv1), per TS 23.401 Annex D.',
   'SGs (MME–MSC/VLR): CSFB and SMS over SGs. Sv (MME–MSC Server): SRVCC.',
   'N26 (AMF–MME): 5GS ↔ EPS mobility with single registration; EPS fallback for voice.',
-  'Combined nodes for 5GS–EPS interworking: SMF+PGW-C, UPF+PGW-U, PCF+PCRF, UDM+HSS.'],specs:'TS 23.401 · 23.272 · 23.216 · 23.501 §5.17 · 23.502 §4.11'}
+  'Combined nodes for 5GS–EPS interworking: SMF+PGW-C, UPF+PGW-U, PCF+PCRF, UDM+HSS.',
+  '2G: CSFB to GERAN (SGs), SRVCC to GERAN (Sv, voice only), LTE ↔ GERAN reselection / redirection / NACC; an S4-SGSN with Gb anchors 2G data in the EPC.',
+  'No direct 5GS ↔ GERAN or UTRAN mobility (always via EPS). Exception: 5G-SRVCC (R16) from NG-RAN to UTRAN, via N26 → MME_SRVCC → Sv → MSC Server.'],specs:'TS 23.401 · 23.272 · 23.216 · 23.501 §5.17 · 23.502 §4.11'}
 };
 
 const ZONES = [
  {x:10,y:20,w:140,h:1180,t:'UE'},
- {x:165,y:20,w:425,h:345,t:'UTRAN · 3G / HSPA'},
- {x:605,y:20,w:905,h:345,t:'UMTS core · CS & PS domains'},
+ {x:165,y:20,w:425,h:135,t:'GERAN · 2G GSM / GPRS / EDGE'},
+ {x:165,y:165,w:425,h:200,t:'UTRAN · 3G / HSPA'},
+ {x:605,y:20,w:905,h:345,t:'2G / 3G core · CS & PS domains'},
  {x:165,y:380,w:425,h:345,t:'E-UTRAN + EN-DC · 4G / 5G NSA',pos:'bl'},
  {x:605,y:380,w:905,h:345,t:'EPC · 4G / 5G NSA',pos:'br'},
  {x:165,y:740,w:425,h:460,t:'NG-RAN · 5G SA'},
@@ -322,11 +333,28 @@ const ELS = [
  full:'User Equipment (Mobile Equipment + UICC/USIM)',
  sum:'Multi-mode terminal. Terminates the radio protocols towards the RAN and NAS signalling towards the core: MSC/SGSN in 3G, MME in 4G/NSA, AMF (and SMF via AMF) in 5G SA.',
  fn:['NAS: 3G MM/CC/SS (CS) and GMM/SM (PS) – TS 24.008; 4G EMM/ESM – TS 24.301; 5G 5GMM/5GSM – TS 24.501.','AS: RRC, PDCP, RLC, MAC, PHY per RAT; SDAP in 5G SA.','USIM holds IMSI/SUPI and the long-term key K; runs UMTS AKA, EPS AKA, 5G AKA or EAP-AKA′.','5G SA: the SUPI is never sent in clear; it is concealed as SUCI with the home-network public key (ECIES profile A/B) unless the null scheme is configured.','Reports radio capabilities (UE capability enquiry) and NAS capabilities (e.g., the DCNR bit for EN-DC).'],
- notes:{hspa:'The UE category sets HSDPA/HSUPA capability, e.g. Cat 10 ≈ 14 Mbps (16QAM), Cat 14 ≈ 21 Mbps (64QAM), Cat 24 ≈ 42 Mbps (DC-HSDPA + 64QAM).',nsa:'An EN-DC UE camps on LTE, attaches to the EPC (DCNR bit set in UE network capability) and gets an NR SCG configured by the MeNB, typically after a B1 measurement. The “5G” icon is commonly driven by SIB2 upperLayerIndication-r15.',sa:'Registers with the 5GC (Registration Request with SUCI or 5G-GUTI and Requested NSSAI). Supports RRC_INACTIVE. Voice via VoNR or EPS fallback.'},
+ notes:{'2g':'GPRS MS classes: A (CS and PS simultaneously), B (attached to both, one at a time), C (one service at a time); the multislot class sets the number of timeslots; DTM (R99) allows CS and PS together.',hspa:'The UE category sets HSDPA/HSUPA capability, e.g. Cat 10 ≈ 14 Mbps (16QAM), Cat 14 ≈ 21 Mbps (64QAM), Cat 24 ≈ 42 Mbps (DC-HSDPA + 64QAM).',nsa:'An EN-DC UE camps on LTE, attaches to the EPC (DCNR bit set in UE network capability) and gets an NR SCG configured by the MeNB, typically after a B1 measurement. The “5G” icon is commonly driven by SIB2 upperLayerIndication-r15.',sa:'Registers with the 5GC (Registration Request with SUCI or 5G-GUTI and Requested NSSAI). Supports RRC_INACTIVE. Voice via VoNR or EPS fallback.'},
  kv:[['Permanent ID','IMSI = MCC + MNC + MSIN; 5G SUPI (imsi-… or nai-…)'],['Equipment ID','IMEI / IMEISV; 5G PEI'],['Temporary IDs','TMSI (CS), P-TMSI (PS 3G), GUTI (4G), 5G-GUTI (5G)'],['Public IDs','MSISDN; 5G GPSI']],
  specs:['TS 23.003','24.008','24.301','24.501','33.501']},
 
-{id:'nodeb',n:'Node B',sb:'UMTS base station',gens:['3g','hspa'],x:190,y:205,w:120,h:56,
+{id:'bts',n:'BTS',sb:'Base Transceiver Station',gens:['2g'],x:190,y:60,w:120,h:50,
+ full:'Base Transceiver Station (GSM / GPRS / EDGE)',
+ sum:'GSM radio node: transceivers (TRX) and Layer 1 towards the MS. Controlled by the BSC over Abis; most radio-resource decisions are taken in the BSC.',
+ fn:['GSM L1: 200 kHz carriers, TDMA with 8 timeslots per carrier, GMSK (EDGE: 8-PSK), channel coding, interleaving, burst formatting.','Ciphering of CS traffic and signalling on the radio path (A5/1, A5/3); GPRS ciphering is done in the SGSN instead.','Frequency hopping, timing-advance measurement, uplink measurements reported to the BSC.','LAPDm on the radio signalling channels; paging and access-grant channel handling.','Relays PCU frames (GPRS/EDGE) and TRAU frames (speech) over Abis.'],
+ kv:[['Cell identity','CGI = MCC + MNC + LAC + CI (16 bit)'],['BSIC','NCC (3 bit) + BCC (3 bit)'],['Carriers','ARFCN; one BCCH carrier per cell'],['Bands','GSM 850 / 900 / 1800 / 1900']],
+ specs:['TS 45.001–45.010 (L1)','44.006 (LAPDm)','43.051','48.058'],
+ tips:['High RxQual and drops point to interference or frequency planning; check BCCH/BSIC reuse for neighbour confusion.','Timing advance (0–63 steps) limits the cell radius to about 35 km unless extended range is used.']},
+
+{id:'bsc',n:'BSC',sb:'Base Station Controller · PCU',gens:['2g'],x:385,y:60,w:130,h:50,
+ full:'Base Station Controller (with PCU; TRAU as part of the BSS)',
+ sum:'Controls the BTSs: radio resource management, channel allocation and handover. The PCU (Packet Control Unit) adds GPRS/EDGE; the TRAU (transcoder) belongs to the BSS but is usually located at the MSC site.',
+ fn:['RR: channel allocation (SDCCH/TCH), power control, handover decisions from MS measurement reports (intra-BSC handover handled locally).','Terminates Abis (RSL, OML) towards the BTSs and the A interface (BSSAP) towards the MSC.','PCU: RLC/MAC for GPRS/EDGE, TBF (temporary block flow) set-up, packet scheduling, link adaptation (CS-x / MCS-x); terminates Gb towards the SGSN.','TRAU: transcoding between the radio speech codecs (FR, EFR, HR, AMR) and 64 kbit/s G.711; the BSC–TRAU link (Ater) is vendor-specific.','Paging on the radio for CS (from the MSC via A) and PS (from the SGSN via Gb).'],
+ notes:{'2g':'With A over IP (R8) the transcoder can be in the BSS or moved into the MGW; in the latter case the compressed codec (e.g. AMR) travels as RTP over the A interface.','4g':'For LTE interworking the BSS broadcasts E-UTRAN neighbours and priorities (SI2quater), so idle mobiles return to LTE; after a CSFB call the BSC can steer the MS back to LTE quickly (“fast return”).'},
+ kv:[['GPRS IDs','BVCI per cell, NSEI per PCU / NS entity (Gb)'],['Circuit IDs','CIC per A-interface timeslot (TDM)']],
+ specs:['TS 43.051','48.008','48.018','44.060','48.058','48.060'],
+ tips:['SDCCH blocking or TCH congestion appear as call set-up failures – check BSC cell KPIs before suspecting the core.','Low GPRS/EDGE throughput: check PDCH allocation (dedicated vs on demand), MS multislot class, and Abis/Gb capacity.']},
+
+{id:'nodeb',n:'Node B',sb:'UMTS base station',gens:['3g','hspa'],x:190,y:220,w:120,h:56,
  full:'Node B – UMTS (WCDMA) base station',
  sum:'In R99 the Node B is essentially a Layer-1 node fully controlled by the RNC over NBAP. With HSPA it gains MAC scheduling and HARQ.',
  fn:['WCDMA L1: channel coding/interleaving, OVSF spreading and scrambling, modulation; 5 MHz carrier at 3.84 Mcps.','Inner-loop (fast) power control at 1500 Hz.','Softer handover combining (between sectors of the same Node B).','Radio measurements reported to the RNC (NBAP common and dedicated measurements).','Terminates Iub frame protocols towards the MAC in the RNC.'],
@@ -335,7 +363,7 @@ const ELS = [
  specs:['TS 25.401','25.211–25.215','25.433 (NBAP)','25.308 (HSDPA)','25.319 (E-DCH)'],
  tips:['Iub transport congestion often limits HSPA throughput before the air interface does – check Iub FP congestion indications.','High uplink noise (RTWP) reduces HSUPA grants and coverage and causes access failures.']},
 
-{id:'rnc',n:'RNC',sb:'Radio Network Controller',gens:['3g','hspa'],x:385,y:205,w:130,h:56,
+{id:'rnc',n:'RNC',sb:'Radio Network Controller',gens:['3g','hspa'],x:385,y:220,w:130,h:56,
  full:'Radio Network Controller',
  sum:'Controls the Node Bs and owns the UTRAN radio protocols: RRC, RLC, MAC-d and PDCP terminate here, not in the Node B.',
  fn:['RRC termination (TS 25.331). RRC states: Idle, CELL_DCH, CELL_FACH, CELL_PCH, URA_PCH.','Radio resource management: admission and congestion control, code allocation, channel-type switching.','Outer-loop power control (SIR target).','Handover control: soft/softer (macro-diversity combining and splitting), hard, inter-frequency, inter-RAT (to GSM/LTE).','Ciphering (UEA1 KASUMI / UEA2 SNOW 3G) and RRC integrity (UIA1/UIA2): UMTS AS security terminates in the RNC.','Iu UP framing for CS, GTP-U endpoint for PS, RANAP towards the core.','Roles: Serving RNC (SRNC), Drift RNC (DRNC), Controlling RNC (CRNC).'],
@@ -348,7 +376,7 @@ const ELS = [
  full:'Mobile Switching Centre Server with VLR (R4 split architecture)',
  sum:'Control part of the CS domain: call control, CS mobility management and the VLR. Controls one or more CS-MGWs with H.248 over Mc.',
  fn:['CS call control (CC), supplementary services, SMS relay towards the SMSC.','CS mobility management: location update, paging, TMSI reallocation, authentication with HLR/AuC.','VLR: temporary subscriber data and current location area (LAI).','GMSC Server role for mobile-terminated calls (MAP SendRoutingInfo to HLR).','CAMEL (CAP to gsmSCF) for IN services and prepaid.','Bearer control of the MGW via H.248 (Mc); BICC/SIP-I call control towards other MSC Servers (Nc).'],
- notes:{'4g':'With LTE: SGs for CS Fallback and SMS over SGs (combined EPS/IMSI attach), and Sv for SRVCC from VoLTE to CS. The MSC Server must be enhanced for CSFB (TS 23.272) and SRVCC (TS 23.216).'},
+ notes:{'2g':'For GSM the MSC (Server) terminates the A-interface control plane (BSSAP); with the R4 split the CS-MGW terminates the A user plane (TDM after the TRAU, or AoIP).','4g':'With LTE: SGs for CS Fallback and SMS over SGs (combined EPS/IMSI attach), and Sv for SRVCC from VoLTE to CS. The MSC Server must be enhanced for CSFB (TS 23.272) and SRVCC (TS 23.216).'},
  kv:[['Identities','MSC/VLR number (E.164), LAI = PLMN + LAC']],
  specs:['TS 23.002','23.205','24.008','29.002 (MAP)','29.232 (Mc)'],
  tips:['CSFB setup failures: check SGs Paging / Service Request and the LAU after fallback; if the target LA differs, MT calls rely on MTRF/MTRR.']},
@@ -356,6 +384,7 @@ const ELS = [
 {id:'mgw',n:'CS-MGW',sb:'Media Gateway',gens:['3g'],x:650,y:180,w:150,h:50,
  full:'Circuit-Switched Media Gateway',
  sum:'User-plane node of the R4 CS core, controlled by the MSC Server over H.248.',
+ notes:{'2g':'Terminates the A-interface user plane: 64 kbit/s TDM after the TRAU, or RTP with A over IP (R8), optionally with the transcoder moved from the BSS into the MGW.'},
  fn:['Terminates the Iu-CS user plane (Iu UP framing, AMR).','Transcoding (e.g., AMR/AMR-WB ↔ G.711), echo cancellation, tones/announcements, conferencing.','Nb user plane towards other MGWs (RTP/IP or AAL2/ATM) and TDM interconnect to the PSTN.','Supports transcoder-free operation (TrFO).'],
  specs:['TS 23.205','29.232','29.414','29.415','25.415']},
 
@@ -377,7 +406,7 @@ const ELS = [
  full:'Serving GPRS Support Node',
  sum:'PS-domain control node for 2G/3G: mobility and session management. Relays user plane towards the GGSN unless Direct Tunnel is used.',
  fn:['GMM: GPRS attach/detach, Routing Area Update, paging, P-TMSI allocation, authentication via HLR (Gr).','SM: PDP context activation/modification/deactivation and QoS negotiation (RANAP RAB Assignment to the RNC).','GGSN selection by DNS resolution of the APN (APN-NI.mnc<MNC>.mcc<MCC>.gprs).','User-plane GTP-U relay between Iu-PS and Gn (not with Direct Tunnel).','Charging (S-CDR, M-CDR), lawful interception, CAMEL (Ge).','Optional Gs to the MSC/VLR (combined attach, network mode of operation I).'],
- notes:{hspa:'With R7 Direct Tunnel the SGSN stays in the control plane only (RANAP + GTP-C) and passes the GGSN TEID to the RNC. Direct Tunnel is not used when the SGSN must handle user data, e.g. CAMEL/online charging at the SGSN, a GGSN without support, or some roaming policies.','4g':'R8 S4-SGSN: GTPv2 on S4 (to SGW) and S3 (to MME), S6d (Diameter) to the HSS, S16 between S4-SGSNs; supports ISR together with the MME.'},
+ notes:{'2g':'Gb mode: the SGSN terminates LLC and SNDCP towards the MS, performs GPRS ciphering (GEA) and is always in the user plane – there is no Direct Tunnel in Gb mode.',hspa:'With R7 Direct Tunnel the SGSN stays in the control plane only (RANAP + GTP-C) and passes the GGSN TEID to the RNC. Direct Tunnel is not used when the SGSN must handle user data, e.g. CAMEL/online charging at the SGSN, a GGSN without support, or some roaming policies.','4g':'R8 S4-SGSN: GTPv2 on S4 (to SGW) and S3 (to MME), S6d (Diameter) to the HSS, S16 between S4-SGSNs; supports ISR together with the MME.'},
  kv:[['Areas','RAI = LAI + RAC'],['Temporary ID','P-TMSI (+ P-TMSI signature)']],
  specs:['TS 23.060','24.008','29.060','25.413'],
  tips:['PDP context reject SM causes: #26 Insufficient resources, #27 Missing or unknown APN, #29 User authentication failed, #30 Activation rejected by GGSN, #33 Requested service option not subscribed.']},
@@ -393,7 +422,7 @@ const ELS = [
  full:'E-UTRAN Node B',
  sum:'LTE base station hosting the complete radio protocol stack (there is no RNC). Connects to the MME (S1-MME), the SGW (S1-U) and neighbours (X2).',
  fn:['RRC, PDCP (ROHC, ciphering, RRC integrity), RLC, MAC (dynamic UL/DL scheduling, HARQ), PHY (OFDMA DL / SC-FDMA UL).','RRM: radio bearer control, admission control, connected-mode mobility (X2/S1 handover).','MME selection (S1-flex / MME pool) and routing of user plane to the SGW.','Paging and system-information broadcast.','Measurement configuration, ANR and other SON functions.'],
- notes:{nsa:'In EN-DC the eNB is the Master eNB (MN). It is the only node with S1-MME, holds the UE’s RRC connection (LTE RRC), decides SgNB Addition (typically on a B1 NR measurement) and forwards the SCG configuration generated by the en-gNB. Option 3: MCG split bearer, S1-U terminates in the eNB which splits towards the en-gNB over X2-U. Options 3a/3x: S1-U of SCG / SCG split bearers terminates in the en-gNB; the path is switched with E-RAB Modification Indication to the MME.',sa:'Connected to the 5GC (NG-C/NG-U instead of S1, Xn instead of X2) an LTE base station becomes an ng-eNB – see the ng-eNB in the NG-RAN area.'},
+ notes:{'2g':'Inter-RAT to GERAN: idle reselection (GERAN neighbours in SIB7), RRC release with redirection (typical for CSFB), Cell Change Order with NACC and – rarely – PS handover; SRVCC to GERAN via the MME (Sv).',nsa:'In EN-DC the eNB is the Master eNB (MN). It is the only node with S1-MME, holds the UE’s RRC connection (LTE RRC), decides SgNB Addition (typically on a B1 NR measurement) and forwards the SCG configuration generated by the en-gNB. Option 3: MCG split bearer, S1-U terminates in the eNB which splits towards the en-gNB over X2-U. Options 3a/3x: S1-U of SCG / SCG split bearers terminates in the en-gNB; the path is switched with E-RAB Modification Indication to the MME.',sa:'Connected to the 5GC (NG-C/NG-U instead of S1, Xn instead of X2) an LTE base station becomes an ng-eNB – see the ng-eNB in the NG-RAN area.'},
  kv:[['ECGI','PLMN + ECI (28 bit; macro: eNB-ID 20 bit + cell 8 bit)'],['PCI','0–503'],['TAC','16 bit'],['Node ID','Global eNB ID']],
  specs:['TS 36.300','36.331','36.413','36.423','37.340'],
  tips:['S1 Setup failure: compare served PLMN/TAC with the MME configuration.','X2 handover failures: check neighbour relations, X2 SCTP association state and the Handover Preparation Failure cause.']},
@@ -696,6 +725,47 @@ const LINKS = [
  specs:['TS 38.300','38.331 (RRC)','37.324 (SDAP)','38.323 (PDCP)','38.322 (RLC)','38.321 (MAC)','38.211–38.215 (PHY)'],
  tips:['Access failures: check SSB/beam coverage and RACH configuration (RRC Setup Request without Setup Complete).','Throughput: check MCS/rank/BLER and the TDD pattern; QFI→DRB mapping in SDAP for QoS issues.']},
 
+/* --- 2G --- */
+{id:'um',n:'Um',a:'ue',b:'bts',gens:['2g'],plane:'both',protos:['radio'],ao:[-30,0],pts:[[50,85]],lp:.5,
+ full:'GSM / GPRS / EDGE radio interface',
+ sum:'TDMA radio interface. For CS, RR peers mostly with the BSC and CM/MM with the MSC; for GPRS, RLC/MAC peers with the PCU and LLC/SNDCP with the SGSN.',
+ st:[{t:'CS control plane',l:['CM (CC / SS / SMS)','MM','RR','LAPDm','GSM L1']},{t:'PS (GPRS / EDGE)',l:['IP','SNDCP','LLC','RLC / MAC','GSM L1 (GMSK / 8-PSK)']},{t:'CS speech',l:['Speech codec (FR / EFR / HR / AMR)','GSM L1 (TCH)']}],
+ pr:['Channel Request (RACH) → Immediate Assignment (AGCH)','Initial L3 message on SDCCH: Location Updating Request / CM Service Request / Paging Response','Authentication Request / Response, Ciphering Mode Command','Assignment Command (TCH), Handover Command, Measurement Report (SACCH)','GPRS: Channel Request / Packet Channel Request, Packet Uplink / Downlink Assignment (TBF), GMM Attach / Routing Area Update, SM Activate PDP Context'],
+ kv:[['Carrier','200 kHz, 8 timeslots, 4.615 ms TDMA frame, 270.833 ksym/s'],['Logical channels','BCCH, PCH / AGCH / RACH, SDCCH, SACCH, FACCH, TCH/F, TCH/H; PDTCH, PACCH'],['Coding schemes','GPRS CS-1…CS-4 (9.05–21.4 kbit/s per TS); EDGE MCS-1…MCS-9 (8.8–59.2 kbit/s per TS)'],['Ciphering','A5/1, A5/3 (CS, in the BTS); GEA3 / GEA4 (PS, in the SGSN)']],
+ notes:{'2g':'A UE with a USIM can run UMTS AKA over GERAN; the GSM cipher key Kc is then derived from CK/IK.'},
+ specs:['TS 44.018 (RR)','24.008 (MM/CC, GMM/SM)','44.006 (LAPDm)','44.060 (RLC/MAC)','44.064 (LLC)','44.065 (SNDCP)','45-series (L1)'],
+ tips:['Location Updating Reject MM causes: #2 IMSI unknown in HLR, #3 Illegal MS, #6 Illegal ME, #11 PLMN not allowed, #12 Location Area not allowed, #13 Roaming not allowed in this LA, #17 Network failure, #22 Congestion.']},
+{id:'abis',n:'Abis',a:'bts',b:'bsc',gens:['2g'],plane:'both',protos:[],
+ full:'BTS ↔ BSC',
+ sum:'Radio signalling (RSL), O&M (OML) and traffic between BTS and BSC. Standardized in the 48.05x series, but O&M and IP transport are largely vendor-specific, so BTS and BSC normally come from the same vendor.',
+ st:[{t:'Signalling (TDM)',l:['RSL (radio) · OML (O&M)','LAPD','E1 / T1']},{t:'Traffic (TDM)',l:['TRAU frames (speech) · PCU frames (packet)','16 / 8 kbit/s sub-timeslots','E1 / T1']},{t:'Abis over IP (vendor-specific)',l:['RSL / OML / traffic','UDP or TCP / SCTP','IP','Ethernet']}],
+ pr:['RSL: Channel Required → Channel Activation → Immediate Assignment Command','RSL: Establish / Data Indication, Data Request (L3 message transport)','RSL: Encryption Command, Measurement Result, Paging Command, Connection Failure Indication','OML: object configuration, alarms, software download'],
+ kv:[['LAPD addressing','TEI per TRX / BTS function, SAPI 0 (RSL), 62 (OML)']],
+ specs:['TS 48.051','48.052','48.056 (LAPD)','48.058 (RSL)','48.060 / 48.061 (TRAU frames)','52.021 (OML)']},
+{id:'acp',n:'A',a:'bsc',b:'mscs',gens:['2g'],plane:'cp',protos:['ss7','sctp'],ao:[0,-15],pts:[[680,70]],bo:[-45,0],lp:.45,
+ full:'A interface control plane (BSS ↔ MSC Server)',
+ sum:'BSSAP signalling between the BSS and the MSC: BSSMAP for BSS management and DTAP for transparent transfer of MM/CM messages. With the R4 split the control plane goes to the MSC Server and the user plane to the CS-MGW.',
+ st:[{t:'Classic SS7',l:['BSSAP (BSSMAP + DTAP)','SCCP','MTP3','MTP2','MTP1 (E1 / T1)']},{t:'SIGTRAN (R8)',l:['BSSAP (BSSMAP + DTAP)','SCCP','M3UA','SCTP','IP']}],
+ pr:['Complete Layer 3 Information (initial message, e.g. Location Updating Request, CM Service Request)','Cipher Mode Command / Complete','Assignment Request / Complete (TCH; CIC, or transport address with AoIP)','Handover Required / Request / Command / Complete (inter-BSC)','Clear Request / Command / Complete','Paging','Reset, Block / Unblock (circuits)'],
+ kv:[['Circuits (TDM)','CIC – Circuit Identity Code of the 64 kbit/s timeslot'],['Connection','One SCCP connection per MS transaction']],
+ specs:['TS 48.006','48.008 (BSSMAP)','24.008 (DTAP content)'],
+ tips:['BSSMAP causes in Clear Request / Assignment Failure (e.g. “radio interface failure”, “no radio resource available”, “equipment failure”) separate radio problems from core issues.']},
+{id:'aup',n:'A UP',a:'bsc',b:'mgw',gens:['2g'],plane:'up',protos:[],ao:[0,19],pts:[[590,104],[590,190]],bo:[0,-15],lp:.55,
+ full:'A interface user plane (BSS ↔ CS-MGW)',
+ sum:'Speech and CS data between the BSS and the core. Classic: 64 kbit/s G.711 timeslots after the transcoder (TRAU). With A over IP (R8): RTP/UDP/IP towards the MGW, with the transcoder either in the BSS or in the MGW.',
+ st:[{t:'A over TDM',l:['G.711 PCM (after the TRAU)','64 kbit/s timeslot','E1 / T1']},{t:'A over IP (R8)',l:['Speech (AMR, G.711) / CS data','RTP / RTCP','UDP','IP']}],
+ kv:[['Bearer set-up','TDM: CIC in BSSMAP Assignment; AoIP: IP address/port exchanged in BSSMAP'],['Transcoder','TDM: TRAU in the BSS; AoIP: in the BSS or in the MGW']],
+ specs:['TS 48.008','48.103','23.205','26.102']},
+{id:'gb',n:'Gb',a:'bsc',b:'sgsn',gens:['2g'],plane:'both',protos:[],ao:[0,2],pts:[[545,87],[545,298]],bo:[0,-10],lp:.86,
+ full:'BSS (PCU) ↔ SGSN',
+ sum:'GPRS/EDGE interface between the PCU and the SGSN. BSSGP carries LLC frames (user data and GMM/SM signalling) plus flow control and paging; the Network Service layer runs over Frame Relay or, from R4, UDP/IP.',
+ st:[{t:'Frame Relay',l:['BSSGP','Network Service (NS)','Frame Relay','E1 / T1']},{t:'Gb over IP (R4)',l:['BSSGP','Network Service (NS)','UDP','IP']},{t:'Carried inside (MS ↔ SGSN)',l:['SNDCP','LLC']}],
+ pr:['UL-UNITDATA / DL-UNITDATA (LLC PDUs)','PAGING-PS / PAGING-CS','FLOW-CONTROL-BVC / FLOW-CONTROL-MS','RA-CAPABILITY, RADIO-STATUS, SUSPEND / RESUME','BVC-RESET / BLOCK / UNBLOCK','NS: NS-RESET, NS-ALIVE, NS-BLOCK / UNBLOCK'],
+ kv:[['Identifiers','NSEI (NS entity), NS-VCI (virtual connection), BVCI (per cell); TLLI identifies the MS'],['Ciphering','GEA in LLC – terminates in the SGSN, not in the BSS']],
+ notes:{'4g':'An S4-SGSN also serves Gb, so 2G packet data can be anchored in the EPC gateways (S4 / S5) instead of a GGSN.'},
+ specs:['TS 48.014','48.016 (NS)','48.018 (BSSGP)','44.064 (LLC)','44.065 (SNDCP)'],
+ tips:['NS-VC or BVC blocked / reset loops stop GPRS for a whole cell or PCU – check NS-ALIVE timers and the NSEI/BVCI configuration on both sides.']},
+
 /* --- 3G RAN --- */
 {id:'iub',n:'Iub',a:'nodeb',b:'rnc',gens:['3g','hspa'],plane:'both',protos:['sctp','atm'],
  full:'Node B ↔ RNC interface',
@@ -715,7 +785,7 @@ const LINKS = [
  specs:['TS 25.420','25.423 (RNSAP)','25.424','25.425','25.427'],
  tips:['A missing or failing Iur forces hard handover (or SRNS relocation) at RNC borders – watch the drop rate on border cells.']},
 
-{id:'iucscp',n:'Iu-CS',a:'rnc',b:'mscs',gens:['3g'],plane:'cp',protos:['ss7','sctp','atm'],ao:[0,-20],pts:[[560,213],[560,95]],bo:[0,-13],lp:.43,
+{id:'iucscp',n:'Iu-CS',a:'rnc',b:'mscs',gens:['3g'],plane:'cp',protos:['ss7','sctp','atm'],ao:[0,-20],pts:[[560,228],[560,95]],bo:[0,-13],lp:.9,
  full:'Iu-CS control plane (RNC ↔ MSC Server)',
  sum:'RNC ↔ MSC Server signalling for the CS domain (RANAP). In the R4 split architecture the control plane terminates in the MSC Server and the user plane in the CS-MGW.',
  st:[{t:'IP transport (SIGTRAN)',l:['RANAP','SCCP','M3UA','SCTP','IP','L2 / L1']},{t:'ATM transport',l:['RANAP','SCCP','MTP3-B','SSCF-NNI','SSCOP','AAL5','ATM']}],
@@ -724,7 +794,7 @@ const LINKS = [
  specs:['TS 25.410','25.412','25.413 (RANAP)'],
  tips:['The Iu Release Request cause (e.g., “Radio Connection With UE Lost”, “Release due to UTRAN Generated Reason”) shows where a drop originated.']},
 
-{id:'iucsup',n:'Iu-CS UP',a:'rnc',b:'mgw',gens:['3g'],plane:'up',protos:['atm'],ao:[0,-4],pts:[[580,229],[580,205]],lp:.2,
+{id:'iucsup',n:'Iu-CS UP',a:'rnc',b:'mgw',gens:['3g'],plane:'up',protos:['atm'],ao:[0,-4],pts:[[580,244],[580,205]],lp:.2,
  full:'Iu-CS user plane (RNC ↔ CS-MGW)',
  sum:'RNC ↔ CS-MGW user plane for circuit-switched calls (AMR speech, CS data) using Iu UP framing.',
  st:[{t:'IP transport (R5+)',l:['Iu UP','RTP / RTCP','UDP','IP','L2 / L1']},{t:'ATM transport',l:['Iu UP','AAL2','ATM']}],
@@ -732,7 +802,7 @@ const LINKS = [
  kv:[['Iu UP modes','Support mode (AMR, RFCIs) / transparent mode'],['Bearer setup','ATM: ALCAP; IP: transport address exchanged in RANAP RAB Assignment']],
  specs:['TS 25.414','25.415 (Iu UP)']},
 
-{id:'iups',n:'Iu-PS',a:'rnc',b:'sgsn',gens:['3g','hspa'],plane:'both',protos:['ss7','sctp','gtpu','atm'],ao:[0,17],pts:[[560,250],[560,318]],bo:[0,10],lp:.7,
+{id:'iups',n:'Iu-PS',a:'rnc',b:'sgsn',gens:['3g','hspa'],plane:'both',protos:['ss7','sctp','gtpu','atm'],ao:[0,17],pts:[[560,265],[560,318]],bo:[0,10],lp:.7,
  full:'Iu-PS (RNC ↔ SGSN)',
  sum:'RNC ↔ SGSN. RANAP signalling for PS mobility and RAB management; GTP-U tunnels for user data (one per RAB).',
  st:[{t:'Control plane (IP)',l:['RANAP','SCCP','M3UA','SCTP','IP','L2 / L1']},{t:'Control plane (ATM)',l:['RANAP','SCCP','MTP3-B','SSCF-NNI','SSCOP','AAL5','ATM']},{t:'User plane',l:['GTP-U','UDP','IP','L2 (AAL5/ATM or Ethernet)','L1']}],
@@ -953,7 +1023,7 @@ const LINKS = [
  sum:'Context transfer for inter-RAT mobility (LTE ↔ 2G/3G) in idle and connected mode; enables ISR.',
  st:[{t:'Control plane',l:['GTPv2-C','UDP','IP','L2 / L1']}],
  pr:['Context Request / Response / Acknowledge (TAU/RAU)','Forward Relocation Request / Response (inter-RAT PS handover)','Identification Request','Detach Notification (ISR)'],
- notes:{'4g':'A pre-R8 Gn/Gp SGSN uses Gn (GTPv1-C) towards the MME instead (TS 23.401 Annex D).'},
+ notes:{'4g':'A pre-R8 Gn/Gp SGSN uses Gn (GTPv1-C) towards the MME instead (TS 23.401 Annex D).','2g':'The S4-SGSN serves GERAN (Gb) as well as UTRAN, so LTE ↔ 2G mobility also uses S3.'},
  specs:['TS 29.274','23.401']},
 
 {id:'s4',n:'S4',a:'sgsn',b:'sgw',gens:['4g','iw'],plane:'both',protos:['gtpc2','gtpu'],ao:[0,16],pts:[[840,324],[840,622]],bo:[0,-16],lp:.55,
@@ -973,7 +1043,7 @@ const LINKS = [
  sum:'Combined EPS/IMSI attach, CS paging over LTE for CS Fallback, and SMS over SGs.',
  st:[{t:'Control plane',l:['SGsAP','SCTP','IP','L2 / L1']}],
  pr:['Location Update Request / Accept / Reject','Paging Request (CS call / SMS)','Service Request','Uplink / Downlink Unitdata (SMS)','IMSI Detach / EPS Detach Indication','Alert Request / UE Activity Indication','Reset Indication'],
- kv:[['SCTP port','29118']],specs:['TS 29.118','23.272'],
+ kv:[['SCTP port','29118']],notes:{'2g':'The CSFB target can be GERAN or UTRAN. On GERAN without DTM the PS bearers are suspended during the CS call and resumed afterwards.'},specs:['TS 29.118','23.272'],
  tips:['CSFB failures: check the SGs association state, the TAI→LAI mapping in the MME and the paging response on the target RAT.']},
 
 {id:'sv',n:'Sv',a:'mme',b:'mscs',gens:['4g','nsa','iw'],plane:'cp',protos:['gtpc2'],ao:[0,-9],pts:[[635,444],[635,125]],bo:[0,27],lp:.83,
@@ -981,7 +1051,7 @@ const LINKS = [
  sum:'Single Radio Voice Call Continuity: hands an ongoing VoLTE call over to the CS domain when LTE coverage is lost.',
  st:[{t:'Control plane',l:['GTPv2-C (Sv)','UDP','IP','L2 / L1']}],
  pr:['SRVCC PS to CS Request / Response','SRVCC PS to CS Complete Notification / Acknowledge','SRVCC PS to CS Cancel Notification','SRVCC CS to PS (rSRVCC)'],
- kv:[['Port','UDP 2123']],specs:['TS 29.280','23.216']},
+ kv:[['Port','UDP 2123']],notes:{'2g':'The target can be GERAN; then only the voice component is transferred and, without DTM, non-voice PS bearers are suspended.',sa:'5G-SRVCC (R16, NG-RAN → UTRAN only): AMF → N26 → MME_SRVCC → Sv → MSC Server.'},specs:['TS 29.280','23.216']},
 
 /* --- 5G NG-RAN --- */
 {id:'f1c',n:'F1-C',a:'gnbdu',b:'gnbcucp',gens:['sa'],plane:'cp',protos:['sctp'],ao:[0,-15],bo:[0,10],lp:.5,
@@ -1074,6 +1144,7 @@ const LINKS = [
  st:[{t:'Control plane',l:['GTPv2-C','UDP','IP','L2 / L1']}],
  pr:['Forward Relocation Request / Response (inter-system handover, EPS fallback)','Context Request / Response (idle-mode mobility)','Identification Request'],
  kv:[['Combined nodes','SMF+PGW-C, UPF+PGW-U, PCF+PCRF, UDM+HSS'],['Without N26','The UE re-registers/attaches without context transfer; IP address kept via SMF+PGW-C']],
+ notes:{sa:'Also used for 5G-SRVCC (R16, NG-RAN → UTRAN): the AMF selects an MME_SRVCC over N26, which runs Sv towards the MSC Server.'},
  specs:['TS 23.501 §5.17','23.502 §4.11','29.274']},
 
 {id:'n32',n:'N32',a:'sepp',b:'partner',gens:['sa'],plane:'sbi',protos:['http2'],bo:[0,-4],lp:.5,
@@ -1266,6 +1337,28 @@ rp('n34','nssf','nwdaf','N34','Nnwdaf analytics consumed by the NSSF, e.g. slice
 
 /* End-to-end stack scenarios --------------------------------------------- */
 const E2E = [
+{id:'2gup',g:'2g',t:'2G GPRS / EDGE user plane (Gb mode)',sum:'LLC and SNDCP run end to end between MS and SGSN; the BSS (PCU) terminates RLC/MAC and relays LLC frames over Gb. GPRS ciphering (GEA) is in LLC.',
+ nodes:[{n:'MS',s:[{l:['Application','IP','SNDCP','LLC','RLC / MAC','GSM L1']}]},
+  {n:'BSS (BTS + BSC/PCU)',s:[{h:'Um',l:['RLC / MAC','GSM L1']},{h:'Gb',l:['BSSGP','Network Service','FR | UDP/IP','L1']}]},
+  {n:'SGSN',s:[{h:'Gb',l:['SNDCP','LLC','BSSGP','Network Service','FR | UDP/IP','L1']},{h:'Gn',l:['GTP-U','UDP','IP','L2','L1']}]},
+  {n:'GGSN',s:[{h:'Gn',l:['GTP-U','UDP','IP','L2','L1']},{h:'Gi',l:['IP (user)','L2','L1']}]},
+  {n:'Server',s:[{l:['Application','IP','L2','L1']}]}],
+ gaps:['Um','Gb','Gn','Gi'],
+ notes:['Between BTS and PCU the RLC/MAC blocks travel in PCU frames over Abis (vendor-specific).','There is no Direct Tunnel in Gb mode – the SGSN is always in the user plane.','With an S4-SGSN the Gn side is replaced by S4 to an SGW and S5 to a PGW.']},
+{id:'2gcp',g:'2g',t:'GSM CS control plane (MS ↔ MSC)',sum:'CM and MM (carried as DTAP) run end to end between MS and MSC; RR terminates in the BSC, LAPDm runs on the radio, RSL on Abis and BSSAP on the A interface.',
+ nodes:[{n:'MS',s:[{l:['CM (CC / SS / SMS)','MM','RR','LAPDm','GSM L1']}]},
+  {n:'BTS',s:[{h:'Um',l:['LAPDm','GSM L1']},{h:'Abis',l:['RSL','LAPD','E1']}]},
+  {n:'BSC',s:[{h:'Abis',l:['RR','RSL','LAPD','E1']},{h:'A',l:['BSSMAP / DTAP','SCCP','MTP3 | M3UA','MTP2 | SCTP','MTP1 | IP']}]},
+  {n:'MSC Server',s:[{h:'A',l:['CM (CC / SS / SMS)','MM','BSSMAP / DTAP','SCCP','MTP3 | M3UA','MTP2 | SCTP','MTP1 | IP']}]}],
+ gaps:['Um','Abis','A'],
+ notes:['The BTS relays RR messages inside RSL (Data Request / Indication); a few RR functions such as ciphering start and measurement pre-processing are performed in the BTS.','CM and MM pass transparently through the BSC as DTAP.']},
+{id:'2gcs',g:'2g',t:'GSM CS speech path (A over TDM)',sum:'The radio speech codec is converted to 64 kbit/s G.711 in the TRAU. With A over IP the transcoder can move into the MGW, so the compressed codec (e.g. AMR) travels as RTP over the A interface.',
+ nodes:[{n:'MS',s:[{l:['Speech codec (FR / EFR / HR / AMR)','Channel coding','GSM L1']}]},
+  {n:'BTS',s:[{h:'Um',l:['Channel coding','GSM L1']},{h:'Abis',l:['TRAU frames','16 / 8 kbit/s sub-TS','E1']}]},
+  {n:'TRAU (in the BSS)',s:[{h:'Ater',l:['TRAU frames','16 kbit/s sub-TS','E1']},{h:'A',l:['G.711 PCM','64 kbit/s TS','E1']}]},
+  {n:'CS-MGW',s:[{h:'A',l:['G.711 PCM','64 kbit/s TS','E1']},{h:'Nb',l:['Nb UP (G.711 / AMR)','RTP','UDP','IP']}]}],
+ gaps:['Um','Abis · BSC · Ater','A'],
+ notes:['The BSC switches the 16 kbit/s sub-timeslots between Abis and Ater; it does not process the speech itself.','TFO (tandem-free operation) and TrFO avoid double transcoding for mobile-to-mobile calls.']},
 {id:'3gup',g:'3g',t:'3G PS user plane (R99 / R4)',sum:'User IP packets are tunnelled from the GGSN to the RNC in GTP-U; the RNC hosts PDCP/RLC/MAC and the Node B only provides L1 via the Iub frame protocol.',
  nodes:[{n:'UE',s:[{l:['Application','IP / PPP','PDCP','RLC','MAC','WCDMA L1']}]},
   {n:'Node B',s:[{h:'Uu',l:['WCDMA L1']},{h:'Iub',l:['Iub FP','UDP/IP | AAL2','L2/L1 | ATM']}]},
@@ -1342,6 +1435,14 @@ const E2E = [
  notes:['RRC messages travel inside F1AP RRC Message Transfer between DU and CU-CP.','N2 SM information (QoS profiles, UPF TEID) is created by the SMF and transported by the AMF in NGAP PDU Session Resource messages.']}
 ];
 
+/* 2G shares the CS and PS core with 3G: tag shared elements/interfaces (keep their colour) */
+(function(){
+ const EL2=['ue','mscs','mgw','hlr','eir','sgsn','ggsn','ocs','peercs','pdn'];
+ const LN2=['mc','cd','f','gf','gr','gs','gc','gn','gi','gy3g','gx3g','nc','nb','sgs','sv','s3','s4','s4c','s4u','s6d'];
+ ELS.forEach(e=>{if(EL2.includes(e.id)&&!e.gens.includes('2g')){e.pc=e.pc||e.gens[0];e.gens.unshift('2g');}});
+ LINKS.forEach(l=>{if(LN2.includes(l.id)&&!l.gens.includes('2g')){l.pc=l.pc||l.gens[0];const i=l.gens.indexOf('iw');if(i>=0)l.gens.splice(i,0,'2g');else l.gens.unshift('2g');}});
+})();
+
 /* =====================================================================
    HELPERS
    ===================================================================== */
@@ -1353,7 +1454,7 @@ function mk(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function gcol(g){return `var(${GENS[g]?GENS[g].v:'--gall'})`;}
 function elColor(E){return E.pc==='all'?'var(--gall)':gcol(E.pc||E.gens[0]);}
-function lnColor(L){return L.gens.includes('iw')?gcol('iw'):gcol(L.gens[0]);}
+function lnColor(L){return L.gens.includes('iw')?gcol('iw'):gcol(L.pc||L.gens[0]);}
 function cen(E){return [E.x+E.w/2,E.y+E.h/2];}
 function clip(from,to,E){const dx=to[0]-from[0],dy=to[1]-from[1];let t=Infinity;
  if(dx>0)t=Math.min(t,(E.x+E.w-from[0])/dx);else if(dx<0)t=Math.min(t,(E.x-from[0])/dx);
@@ -1361,9 +1462,13 @@ function clip(from,to,E){const dx=to[0]-from[0],dy=to[1]-from[1];let t=Infinity;
  if(!isFinite(t)||t<0)t=0;return [from[0]+dx*t,from[1]+dy*t];}
 function kind(x){const s=x.toLowerCase();
  if(/^application|^pdu \(|ip \(user\)|^ip \/ ppp|^amr frames|^server|^service api|n32-[cf]|nsmf \/ namf/.test(s))return 'appl';
- if(/nas|gmm|emm|esm|5gmm|5gsm|^mm\b/.test(s))return 'nas';
+ if(/nas|gmm|emm|esm|5gmm|5gsm|^mm\b|^cm \(/.test(s))return 'nas';
+ if(/^rr$|^rr\b/.test(s))return 'rrc';
  if(/rrc/.test(s))return 'rrc';
- if(/gtp-u|nr-u|\bfp\b|iu up|nb up|rtp/.test(s))return 'tun';
+ if(/gtp-u|nr-u|\bfp\b|iu up|nb up|rtp|trau frames|pcu frames|g\.711|speech/.test(s))return 'tun';
+ if(/sndcp|llc|lapdm|channel coding|gsm l1/.test(s))return 'radio';
+ if(/bssgp|bssap|bssmap|dtap|^rsl|oml/.test(s))return 'ap';
+ if(/network service|frame relay|lapd|^fr \||sub-t|timeslot|^e1/.test(s))return 'ss7';
  if(/sdap|pdcp|rlc|mac|phy|wcdma l1/.test(s))return 'radio';
  if(/s1ap|ngap|x2ap|xnap|f1ap|e1ap|nbap|ranap|rnsap|sgsap|pfcp|gtpv1-c|gtpv2-c|gtp′|diameter|^map|tcap|h\.248|bicc|sip|http|radius|control only|↔/.test(s))return 'ap';
  if(/sccp|m3ua|mtp|sscf|sscop|aal|atm/.test(s))return 'ss7';
@@ -1609,7 +1714,7 @@ function renderOverview(){
  <tr><td>6, 8, 9</td><td>Non-GBR</td><td>TCP-based data (9 is the usual default bearer / flow)</td></tr>
  <tr><td>7</td><td>Non-GBR</td><td>Voice / live video streaming, interactive gaming</td></tr></table>
  <p style="color:var(--muted);font-size:12px">5QI 1–9 keep the QCI meanings; 5G adds further values (e.g. 65–70 mission-critical, 82–90 delay-critical GBR).</p>
- <h3>Scope</h3><p style="color:var(--muted);font-size:13px">Reference architecture per 3GPP R99–R18 and GSMA guidelines. Some optional nodes are left out for readability and are described in the text of the related element: SMSF, LMF, NSSAAF, BSF, 5G-EIR, N3IWF/TNGF, ePDG/3GPP AAA (S2b, SWm, SWx), SMSC, gsmSCF (CAMEL), TDF (Sd, Sxc), SCEF (T6a), CBC, BM-SC, DRA/DEA. Vendor implementations often combine nodes (e.g., GGSN/PGW/SMF+UPF, HLR/HSS/UDM). Use the EPC toggle for the R14 CUPS split (SGW-C/U, PGW-C/U, Sxa, Sxb). The ng-eNB covers LTE connected to the 5GC (Options 4, 5, 7).</p><p class="specs">Version ${esc(VERSION)}</p>`;}
+ <h3>Scope</h3><p style="color:var(--muted);font-size:13px">Reference architecture per GSM Phase 2+ / 3GPP R97–R18 and GSMA guidelines. Some optional nodes are left out for readability and are described in the text of the related element: SMSF, LMF, NSSAAF, BSF, 5G-EIR, N3IWF/TNGF, ePDG/3GPP AAA (S2b, SWm, SWx), SMSC, gsmSCF (CAMEL), TDF (Sd, Sxc), SCEF (T6a), CBC, BM-SC, DRA/DEA. Vendor implementations often combine nodes (e.g., GGSN/PGW/SMF+UPF, HLR/HSS/UDM). Use the EPC toggle for the R14 CUPS split (SGW-C/U, PGW-C/U, Sxa, Sxb). The ng-eNB covers LTE connected to the 5GC (Options 4, 5, 7).</p><p class="specs">Version ${esc(VERSION)}</p>`;}
 panel.addEventListener('click',ev=>{const b=ev.target.closest('[data-sel],[data-gen],[data-act]');if(!b)return;
  if(b.dataset.sel){const [t,id]=b.dataset.sel.split(':');select(t,id);return;}
  if(b.dataset.gen){toggleGen(b.dataset.gen,true);return;}

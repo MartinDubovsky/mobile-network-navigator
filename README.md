@@ -1,8 +1,8 @@
-# Mobile Network Architecture Navigator
+# Mobile Network Navigator
 
-**Version 2026.11.04.3** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
+**Version 2026.11.05** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
 
-An interactive, single-file HTML reference of 3GPP mobile network architectures: **3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them and the protocol stacks used on each interface.
+An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them and the protocol stacks used on each interface.
 
 It is meant for network engineers who need to get their bearings quickly while troubleshooting or discussing a topic with colleagues.
 
@@ -35,6 +35,9 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 
 | ID | Scenario |
 |---|---|
+| `2gup` | 2G GPRS / EDGE user plane (Gb mode) |
+| `2gcp` | GSM CS control plane (MS ↔ MSC) |
+| `2gcs` | GSM CS speech path (A over TDM) |
 | `3gup` | 3G PS user plane (R99 / R4) |
 | `3gcp` | 3G PS control plane (UE ↔ SGSN) |
 | `hspaup` | HSPA user plane with Direct Tunnel (R7+) |
@@ -53,7 +56,7 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 
 | Control | Behaviour |
 |---|---|
-| **Generation chips** (3G UMTS, HSPA, 4G LTE/EPC, 5G NSA, 5G SA, Interworking) | Click to toggle, and click several to combine. Double-click to show one generation only. **All** clears the filter. Elements that only take part through another generation’s interface (e.g., the MSC Server under 4G via SGs/Sv) are shown half-dimmed. With no item selected, the panel shows an overview of the most recently chosen generation. |
+| **Generation chips** (2G GSM, 3G UMTS, HSPA, 4G LTE/EPC, 5G NSA, 5G SA, Interworking) | Click to toggle, and click several to combine. Double-click to show one generation only. **All** clears the filter. Elements that only take part through another generation’s interface (e.g., the MSC Server under 4G via SGs/Sv) are shown half-dimmed. With no item selected, the panel shows an overview of the most recently chosen generation. |
 | **Search** (toolbar, left) | Free text over names, descriptions, protocols, procedures, ports and specs, e.g. `S1-MME`, `Diameter`, `2152`, `PFCP`, `29.274`. Several words are combined with AND. The match count is shown next to the box. |
 | **Planes** | Show/hide control-plane, user-plane and SBI interfaces. Interfaces that carry both planes stay visible while either plane is on. |
 | **5GC view** | *Service-based*: NFs attached to the SBI bus (Namf, Nsmf …). *Reference points*: point-to-point N5, N7, N8, N10, N11, N12, N13, N15, N22, N23, N28, N33, N34, N35, N36, N37, N40. |
@@ -108,7 +111,7 @@ The page address updates with the current selection, so a link can be sent to a 
 | `#if=<interface-id>` | `index.html#if=s1mme` | Interface details |
 | `#gen=<gen>[,<gen>…]` | `index.html#gen=nsa,4g` | Generation filter |
 
-Generation IDs: `3g`, `hspa`, `4g`, `nsa`, `sa`, `iw` (interworking).
+Generation IDs: `2g`, `3g`, `hspa`, `4g`, `nsa`, `sa`, `iw` (interworking).
 
 The **Copy link to this item** button in the panel copies the current address to the clipboard. Some browsers block the clipboard for `file://` pages; in that case copy the address bar instead.
 
@@ -118,6 +121,7 @@ The **Copy link to this item** button in the panel copies the current address to
 | ID | Element | ID | Element |
 |---|---|---|---|
 | `ue` | UE | `amf` | AMF |
+| `bts` | BTS (2G) | `bsc` | BSC + PCU (2G) |
 | `nodeb` | Node B | `smf` | SMF |
 | `rnc` | RNC | `upf` | UPF |
 | `mscs` | MSC Server / VLR | `ausf` | AUSF |
@@ -148,6 +152,7 @@ CUPS view only: `sgwc` (SGW-C), `sgwu` (SGW-U), `pgwc` (PGW-C), `pgwu` (PGW-U). 
 
 | Area | IDs |
 |---|---|
+| 2G | `um` (Um), `abis`, `acp` (A, control plane), `aup` (A, user plane), `gb` |
 | Radio | `uu3g` (Uu), `lteuu` (LTE-Uu), `nruunsa` (NR-Uu EN-DC), `nruusa` (NR-Uu SA) |
 | 3G RAN | `iub`, `iur`, `iucscp` (Iu-CS), `iucsup` (Iu-CS UP), `iups` (Iu-PS), `dt` (Direct Tunnel) |
 | 3G core | `mc`, `cd` (C/D), `f`, `gf`, `gr`, `gs` (SGSN–MSC/VLR), `gc` (GGSN–HLR), `gn` (Gn/Gp), `gi`, `gy3g` (Gy/Ga), `gx3g` (Gx GGSN–PCRF, R7+), `nc`, `nb` |
@@ -169,8 +174,8 @@ Selecting a reference point switches the 5GC view to *Reference points* automati
 
 ## Scope and simplifications
 
-- The content reflects 3GPP Releases R99–R18 and GSMA roaming guidelines (IR.34, IR.88, NG.113). Spec numbers are listed per item so details can be checked against the release your network runs.
-- **Contents:** 41 elements in the classic view (45 including the four CUPS functions); 66 point-to-point interfaces; the SBI bus with 14 service-based NF interfaces; 17 SBA reference points; and 13 interface entries for the CUPS view (6 new – Sxa, Sxb, S5-C, S5-U, S4-C, S4-U – plus 7 re-routed variants).
+- The content reflects GSM Phase 2+ and 3GPP Releases R97–R18 and GSMA roaming guidelines (IR.34, IR.88, NG.113). Spec numbers are listed per item so details can be checked against the release your network runs.
+- **Contents:** 43 elements in the classic view (47 including the four CUPS functions); 71 point-to-point interfaces; the SBI bus with 14 service-based NF interfaces; 17 SBA reference points; and 13 interface entries for the CUPS view (6 new – Sxa, Sxb, S5-C, S5-U, S4-C, S4-U – plus 7 re-routed variants).
 - **CUPS:** Sxc (TDF-C ↔ TDF-U) is described in the Sxb details but not drawn. GGSN CUPS is not shown.
 - **Mentioned in text but not drawn** (checked with a scan of all texts against the map, release 2026.11.04.3):
   - *Nodes that would need extra layout space:* SMSF (N20/N21), LMF, NSSAAF, BSF, 5G-EIR (N17), N3IWF/TNGF, ePDG + 3GPP AAA (S2b, SWm, SWx; S2a), SMSC, gsmSCF/CAMEL (CAP, Ge), TDF (Sd, Sxc), SCEF (T6a, S6t), CBC, BM-SC.
@@ -210,6 +215,13 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ---
 
 ## Changelog
+
+### 2026.11.05
+- Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).
+- The CS and PS core (MSC Server/VLR, CS-MGW, HLR/AuC, EIR, SGSN, GGSN, charging) is shared with 3G and now tagged for both generations.
+- Integration with modern networks: CSFB and SRVCC to GERAN (SGs, Sv), LTE ↔ GERAN reselection / redirection / NACC, S4-SGSN with Gb (S3/S4), and 5G-SRVCC (R16, NG-RAN → UTRAN only, via N26 → MME_SRVCC → Sv); no direct 5GS ↔ GERAN mobility.
+- New end-to-end stacks: 2G GPRS/EDGE user plane, GSM CS control plane, GSM speech path.
+- Renamed to “Mobile Network Navigator”; shorter generation chip subtitles so the header still fits one row at 1920 px.
 
 ### 2026.11.04.3
 - Drew interfaces that were only described in text: **Cx / Sh** (IMS–HSS), **Ro / Rf** (IMS–OCS/OFCS), **Sy** (PCRF–OCS), **S9** (PCRF–roaming partner), **S6d** (S4-SGSN–HSS), **Gs** (SGSN–MSC/VLR), **Gc** (GGSN–HLR), **Nhss** (HSS–UDM interworking, R16), and reference points **N23** (PCF–NWDAF) and **N34** (NSSF–NWDAF).
