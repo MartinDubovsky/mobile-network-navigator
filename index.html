@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="version" content="2026.11.05.3">
+<meta name="version" content="2026.11.05.4">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mobile Network Navigator · 2G · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
@@ -201,6 +201,45 @@ table.qr td:first-child{font-family:var(--mono)}
 #tip b{font-family:var(--mono)}
 #tip .s{color:var(--muted);display:block;margin-top:2px}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:8px 14px;border-radius:8px;z-index:60;font-size:13px}
+/* message flows */
+.mfcount{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:400;margin-left:4px}
+.mfchips{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 6px}
+.mfc{border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:3px 9px;cursor:pointer;font-size:11.5px;line-height:1.25;text-align:left}
+.mfc.on{border-color:var(--ink);background:color-mix(in srgb,var(--ink) 12%,var(--panel2));font-weight:600}
+.mfc.hit:not(.on){border-color:#f59e0b}
+.mfmeta{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--muted);margin:2px 0 4px;flex-wrap:wrap}
+.mftools{display:flex;gap:4px}
+.mftools button{border:1px solid var(--line);background:var(--panel2);border-radius:6px;padding:2px 8px;cursor:pointer;font-size:11.5px;font-family:var(--sans);color:var(--ink)}
+.mfdesc{font-size:12.5px;color:var(--muted);margin:2px 0 6px}
+.mfd{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:6px 4px 10px;position:relative}
+.mfh{position:relative;height:34px;margin-bottom:4px}
+.mfl{position:absolute;top:0;transform:translateX(-50%);text-align:center;font-weight:650;font-size:11.5px;line-height:1.2;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:3px 4px;max-height:34px;overflow:hidden;z-index:2}
+.mfb{position:relative;padding-bottom:4px}
+.mfv{position:absolute;top:-4px;bottom:0;width:0;border-left:1px dashed var(--faint);z-index:0}
+.mfm{position:relative;z-index:1;padding:3px 0 4px}
+.mft{text-align:center;font-family:var(--mono);font-size:11.5px;line-height:1.3;word-break:break-word}
+.mft b{font-weight:650}
+.mfm .bg{background:var(--bg);box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:0 2px}
+.mftag{display:inline-block;font-family:var(--sans);font-size:9.5px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:0 3px;margin-right:4px;vertical-align:1px}
+.mfo{font-family:var(--sans);font-size:9.5px;color:var(--muted);border:1px dashed var(--faint);border-radius:3px;padding:0 3px}
+.mfa{height:0;border-top:1.6px solid var(--ink);position:relative;margin-top:2px;margin-bottom:2px}
+.mfm.opt .mfa{border-top-style:dashed;border-top-color:var(--muted)}
+.mfa::after{content:'';position:absolute;top:-5px;border:4.5px solid transparent}
+.mfa.r::after{right:-1px;border-left:8px solid var(--ink);border-right:0}
+.mfa.l::after{left:-1px;border-right:8px solid var(--ink);border-left:0}
+.mfm.opt .mfa.r::after{border-left-color:var(--muted)}.mfm.opt .mfa.l::after{border-right-color:var(--muted)}
+.mfx{text-align:center;font-size:11px;color:var(--muted);line-height:1.3}
+.mfn{position:relative;z-index:1;background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:3px 7px;margin:4px 0;font-size:11px;color:var(--muted);line-height:1.35;text-align:center}
+.mfsep{position:relative;z-index:1;text-align:center;margin:6px 0;border-top:1px dashed var(--faint);height:0}
+.mfsep span{position:relative;top:-0.7em;background:var(--bg);padding:0 6px;font-size:10.5px;color:var(--muted);font-style:italic}
+.mfm.hit .mft,.mfn.hit{background:color-mix(in srgb,#f59e0b 22%,transparent);border-radius:4px}
+.mflegend{font-size:11px;color:var(--muted);margin:4px 0 0;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.mflegend .lg-s,.mflegend .lg-o{display:inline-block;width:22px;border-top:1.6px solid var(--ink);vertical-align:middle}
+.mflegend .lg-o{border-top:1.6px dashed var(--muted);margin-left:6px}
+#modal .mbox.wide{width:min(1180px,100%)}
+.mfbox.big .mft{font-size:13px}.mfbox.big .mfx{font-size:12.5px}.mfbox.big .mfl{font-size:13px}.mfbox.big .mfn{font-size:12.5px}.mfbox.big .mfc{font-size:12.5px}
+.mfbox.big .mfh{height:38px}
+textarea.mfcopy{width:100%;height:50vh;font-family:var(--mono);font-size:12px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px}
 /* network data */
 #ndwrap{position:relative;display:flex;align-items:center;gap:6px}
 #ndbtn.on{border-color:var(--giw);background:color-mix(in srgb,var(--giw) 16%,var(--panel))}
@@ -317,7 +356,7 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
 <script>
 'use strict';
 const PRISTINE_DOC=document.documentElement.cloneNode(true); /* clean copy of the tool, used by “Save tool + data as one HTML file” */
-const VERSION = '2026.11.05.3';
+const VERSION = '2026.11.05.4';
 /* =====================================================================
    DATA
    ===================================================================== */
@@ -1772,6 +1811,7 @@ function renderPanel(){
   ${notesHTML(L.notes)}
   ${L.kv?`<h3>Ports · IDs · parameters</h3>${kvHTML(L.kv)}`:''}
   ${L.pr?`<h3>Key procedures / messages</h3>${listHTML(L.pr)}`:''}
+  ${mfSection(L)}
   ${L.isbus?`<h3>Attached NFs</h3><div class="ifcs">${LINKS.filter(x=>x.bus).map(x=>ifcBtn(x,null)).join('')}</div>`:''}
   ${L.tips?`<h3>Troubleshooting quick refs</h3>${tipsHTML(L.tips)}`:''}
   ${L.specs?`<h3>Key specifications</h3>${specsHTML(L.specs)}`:''}
@@ -1785,7 +1825,7 @@ function renderOverview(){
   <h3>Interfaces</h3><div class="ifcs">${LINKS.filter(l=>l.gens.includes(g)&&!l.bus&&cupsOK(l)).map(l=>ifcBtn(l,null)).join('')}</div>
   <h3>Key specifications</h3><div class="specs">${esc(I.specs)}</div>`;return;}
  panel.innerHTML=`<h2>Quick orientation</h2>
- <p style="color:var(--muted)">Click any element or interface on the map for its role, protocol stack, key procedures, ports and spec references. Generation chips highlight what belongs to each system (click several to combine, double-click for one only); elements that only take part through another generation’s interface are shown half-dimmed. Coloured bars on a box show which generations use it.</p>
+ <p style="color:var(--muted)">Click any element or interface on the map for its role, protocol stack, key procedures with message-flow diagrams, ports and spec references. Generation chips highlight what belongs to each system (click several to combine, double-click for one only); elements that only take part through another generation’s interface are shown half-dimmed. Coloured bars on a box show which generations use it.</p>
  <p style="color:var(--muted);font-size:12.5px">Mouse wheel / pinch to zoom · drag to pan · <b>/</b> focuses search · <b>Esc</b> clears · the URL updates with your selection, so you can send a colleague a link straight to an interface.</p>
  ${ndOverviewHTML()}
  <h3>Generations</h3><div class="gcards">${GENORDER.map(k=>`<div class="gcard" data-gen="${k}" style="--c:${gcol(k)}"><b>${esc(GENS[k].n)} <small style="color:var(--muted);font-weight:400">${esc(GENS[k].s)}</small></b><span>${esc(GENINFO[k].sum)}</span></div>`).join('')}</div>
@@ -1835,10 +1875,13 @@ function toggleGen(g,exclusive){if(g==='all'){state.gens.clear();state.lastGen=n
  else if(exclusive){state.gens=new Set([g]);state.lastGen=g;}
  else{if(state.gens.has(g)){state.gens.delete(g);if(state.lastGen===g)state.lastGen=[...state.gens].pop()||null;}else{state.gens.add(g);state.lastGen=g;}}
  state.sel=null;updateHash();apply();renderPanel();}
-function updateHash(){let h='';if(state.sel)h=(state.sel[0]==='el'?'el=':'if=')+state.sel[1];else if(state.gens.size)h='gen='+[...state.gens].join(',');
+function updateHash(){let h='';if(state.sel){h=(state.sel[0]==='el'?'el=':'if=')+state.sel[1];const v=state.sel[0]==='if'&&state.mfi&&state.mfi[state.sel[1]];if(v&&v.i>0&&MF[state.sel[1]])h+='&mf='+mfSlug(MF[state.sel[1]][v.i].t);}else if(state.gens.size)h='gen='+[...state.gens].join(',');
  try{history.replaceState(null,'',h?'#'+h:location.pathname+location.search);}catch(e){}}
-function readHash(){const h=decodeURIComponent(location.hash.slice(1));if(!h)return;const [k,v]=h.split('=');
- if(k==='el'&&EM[v])select('el',v);else if(k==='if'&&LM[v])select('if',v);else if(k==='gen'){v.split(',').forEach(g=>{if(GENS[g]){state.gens.add(g);state.lastGen=g;}});apply();renderPanel();}}
+function readHash(){const h=decodeURIComponent(location.hash.slice(1));if(!h)return;const q={};h.split('&').forEach(p=>{const i=p.indexOf('=');if(i>0)q[p.slice(0,i)]=p.slice(i+1);});
+ if(q.if&&LM[q.if]){let j=-1;if(q.mf&&MF[q.if]){j=MF[q.if].findIndex(f=>mfSlug(f.t)===q.mf);if(j>=0)state.mfi[q.if]={i:j,q:state.q};}select('if',q.if);
+  if(j>=0)setTimeout(()=>{const b=panel.querySelector('.mfbox');if(b)b.scrollIntoView({block:'start'});},60);}
+ else if(q.el&&EM[q.el])select('el',q.el);
+ else if(q.gen){q.gen.split(',').forEach(g=>{if(GENS[g]){state.gens.add(g);state.lastGen=g;}});apply();renderPanel();}}
 
 /* header controls */
 function buildChips(){const c=$('#genchips');
@@ -1921,6 +1964,1637 @@ $('#e2enav').addEventListener('click',ev=>{const b=ev.target.closest('button[dat
 function buildLegend(){const sw=(dash,w,ov)=>`<svg width="26" height="10"><line x1="2" y1="5" x2="24" y2="5" stroke="var(--ink)" stroke-width="${w}" ${dash?`stroke-dasharray="${dash}"`:''} stroke-linecap="round"/>${ov?`<line x1="2" y1="5" x2="24" y2="5" stroke="var(--panel)" stroke-width="1.4" stroke-dasharray="6 5"/>`:''}</svg>`;
  $('#legend').innerHTML=`<span class="hide" id="leghide">hide</span><div class="row"><span>${sw('7 5',2.2)} Control</span><span>${sw('',2.2)} User</span><span>${sw('',4,true)} Control + user</span><span>${sw('1.5 4.5',2.6)} SBI</span><span>${sw('12 4 2 4',1.6)} Logical (NAS)</span><span style="color:var(--muted)">colour = generation (see chips)</span></div>`;
  $('#leghide').onclick=()=>{const l=$('#legend');l.classList.toggle('mini');$('#leghide').textContent=l.classList.contains('mini')?'Legend ▸':'hide';};}
+
+/* =====================================================================
+   MESSAGE FLOWS – per-interface sequence diagrams
+   Flow: {t:title, s:spec, d:note, p:[lane names] (default: the two ends), m:[rows]}
+   Row:  [from, to, 'TAG|MESSAGE', 'key IEs / remarks', '?' = optional / conditional]
+         ['*', text] note across all lanes · ['*N', text] note on lane N · ['=', text] separator
+   ===================================================================== */
+const MF={};
+const mfDia=(app,extra)=>({t:'Diameter peer connection',s:'RFC 6733',d:'Once per peer, before any application message. TCP or SCTP port 3868 (TLS / DTLS 5868).'+(extra?' '+extra:''),m:[
+ [0,1,'CER','Capabilities-Exchange-Request: Origin-Host / Origin-Realm, Host-IP-Address, Vendor-Id, supported applications: '+app+' (3GPP applications inside Vendor-Specific-Application-Id, Vendor-Id 10415)'],
+ [1,0,'CEA','Result-Code 2001 (DIAMETER_SUCCESS), common applications'],
+ [0,1,'DWR','Device-Watchdog-Request when the connection is idle (Tw, typically 30 s) – either side'],
+ [1,0,'DWA',''],
+ [0,1,'DPR','Disconnect-Peer-Request, e.g. Disconnect-Cause REBOOTING','?'],
+ [1,0,'DPA','','?']]});
+const mfGTPU=o=>{o=o||{};const F=[
+ {t:'User data (G-PDU)',s:'TS 29.281',d:o.d||'',m:[
+  [0,1,'G-PDU (uplink)','GTP-U type 255; TEID = the value the receiving side assigned when the tunnel was set up'+(o.ul||'')],
+  [1,0,'G-PDU (downlink)','TEID assigned by the receiving side'+(o.dl||'')]]},
+ {t:'Path supervision (Echo)',s:'TS 29.281',m:[
+  [0,1,'Echo Request','type 1, TEID 0, sequence number; sent per peer at a configured interval – either side'],
+  [1,0,'Echo Response','type 2; Recovery IE (restart counter, not used in GTP-U)'],
+  ['*','No response after the configured retries → path failure (alarm); the node may release the bearers on that path']]},
+ {t:'Error Indication',s:'TS 29.281 · TS 23.007',m:[
+  [1,0,'G-PDU','arrives for a TEID the receiver does not know (e.g. its context was lost in a restart)'],
+  [0,1,'Error Indication','type 26, TEID 0; IEs: TEID Data I and GTP-U Peer Address of the unknown tunnel'],
+  ['*',o.ei||'The receiver of the Error Indication handles the bearer per TS 23.007 (release, or re-establish it)']]}];
+ if(o.em)F.push({t:'End Marker (path switch)',s:'TS 29.281 · TS 23.401 / 23.502',p:o.em.p,m:[
+  ['*',o.em.sw],
+  [1,0,'G-PDU (downlink)','last packets on the old path'],
+  [1,0,'End Marker','type 254, TEID of the old tunnel – nothing more will follow on this path'],
+  [1,2,'G-PDU (downlink)','packets on the new path'],
+  ['*','The source forwards the End Marker over '+o.em.fwd+'; the target delivers the forwarded packets first, then those from the new path']]});
+ return F;};
+
+/* ---------- 2G GSM / GPRS ---------- */
+MF.um=[
+ {t:'Location update',s:'TS 44.018 · TS 24.008',d:'MM messages are carried transparently through the BSS (DTAP) to the MSC/VLR.',p:['MS','BSS (BTS + BSC)','MSC / VLR'],m:[
+  [0,1,'RR|CHANNEL REQUEST','RACH; establishment cause “location updating”, random reference'],
+  [1,0,'RR|IMMEDIATE ASSIGNMENT','AGCH; SDCCH description, timing advance, request reference'],
+  [0,2,'MM|LOCATION UPDATING REQUEST','in a LAPDm SABM on the SDCCH; LU type (normal / periodic / IMSI attach), CKSN, old LAI, TMSI or IMSI, classmark 1'],
+  [2,0,'MM|AUTHENTICATION REQUEST','RAND (+ AUTN for UMTS AKA)','?'],
+  [0,2,'MM|AUTHENTICATION RESPONSE','SRES (or RES)','?'],
+  [1,0,'RR|CIPHERING MODE COMMAND','A5/1 or A5/3, ordered by the MSC with BSSMAP CIPHER MODE COMMAND','?'],
+  [0,1,'RR|CIPHERING MODE COMPLETE','first ciphered message','?'],
+  [2,0,'MM|LOCATION UPDATING ACCEPT','LAI, new TMSI (optional)'],
+  [0,2,'MM|TMSI REALLOCATION COMPLETE','only if a new TMSI was allocated','?'],
+  [1,0,'RR|CHANNEL RELEASE','the SDCCH is released']]},
+ {t:'Mobile-originated call',s:'TS 44.018 · TS 24.008',d:'With ciphering, the CIPHERING MODE COMMAND also accepts the CM service request; without it the MSC sends CM SERVICE ACCEPT. Early assignment shown.',p:['MS','BSS (BTS + BSC)','MSC'],m:[
+  [0,1,'RR|CHANNEL REQUEST','cause “originating call”'],
+  [1,0,'RR|IMMEDIATE ASSIGNMENT','SDCCH'],
+  [0,2,'MM|CM SERVICE REQUEST','CM service type (MO call), CKSN, classmark 2, TMSI / IMSI'],
+  [2,0,'MM|AUTHENTICATION REQUEST','','?'],
+  [0,2,'MM|AUTHENTICATION RESPONSE','','?'],
+  [1,0,'RR|CIPHERING MODE COMMAND',''],
+  [0,1,'RR|CIPHERING MODE COMPLETE',''],
+  [0,2,'CC|SETUP','called party BCD number, bearer capability (speech versions FR / EFR / AMR)'],
+  [2,0,'CC|CALL PROCEEDING',''],
+  [1,0,'RR|ASSIGNMENT COMMAND','TCH description, channel mode (speech version), power command'],
+  [0,1,'RR|ASSIGNMENT COMPLETE','sent on the new TCH (FACCH)'],
+  [2,0,'CC|ALERTING','called party is ringing'],
+  [2,0,'CC|CONNECT','answer'],
+  [0,2,'CC|CONNECT ACKNOWLEDGE','']]},
+ {t:'Mobile-terminated call (paging)',s:'TS 44.018 · TS 24.008',p:['MS','BSS (BTS + BSC)','MSC'],m:[
+  [1,0,'RR|PAGING REQUEST TYPE 1','PCH; TMSI or IMSI, channel needed'],
+  [0,1,'RR|CHANNEL REQUEST','cause “answer to paging”'],
+  [1,0,'RR|IMMEDIATE ASSIGNMENT','SDCCH'],
+  [0,2,'RR|PAGING RESPONSE','in SABM; CKSN, classmark 2, mobile identity – forwarded to the MSC'],
+  [1,0,'RR|CIPHERING MODE COMMAND','',''],
+  [0,1,'RR|CIPHERING MODE COMPLETE',''],
+  [2,0,'CC|SETUP','calling party number (CLI), bearer capability'],
+  [0,2,'CC|CALL CONFIRMED',''],
+  [1,0,'RR|ASSIGNMENT COMMAND','TCH'],
+  [0,1,'RR|ASSIGNMENT COMPLETE',''],
+  [0,2,'CC|ALERTING',''],
+  [0,2,'CC|CONNECT',''],
+  [2,0,'CC|CONNECT ACKNOWLEDGE','']]},
+ {t:'Call release',s:'TS 24.008',p:['MS','BSS (BTS + BSC)','MSC'],m:[
+  [0,2,'CC|DISCONNECT','cause, e.g. #16 normal call clearing'],
+  [2,0,'CC|RELEASE',''],
+  [0,2,'CC|RELEASE COMPLETE',''],
+  ['*','MSC → BSC: BSSMAP CLEAR COMMAND'],
+  [1,0,'RR|CHANNEL RELEASE','RR cause; the MS returns to idle']]},
+ {t:'Handover (radio side)',s:'TS 44.018 · TS 45.008',d:'The target channel can be in another cell of the same BSC or of another BSC (then prepared over the A interface).',p:['MS','BSS (BTS + BSC)'],m:[
+  [0,1,'RR|MEASUREMENT REPORT','SACCH, every 480 ms: RXLEV / RXQUAL of the serving cell and up to 6 neighbours (BSIC, BCCH)'],
+  [1,0,'RR|HANDOVER COMMAND','FACCH; target cell, channel description, handover reference, synchronisation indication'],
+  [0,1,'RR|HANDOVER ACCESS','access bursts on the new channel with the handover reference'],
+  [1,0,'RR|PHYSICAL INFORMATION','timing advance – non-synchronised handover only','?'],
+  [0,1,'RR|HANDOVER COMPLETE','on the new channel']]},
+ {t:'GPRS attach and PDP context activation',s:'TS 44.060 · TS 24.008',d:'GMM / SM messages travel in LLC frames over RLC/MAC to the SGSN; the SGSN also does the GPRS ciphering (GEA, in LLC).',p:['MS','BSS (BTS + PCU)','SGSN'],m:[
+  [0,1,'RR|CHANNEL REQUEST','one-phase access on the CCCH (or EGPRS PACKET CHANNEL REQUEST)'],
+  [1,0,'RR|IMMEDIATE ASSIGNMENT','packet uplink assignment: PDCH, TFI, USF – an uplink TBF'],
+  [0,2,'GMM|ATTACH REQUEST','attach type, P-TMSI or IMSI, old RAI, MS network capability, DRX parameter'],
+  [2,0,'GMM|AUTHENTICATION AND CIPHERING REQUEST','RAND, ciphering algorithm (GEA/x)'],
+  [0,2,'GMM|AUTHENTICATION AND CIPHERING RESPONSE','SRES'],
+  [2,0,'GMM|ATTACH ACCEPT','P-TMSI, RAI, periodic RA update timer; downlink data needs a downlink TBF (PACKET DOWNLINK ASSIGNMENT)'],
+  [0,2,'GMM|ATTACH COMPLETE',''],
+  [0,2,'SM|ACTIVATE PDP CONTEXT REQUEST','NSAPI, LLC SAPI, requested QoS, PDP address (empty = dynamic), APN'],
+  [2,0,'SM|ACTIVATE PDP CONTEXT ACCEPT','PDP address, negotiated QoS, radio priority']]}];
+MF.abis=[
+ {t:'Channel establishment (SDCCH)',s:'TS 48.058 (RSL)',m:[
+  ['*','MS → BTS: CHANNEL REQUEST on the RACH'],
+  [0,1,'CHANNEL REQUIRED','request reference (random access info + frame number), access delay'],
+  [1,0,'CHANNEL ACTIVATION','channel number (SDCCH), activation type, channel mode (signalling), timing advance'],
+  [0,1,'CHANNEL ACTIVATION ACKNOWLEDGE','frame number'],
+  [1,0,'IMMEDIATE ASSIGN COMMAND','carries RR IMMEDIATE ASSIGNMENT for the AGCH'],
+  ['*','MS → BTS: SABM with the first layer-3 message; the BTS answers with UA'],
+  [0,1,'ESTABLISH INDICATION','link identifier (SAPI 0), L3 information, e.g. LOCATION UPDATING REQUEST or CM SERVICE REQUEST']]},
+ {t:'L3 transport and ciphering',s:'TS 48.058',m:[
+  [1,0,'DATA REQUEST','downlink L3 message for the MS, e.g. AUTHENTICATION REQUEST'],
+  [0,1,'DATA INDICATION','uplink L3 message from the MS'],
+  [1,0,'ENCRYPTION COMMAND','encryption information (A5/x + Kc) and the RR CIPHERING MODE COMMAND'],
+  [0,1,'DATA INDICATION','RR CIPHERING MODE COMPLETE']]},
+ {t:'TCH assignment',s:'TS 48.058',m:[
+  [1,0,'CHANNEL ACTIVATION','TCH, channel mode (speech FR / EFR / AMR)'],
+  [0,1,'CHANNEL ACTIVATION ACKNOWLEDGE',''],
+  [1,0,'DATA REQUEST','RR ASSIGNMENT COMMAND, sent on the old SDCCH'],
+  [0,1,'ESTABLISH INDICATION','on the new TCH (FACCH, SAPI 0)'],
+  [0,1,'DATA INDICATION','RR ASSIGNMENT COMPLETE'],
+  [1,0,'RF CHANNEL RELEASE','old SDCCH'],
+  [0,1,'RF CHANNEL RELEASE ACKNOWLEDGE',''],
+  ['*','Speech now flows in TRAU frames on the Abis sub-timeslot (16 or 8 kbit/s)']]},
+ {t:'Measurements, paging, failures',s:'TS 48.058',m:[
+  [0,1,'MEASUREMENT RESULT','every SACCH period (480 ms): MS report + BTS uplink measurements – input for power control and handover'],
+  [1,0,'PAGING COMMAND','paging group, MS identity, channel needed'],
+  [0,1,'CONNECTION FAILURE INDICATION','radio link failure (cause); the BSC releases the channel','?']]},
+ {t:'Channel release',s:'TS 48.058',m:[
+  [1,0,'DATA REQUEST','RR CHANNEL RELEASE for the MS'],
+  [1,0,'DEACTIVATE SACCH',''],
+  [0,1,'RELEASE INDICATION','the MS released the LAPDm link (DISC / UA)'],
+  [1,0,'RF CHANNEL RELEASE',''],
+  [0,1,'RF CHANNEL RELEASE ACKNOWLEDGE','']]}];
+MF.acp=[
+ {t:'Connection set-up and ciphering',s:'TS 48.008 (BSSMAP)',d:'One SCCP connection per MS. DTAP messages (MM / CC) are passed through unchanged.',m:[
+  [0,1,'COMPLETE LAYER 3 INFORMATION','in SCCP CR; cell identifier (CGI), L3 information: LOCATION UPDATING REQUEST, CM SERVICE REQUEST or PAGING RESPONSE'],
+  [1,0,'SCCP CC','connection confirmed – the SCCP connection now identifies this MS'],
+  [1,0,'DTAP: AUTHENTICATION REQUEST','','?'],
+  [0,1,'DTAP: AUTHENTICATION RESPONSE','','?'],
+  [1,0,'CIPHER MODE COMMAND','encryption information: permitted A5 algorithms + Kc'],
+  [0,1,'CIPHER MODE COMPLETE','chosen encryption algorithm']]},
+ {t:'Assignment (traffic channel)',s:'TS 48.008',m:[
+  [1,0,'ASSIGNMENT REQUEST','channel type (speech, permitted speech versions); TDM: CIC; AoIP: MGW transport layer address + codec list'],
+  ['*','BSC assigns the TCH on the radio side (RR ASSIGNMENT COMMAND)'],
+  [0,1,'ASSIGNMENT COMPLETE','chosen channel, speech version / codec; AoIP: BSS transport layer address'],
+  ['=','or'],
+  [0,1,'ASSIGNMENT FAILURE','cause, e.g. no radio resource available','?']]},
+ {t:'Release',s:'TS 48.008',m:[
+  [0,1,'CLEAR REQUEST','BSS-initiated, cause e.g. radio interface failure','?'],
+  [1,0,'CLEAR COMMAND','cause, e.g. call control'],
+  [0,1,'CLEAR COMPLETE',''],
+  [1,0,'SCCP RLSD','the MSC releases the SCCP connection'],
+  [0,1,'SCCP RLC','']]},
+ {t:'Inter-BSC handover',s:'TS 48.008',p:['Serving BSC','MSC Server','Target BSC'],m:[
+  [0,1,'HANDOVER REQUIRED','cause (e.g. uplink quality), preferred list of target cells'],
+  [1,2,'HANDOVER REQUEST','in SCCP CR; channel type, encryption information, cell identifiers, classmark; AoIP: transport address, codec list'],
+  [2,1,'HANDOVER REQUEST ACKNOWLEDGE','layer-3 information = RR HANDOVER COMMAND, chosen channel'],
+  [1,0,'HANDOVER COMMAND','carries the RR HANDOVER COMMAND for the MS'],
+  [2,1,'HANDOVER DETECT','the MS accessed the new channel','?'],
+  [2,1,'HANDOVER COMPLETE',''],
+  [1,0,'CLEAR COMMAND','cause “handover successful”'],
+  [0,1,'CLEAR COMPLETE','']]},
+ {t:'Paging',s:'TS 48.008',m:[
+  [1,0,'PAGING','connectionless (SCCP UDT); IMSI, TMSI, cell identifier list (e.g. all cells of the LAC), channel needed'],
+  ['*','BTS pages the MS; its PAGING RESPONSE comes back in COMPLETE LAYER 3 INFORMATION']]},
+ {t:'Reset',s:'TS 48.008',d:'Either side can start it after a failure; all calls of that BSC are released.',m:[
+  [1,0,'RESET','cause, e.g. equipment failure'],
+  [0,1,'RESET ACKNOWLEDGE','']]}];
+MF.aup=[
+ {t:'Speech path with A over IP',s:'TS 48.103 · TS 48.008',m:[
+  ['*','A (BSSMAP): ASSIGNMENT REQUEST gives the MGW RTP address / port and the codec list; ASSIGNMENT COMPLETE returns the BSS address / port and the chosen codec'],
+  [0,1,'RTP (uplink speech)','RTP / UDP / IP, typically one packet per 20 ms; transcoder in the BSS: G.711, transcoder-less: e.g. AMR, EFR, FR'],
+  [1,0,'RTP (downlink speech)',''],
+  ['*','RTCP is optional']]},
+ {t:'Classic TDM A interface',s:'TS 48.008',m:[
+  ['*','The MSC picks a 64 kbit/s timeslot (CIC) in ASSIGNMENT REQUEST; the TRAU in the BSS converts to G.711'],
+  [0,1,'G.711 speech (64 kbit/s)','one E1 timeslot per call'],
+  [1,0,'G.711 speech (64 kbit/s)','']]}];
+MF.gb=[
+ {t:'NS-VC and BVC start-up',s:'TS 48.016 (NS) · TS 48.018 (BSSGP)',d:'Frame Relay or statically configured IP. With IP-SNS the NS-VCs come from the SNS configuration instead (next flow).',m:[
+  [0,1,'NS-RESET','NS-VCI, NSEI, cause'],
+  [1,0,'NS-RESET-ACK',''],
+  [0,1,'NS-UNBLOCK',''],
+  [1,0,'NS-UNBLOCK-ACK',''],
+  [0,1,'BVC-RESET','BVCI 0 (signalling), then each cell’s PTP BVCI with its cell identifier'],
+  [1,0,'BVC-RESET-ACK',''],
+  [0,1,'NS-ALIVE','periodic test (Tns-test) – either side'],
+  [1,0,'NS-ALIVE-ACK','']]},
+ {t:'IP sub-network service (Gb over IP)',s:'TS 48.016',m:[
+  [0,1,'SNS-SIZE','number of IP endpoints and NS-VCs the BSS wants'],
+  [1,0,'SNS-SIZE-ACK',''],
+  [0,1,'SNS-CONFIG','BSS IP endpoints (address, port, signalling / data weights)'],
+  [1,0,'SNS-CONFIG-ACK',''],
+  [1,0,'SNS-CONFIG','SGSN IP endpoints'],
+  [0,1,'SNS-CONFIG-ACK',''],
+  ['*','Every endpoint pair is an NS-VC, checked with NS-ALIVE / NS-ALIVE-ACK']]},
+ {t:'Uplink and downlink data',s:'TS 48.018',m:[
+  [0,1,'UL-UNITDATA','TLLI, QoS profile, cell identifier, LLC PDU (e.g. GMM ATTACH REQUEST or user data)'],
+  [1,0,'DL-UNITDATA','TLLI, QoS profile, PDU lifetime, MS radio access capability, IMSI, LLC PDU']]},
+ {t:'Flow control',s:'TS 48.018',m:[
+  [0,1,'FLOW-CONTROL-BVC','tag, BVC bucket size, bucket leak rate, default MS bucket and leak rate'],
+  [1,0,'FLOW-CONTROL-BVC-ACK',''],
+  [0,1,'FLOW-CONTROL-MS','TLLI, MS bucket size, leak rate'],
+  [1,0,'FLOW-CONTROL-MS-ACK','']]},
+ {t:'Paging and radio status',s:'TS 48.018',m:[
+  [1,0,'PAGING-PS','IMSI, P-TMSI, RAI / BVCI, QoS, DRX parameters'],
+  [1,0,'PAGING-CS','CS paging through the SGSN when Gs is used','?'],
+  [0,1,'RADIO-STATUS','TLLI, cause (e.g. radio contact lost) – the SGSN stops downlink data','?']]},
+ {t:'Suspend / resume (CS call without DTM)',s:'TS 48.018',m:[
+  [0,1,'SUSPEND','TLLI, RAI'],
+  [1,0,'SUSPEND-ACK','suspend reference number'],
+  ['=','CS call in progress'],
+  [0,1,'RESUME','TLLI, RAI, suspend reference number'],
+  [1,0,'RESUME-ACK','']]}];
+MF.mc=[
+ {t:'MGW registration',s:'TS 29.232 · ITU-T H.248.1',m:[
+  [1,0,'SERVICE CHANGE','ROOT termination, method Restart (or Failover), MGW profile'],
+  [0,1,'SERVICE CHANGE reply','MGC address (possibly a redirect)'],
+  ['*','Then audits (AUDIT VALUE / AUDIT CAPABILITIES) and inactivity timer supervision']]},
+ {t:'Call set-up: terminations in a context',s:'TS 29.232',d:'3GPP procedures such as Prepare Bearer, Establish Bearer and Change Through-Connection are carried out with H.248 ADD and MODIFY.',m:[
+  [0,1,'ADD request','context $ (choose); termination $ (e.g. RTP, Iu or Nb); codec, bearer address'],
+  [1,0,'ADD reply','context ID, termination ID, local MGW IP address / port'],
+  [0,1,'ADD request','second termination in the same context (the other call leg)'],
+  [1,0,'ADD reply',''],
+  [0,1,'MODIFY request','through-connection both-way, e.g. after answer'],
+  [1,0,'MODIFY reply','']]},
+ {t:'Events and release',s:'TS 29.232',m:[
+  [0,1,'MODIFY request','events descriptor (e.g. DTMF detection, bearer released), signals (tones, announcements)','?'],
+  [1,0,'MODIFY reply','','?'],
+  [1,0,'NOTIFY request','observed event, e.g. DTMF digit'],
+  [0,1,'NOTIFY reply',''],
+  [0,1,'SUBTRACT request','terminations of the released call leg'],
+  [1,0,'SUBTRACT reply','statistics (packets / octets sent and received, jitter, loss)']]}];
+MF.cd=[
+ {t:'Location update (new VLR)',s:'TS 29.002 (MAP, D interface)',d:'Each MAP operation runs in a TCAP dialogue (BEGIN … END).',p:['VLR (MSC Server)','HLR','Old VLR'],m:[
+  [0,1,'MAP sendAuthenticationInfo','IMSI, number of requested vectors','?'],
+  [1,0,'… result','authentication vectors (triplets or quintuplets)','?'],
+  [0,1,'MAP updateLocation','IMSI, MSC number, VLR number, LMSI'],
+  [1,2,'MAP cancelLocation','IMSI, cancellation type “update procedure”'],
+  [2,1,'… result',''],
+  [1,0,'MAP insertSubscriberData','MSISDN, category, bearer / teleservices, supplementary services, CAMEL subscription (CSI), ODB'],
+  [0,1,'… result',''],
+  [1,0,'MAP updateLocation result','HLR number']]},
+ {t:'Mobile-terminated call: routing (C and D)',s:'TS 29.002 · TS 23.018',p:['GMSC','HLR','VLR (MSC Server)'],m:[
+  [0,1,'MAP sendRoutingInfo','MSISDN, interrogation type, GMSC address'],
+  [1,2,'MAP provideRoamingNumber','IMSI, MSC number, (LMSI)'],
+  [2,1,'… result','MSRN'],
+  [1,0,'MAP sendRoutingInfo result','IMSI, MSRN'],
+  ['*','The GMSC routes the call to the MSRN (IAM / INVITE on Nc)']]},
+ {t:'SMS routing (C)',s:'TS 29.002',p:['SMS-GMSC','HLR'],m:[
+  [0,1,'MAP sendRoutingInfoForSM','MSISDN, SM-RP-PRI, service centre address'],
+  [1,0,'… result','IMSI, serving MSC and / or SGSN number for delivery']]},
+ {t:'Purge MS',s:'TS 29.002',m:[
+  [0,1,'MAP purgeMS','IMSI, VLR number – the VLR deleted the subscriber record'],
+  [1,0,'… result','freeze TMSI']]}];
+MF.f=[{t:'IMEI check',s:'TS 29.002',m:[
+  ['*','The MSC first gets the IMEI from the MS (MM IDENTITY REQUEST)'],
+  [0,1,'MAP checkIMEI','IMEI (or IMEISV)'],
+  [1,0,'… result','equipment status: white, grey or black list']]}];
+MF.gf=[{t:'IMEI check',s:'TS 29.002',m:[
+  ['*','The SGSN first gets the IMEISV from the MS (GMM IDENTITY REQUEST, or in the attach procedure)'],
+  [0,1,'MAP checkIMEI','IMEI (or IMEISV)'],
+  [1,0,'… result','equipment status: white, grey or black list']]}];
+MF.gr=[
+ {t:'GPRS attach / inter-SGSN RAU',s:'TS 29.002 (MAP, Gr)',p:['SGSN','HLR','Old SGSN'],m:[
+  [0,1,'MAP sendAuthenticationInfo','IMSI, number of vectors','?'],
+  [1,0,'… result','triplets or quintuplets','?'],
+  [0,1,'MAP updateGprsLocation','IMSI, SGSN number, SGSN address'],
+  [1,2,'MAP cancelLocation','cancellation type “update procedure”'],
+  [2,1,'… result',''],
+  [1,0,'MAP insertSubscriberData','GPRS subscription data: PDP contexts (APN, PDP type, QoS), MSISDN'],
+  [0,1,'… result',''],
+  [1,0,'MAP updateGprsLocation result','HLR number']]},
+ {t:'Purge MS',s:'TS 29.002',m:[
+  [0,1,'MAP purgeMS','IMSI, SGSN number'],
+  [1,0,'… result','freeze P-TMSI']]}];
+MF.gs=[
+ {t:'Combined GPRS / IMSI attach',s:'TS 29.018 (BSSAP+)',m:[
+  ['*','MS → SGSN: GMM ATTACH REQUEST, attach type “combined”'],
+  [0,1,'BSSAP+-LOCATION-UPDATE-REQUEST','IMSI, SGSN number, update type (IMSI attach), new LAI'],
+  ['*','The VLR performs a normal MAP updateLocation towards the HLR'],
+  [1,0,'BSSAP+-LOCATION-UPDATE-ACCEPT','LAI, new TMSI (optional)'],
+  [0,1,'BSSAP+-TMSI-REALLOCATION-COMPLETE','after the MS confirmed the TMSI (GMM ATTACH COMPLETE)','?']]},
+ {t:'CS paging through the SGSN',s:'TS 29.018',m:[
+  [1,0,'BSSAP+-PAGING-REQUEST','IMSI, VLR name, TMSI, LAI, channel needed'],
+  ['*','SGSN pages over Gb (PAGING-CS) or Iu; the MS answers on the CS side towards the MSC']]},
+ {t:'Detach',s:'TS 29.018',m:[
+  [0,1,'BSSAP+-IMSI-DETACH-INDICATION','IMSI, SGSN number, IMSI detach from non-GPRS service type'],
+  [1,0,'BSSAP+-IMSI-DETACH-ACK',''],
+  [0,1,'BSSAP+-GPRS-DETACH-INDICATION','IMSI, SGSN number, IMSI detach from GPRS service type','?'],
+  [1,0,'BSSAP+-GPRS-DETACH-ACK','','?']]}];
+MF.gc=[{t:'Network-requested PDP context activation',s:'TS 29.002 · TS 23.060',m:[
+  [0,1,'MAP sendRoutingInfoForGprs','IMSI – a packet arrived for a static PDP address'],
+  [1,0,'… result','SGSN address (or reason why the MS is not reachable)'],
+  ['*','GGSN → SGSN: PDU Notification Request (Gn)'],
+  [0,1,'MAP failureReport','the MS could not be reached – the HLR sets MNRG','?'],
+  [1,0,'MAP noteMsPresentForGprs','the MS became reachable again','?']]}];
+MF.nc=[
+ {t:'Call set-up with BICC',s:'ITU-T Q.1902 · Q.1970 (IPBCP) · TS 29.205',m:[
+  [0,1,'IAM','called / calling party number, nature of connection; supported codec list and bearer set-up direction (APM)'],
+  [1,0,'APM','selected codec; IPBCP bearer address exchange'],
+  [0,1,'APM','IPBCP: the other side’s bearer address'],
+  ['*','Which side sends the IPBCP Request and which answers Accepted depends on forward or backward bearer establishment'],
+  [1,0,'ACM','address complete – the called party is alerted'],
+  [1,0,'ANM','answer'],
+  ['=','release'],
+  [0,1,'REL','cause, e.g. 16 normal call clearing'],
+  [1,0,'RLC','']]},
+ {t:'Call set-up with SIP-I',s:'ITU-T Q.1912.5 · TS 29.231',m:[
+  [0,1,'INVITE','SDP offer (codecs, MGW IP / port); ISUP IAM encapsulated as MIME body'],
+  [1,0,'100 Trying',''],
+  [1,0,'180 Ringing / 183 Session Progress','SDP answer; ISUP ACM'],
+  [1,0,'200 OK','ISUP ANM'],
+  [0,1,'ACK',''],
+  ['=','release'],
+  [0,1,'BYE','ISUP REL'],
+  [1,0,'200 OK','ISUP RLC']]}];
+MF.nb=[{t:'Nb user plane over IP',s:'TS 29.414 · TS 29.415',m:[
+  ['*','Bearer addresses come from IPBCP (BICC) or SDP (SIP-I) on Nc and from H.248 on Mc'],
+  [0,1,'Nb UP INITIALISATION','support mode: RFCI set (allowed AMR rates)','?'],
+  [1,0,'INITIALISATION ACK','','?'],
+  [0,1,'RTP (speech)','e.g. AMR / AMR-WB frames over RTP / UDP; transcoder-free (TrFO) where possible'],
+  [1,0,'RTP (speech)','']]}];
+
+/* ---------- 3G UMTS / HSPA ---------- */
+MF.uu3g=[
+ {t:'RRC connection set-up',s:'TS 25.331',p:['UE','RNC (via Node B)','Core (MSC / SGSN)'],m:[
+  [0,1,'RRC|RRC CONNECTION REQUEST','CCCH on the RACH; initial UE identity (TMSI / P-TMSI / IMSI), establishment cause'],
+  [1,0,'RRC|RRC CONNECTION SETUP','CCCH on the FACH; U-RNTI, signalling radio bearers, target state CELL_DCH or CELL_FACH'],
+  [0,1,'RRC|RRC CONNECTION SETUP COMPLETE','DCCH; UE radio access capability, START values'],
+  [0,2,'RRC|INITIAL DIRECT TRANSFER','CN domain (CS / PS), NAS message, e.g. CM SERVICE REQUEST or ATTACH REQUEST → RANAP INITIAL UE MESSAGE']]},
+ {t:'Security and radio bearer set-up',s:'TS 25.331',p:['UE','RNC (via Node B)','Core (MSC / SGSN)'],m:[
+  [2,0,'RRC|DOWNLINK DIRECT TRANSFER','NAS AUTHENTICATION REQUEST (RAND, AUTN)','?'],
+  [0,2,'RRC|UPLINK DIRECT TRANSFER','NAS AUTHENTICATION RESPONSE (RES)','?'],
+  [1,0,'RRC|SECURITY MODE COMMAND','integrity (UIA1 / UIA2), ciphering (UEA0 / 1 / 2), CN domain – after RANAP SECURITY MODE COMMAND'],
+  [0,1,'RRC|SECURITY MODE COMPLETE',''],
+  [1,0,'RRC|RADIO BEARER SETUP','after RANAP RAB ASSIGNMENT REQUEST: RAB info, transport and physical channels (DCH, or HS-DSCH / E-DCH)'],
+  [0,1,'RRC|RADIO BEARER SETUP COMPLETE','']]},
+ {t:'Soft handover (active set update)',s:'TS 25.331',m:[
+  [1,0,'RRC|MEASUREMENT CONTROL','intra-frequency events 1a / 1b / 1c, reporting range, time to trigger','?'],
+  [0,1,'RRC|MEASUREMENT REPORT','event 1a – a cell enters the reporting range (CPICH Ec/No or RSCP)'],
+  ['*','RNC adds the radio link: NBAP RADIO LINK SETUP / ADDITION, or RNSAP over Iur for a DRNC cell'],
+  [1,0,'RRC|ACTIVE SET UPDATE','radio links to add / remove'],
+  [0,1,'RRC|ACTIVE SET UPDATE COMPLETE','']]},
+ {t:'HSDPA serving cell change',s:'TS 25.331 · TS 25.308',m:[
+  [0,1,'RRC|MEASUREMENT REPORT','event 1d – change of best cell'],
+  [1,0,'RRC|PHYSICAL CHANNEL RECONFIGURATION','new serving HS-DSCH cell (RADIO BEARER or TRANSPORT CHANNEL RECONFIGURATION can be used as well)'],
+  [0,1,'RRC|PHYSICAL CHANNEL RECONFIGURATION COMPLETE','']]},
+ {t:'Cell update and state change',s:'TS 25.331',m:[
+  [0,1,'RRC|CELL UPDATE','cause: cell reselection, uplink data, paging response, periodic, radio link failure'],
+  [1,0,'RRC|CELL UPDATE CONFIRM','new C-RNTI / U-RNTI, possibly a new RRC state'],
+  [0,1,'RRC|UTRAN MOBILITY INFORMATION CONFIRM','when new identities were assigned (other confirmations depending on the reconfiguration)','?']]},
+ {t:'Paging and release',s:'TS 25.331',m:[
+  [1,0,'RRC|PAGING TYPE 1','PCCH (idle, CELL_PCH, URA_PCH): UE identity, CN domain, paging cause'],
+  ['*','The UE answers with RRC CONNECTION REQUEST (idle) or CELL UPDATE (CELL_PCH / URA_PCH)'],
+  ['=','later'],
+  [1,0,'RRC|RRC CONNECTION RELEASE','release cause'],
+  [0,1,'RRC|RRC CONNECTION RELEASE COMPLETE','unacknowledged mode, sent several times']]}];
+MF.iub=[
+ {t:'Cell set-up',s:'TS 25.433 (NBAP)',m:[
+  [0,1,'RESOURCE STATUS INDICATION','local cells and their capacity after Node B start-up'],
+  [1,0,'AUDIT REQUEST','','?'],
+  [0,1,'AUDIT RESPONSE','','?'],
+  [1,0,'CELL SETUP REQUEST','C-ID, UARFCN, primary scrambling code, maximum transmission power'],
+  [0,1,'CELL SETUP RESPONSE',''],
+  [1,0,'COMMON TRANSPORT CHANNEL SETUP REQUEST','S-CCPCH (FACH / PCH) or PRACH (RACH)'],
+  [0,1,'COMMON TRANSPORT CHANNEL SETUP RESPONSE','transport layer address / binding ID'],
+  [1,0,'SYSTEM INFORMATION UPDATE REQUEST','SIB segments and their BCH scheduling'],
+  [0,1,'SYSTEM INFORMATION UPDATE RESPONSE','']]},
+ {t:'Radio link set-up (dedicated channel)',s:'TS 25.433 · TS 25.427 (FP)',m:[
+  [1,0,'RADIO LINK SETUP REQUEST','CRNC communication context ID, UL / DL DPCH info, scrambling code, TFCS, (HS-DSCH / E-DCH info)'],
+  [0,1,'RADIO LINK SETUP RESPONSE','Node B communication context ID, transport layer address and binding ID per DCH'],
+  ['*','Transport bearers: AAL2 (ALCAP) or IP / UDP, identified by the binding ID'],
+  [1,0,'DL SYNCHRONISATION','FP control frame with the CFN'],
+  [0,1,'UL SYNCHRONISATION','FP: time of arrival'],
+  [0,1,'RADIO LINK RESTORE INDICATION','uplink synchronisation achieved']]},
+ {t:'Synchronised radio link reconfiguration',s:'TS 25.433',m:[
+  [1,0,'RADIO LINK RECONFIGURATION PREPARE','new TFCS / channels / HS-DSCH configuration'],
+  [0,1,'RADIO LINK RECONFIGURATION READY',''],
+  [1,0,'RADIO LINK RECONFIGURATION COMMIT','activation CFN – the UE gets the same CFN in the RRC message']]},
+ {t:'HSDPA flow control (FP)',s:'TS 25.435',m:[
+  [1,0,'HS-DSCH CAPACITY REQUEST','FP control frame: scheduling priority, user buffer size'],
+  [0,1,'HS-DSCH CAPACITY ALLOCATION','credits, interval, repetition period'],
+  [1,0,'HS-DSCH DATA FRAME','MAC-d PDUs (frame type 1 or 2) within the granted credits']]},
+ {t:'Radio link deletion and failure',s:'TS 25.433',m:[
+  [0,1,'RADIO LINK FAILURE INDICATION','e.g. synchronisation failure','?'],
+  [1,0,'RADIO LINK DELETION REQUEST',''],
+  [0,1,'RADIO LINK DELETION RESPONSE','']]}];
+MF.iur=[
+ {t:'Soft handover to a DRNC cell',s:'TS 25.423 (RNSAP)',p:['Serving RNC','Drift RNC'],m:[
+  [0,1,'RADIO LINK SETUP REQUEST','SRNC-ID, S-RNTI, target cell C-ID, UL / DL DPCH info, TFCS, DCH info'],
+  ['*','DRNC sets up the radio link in its Node B (NBAP RADIO LINK SETUP)'],
+  [1,0,'RADIO LINK SETUP RESPONSE','radio link info, transport layer address / binding ID'],
+  ['*','SRNC → UE: RRC ACTIVE SET UPDATE'],
+  [0,1,'RADIO LINK ADDITION REQUEST','further cells under the same DRNC','?'],
+  [1,0,'RADIO LINK ADDITION RESPONSE','','?'],
+  [0,1,'RADIO LINK DELETION REQUEST','','?'],
+  [1,0,'RADIO LINK DELETION RESPONSE','','?']]},
+ {t:'Cell update in a DRNC cell',s:'TS 25.423',p:['Serving RNC','Drift RNC'],m:[
+  [1,0,'UPLINK SIGNALLING TRANSFER INDICATION','the RRC CELL UPDATE / URA UPDATE received in the DRNC cell, C-RNTI'],
+  [0,1,'DOWNLINK SIGNALLING TRANSFER REQUEST','RRC CELL UPDATE CONFIRM to send in that cell']]},
+ {t:'SRNS relocation, UE not involved',s:'TS 25.423 · TS 25.413',p:['Source RNC','Target RNC'],m:[
+  ['*','Core network: RANAP RELOCATION REQUIRED / REQUEST / COMMAND on Iu'],
+  [0,1,'RELOCATION COMMIT','the target RNC takes over the SRNC role'],
+  ['*','Target RNC → core: RANAP RELOCATION DETECT and RELOCATION COMPLETE']]}];
+const mfIuSec=(cn,nas)=>({t:'Connection set-up and security',s:'TS 25.413 (RANAP)',m:[
+  [0,1,'INITIAL UE MESSAGE','in SCCP CR; CN domain '+cn+', LAI'+(cn==='PS'?' + RAC':'')+', SAI, NAS PDU ('+nas+'), Iu signalling connection ID'],
+  [1,0,'SCCP CC',''],
+  [1,0,'DIRECT TRANSFER','NAS '+(cn==='PS'?'GMM AUTHENTICATION AND CIPHERING REQUEST':'AUTHENTICATION REQUEST'),'?'],
+  [0,1,'DIRECT TRANSFER','NAS response','?'],
+  [1,0,'COMMON ID','IMSI','?'],
+  [1,0,'SECURITY MODE COMMAND','integrity protection info (UIA, IK), encryption info (UEA, CK)'],
+  [0,1,'SECURITY MODE COMPLETE','chosen algorithms']]});
+const mfIuRel=pmm=>({t:'Iu release',s:'TS 25.413',m:[
+  [0,1,'IU RELEASE REQUEST','cause, e.g. '+(pmm?'user inactivity':'radio connection with UE lost'),'?'],
+  [1,0,'IU RELEASE COMMAND','cause'],
+  [0,1,'IU RELEASE COMPLETE',pmm?'RAB data volume report, DL N-PDU sequence numbers':''],
+  [1,0,'SCCP RLSD',''],
+  [0,1,'SCCP RLC',''],
+  ...(pmm?[['*','With Direct Tunnel the SGSN re-points the GGSN / SGW to itself (Update PDP Context / Release Access Bearers)']]:[])]});
+const mfReloc=cn=>({t:'SRNS relocation',s:'TS 25.413',p:['Source RNC',cn,'Target RNC'],m:[
+  [0,1,'RELOCATION REQUIRED','relocation type (UE involved / not involved), cause, target RNC-ID, source-to-target transparent container'],
+  [1,2,'RELOCATION REQUEST','RABs to set up, security info, transparent container'],
+  [2,1,'RELOCATION REQUEST ACKNOWLEDGE','target-to-source container (RRC message for the UE), RABs set up'],
+  [1,0,'RELOCATION COMMAND',''],
+  ['*','UE involved: the source sends the RRC message to the UE; not involved: RNSAP RELOCATION COMMIT over Iur'],
+  [2,1,'RELOCATION DETECT',''],
+  [2,1,'RELOCATION COMPLETE',''],
+  [1,0,'IU RELEASE COMMAND','to the source RNC'],
+  [0,1,'IU RELEASE COMPLETE','']]});
+MF.iucscp=[
+ mfIuSec('CS','e.g. CM SERVICE REQUEST'),
+ {t:'RAB assignment (speech)',s:'TS 25.413',m:[
+  [1,0,'RAB ASSIGNMENT REQUEST','RAB ID, RAB parameters (conversational, AMR sub-flows), user plane mode (support mode), MGW transport layer address + binding ID'],
+  ['*','RNC sets up the radio bearer (RRC RADIO BEARER SETUP) and starts the Iu UP towards the MGW'],
+  [0,1,'RAB ASSIGNMENT RESPONSE','RABs set up (or failed, with cause)']]},
+ mfIuRel(false),
+ {t:'Paging',s:'TS 25.413',m:[[1,0,'PAGING','CN domain CS, IMSI, TMSI, paging area (LAI), paging cause']]},
+ mfReloc('MSC Server')];
+MF.iucsup=[
+ {t:'Iu UP initialisation (support mode)',s:'TS 25.415',d:'Normally started by the RNC after RAB assignment.',m:[
+  [0,1,'INITIALISATION','control PDU (type 14): RFCI set = allowed AMR sub-flow combinations, Iu UP mode version, TTI'],
+  [1,0,'INITIALISATION positive ACK',''],
+  [0,1,'Iu UP data PDU (uplink)','PDU type 0 / 1: AMR frame, RFCI, frame number'],
+  [1,0,'Iu UP data PDU (downlink)','']]},
+ {t:'Rate control and time alignment',s:'TS 25.415',m:[
+  [1,0,'RATE CONTROL','maximum allowed rate (RFCI indicators) – either side can send it'],
+  [0,1,'RATE CONTROL ACK',''],
+  [0,1,'TIME ALIGNMENT','delay or advance the downlink frames (500 µs steps)'],
+  [1,0,'TIME ALIGNMENT ACK','']]}];
+MF.iups=[
+ mfIuSec('PS','ATTACH REQUEST or SERVICE REQUEST'),
+ {t:'RAB assignment (PDP context)',s:'TS 25.413 · TS 23.060',m:[
+  ['*','UE → SGSN: SM ACTIVATE PDP CONTEXT REQUEST; SGSN ↔ GGSN: Create PDP Context (Gn)'],
+  [1,0,'RAB ASSIGNMENT REQUEST','RAB ID (= NSAPI), RAB parameters (traffic class, MBR / GBR), SGSN user-plane address + TEID – or the GGSN’s with Direct Tunnel'],
+  [0,1,'RAB ASSIGNMENT RESPONSE','RNC user-plane address + downlink TEID'],
+  ['*','SGSN → UE: SM ACTIVATE PDP CONTEXT ACCEPT (in DIRECT TRANSFER)']]},
+ mfIuRel(true),
+ {t:'Paging',s:'TS 25.413',m:[[1,0,'PAGING','CN domain PS, IMSI, P-TMSI, paging area (RAI)']]},
+ mfReloc('SGSN'),
+ ...mfGTPU({d:'Iu-PS user plane between the RNC and the SGSN (or the GGSN / SGW with Direct Tunnel).'}).slice(0,2)];
+MF.dt=[
+ {t:'Direct Tunnel set-up',s:'TS 23.060 · TS 29.060',p:['RNC','SGSN','GGSN'],m:[
+  [1,2,'Create PDP Context Request','Gn: APN, QoS, SGSN control address'],
+  [2,1,'Create PDP Context Response','GGSN user-plane address + TEID'],
+  [1,0,'RAB ASSIGNMENT REQUEST','Iu-PS: GGSN user-plane address + TEID'],
+  [0,1,'RAB ASSIGNMENT RESPONSE','RNC user-plane address + TEID'],
+  [1,2,'Update PDP Context Request','Direct Tunnel Flags (DTI = 1), RNC user-plane address + TEID'],
+  [2,1,'Update PDP Context Response',''],
+  [0,2,'G-PDU (uplink)','RNC → GGSN directly'],
+  [2,0,'G-PDU (downlink)','GGSN → RNC directly']]},
+ {t:'Idle: data goes to the SGSN',s:'TS 23.060',p:['RNC','SGSN','GGSN'],m:[
+  [0,1,'IU RELEASE COMPLETE','after IU RELEASE COMMAND (Iu-PS)'],
+  [1,2,'Update PDP Context Request','SGSN user-plane address + TEID, no Direct Tunnel'],
+  [2,1,'Update PDP Context Response',''],
+  [2,1,'G-PDU (downlink)','now arrives at the SGSN'],
+  ['*','The SGSN buffers and pages the UE; after the Service Request the direct tunnel is set up again']]},
+ {t:'Error Indication from the RNC',s:'TS 23.060 · TS 29.060',p:['RNC','SGSN','GGSN'],m:[
+  [2,0,'G-PDU','the RNC has no context for the TEID (e.g. after an RNC restart)'],
+  [0,2,'Error Indication','TEID Data I + peer address'],
+  [2,1,'Update PDP Context Request','Direct Tunnel Flags with EI = 1'],
+  [1,2,'Update PDP Context Response',''],
+  ['*','The SGSN re-establishes the RAB or releases the PDP context']]}];
+MF.gn=[
+ {t:'PDP context activation',s:'TS 29.060 (GTPv1)',m:[
+  [0,1,'Create PDP Context Request','IMSI, MSISDN, APN, NSAPI, QoS profile, end user address (empty = dynamic), SGSN addresses + TEID-C / TEID-U, RAT type, ULI'],
+  [1,0,'Create PDP Context Response','cause 128 (request accepted), end user address (UE IP), GGSN addresses + TEIDs, negotiated QoS, charging ID'],
+  [0,1,'G-PDU','user data on GTP-U (TEID of the GGSN)'],
+  [1,0,'G-PDU','']]},
+ {t:'PDP context modification',s:'TS 29.060',d:'The GGSN can also start an Update PDP Context, e.g. for a QoS change from the PCRF.',m:[
+  [0,1,'Update PDP Context Request','new SGSN address / TEIDs (inter-SGSN RAU) or RNC address / TEID (Direct Tunnel), QoS, RAT type / ULI change'],
+  [1,0,'Update PDP Context Response','cause, negotiated QoS']]},
+ {t:'PDP context deactivation',s:'TS 29.060',d:'Either side can start it.',m:[
+  [0,1,'Delete PDP Context Request','NSAPI, teardown indicator (all contexts of this PDP address)'],
+  [1,0,'Delete PDP Context Response','cause']]},
+ {t:'Network-requested PDP context activation',s:'TS 29.060 · TS 23.060',m:[
+  ['*','GGSN ↔ HLR: MAP sendRoutingInfoForGprs (Gc) to find the SGSN'],
+  [1,0,'PDU Notification Request','IMSI, end user address (static), APN'],
+  [0,1,'PDU Notification Response','cause'],
+  ['*','SGSN → MS: SM REQUEST PDP CONTEXT ACTIVATION; the MS then starts a normal activation']]},
+ {t:'Inter-SGSN routing area update',s:'TS 29.060 · TS 23.060',p:['New SGSN','Old SGSN'],m:[
+  [0,1,'SGSN Context Request','old RAI, P-TMSI (TLLI), P-TMSI signature, new SGSN address'],
+  [1,0,'SGSN Context Response','MM context (security), PDP contexts'],
+  [0,1,'SGSN Context Acknowledge','new SGSN TEIDs – the old SGSN may now forward buffered data'],
+  ['*','New SGSN → GGSN: Update PDP Context Request with its addresses and TEIDs']]},
+ {t:'Path supervision (Echo)',s:'TS 29.060',m:[
+  [0,1,'Echo Request','either side, per peer'],
+  [1,0,'Echo Response','Recovery IE = restart counter; a new value means the peer restarted → its contexts are deleted']]}];
+const mfRadius=(gw,ctx)=>({t:'AAA with RADIUS (optional)',s:'TS 29.061',d:'Used for APNs configured for RADIUS authentication / accounting (e.g. enterprise APNs). UDP 1812 / 1813; Diameter (NASREQ) is the alternative.',p:[gw,'AAA server'],m:[
+  [0,1,'Access-Request','User-Name / password or CHAP from the PCO, 3GPP-IMSI, Calling-Station-Id (MSISDN), Called-Station-Id (APN)'],
+  [1,0,'Access-Accept','Framed-IP-Address if the AAA allocates the address; optional DNS / profile attributes'],
+  [0,1,'Accounting-Request (Start)','Acct-Session-Id, Framed-IP-Address, 3GPP-Charging-Id, serving node address'],
+  [1,0,'Accounting-Response',''],
+  ['=',ctx+' released'],
+  [0,1,'Accounting-Request (Stop)','session time, input / output octets, Acct-Terminate-Cause'],
+  [1,0,'Accounting-Response','']]});
+const mfUserIP=(o)=>({t:'User traffic',s:o.s,d:o.d,m:[
+  [0,1,'IP packet (uplink)','decapsulated from GTP-U, source address = UE address'],
+  [1,0,'IP packet (downlink)',o.dl]]});
+MF.gi=[mfUserIP({s:'TS 29.061',dl:'routed to the GGSN by the UE address pool route; enterprise APNs may use L2TP, IPsec or GRE'}),mfRadius('GGSN','PDP context')];
+const mfGy=(gw,sess)=>[
+ {t:'Online charging (session-based)',s:'RFC 4006 · TS 32.299 · TS 32.251',p:[gw,'OCS'],m:[
+  [0,1,'CCR-Initial','CC-Request-Type 1, Session-Id, Subscription-Id (MSISDN / IMSI), MSCC with Requested-Service-Unit per Rating-Group, PS-Information'],
+  [1,0,'CCA-Initial','Result-Code 2001; MSCC: Granted-Service-Unit (volume / time), Validity-Time, optionally Final-Unit-Indication'],
+  [0,1,'CCR-Update','Used-Service-Unit, Reporting-Reason (e.g. QUOTA_EXHAUSTED, VALIDITY_TIME), new Requested-Service-Unit'],
+  [1,0,'CCA-Update','new grant, or Result-Code 4012 (credit limit reached) for the rating group'],
+  ['=',sess+' released'],
+  [0,1,'CCR-Termination','final Used-Service-Unit, Termination-Cause'],
+  [1,0,'CCA-Termination','']]},
+ {t:'Re-authorisation by the OCS',s:'RFC 4006 · TS 32.299',p:[gw,'OCS'],m:[
+  [1,0,'RAR','Re-Auth-Request-Type, optionally Rating-Group(s) – e.g. tariff change or new balance'],
+  [0,1,'RAA',''],
+  [0,1,'CCR-Update','usage so far + request for a new quota'],
+  [1,0,'CCA-Update','']]}];
+MF.gy3g=[...mfGy('GGSN','PDP context'),
+ {t:'Offline charging: CDR transfer (Ga, GTP′)',s:'TS 32.295',d:'UDP or TCP port 3386.',p:['GGSN','Charging Gateway'],m:[
+  [0,1,'Node Alive Request','after a restart of the GGSN','?'],
+  [1,0,'Node Alive Response','','?'],
+  [0,1,'Data Record Transfer Request','Send Data Record Packet: G-CDR(s), sequence number'],
+  [1,0,'Data Record Transfer Response','cause “request accepted”'],
+  [0,1,'Echo Request','path supervision','?'],
+  [1,0,'Echo Response','','?']]},
+ mfDia('Auth-Application-Id 4 (Diameter Credit Control)')];
+const mfGx=(g3)=>[
+ {t:g3?'PDP context activation (IP-CAN session set-up)':'PDN connection set-up (IP-CAN session)',s:'TS 29.212',m:[
+  [0,1,'CCR-Initial','CC-Request-Type 1, Subscription-Id, Framed-IP-Address, Called-Station-Id (APN), IP-CAN-Type, RAT-Type, '+(g3?'requested QoS, Bearer-Usage':'default EPS bearer QoS, APN-AMBR')+', 3GPP-User-Location-Info'],
+  [1,0,'CCA-Initial','Charging-Rule-Install (PCC rules)'+(g3?'':', default bearer QoS / APN-AMBR')+', Event-Trigger list'+(g3?', Bearer-Control-Mode':'')]]},
+ {t:g3?'PCRF-initiated rule change':'PCRF-initiated rule push (e.g. VoLTE dedicated bearer)',s:'TS 29.212 · TS 29.213',m:[
+  ['*','Trigger: e.g. Rx AAR from the P-CSCF, or a subscription / usage change'],
+  [1,0,'RAR','Charging-Rule-Install / Remove'+(g3?'':' – e.g. a rule with QCI 1, GBR and the media flow descriptions')],
+  [0,1,'RAA',''],
+  ['*',g3?'GGSN applies it by PDP context modification, or (UE / NW bearer control) a network-requested secondary PDP context':'PGW starts a dedicated bearer (S5/S8 Create Bearer Request)'],
+  [0,1,'CCR-Update','Event-Trigger SUCCESSFUL_RESOURCE_ALLOCATION, Charging-Rule-Report','?'],
+  [1,0,'CCA-Update','','?']]},
+ {t:'Event and usage report',s:'TS 29.212',m:[
+  [0,1,'CCR-Update','Event-Trigger, e.g. RAT_CHANGE, USER_LOCATION_CHANGE, USAGE_REPORT (Usage-Monitoring-Information)'],
+  [1,0,'CCA-Update','updated rules, QoS or usage-monitoring thresholds']]},
+ {t:'Session termination',s:'TS 29.212',m:[
+  [0,1,'CCR-Termination','Termination-Cause, final usage report'],
+  [1,0,'CCA-Termination','']]},
+ mfDia('Auth-Application-Id 16777238 (Gx)')];
+MF.gx3g=mfGx(true);
+/* ---------- 4G LTE / EPC ---------- */
+MF.uu3g.forEach(f=>{if(!f.p)f.p=['UE','RNC (via Node B)'];});
+const mfLteUu=(c5)=>[
+ {t:'Random access and RRC connection set-up',s:'TS 36.321 · TS 36.331',m:[
+  [0,1,'MAC|Random Access Preamble (Msg1)','PRACH; preamble from the contention-based set'],
+  [1,0,'MAC|Random Access Response (Msg2)','PDSCH addressed by RA-RNTI: timing advance, UL grant, temporary C-RNTI'],
+  [0,1,'RRC|RRCConnectionRequest (Msg3)','CCCH; ue-Identity (S-TMSI or random value), establishmentCause'],
+  [1,0,'RRC|RRCConnectionSetup (Msg4)','SRB1 configuration; also resolves contention'],
+  [0,1,'RRC|RRCConnectionSetupComplete','selected PLMN, '+(c5?'registered AMF, S-NSSAI list, dedicatedInfoNAS (5GS REGISTRATION REQUEST or SERVICE REQUEST)':'registered MME (GUMMEI), dedicatedInfoNAS (ATTACH REQUEST, TAU REQUEST or SERVICE REQUEST)')]]},
+ {t:'Security, capabilities and bearers',s:'TS 36.331',m:[
+  [1,0,'RRC|SecurityModeCommand','AS integrity (EIA) and ciphering (EEA) algorithms'],
+  [0,1,'RRC|SecurityModeComplete',''],
+  [1,0,'RRC|UECapabilityEnquiry','requested RAT types (E-UTRA, NR, UTRA, GERAN …)','?'],
+  [0,1,'RRC|UECapabilityInformation','','?'],
+  [1,0,'RRC|RRCConnectionReconfiguration','SRB2, DRBs ('+(c5?'mapped from QoS flows, with SDAP':'one per EPS bearer')+'), measConfig, dedicatedInfoNAS (e.g. '+(c5?'REGISTRATION ACCEPT':'ATTACH ACCEPT')+')'],
+  [0,1,'RRC|RRCConnectionReconfigurationComplete',''],
+  [0,1,'RRC|ULInformationTransfer','dedicatedInfoNAS (e.g. '+(c5?'REGISTRATION COMPLETE':'ATTACH COMPLETE')+')']]},
+ {t:'Handover',s:'TS 36.331',d:'The UE completes the handover towards the target cell: random access, then RRCConnectionReconfigurationComplete.',m:[
+  [1,0,'RRC|RRCConnectionReconfiguration','measConfig: e.g. event A3 (neighbour better than serving + offset), A5, B1 / B2 (inter-RAT)','?'],
+  [0,1,'RRC|MeasurementReport','measId, RSRP / RSRQ of the serving and neighbour cells'],
+  ['*','Source prepares the target ('+(c5?'Xn or N2':'X2 or S1')+' HANDOVER REQUEST)'],
+  [1,0,'RRC|RRCConnectionReconfiguration','mobilityControlInfo: target PCI, new C-RNTI, dedicated RACH preamble – the handover command']]},
+ {t:'Re-establishment',s:'TS 36.331',m:[
+  [0,1,'RRC|RRCConnectionReestablishmentRequest','C-RNTI, PCI and shortMAC-I of the previous cell; cause handoverFailure / reconfigurationFailure / otherFailure'],
+  [1,0,'RRC|RRCConnectionReestablishment','SRB1 configuration, NCC'],
+  [0,1,'RRC|RRCConnectionReestablishmentComplete',''],
+  ['=','or, if the cell has no UE context'],
+  [1,0,'RRC|RRCConnectionReestablishmentReject','the UE goes to idle and sets up a new connection','?']]},
+ {t:c5?'Paging, release and RRC_INACTIVE':'Paging and release',s:'TS 36.331',m:[
+  [1,0,'RRC|Paging','PCCH (P-RNTI): paging record list ('+(c5?'5G-S-TMSI or I-RNTI':'S-TMSI, cn-Domain ps / cs')+'), system information change'],
+  [1,0,'RRC|RRCConnectionRelease',c5?'releaseCause; with rrc-InactiveConfig the UE goes to RRC_INACTIVE (I-RNTI, RAN notification area)':'releaseCause, idleModeMobilityControlInfo (priorities), redirectedCarrierInfo (e.g. CS fallback)'],
+  ...(c5?[['=','later, from RRC_INACTIVE'],[0,1,'RRC|RRCConnectionResumeRequest','resumeIdentity (I-RNTI), shortResumeMAC-I, resumeCause'],[1,0,'RRC|RRCConnectionResume',''],[0,1,'RRC|RRCConnectionResumeComplete','']]:[])]}];
+MF.lteuu=mfLteUu(false);
+MF.lteuu5gc=mfLteUu(true);
+MF.s1mme=[
+ {t:'S1 Setup',s:'TS 36.413 (S1AP)',m:[
+  ['*','SCTP association set up by the eNodeB to MME port 36412 (INIT, INIT ACK, COOKIE ECHO, COOKIE ACK); S1AP uses PPID 18'],
+  [0,1,'S1 SETUP REQUEST','Global eNB ID, eNB name, supported TAs (TAC + broadcast PLMNs), default paging DRX'],
+  [1,0,'S1 SETUP RESPONSE','MME name, served GUMMEIs, relative MME capacity'],
+  ['=','or'],
+  [1,0,'S1 SETUP FAILURE','cause, Time To Wait','?']]},
+ {t:'Attach (initial context set-up)',s:'TS 36.413 · TS 23.401',m:[
+  [0,1,'INITIAL UE MESSAGE','eNB UE S1AP ID, NAS PDU (ATTACH REQUEST + PDN CONNECTIVITY REQUEST), TAI, ECGI, RRC establishment cause'],
+  [1,0,'DOWNLINK NAS TRANSPORT','MME UE S1AP ID; NAS AUTHENTICATION REQUEST'],
+  [0,1,'UPLINK NAS TRANSPORT','NAS AUTHENTICATION RESPONSE'],
+  [1,0,'DOWNLINK NAS TRANSPORT','NAS SECURITY MODE COMMAND'],
+  [0,1,'UPLINK NAS TRANSPORT','NAS SECURITY MODE COMPLETE'],
+  ['*','MME ↔ HSS: S6a ULR / ULA; MME ↔ SGW: S11 Create Session'],
+  [1,0,'INITIAL CONTEXT SETUP REQUEST','UE-AMBR, E-RABs to set up (QCI, ARP, SGW S1-U F-TEID), KeNB, UE security capabilities, NAS PDU (ATTACH ACCEPT + ACTIVATE DEFAULT EPS BEARER CONTEXT REQUEST)'],
+  [0,1,'UE CAPABILITY INFO INDICATION','UE radio capability, if the eNB fetched it','?'],
+  [0,1,'INITIAL CONTEXT SETUP RESPONSE','E-RABs set up with the eNB S1-U F-TEID'],
+  [0,1,'UPLINK NAS TRANSPORT','ATTACH COMPLETE + ACTIVATE DEFAULT EPS BEARER CONTEXT ACCEPT'],
+  ['*','MME → SGW: Modify Bearer Request with the eNB F-TEID (S11)']]},
+ {t:'Service request (idle → connected)',s:'TS 36.413 · TS 23.401',m:[
+  [0,1,'INITIAL UE MESSAGE','NAS SERVICE REQUEST, S-TMSI'],
+  [1,0,'INITIAL CONTEXT SETUP REQUEST','E-RABs with the SGW F-TEIDs, KeNB'],
+  [0,1,'INITIAL CONTEXT SETUP RESPONSE','eNB F-TEIDs'],
+  ['*','MME → SGW: Modify Bearer Request (S11)']]},
+ {t:'Paging',s:'TS 36.413',m:[
+  [1,0,'PAGING','UE identity index value, UE paging identity (S-TMSI or IMSI), CN domain (PS / CS), TAI list, optional paging DRX / priority'],
+  ['*','The eNB pages in all cells of the listed TAs; the UE answers with a Service Request (or Extended Service Request for CS fallback)']]},
+ {t:'Dedicated bearer set-up',s:'TS 36.413',m:[
+  ['*','Triggered by S11 Create Bearer Request'],
+  [1,0,'E-RAB SETUP REQUEST','E-RAB ID, QCI / ARP / GBR, SGW S1-U F-TEID, NAS PDU (ACTIVATE DEDICATED EPS BEARER CONTEXT REQUEST)'],
+  [0,1,'E-RAB SETUP RESPONSE','eNB S1-U F-TEID'],
+  [0,1,'UPLINK NAS TRANSPORT','ACTIVATE DEDICATED EPS BEARER CONTEXT ACCEPT']]},
+ {t:'UE context release (to idle)',s:'TS 36.413 · TS 23.401',m:[
+  [0,1,'UE CONTEXT RELEASE REQUEST','cause, e.g. user inactivity or radio connection with UE lost'],
+  ['*','MME → SGW: Release Access Bearers Request (S11)'],
+  [1,0,'UE CONTEXT RELEASE COMMAND','UE S1AP IDs, cause'],
+  [0,1,'UE CONTEXT RELEASE COMPLETE','']]},
+ {t:'X2 handover: path switch',s:'TS 36.413',p:['eNodeB (target)','MME'],m:[
+  [0,1,'PATH SWITCH REQUEST','E-RABs with the new eNB F-TEIDs, source MME UE S1AP ID, ECGI, TAI, UE security capabilities'],
+  ['*','MME → SGW: Modify Bearer Request; the SGW sends End Marker to the source eNB'],
+  [1,0,'PATH SWITCH REQUEST ACKNOWLEDGE','security context (NH, NCC), E-RABs switched']]},
+ {t:'S1 handover',s:'TS 36.413 · TS 23.401',p:['Source eNodeB','MME','Target eNodeB'],m:[
+  [0,1,'HANDOVER REQUIRED','handover type intraLTE, cause, target ID, source-to-target transparent container'],
+  [1,2,'HANDOVER REQUEST','E-RABs to set up (SGW F-TEIDs), security context, transparent container'],
+  [2,1,'HANDOVER REQUEST ACKNOWLEDGE','E-RABs admitted (target and forwarding F-TEIDs), target-to-source container (the RRC handover command)'],
+  [1,0,'HANDOVER COMMAND','target-to-source container, E-RABs subject to forwarding'],
+  [0,1,'ENB STATUS TRANSFER','PDCP SN / HFN status'],
+  [1,2,'MME STATUS TRANSFER',''],
+  [2,1,'HANDOVER NOTIFY','the UE has arrived (ECGI, TAI)'],
+  ['*','MME → SGW: Modify Bearer Request with the target eNB F-TEIDs'],
+  [1,0,'UE CONTEXT RELEASE COMMAND','cause “successful handover”'],
+  [0,1,'UE CONTEXT RELEASE COMPLETE','']]},
+ {t:'EN-DC: S1-U moves to the en-gNB',s:'TS 36.413 · TS 37.340',m:[
+  ['*','After X2 SgNB Addition for an SCG (split) bearer'],
+  [0,1,'E-RAB MODIFICATION INDICATION','E-RABs to modify: en-gNB S1-U F-TEID'],
+  ['*','MME → SGW: Modify Bearer Request (S11) – the downlink now goes to the en-gNB'],
+  [1,0,'E-RAB MODIFICATION CONFIRM','']]}];
+MF.s1u=mfGTPU({em:{p:['Source eNodeB','SGW','Target eNodeB'],sw:'Path switch: the MME gives the SGW the target eNB F-TEID (S11 Modify Bearer Request)',fwd:'X2-U'}});
+MF.s1uc=mfGTPU({em:{p:['Source eNodeB','SGW-U','Target eNodeB'],sw:'Path switch: S11 Modify Bearer Request to the SGW-C, which updates the downlink FAR in the SGW-U (Sxa Session Modification)',fwd:'X2-U'}});
+const mfNsaS1u=(c)=>({t:'SCG bearer: downlink moves to the en-gNB',s:'TS 37.340 · TS 23.401',p:['en-gNB','MeNB (eNodeB)','MME','SGW'+(c?'-C / -U':'')],m:[
+  ['*','X2: SgNB Addition (or Modification) for an SCG / SCG split bearer'],
+  [1,2,'E-RAB MODIFICATION INDICATION','S1-MME: en-gNB S1-U F-TEID'],
+  [2,3,'Modify Bearer Request','S11: en-gNB F-TEID'+(c?'; the SGW-C updates the SGW-U over Sxa':'')],
+  [3,2,'Modify Bearer Response',''],
+  [3,1,'End Marker','on the old S1-U path to the MeNB'],
+  [3,0,'G-PDU (downlink)','now sent to the en-gNB'],
+  [0,3,'G-PDU (uplink)','when the uplink is on the SCG'],
+  [2,1,'E-RAB MODIFICATION CONFIRM','']]});
+MF.s1unsa=[mfNsaS1u(false),...mfGTPU().slice(1)];
+MF.s1unsac=[mfNsaS1u(true),...mfGTPU().slice(1)];
+MF.x2lte=[
+ {t:'X2 Setup',s:'TS 36.423 (X2AP)',p:['eNodeB 1','eNodeB 2'],m:[
+  ['*','SCTP to port 36422 (PPID 27); the peer address is often learned with S1 eNB / MME Configuration Transfer (ANR)'],
+  [0,1,'X2 SETUP REQUEST','Global eNB ID, served cells (PCI, ECGI, TAC, EARFCN, bandwidth), neighbour info, GU group IDs'],
+  [1,0,'X2 SETUP RESPONSE','served cells of the peer']]},
+ {t:'X2 handover',s:'TS 36.423 · TS 36.300',p:['Source eNodeB','Target eNodeB'],m:[
+  ['*','UE → source: MeasurementReport (e.g. event A3)'],
+  [0,1,'HANDOVER REQUEST','old eNB UE X2AP ID, cause, target cell, GUMMEI, UE context (KeNB*, E-RABs with SGW F-TEIDs, UE-AMBR), RRC context'],
+  [1,0,'HANDOVER REQUEST ACKNOWLEDGE','new eNB UE X2AP ID, E-RABs admitted (DL forwarding F-TEIDs), target-to-source container (RRCConnectionReconfiguration with mobilityControlInfo)'],
+  ['*','Source → UE: the handover command'],
+  [0,1,'SN STATUS TRANSFER','UL / DL PDCP COUNT per E-RAB'],
+  [0,1,'Forwarded data (X2-U)','GTP-U, downlink packets in transit','?'],
+  ['*','UE → target: RRCConnectionReconfigurationComplete; target → MME: PATH SWITCH REQUEST'],
+  [1,0,'UE CONTEXT RELEASE','after PATH SWITCH REQUEST ACKNOWLEDGE']]},
+ {t:'Handover preparation failure / cancel',s:'TS 36.423',p:['Source eNodeB','Target eNodeB'],m:[
+  [0,1,'HANDOVER REQUEST',''],
+  [1,0,'HANDOVER PREPARATION FAILURE','cause, e.g. no radio resources available in the target cell'],
+  ['=','or, after a successful preparation'],
+  [0,1,'HANDOVER CANCEL','cause, e.g. the UE did not leave','?']]},
+ {t:'Load and resource status (ICIC, MLB, MRO)',s:'TS 36.423',p:['eNodeB 1','eNodeB 2'],m:[
+  [0,1,'LOAD INFORMATION','UL interference overload / high interference indication, RNTP'],
+  [0,1,'RESOURCE STATUS REQUEST','measurement IDs, report characteristics (PRB usage, TNL load, composite available capacity), periodicity'],
+  [1,0,'RESOURCE STATUS RESPONSE',''],
+  [1,0,'RESOURCE STATUS UPDATE','periodic reports'],
+  [0,1,'MOBILITY CHANGE REQUEST','proposed handover trigger change (MLB / MRO)','?'],
+  [1,0,'MOBILITY CHANGE ACKNOWLEDGE','','?']]},
+ {t:'eNB configuration update',s:'TS 36.423',p:['eNodeB 1','eNodeB 2'],m:[
+  [0,1,'ENB CONFIGURATION UPDATE','served cells to add / modify / delete'],
+  [1,0,'ENB CONFIGURATION UPDATE ACKNOWLEDGE','']]}];
+MF.x2endc=[
+ {t:'EN-DC X2 Setup',s:'TS 36.423',d:'Either node can start it.',p:['MeNB (eNodeB)','en-gNB'],m:[
+  [0,1,'EN-DC X2 SETUP REQUEST','Global eNB ID, served E-UTRA cells'],
+  [1,0,'EN-DC X2 SETUP RESPONSE','Global en-gNB ID, served NR cells (NR CGI, NR PCI, frequency info)']]},
+ {t:'SgNB addition',s:'TS 36.423 · TS 37.340',p:['MeNB (eNodeB)','en-gNB'],m:[
+  ['*','UE reports a B1 measurement (an NR cell is above the threshold)'],
+  [0,1,'SGNB ADDITION REQUEST','MeNB UE X2AP ID, NR UE security capabilities, SgNB security key, E-RABs (SGW F-TEIDs for SCG bearers), MeNB-to-SgNB container (CG-ConfigInfo)'],
+  [1,0,'SGNB ADDITION REQUEST ACKNOWLEDGE','SgNB UE X2AP ID, E-RABs admitted (en-gNB S1-U and X2-U F-TEIDs), SgNB-to-MeNB container (CG-Config with the NR RRCReconfiguration)'],
+  ['*','MeNB → UE: RRCConnectionReconfiguration with nr-Config; the UE confirms'],
+  [0,1,'SGNB RECONFIGURATION COMPLETE','UE configured'],
+  ['*','UE → en-gNB: random access on the PSCell'],
+  [0,1,'SN STATUS TRANSFER','for bearers that move to the en-gNB','?'],
+  ['*','SCG / SCG split bearer: MeNB → MME E-RAB MODIFICATION INDICATION moves the S1-U to the en-gNB. MCG split bearer: S1-U stays at the MeNB']]},
+ {t:'SgNB release by the MeNB',s:'TS 36.423 · TS 37.340',p:['MeNB (eNodeB)','en-gNB'],m:[
+  [0,1,'SGNB RELEASE REQUEST','cause, e.g. NR coverage lost (B1 / A2)'],
+  [1,0,'SGNB RELEASE REQUEST ACKNOWLEDGE',''],
+  ['*','MeNB → UE: RRCConnectionReconfiguration (SCG release); if needed E-RAB MODIFICATION INDICATION back to the MeNB'],
+  [0,1,'UE CONTEXT RELEASE','when the path switch is complete']]},
+ {t:'SgNB release by the en-gNB / SCG failure',s:'TS 36.423 · TS 37.340',p:['MeNB (eNodeB)','en-gNB'],m:[
+  [1,0,'SGNB RELEASE REQUIRED','cause, e.g. SCG radio link failure'],
+  [0,1,'SGNB RELEASE CONFIRM',''],
+  ['*','On SCG failure the UE reports SCGFailureInformationNR to the MeNB; the MeNB releases or changes the SgNB']]},
+ {t:'SgNB modification',s:'TS 36.423',p:['MeNB (eNodeB)','en-gNB'],m:[
+  [1,0,'SGNB MODIFICATION REQUIRED','en-gNB-initiated, e.g. PSCell change or bearer change'],
+  ['*','MeNB → UE: RRCConnectionReconfiguration'],
+  [0,1,'SGNB MODIFICATION CONFIRM',''],
+  ['=','or MeNB-initiated'],
+  [0,1,'SGNB MODIFICATION REQUEST','e.g. bearer add / release, security key update','?'],
+  [1,0,'SGNB MODIFICATION REQUEST ACKNOWLEDGE','','?']]},
+ {t:'Split bearer flow control (X2-U, NR-U)',s:'TS 38.425',d:'For an MCG split bearer the MeNB hosts PDCP; for an SCG split bearer the en-gNB does, and the direction is reversed.',p:['MeNB (eNodeB)','en-gNB'],m:[
+  [0,1,'DL USER DATA','GTP-U with NR-U header (PDU type 0): NR-U sequence number, PDCP PDU'],
+  [1,0,'DL DATA DELIVERY STATUS','PDU type 1: desired buffer size, highest transmitted / delivered PDCP SN, lost NR-U SNs'],
+  [1,0,'G-PDU (uplink)','PDCP PDUs received on the NR leg','?']]},
+ {t:'Secondary RAT data usage report',s:'TS 36.423 · TS 23.401',p:['MeNB (eNodeB)','en-gNB'],m:[
+  [1,0,'SECONDARY RAT DATA USAGE REPORT','NR uplink / downlink volume per E-RAB and time interval'],
+  ['*','The MeNB forwards it to the MME (S1AP SECONDARY RAT DATA USAGE REPORT) for charging']]}];
+const mfS11=(c)=>{const sg='SGW'+(c?'-C':'');return [
+ {t:'Attach: default bearer',s:'TS 29.274 (GTPv2-C)',m:[
+  [0,1,'Create Session Request','IMSI, MSISDN, MEI, ULI (TAI, ECGI), serving network, RAT type EUTRAN, MME S11 F-TEID, PGW S5/S8 address, APN, PDN type, PAA (0.0.0.0 = dynamic), APN-AMBR, bearer context (EBI 5, QoS)'],
+  ['*',sg+' → PGW: Create Session Request (S5/S8)'+(c?'; '+sg+' → SGW-U: Sxa Session Establishment':'')],
+  [1,0,'Create Session Response','cause 16 “request accepted”, '+sg+' S11 F-TEID, PGW S5/S8-C F-TEID, PAA (UE IP), APN-AMBR, bearer context (SGW S1-U F-TEID)'],
+  ['*','MME → eNB: INITIAL CONTEXT SETUP REQUEST'],
+  [0,1,'Modify Bearer Request','bearer context: eNB S1-U F-TEID'],
+  [1,0,'Modify Bearer Response','cause']]},
+ {t:'Idle mode: release and downlink data',s:'TS 29.274 · TS 23.401',m:[
+  [0,1,'Release Access Bearers Request','after S1 UE CONTEXT RELEASE – the SGW removes the eNB F-TEIDs'],
+  [1,0,'Release Access Bearers Response',''],
+  ['=','downlink data arrives for the idle UE'],
+  [1,0,'Downlink Data Notification','EBI, ARP (paging policy)'],
+  [0,1,'Downlink Data Notification Acknowledge','cause'],
+  ['*','MME pages; the UE sends a Service Request'],
+  [0,1,'Modify Bearer Request','new eNB F-TEIDs'],
+  [1,0,'Modify Bearer Response','']]},
+ {t:'Network-initiated dedicated bearer',s:'TS 29.274 · TS 23.401',m:[
+  [1,0,'Create Bearer Request','relayed from the PGW: linked EBI, bearer QoS (QCI, ARP, GBR / MBR), TFT, SGW S1-U F-TEID, PTI'],
+  ['*','MME → eNB: E-RAB SETUP REQUEST; the UE accepts'],
+  [0,1,'Create Bearer Response','cause, EBI assigned by the MME, eNB S1-U F-TEID']]},
+ {t:'X2 handover: path switch',s:'TS 29.274 · TS 23.401',m:[
+  [0,1,'Modify Bearer Request','target eNB S1-U F-TEIDs, new ECGI'],
+  [1,0,'Modify Bearer Response',''],
+  ['*','The SGW sends End Marker on the old S1-U path']]},
+ {t:'Detach / PDN disconnection',s:'TS 29.274',m:[
+  [0,1,'Delete Session Request','linked EBI, ULI, indication flags (OI: forward to the PGW)'],
+  [1,0,'Delete Session Response','cause']]},
+ {t:'Path supervision (Echo)',s:'TS 29.274 · TS 23.007',m:[
+  [0,1,'Echo Request','Recovery IE (restart counter) – either side, per peer'],
+  [1,0,'Echo Response','Recovery IE; a higher restart counter means the peer restarted → its PDN connections are deleted']]}];};
+MF.s11=mfS11(false);MF.s11c=mfS11(true);
+const mfS5=(c)=>[
+ {t:'PDN connection set-up',s:'TS 29.274 · TS 23.401',m:[
+  [0,1,'Create Session Request','IMSI, MSISDN, ULI, RAT type, SGW S5/S8-C and -U F-TEIDs, APN, PDN type, PAA, APN-AMBR, bearer QoS, charging characteristics'],
+  ['*','PGW'+(c?'-C':'')+' ↔ PCRF: Gx CCR-I / CCA-I; IP address allocation'+(c?'; PGW-C → PGW-U: Sxb Session Establishment':'')],
+  [1,0,'Create Session Response','PGW S5/S8 F-TEIDs, PAA (UE IPv4 / IPv6 prefix), APN-AMBR, charging ID, PCO (DNS, P-CSCF addresses)']]},
+ {t:'Dedicated bearer (PCRF-triggered)',s:'TS 29.274 · TS 23.401',m:[
+  ['*','PCRF → PGW: Gx RAR with a new PCC rule (e.g. QCI 1 for VoLTE)'],
+  [1,0,'Create Bearer Request','linked EBI, bearer QoS, TFT, PGW S5/S8-U F-TEID, charging ID'],
+  ['*','SGW → MME (S11) → eNB → UE'],
+  [0,1,'Create Bearer Response','EBI, SGW S5/S8-U F-TEID']]},
+ {t:'Mobility: SGW relocation, RAT or location change',s:'TS 29.274',m:[
+  [0,1,'Modify Bearer Request','new SGW F-TEIDs (SGW relocation), ULI, RAT type'],
+  [1,0,'Modify Bearer Response','the PGW may report the change to the PCRF / OCS']]},
+ {t:'Bearer modification and deletion by the network',s:'TS 29.274',m:[
+  [1,0,'Update Bearer Request','new QoS, TFT or APN-AMBR'],
+  [0,1,'Update Bearer Response',''],
+  [1,0,'Delete Bearer Request','EBI(s), cause'],
+  [0,1,'Delete Bearer Response','']]},
+ {t:'PDN disconnection',s:'TS 29.274',m:[
+  [0,1,'Delete Session Request','linked EBI, ULI'],
+  [1,0,'Delete Session Response','cause']]},
+ {t:'Path supervision (Echo)',s:'TS 29.274',m:[
+  [0,1,'Echo Request','Recovery IE'],
+  [1,0,'Echo Response','Recovery IE (restart counter)']]}];
+MF.s5=[...mfS5(false),...mfGTPU({d:'S5/S8 user plane between SGW and PGW.'}).slice(0,1)];
+MF.s5c=mfS5(true);
+MF.s5u=mfGTPU({d:'Between SGW-U and PGW-U; the TEIDs are allocated by the user-plane functions or by the control functions and sent over Sxa / Sxb.'});
+const mfS6=(sgsn)=>{const n=sgsn?'SGSN':'MME',ind=sgsn?'S6d':'S6a';return [
+ {t:(sgsn?'Attach / RAU':'Attach')+': authentication and location update',s:'TS 29.272',p:[n,'HSS','Old MME / SGSN'],m:[
+  [0,1,'AIR','User-Name (IMSI), Visited-PLMN-Id, '+(sgsn?'Requested-UTRAN-GERAN-Authentication-Info':'Requested-EUTRAN-Authentication-Info')+' (number of vectors, re-sync info)'],
+  [1,0,'AIA','Authentication-Info: '+(sgsn?'UTRAN vectors (quintuplets) or GERAN triplets':'E-UTRAN vectors (RAND, XRES, AUTN, KASME)')],
+  [0,1,'ULR','ULR-Flags ('+ind+' indicator, initial attach), RAT-Type, Visited-PLMN-Id'+(sgsn?'':', UE-SRVCC-Capability')],
+  [1,2,'CLR','to the previous node: Cancellation-Type MME_UPDATE_PROCEDURE or SGSN_UPDATE_PROCEDURE'],
+  [2,1,'CLA',''],
+  [1,0,'ULA','Subscription-Data: MSISDN, AMBR, APN-Configuration-Profile (default APN, QCI / ARP, PGW allocation)'+(sgsn?', GPRS-Subscription-Data':'')+', access restrictions; ULA-Flags']]},
+ {t:'Subscriber data change',s:'TS 29.272',m:[
+  [1,0,'IDR','changed Subscription-Data (e.g. new APN profile, AMBR), IDR-Flags'],
+  [0,1,'IDA',''],
+  [1,0,'DSR','DSR-Flags / Context-Identifier of the deleted data','?'],
+  [0,1,'DSA','','?']]},
+ {t:'Purge',s:'TS 29.272',m:[
+  [0,1,'PUR','the UE context was deleted in the '+n+' (e.g. after a long time detached)'],
+  [1,0,'PUA','PUA-Flags (e.g. freeze '+(sgsn?'P-TMSI':'M-TMSI')+')']]},
+ {t:'Notify',s:'TS 29.272',m:[
+  [0,1,'NOR','e.g. PGW identity for an APN (for later non-3GPP access), change of SRVCC capability'],
+  [1,0,'NOA','']]},
+ {t:'HSS reset',s:'TS 29.272',m:[
+  [1,0,'RSR','the HSS restarted; affected User-Id groups'],
+  [0,1,'RSA',''],
+  ['*','The '+n+' marks the affected subscribers and updates the location at the next contact']]},
+ mfDia('Auth-Application-Id 16777251 ('+ind+')')];};
+MF.s6a=mfS6(false);MF.s6d=mfS6(true);
+MF.s10=[
+ {t:'TAU with MME change',s:'TS 29.274 · TS 23.401',p:['New MME','Old MME'],m:[
+  [0,1,'Context Request','GUTI or IMSI, complete TAU request message (for the integrity check), RAT type, new MME S10 F-TEID'],
+  [1,0,'Context Response','IMSI, MM context (KASME, NAS COUNT), PDN connections (APN, SGW / PGW F-TEIDs, bearers)'],
+  [0,1,'Context Acknowledge','cause; SGW change indication']]},
+ {t:'S1 handover with MME relocation',s:'TS 29.274 · TS 23.401',p:['Source MME','Target MME'],m:[
+  [0,1,'Forward Relocation Request','IMSI, MM context, PDN connections, target eNB ID, E-UTRAN transparent container, source MME S10 F-TEID'],
+  ['*','Target MME: Create Session if the SGW changes; S1 HANDOVER REQUEST to the target eNB'],
+  [1,0,'Forward Relocation Response','cause, target-to-source container, bearer contexts (forwarding F-TEIDs)'],
+  ['*','Source MME → source eNB: HANDOVER COMMAND; the UE arrives at the target (HANDOVER NOTIFY)'],
+  [1,0,'Forward Relocation Complete Notification',''],
+  [0,1,'Forward Relocation Complete Acknowledge','']]},
+ {t:'Identification',s:'TS 29.274',p:['New MME','Old MME'],m:[
+  [0,1,'Identification Request','GUTI, complete attach request message'],
+  [1,0,'Identification Response','IMSI, MM context (if the integrity check passed)']]}];
+MF.s13=[
+ {t:'IMEI check',s:'TS 29.272',m:[
+  ['*','The MME gets the IMEISV in NAS SECURITY MODE COMPLETE (or with an IDENTITY REQUEST)'],
+  [0,1,'ECR','Terminal-Information: IMEI, Software-Version; User-Name (IMSI) optional'],
+  [1,0,'ECA','Equipment-Status: 0 WHITELISTED, 1 BLACKLISTED, 2 GREYLISTED']]},
+ mfDia('Auth-Application-Id 16777252 (S13)')];
+MF.gx=mfGx(false);MF.gxc=mfGx(false);
+MF.rx=[
+ {t:'VoLTE call: session authorisation',s:'TS 29.214 · TS 29.213',m:[
+  [1,0,'AAR','from the P-CSCF: Media-Component-Description (from SDP offer / answer: media type, codec data, bandwidth, flow descriptions), Framed-IP-Address, Specific-Action subscriptions'],
+  ['*','PCRF → PGW: Gx RAR with a QCI 1 PCC rule'],
+  [0,1,'AAA','Result-Code; optionally IP-CAN type, access network charging identifier']]},
+ {t:'Bearer event notification',s:'TS 29.214',m:[
+  [0,1,'RAR','Specific-Action, e.g. INDICATION_OF_LOSS_OF_BEARER, INDICATION_OF_RELEASE_OF_BEARER, ACCESS_NETWORK_INFO_REPORT'],
+  [1,0,'RAA','']]},
+ {t:'Session termination',s:'TS 29.214',m:[
+  [1,0,'STR','after SIP BYE: Termination-Cause'],
+  [0,1,'STA',''],
+  ['*','PCRF removes the PCC rules (Gx RAR) → the dedicated bearer is deleted']]},
+ {t:'Abort by the PCRF',s:'TS 29.214',m:[
+  [0,1,'ASR','e.g. the IP-CAN session was terminated'],
+  [1,0,'ASA',''],
+  [1,0,'STR',''],
+  [0,1,'STA','']]},
+ mfDia('Auth-Application-Id 16777236 (Rx)')];
+MF.gy4g=[...mfGy('PGW','PDN connection'),
+ {t:'Offline charging (Gz via Rf)',s:'TS 32.299 · TS 32.251',d:'Alternatively CDRs are sent to a charging gateway with GTP′ (as on Ga).',p:['PGW','OFCS'],m:[
+  [0,1,'ACR (START)','Accounting-Record-Type 2, Service-Information / PS-Information (charging ID, APN, RAT type, ULI)'],
+  [1,0,'ACA',''],
+  [0,1,'ACR (INTERIM)','at a volume / time limit or tariff time change: Service-Data-Container'],
+  [1,0,'ACA',''],
+  [0,1,'ACR (STOP)','Accounting-Record-Type 4'],
+  [1,0,'ACA','']]},
+ mfDia('Auth-Application-Id 4 (Gy), Acct-Application-Id 3 (Rf)')];
+MF.gy4gc=MF.gy4g.map(f=>f.p?{...f,p:f.p.map(x=>x==='PGW'?'PGW-C':x)}:f);
+MF.sgi=[mfUserIP({s:'TS 29.061',dl:'routed to the PGW by the UE address pool route; IPv6: the /64 prefix assigned to the UE'}),mfRadius('PGW','PDN connection')];
+MF.sgic=[mfUserIP({s:'TS 29.061',dl:'routed to the PGW-U by the UE address pool route'}),mfRadius('PGW-C','PDN connection')];
+MF.s3=[
+ {t:'TAU from 2G / 3G (old node = SGSN)',s:'TS 29.274 · TS 23.401',p:['MME (new)','SGSN (old)'],m:[
+  [0,1,'Context Request','P-TMSI and RAI mapped from the GUTI, P-TMSI signature, complete TAU request, RAT type'],
+  [1,0,'Context Response','MM context (security), PDP contexts → EPS bearers, ISR supported'],
+  [0,1,'Context Acknowledge','ISR activated (if ISR is used)']]},
+ {t:'RAU from E-UTRAN (old node = MME)',s:'TS 29.274 · TS 23.060',p:['SGSN (new)','MME (old)'],m:[
+  [0,1,'Context Request','GUTI mapped from the P-TMSI / RAI, RAT type'],
+  [1,0,'Context Response','MM context, EPS bearer contexts'],
+  [0,1,'Context Acknowledge','ISR activated (optional)']]},
+ {t:'Inter-RAT PS handover (E-UTRAN → UTRAN)',s:'TS 29.274 · TS 23.401',p:['MME','SGSN'],m:[
+  [0,1,'Forward Relocation Request','IMSI, MM context, PDN connections, target RNC ID, source-to-target transparent container'],
+  ['*','SGSN prepares the target RNC (RANAP RELOCATION REQUEST)'],
+  [1,0,'Forward Relocation Response','target-to-source container'],
+  [1,0,'Forward Relocation Complete Notification','the UE has arrived in UTRAN'],
+  [0,1,'Forward Relocation Complete Acknowledge','']]},
+ {t:'CS fallback to GERAN without DTM: suspend',s:'TS 23.272 · TS 29.274',p:['MME','SGSN'],m:[
+  ['*','Target BSS → SGSN: BSSGP SUSPEND (the UE is busy with the CS call)'],
+  [1,0,'Suspend Notification','so that the MME / SGW stop paging for PS data'],
+  [0,1,'Suspend Acknowledge',''],
+  ['*','After the call the UE resumes PS service (RAU / TAU)']]},
+ {t:'ISR: detach',s:'TS 29.274',m:[
+  [0,1,'Detach Notification','detach type – the SGSN removes the UE as well'],
+  [1,0,'Detach Acknowledge','']]}];
+const mfS4=(sgw)=>[
+ {t:'PDP context activation via the EPC',s:'TS 29.274 · TS 23.060',p:['SGSN',sgw],m:[
+  [0,1,'Create Session Request','RAT type UTRAN / GERAN, SGSN S4 F-TEIDs, APN, bearer context (EBI = NSAPI)'],
+  [1,0,'Create Session Response','SGW F-TEIDs (S4-U, or S12 for Direct Tunnel), PAA'],
+  [0,1,'Modify Bearer Request','with Direct Tunnel: RNC F-TEID (S12)','?'],
+  [1,0,'Modify Bearer Response','','?']]},
+ {t:'Iu release and downlink data',s:'TS 29.274 · TS 23.060',p:['SGSN',sgw],m:[
+  [0,1,'Release Access Bearers Request','after Iu release (Direct Tunnel)'],
+  [1,0,'Release Access Bearers Response',''],
+  [1,0,'Downlink Data Notification',''],
+  [0,1,'Downlink Data Notification Acknowledge',''],
+  ['*','SGSN pages the UE; after the Service Request the RNC F-TEID is set again (Modify Bearer Request)']]},
+ {t:'Deactivation',s:'TS 29.274',p:['SGSN',sgw],m:[
+  [0,1,'Delete Session Request',''],
+  [1,0,'Delete Session Response','']]}];
+MF.s4=[...mfS4('SGW'),...mfGTPU({d:'S4-U, used when Direct Tunnel (S12) is not applied.'}).slice(0,1)];
+MF.s4c=mfS4('SGW-C');
+MF.s4u=mfGTPU({d:'S4-U between the SGSN and the SGW-U.'});
+MF.s12=mfGTPU({d:'Direct Tunnel RNC ↔ SGW: the SGSN gives each side the other’s F-TEID (RANAP RAB Assignment, S4 Modify Bearer Request).'});
+MF.s12c=MF.s12;
+MF.sgs=[
+ {t:'Combined attach (EPS / IMSI)',s:'TS 29.118 (SGsAP) · TS 23.272',m:[
+  [0,1,'SGsAP-LOCATION-UPDATE-REQUEST','IMSI, MME name, EPS location update type (IMSI attach), new LAI (mapped from the TAI), IMEISV, TAI, E-CGI'],
+  ['*','VLR: MAP updateLocation to the HLR'],
+  [1,0,'SGsAP-LOCATION-UPDATE-ACCEPT','LAI, new TMSI (optional)'],
+  [0,1,'SGsAP-TMSI-REALLOCATION-COMPLETE','after ATTACH COMPLETE, if a TMSI was allocated','?']]},
+ {t:'CS fallback: mobile-terminated call',s:'TS 29.118 · TS 23.272',m:[
+  [1,0,'SGsAP-PAGING-REQUEST','IMSI, VLR name, service indicator “CS call”, TMSI, CLI (optional), LAI'],
+  ['*','MME pages the UE (idle) or sends NAS CS SERVICE NOTIFICATION (connected)'],
+  [0,1,'SGsAP-SERVICE-REQUEST','IMSI, service indicator, IMEISV, UE EMM mode (idle / connected)'],
+  ['*','UE: EXTENDED SERVICE REQUEST → S1AP CS Fallback Indicator → redirection or PS handover to 2G / 3G; the paging response then goes to the MSC']]},
+ {t:'SMS over SGs (mobile-terminated)',s:'TS 29.118 · TS 23.272',m:[
+  [1,0,'SGsAP-PAGING-REQUEST','service indicator “SMS” (not needed if the UE is connected)'],
+  [0,1,'SGsAP-SERVICE-REQUEST','',''],
+  [1,0,'SGsAP-DOWNLINK-UNITDATA','NAS message container: CP-DATA (RP-DATA = the SMS)'],
+  [0,1,'SGsAP-UPLINK-UNITDATA','CP-ACK'],
+  [0,1,'SGsAP-UPLINK-UNITDATA','CP-DATA (RP-ACK)'],
+  [1,0,'SGsAP-DOWNLINK-UNITDATA','CP-ACK'],
+  [1,0,'SGsAP-RELEASE-REQUEST','no more NAS signalling for this UE']]},
+ {t:'Detach',s:'TS 29.118',m:[
+  [0,1,'SGsAP-IMSI-DETACH-INDICATION','IMSI, MME name, IMSI detach from non-EPS service type'],
+  [1,0,'SGsAP-IMSI-DETACH-ACK',''],
+  [0,1,'SGsAP-EPS-DETACH-INDICATION','IMSI, MME name, IMSI detach from EPS service type','?'],
+  [1,0,'SGsAP-EPS-DETACH-ACK','','?']]},
+ {t:'VLR restart',s:'TS 29.118',m:[
+  [1,0,'SGsAP-RESET-INDICATION','VLR name'],
+  [0,1,'SGsAP-RESET-ACK','MME name'],
+  ['*','The MME marks its SGs associations with that VLR; the UEs re-register at the next combined TAU or contact']]}];
+MF.sv=[
+ {t:'SRVCC from E-UTRAN (PS → CS)',s:'TS 29.280 · TS 23.216',p:['MME','MSC Server (SRVCC)'],m:[
+  ['*','eNB → MME: HANDOVER REQUIRED with the SRVCC HO indication'],
+  [0,1,'SRVCC PS to CS Request','IMSI, MME Sv F-TEID, C-MSISDN, STN-SR, target RNC / cell ID, source-to-target transparent container, CS security keys (derived), SRVCC flags'],
+  ['*','MSC Server: handover preparation towards the target RNC / BSC; IMS session transfer to the STN-SR (INVITE)'],
+  [1,0,'SRVCC PS to CS Response','cause, MSC Sv F-TEID, target-to-source transparent container'],
+  ['*','MME → eNB: HANDOVER COMMAND; the UE moves to 2G / 3G'],
+  [1,0,'SRVCC PS to CS Complete Notification','the UE has arrived in the target cell'],
+  [0,1,'SRVCC PS to CS Complete Acknowledge','']]},
+ {t:'SRVCC cancel',s:'TS 29.280',p:['MME','MSC Server (SRVCC)'],m:[
+  [0,1,'SRVCC PS to CS Cancel Notification','cause, e.g. the eNB cancelled the handover'],
+  [1,0,'SRVCC PS to CS Cancel Acknowledge','']]},
+ {t:'rSRVCC (CS → PS, R11)',s:'TS 29.280 · TS 23.216',p:['MME','MSC Server (SRVCC)'],m:[
+  [1,0,'SRVCC CS to PS Request','target eNB ID, transparent container'],
+  [0,1,'SRVCC CS to PS Response',''],
+  [0,1,'SRVCC CS to PS Complete Notification',''],
+  [1,0,'SRVCC CS to PS Complete Acknowledge','']]}];
+MF.sy=[
+ {t:'Policy counter status',s:'TS 29.219',m:[
+  [0,1,'SLR','Spending-Limit-Request: SL-Request-Type INITIAL_REQUEST, Subscription-Id, Policy-Counter-Identifier list'],
+  [1,0,'SLA','Policy-Counter-Status-Report for each counter'],
+  [1,0,'SNR','Spending-Status-Notification: a counter changed status (e.g. limit reached)'],
+  [0,1,'SNA',''],
+  ['*','PCRF changes the policy, e.g. a lower APN-AMBR via Gx RAR'],
+  [0,1,'STR','unsubscribe when the last IP-CAN session ends'],
+  [1,0,'STA','']]},
+ mfDia('Auth-Application-Id 16777302 (Sy)')];
+MF.s9=[
+ {t:'S9 session',s:'TS 29.215',p:['H-PCRF','V-PCRF (partner)'],m:[
+  [1,0,'CCR-Initial','from the V-PCRF: subscriber identity, IP-CAN session information of the visited network'],
+  [0,1,'CCA-Initial','PCC / QoS rules from the home network'],
+  [0,1,'RAR','rule changes from the H-PCRF'],
+  [1,0,'RAA',''],
+  [1,0,'CCR-Termination',''],
+  [0,1,'CCA-Termination','']]},
+ mfDia('Auth-Application-Id 16777267 (S9)')];
+MF.cxsh=[
+ {t:'IMS registration (Cx)',s:'TS 29.228 · TS 29.229 · TS 24.229',p:['I-CSCF','S-CSCF','HSS'],m:[
+  ['*','UE → P-CSCF → I-CSCF: SIP REGISTER'],
+  [0,2,'UAR','User-Authorization-Request: public and private identity, visited network, User-Authorization-Type REGISTRATION'],
+  [2,0,'UAA','assigned S-CSCF name, or the required capabilities'],
+  ['*','I-CSCF → S-CSCF: REGISTER'],
+  [1,2,'MAR','Multimedia-Auth-Request: SIP-Auth-Data-Item (Digest-AKAv1-MD5), S-CSCF name'],
+  [2,1,'MAA','authentication vectors (RAND, AUTN, XRES, CK, IK)'],
+  ['*','S-CSCF → UE: 401 Unauthorized; the UE sends a second REGISTER with the response (the I-CSCF repeats the UAR)'],
+  [1,2,'SAR','Server-Assignment-Type REGISTRATION'],
+  [2,1,'SAA','User-Data (service profile with iFC, public identities), charging addresses']]},
+ {t:'Terminating session: find the S-CSCF (Cx)',s:'TS 29.228',p:['I-CSCF','S-CSCF','HSS'],m:[
+  [0,2,'LIR','Location-Info-Request: public identity of the called user'],
+  [2,0,'LIA','assigned S-CSCF name'],
+  ['*','I-CSCF forwards the INVITE to that S-CSCF']]},
+ {t:'HSS-initiated deregistration and profile push (Cx)',s:'TS 29.228',p:['I-CSCF','S-CSCF','HSS'],m:[
+  [2,1,'RTR','Registration-Termination-Request: deregistration reason, e.g. subscription withdrawn'],
+  [1,2,'RTA',''],
+  [2,1,'PPR','Push-Profile-Request: changed User-Data or charging information','?'],
+  [1,2,'PPA','','?']]},
+ {t:'Application server data (Sh)',s:'TS 29.328 · TS 29.329',p:['Application Server (e.g. TAS)','HSS'],m:[
+  [0,1,'UDR','User-Data-Request: Data-Reference (e.g. RepositoryData, IMSPublicIdentity, MSISDN, T-ADS information)'],
+  [1,0,'UDA','User-Data (XML)'],
+  [0,1,'SNR','Subscribe-Notifications-Request for a data reference','?'],
+  [1,0,'SNA','','?'],
+  [1,0,'PNR','Push-Notification-Request: the data changed','?'],
+  [0,1,'PNA','','?'],
+  [0,1,'PUR','Profile-Update-Request, e.g. repository data','?'],
+  [1,0,'PUA','','?']]},
+ mfDia('Auth-Application-Id 16777216 (Cx), 16777217 (Sh)')];
+MF.rorf=[
+ {t:'Online charging, session-based (Ro)',s:'TS 32.299 · TS 32.260',p:['IMS node (S-CSCF / AS)','OCS'],m:[
+  [0,1,'CCR-Initial','Service-Information / IMS-Information (calling / called party, SIP method), Requested-Service-Unit (time)'],
+  [1,0,'CCA-Initial','Granted-Service-Unit (e.g. seconds)'],
+  [0,1,'CCR-Update','Used-Service-Unit, new request'],
+  [1,0,'CCA-Update',''],
+  [0,1,'CCR-Termination','after BYE: final Used-Service-Unit'],
+  [1,0,'CCA-Termination','']]},
+ {t:'Event charging (Ro, e.g. SMS over IP)',s:'TS 32.299',p:['IMS node (S-CSCF / AS)','OCS'],m:[
+  [0,1,'CCR-Event','CC-Request-Type 4 EVENT_REQUEST, Requested-Action DIRECT_DEBITING'],
+  [1,0,'CCA-Event','Result-Code; the event may now be delivered']]},
+ {t:'Offline charging (Rf)',s:'TS 32.299 · TS 32.260',p:['IMS node (CSCF / AS)','OFCS (CDF)'],m:[
+  [0,1,'ACR (START)','at the 200 OK of the INVITE'],
+  [1,0,'ACA',''],
+  [0,1,'ACR (INTERIM)','periodically, if configured','?'],
+  [1,0,'ACA','','?'],
+  [0,1,'ACR (STOP)','at BYE'],
+  [1,0,'ACA',''],
+  [0,1,'ACR (EVENT)','session-less events, e.g. REGISTER or MESSAGE','?'],
+  [1,0,'ACA','','?']]},
+ mfDia('Auth-Application-Id 4 (Ro), Acct-Application-Id 3 (Rf)')];
+/* ---------- 5G NSA / SA radio and RAN ---------- */
+MF.nruunsa=[
+ {t:'Access to the NR PSCell after SgNB addition',s:'TS 37.340 · TS 38.321 · TS 38.331',m:[
+  ['*','The MeNB delivers the NR configuration: RRCConnectionReconfiguration with nr-Config (an NR RRCReconfiguration with reconfigurationWithSync)'],
+  [0,1,'MAC|Random Access Preamble','dedicated (contention-free) preamble on the PSCell'],
+  [1,0,'MAC|Random Access Response','timing advance, UL grant'],
+  [0,1,'User data (SCG DRB)','PDCP terminated in the en-gNB (SCG or SCG split bearer)'],
+  [1,0,'User data (SCG DRB)','']]},
+ {t:'SRB3: NR RRC directly from the en-gNB',s:'TS 38.331 · TS 37.340',d:'Optional; without SRB3 these messages are carried inside LTE RRC through the MeNB.',m:[
+  [1,0,'RRC|RRCReconfiguration','on SRB3, e.g. NR measurement configuration or SCG reconfiguration'],
+  [0,1,'RRC|RRCReconfigurationComplete','on SRB3'],
+  [0,1,'RRC|MeasurementReport','NR measurements on SRB3']]},
+ {t:'SCG failure',s:'TS 36.331 · TS 37.340',p:['UE','MeNB (eNodeB)','en-gNB'],m:[
+  [0,1,'RRC|SCGFailureInformationNR','LTE SRB1: failureType (e.g. t310-Expiry, randomAccessProblem, rlc-MaxNumRetx), NR measurement results'],
+  [1,2,'SGNB RELEASE REQUEST or SGNB MODIFICATION REQUEST','X2-C – the MeNB decides']]}];
+MF.nruusa=[
+ {t:'RRC set-up',s:'TS 38.321 · TS 38.331',p:['UE','gNB (DU + CU-CP)'],m:[
+  [0,1,'MAC|Random Access Preamble (Msg1)','PRACH occasion associated with the selected SSB'],
+  [1,0,'MAC|Random Access Response (Msg2)','RA-RNTI: timing advance, UL grant, TC-RNTI'],
+  [0,1,'RRC|RRCSetupRequest (Msg3)','ue-Identity (5G-S-TMSI part 1 or random value), establishmentCause'],
+  [1,0,'RRC|RRCSetup (Msg4)','masterCellGroup, SRB1; also resolves contention'],
+  [0,1,'RRC|RRCSetupComplete','selectedPLMN-Identity, registeredAMF, s-NSSAI-List, dedicatedNAS-Message (REGISTRATION REQUEST or SERVICE REQUEST), ng-5G-S-TMSI part 2']]},
+ {t:'Security, capabilities and reconfiguration',s:'TS 38.331',p:['UE','gNB (DU + CU-CP)'],m:[
+  [1,0,'RRC|SecurityModeCommand','AS integrity (NIA) and ciphering (NEA) algorithms'],
+  [0,1,'RRC|SecurityModeComplete',''],
+  [1,0,'RRC|UECapabilityEnquiry','requested RAT types','?'],
+  [0,1,'RRC|UECapabilityInformation','','?'],
+  [1,0,'RRC|RRCReconfiguration','radioBearerConfig (SRB2, DRBs with SDAP QoS-flow mapping), measConfig, dedicatedNAS-MessageList'],
+  [0,1,'RRC|RRCReconfigurationComplete','']]},
+ {t:'Handover (reconfigurationWithSync)',s:'TS 38.331 · TS 38.300',p:['UE','gNB (DU + CU-CP)'],m:[
+  [0,1,'RRC|MeasurementReport','e.g. event A3: SS-RSRP / SS-RSRQ of serving and neighbour cells'],
+  ['*','Source prepares the target (Xn or N2 HANDOVER REQUEST)'],
+  [1,0,'RRC|RRCReconfiguration','reconfigurationWithSync: target PCI, new C-RNTI, dedicated RACH resources'],
+  ['*','UE → target gNB: random access, then RRCReconfigurationComplete']]},
+ {t:'RRC_INACTIVE: suspend and resume',s:'TS 38.331',p:['UE','gNB (DU + CU-CP)'],m:[
+  [1,0,'RRC|RRCRelease','suspendConfig: fullI-RNTI / shortI-RNTI, ran-PagingCycle, ran-NotificationAreaInfo, t380, nextHopChainingCount'],
+  ['=','later: uplink data, RAN paging or RNA update'],
+  [0,1,'RRC|RRCResumeRequest','resumeIdentity (I-RNTI), resumeMAC-I, resumeCause'],
+  [1,0,'RRC|RRCResume','radioBearerConfig, masterCellGroup'],
+  [0,1,'RRC|RRCResumeComplete','']]},
+ {t:'Re-establishment',s:'TS 38.331',p:['UE','gNB (DU + CU-CP)'],m:[
+  [0,1,'RRC|RRCReestablishmentRequest','ue-Identity (C-RNTI, PCI, shortMAC-I), reestablishmentCause'],
+  [1,0,'RRC|RRCReestablishment','nextHopChainingCount'],
+  [0,1,'RRC|RRCReestablishmentComplete','']]}];
+MF.f1c=[
+ {t:'F1 Setup',s:'TS 38.473 (F1AP)',m:[
+  ['*','SCTP association set up by the gNB-DU to port 38472; F1AP uses PPID 62'],
+  [0,1,'F1 SETUP REQUEST','gNB-DU ID, served cells (NR CGI, NR PCI, TAC, frequency info, MIB / SIB1), RRC version'],
+  [1,0,'F1 SETUP RESPONSE','gNB-CU name, cells to be activated, gNB-CU RRC version'],
+  [1,0,'GNB-CU CONFIGURATION UPDATE','cells to activate / deactivate','?'],
+  [0,1,'GNB-CU CONFIGURATION UPDATE ACKNOWLEDGE','','?']]},
+ {t:'Initial access (RRC set-up)',s:'TS 38.473 · TS 38.401',m:[
+  [0,1,'INITIAL UL RRC MESSAGE TRANSFER','gNB-DU UE F1AP ID, NR CGI, C-RNTI, RRC container (RRCSetupRequest), DU to CU RRC container (CellGroupConfig)'],
+  [1,0,'DL RRC MESSAGE TRANSFER','gNB-CU UE F1AP ID, SRB0: RRCSetup'],
+  [0,1,'UL RRC MESSAGE TRANSFER','SRB1: RRCSetupComplete with the NAS message'],
+  ['*','CU-CP → AMF: INITIAL UE MESSAGE (N2)']]},
+ {t:'UE context set-up',s:'TS 38.473 · TS 38.401',m:[
+  ['*','After N2 INITIAL CONTEXT SETUP REQUEST'],
+  [1,0,'UE CONTEXT SETUP REQUEST','SpCell ID, CU to DU RRC information (UE capabilities), SRB2 / DRBs to set up (QoS, F1-U UL tunnel), RRC container (SecurityModeCommand)'],
+  [0,1,'UE CONTEXT SETUP RESPONSE','DU to CU RRC information (CellGroupConfig), DRBs set up (F1-U DL tunnel)'],
+  [0,1,'UL RRC MESSAGE TRANSFER','SecurityModeComplete'],
+  [1,0,'DL RRC MESSAGE TRANSFER','RRCReconfiguration (DRBs, measurements)'],
+  [0,1,'UL RRC MESSAGE TRANSFER','RRCReconfigurationComplete']]},
+ {t:'UE context modification',s:'TS 38.473',m:[
+  [1,0,'UE CONTEXT MODIFICATION REQUEST','DRBs to add / modify / release, RRC container'],
+  [0,1,'UE CONTEXT MODIFICATION RESPONSE','updated CellGroupConfig'],
+  ['=','or DU-initiated'],
+  [0,1,'UE CONTEXT MODIFICATION REQUIRED','e.g. radio-related change in the DU','?'],
+  [1,0,'UE CONTEXT MODIFICATION CONFIRM','','?']]},
+ {t:'UE context release',s:'TS 38.473',m:[
+  [0,1,'UE CONTEXT RELEASE REQUEST','DU-initiated, e.g. radio link failure','?'],
+  [1,0,'UE CONTEXT RELEASE COMMAND','cause, RRC container (RRCRelease)'],
+  [0,1,'UE CONTEXT RELEASE COMPLETE','']]},
+ {t:'Paging',s:'TS 38.473',m:[
+  [1,0,'PAGING','UE identity index, paging identity (5G-S-TMSI for CN paging, I-RNTI for RAN paging), paging cell list, paging DRX']]}];
+MF.f1u=[
+ {t:'Downlink data and flow control (NR-U)',s:'TS 38.425 · TS 38.470',d:'NR user plane protocol over GTP-U.',m:[
+  [1,0,'DL USER DATA','GTP-U with NR RAN container, PDU type 0: NR-U sequence number + PDCP PDU'],
+  [0,1,'DL DATA DELIVERY STATUS','PDU type 1: desired buffer size, highest transmitted / successfully delivered PDCP SN, lost NR-U SN ranges'],
+  [0,1,'G-PDU (uplink)','uplink PDCP PDUs']]},
+ {t:'Assistance information',s:'TS 38.425',m:[
+  [0,1,'ASSISTANCE INFORMATION DATA','PDU type 2: e.g. radio quality, UL delay – helps the CU-UP with traffic splitting']]}];
+MF.e1=[
+ {t:'E1 Setup',s:'TS 38.463 (E1AP)',m:[
+  [1,0,'GNB-CU-UP E1 SETUP REQUEST','gNB-CU-UP ID, supported PLMNs and slices, CN support (EPC / 5GC)'],
+  [0,1,'GNB-CU-UP E1 SETUP RESPONSE','gNB-CU-CP name'],
+  ['*','Alternatively the CU-CP starts it: GNB-CU-CP E1 SETUP REQUEST / RESPONSE']]},
+ {t:'Bearer context set-up',s:'TS 38.463 · TS 38.401',m:[
+  [0,1,'BEARER CONTEXT SETUP REQUEST','gNB-CU-CP UE E1AP ID, security keys and algorithms, UE-AMBR, PDU sessions (UPF NG-U UL F-TEID, QoS flow → DRB mapping, PDCP config)'],
+  [1,0,'BEARER CONTEXT SETUP RESPONSE','gNB-CU-UP UE E1AP ID, NG-U DL F-TEID, F1-U UL F-TEIDs per DRB'],
+  ['*','CU-CP sends the F1-U UL F-TEIDs to the DU (UE CONTEXT SETUP) and the NG-U DL F-TEID to the AMF (PDU SESSION RESOURCE SETUP RESPONSE)'],
+  [0,1,'BEARER CONTEXT MODIFICATION REQUEST','F1-U DL F-TEIDs from the DU'],
+  [1,0,'BEARER CONTEXT MODIFICATION RESPONSE','']]},
+ {t:'Bearer context release',s:'TS 38.463',m:[
+  [1,0,'BEARER CONTEXT RELEASE REQUEST','CU-UP-initiated','?'],
+  [0,1,'BEARER CONTEXT RELEASE COMMAND','cause'],
+  [1,0,'BEARER CONTEXT RELEASE COMPLETE','']]},
+ {t:'RRC_INACTIVE downlink data and usage report',s:'TS 38.463',m:[
+  [1,0,'DL DATA NOTIFICATION','downlink data for a suspended UE (paging policy indicator)'],
+  ['*','CU-CP starts RAN paging (F1 PAGING, Xn RAN PAGING)'],
+  [1,0,'DATA USAGE REPORT','secondary RAT volume per PDU session (NR-DC / EN-DC charging)','?']]}];
+const mfXn=(pn)=>[
+ {t:'Xn Setup',s:'TS 38.423 (XnAP)',p:pn,m:[
+  ['*','SCTP to port 38422; XnAP uses PPID 61'],
+  [0,1,'XN SETUP REQUEST','global NG-RAN node ID, TAI support list (TAC, PLMNs, slices), served cells, AMF region info'],
+  [1,0,'XN SETUP RESPONSE','the same for the peer']]},
+ {t:'Xn handover',s:'TS 38.423 · TS 38.300',p:['Source '+pn[0].replace(/ 1$/,''),'Target '+pn[1].replace(/ 2$/,'')],m:[
+  [0,1,'HANDOVER REQUEST','source UE XnAP ID, cause, target cell, GUAMI, UE context (KgNB*, UE-AMBR, PDU sessions with UPF UL F-TEIDs, QoS flows), RRC context'],
+  [1,0,'HANDOVER REQUEST ACKNOWLEDGE','target UE XnAP ID, PDU sessions admitted (DL forwarding F-TEIDs), target-to-source container (RRCReconfiguration with reconfigurationWithSync)'],
+  ['*','Source → UE: RRCReconfiguration'],
+  [0,1,'SN STATUS TRANSFER','PDCP COUNT per DRB'],
+  [0,1,'Forwarded data (Xn-U)','GTP-U, downlink packets in transit','?'],
+  ['*','UE → target: RRCReconfigurationComplete; target → AMF: PATH SWITCH REQUEST'],
+  [1,0,'UE CONTEXT RELEASE','after PATH SWITCH REQUEST ACKNOWLEDGE']]},
+ {t:'RRC_INACTIVE: RAN paging and context retrieval',s:'TS 38.423 · TS 38.300',p:['Last serving node','New node'],m:[
+  [0,1,'RAN PAGING','downlink data for a UE in RRC_INACTIVE: I-RNTI, RAN paging area, paging DRX'],
+  ['*','UE → new node: RRCResumeRequest (I-RNTI, resumeMAC-I)'],
+  [1,0,'RETRIEVE UE CONTEXT REQUEST','I-RNTI, resumeMAC-I, new cell'],
+  [0,1,'RETRIEVE UE CONTEXT RESPONSE','UE context (security, PDU sessions)'],
+  [1,0,'XN-U ADDRESS INDICATION','DL forwarding F-TEIDs','?'],
+  ['*','New node → UE: RRCResume; new node → AMF: PATH SWITCH REQUEST'],
+  [1,0,'UE CONTEXT RELEASE','']]},
+ {t:'Configuration update',s:'TS 38.423',p:pn,m:[
+  [0,1,'NG-RAN NODE CONFIGURATION UPDATE','served cells to add / modify / delete'],
+  [1,0,'NG-RAN NODE CONFIGURATION UPDATE ACKNOWLEDGE','']]},
+ {t:'MR-DC: S-node addition',s:'TS 38.423 · TS 37.340',p:['Master node','Secondary node'],m:[
+  [0,1,'S-NODE ADDITION REQUEST','UE security capabilities, S-node security key, PDU sessions, MN-to-SN container (CG-ConfigInfo)'],
+  [1,0,'S-NODE ADDITION REQUEST ACKNOWLEDGE','SN-to-MN container (CG-Config)'],
+  ['*','MN → UE: RRCReconfiguration with the SCG configuration'],
+  [0,1,'S-NODE RECONFIGURATION COMPLETE','']]}];
+MF.xn=mfXn(['gNB 1','gNB 2']);MF.xnngenb=mfXn(['gNB','ng-eNB']);
+MF.xnngenb[1].p=['Source node','Target node'];
+
+/* ---------- 5GC ---------- */
+MF.n1=[
+ {t:'Initial registration',s:'TS 24.501 · TS 23.502',p:['UE','AMF (NAS via the gNB)'],m:[
+  [0,1,'5GMM|REGISTRATION REQUEST','registration type “initial”, 5GS mobile identity (SUCI or 5G-GUTI), ngKSI, UE security capability, requested NSSAI'],
+  [1,0,'5GMM|IDENTITY REQUEST','if the 5G-GUTI is unknown','?'],
+  [0,1,'5GMM|IDENTITY RESPONSE','SUCI','?'],
+  [1,0,'5GMM|AUTHENTICATION REQUEST','ngKSI, ABBA, RAND, AUTN'],
+  [0,1,'5GMM|AUTHENTICATION RESPONSE','RES*'],
+  [1,0,'5GMM|SECURITY MODE COMMAND','selected NAS algorithms (NEA / NIA), ngKSI, replayed UE security capabilities, IMEISV request'],
+  [0,1,'5GMM|SECURITY MODE COMPLETE','IMEISV, NAS message container (the complete REGISTRATION REQUEST)'],
+  [1,0,'5GMM|REGISTRATION ACCEPT','5G-GUTI, TAI list, allowed NSSAI, T3512, 5GS network feature support'],
+  [0,1,'5GMM|REGISTRATION COMPLETE','acknowledges the new 5G-GUTI']]},
+ {t:'PDU session establishment',s:'TS 24.501 · TS 23.502',d:'5GSM messages are carried in 5GMM UL / DL NAS TRANSPORT; the AMF relays them to the SMF.',p:['UE','AMF','SMF'],m:[
+  [0,2,'5GSM|PDU SESSION ESTABLISHMENT REQUEST','in UL NAS TRANSPORT (PDU session ID, request type “initial request”, S-NSSAI, DNN); PDU session type, SSC mode'],
+  ['*','AMF selects the SMF (NRF) and calls Nsmf_PDUSession_CreateSMContext'],
+  [2,0,'5GSM|PDU SESSION ESTABLISHMENT ACCEPT','in DL NAS TRANSPORT: selected PDU session type and SSC mode, QoS rules, session-AMBR, PDU address, S-NSSAI, DNN']]},
+ {t:'Service request',s:'TS 24.501',p:['UE','AMF (NAS via the gNB)'],m:[
+  [0,1,'5GMM|SERVICE REQUEST','5G-S-TMSI, service type (data, signalling, mobile terminated services), uplink data status, PDU session status'],
+  [1,0,'5GMM|SERVICE ACCEPT','PDU session status, PDU session reactivation result']]},
+ {t:'Mobility / periodic registration update',s:'TS 24.501',p:['UE','AMF (NAS via the gNB)'],m:[
+  [0,1,'5GMM|REGISTRATION REQUEST','registration type “mobility” or “periodic”, 5G-GUTI, uplink data status'],
+  [1,0,'5GMM|REGISTRATION ACCEPT','new TAI list, possibly a new 5G-GUTI'],
+  [0,1,'5GMM|REGISTRATION COMPLETE','only if a new 5G-GUTI was assigned','?']]},
+ {t:'Configuration update',s:'TS 24.501',p:['UE','AMF (NAS via the gNB)'],m:[
+  [1,0,'5GMM|CONFIGURATION UPDATE COMMAND','new 5G-GUTI, TAI list, allowed NSSAI, network name, time zone; acknowledgement requested'],
+  [0,1,'5GMM|CONFIGURATION UPDATE COMPLETE','if acknowledgement was requested','?']]},
+ {t:'Deregistration (UE-initiated)',s:'TS 24.501',p:['UE','AMF (NAS via the gNB)'],m:[
+  [0,1,'5GMM|DEREGISTRATION REQUEST (UE ORIGINATING)','de-registration type (switch off / normal, access type), 5G-GUTI'],
+  [1,0,'5GMM|DEREGISTRATION ACCEPT (UE ORIGINATING)','not sent at switch-off','?']]}];
+const mfN2=(ran)=>[
+ {t:'NG Setup',s:'TS 38.413 (NGAP)',m:[
+  ['*','SCTP association set up by the '+ran+' to AMF port 38412; NGAP uses PPID 60'],
+  [0,1,'NG SETUP REQUEST','global RAN node ID, RAN node name, supported TA list (TAC, PLMN, S-NSSAIs), default paging DRX'],
+  [1,0,'NG SETUP RESPONSE','AMF name, served GUAMI list, relative AMF capacity, PLMN support list (slices)'],
+  ['=','or'],
+  [1,0,'NG SETUP FAILURE','cause, time to wait','?']]},
+ {t:'Registration and initial context set-up',s:'TS 38.413 · TS 23.502',m:[
+  [0,1,'INITIAL UE MESSAGE','RAN UE NGAP ID, NAS PDU (REGISTRATION REQUEST), user location (NR CGI, TAI), RRC establishment cause, optional 5G-S-TMSI'],
+  [1,0,'DOWNLINK NAS TRANSPORT','AMF UE NGAP ID; NAS AUTHENTICATION REQUEST, then SECURITY MODE COMMAND'],
+  [0,1,'UPLINK NAS TRANSPORT','NAS responses'],
+  [1,0,'INITIAL CONTEXT SETUP REQUEST','GUAMI, allowed NSSAI, UE security capabilities, security key, optional PDU session resources, NAS PDU (REGISTRATION ACCEPT)'],
+  [0,1,'INITIAL CONTEXT SETUP RESPONSE','PDU sessions set up (with NG-U DL F-TEIDs), if any'],
+  [0,1,'UE RADIO CAPABILITY INFO INDICATION','if the '+ran+' fetched the UE radio capability','?'],
+  [0,1,'UPLINK NAS TRANSPORT','REGISTRATION COMPLETE']]},
+ {t:'PDU session resource set-up',s:'TS 38.413 · TS 23.502',m:[
+  [1,0,'PDU SESSION RESOURCE SETUP REQUEST','PDU session ID, S-NSSAI, NAS PDU (PDU SESSION ESTABLISHMENT ACCEPT), N2 SM info: UPF UL F-TEID, QoS flows (5QI, ARP, GFBR / MFBR), PDU session type, session AMBR'],
+  [0,1,'PDU SESSION RESOURCE SETUP RESPONSE','N2 SM info: '+ran+' DL F-TEID, accepted QoS flows'],
+  ['*','AMF → SMF: Nsmf_PDUSession_UpdateSMContext; SMF → UPF: PFCP Session Modification (downlink FAR)']]},
+ {t:'Paging and service request',s:'TS 38.413 · TS 23.502',m:[
+  [1,0,'PAGING','UE paging identity (5G-S-TMSI), TAI list for paging, paging DRX, paging priority'],
+  [0,1,'INITIAL UE MESSAGE','NAS SERVICE REQUEST'],
+  [1,0,'INITIAL CONTEXT SETUP REQUEST','PDU sessions to activate (UPF F-TEIDs), security key, NAS SERVICE ACCEPT'],
+  [0,1,'INITIAL CONTEXT SETUP RESPONSE','DL F-TEIDs']]},
+ {t:'UE context release (to CM-IDLE)',s:'TS 38.413 · TS 23.502',m:[
+  [0,1,'UE CONTEXT RELEASE REQUEST','cause, e.g. user inactivity; PDU sessions'],
+  [1,0,'UE CONTEXT RELEASE COMMAND','UE NGAP IDs, cause'],
+  [0,1,'UE CONTEXT RELEASE COMPLETE','user location, PDU session list'],
+  ['*','AMF → SMF: Nsmf_PDUSession_UpdateSMContext (up connection deactivated); the UPF buffers or drops downlink data']]},
+ {t:'Xn handover: path switch',s:'TS 38.413 · TS 23.502',p:[ran+' (target)','AMF'],m:[
+  [0,1,'PATH SWITCH REQUEST','source AMF UE NGAP ID, user location, UE security capabilities, PDU sessions with the new DL F-TEIDs'],
+  ['*','AMF → SMF: UpdateSMContext; SMF → UPF: PFCP Session Modification; the UPF sends End Marker to the source'],
+  [1,0,'PATH SWITCH REQUEST ACKNOWLEDGE','security context (NH, NCC), PDU sessions switched']]},
+ {t:'N2 handover',s:'TS 38.413 · TS 23.502',p:['Source '+ran,'AMF','Target '+ran],m:[
+  [0,1,'HANDOVER REQUIRED','handover type intra5GS, cause, target ID, PDU sessions, source-to-target transparent container'],
+  ['*','AMF ↔ SMF: Nsmf_PDUSession_UpdateSMContext (N2 SM info for the target)'],
+  [1,2,'HANDOVER REQUEST','UE security capabilities, security context, PDU session resources (UPF UL F-TEIDs, QoS), transparent container'],
+  [2,1,'HANDOVER REQUEST ACKNOWLEDGE','PDU sessions admitted (DL and forwarding F-TEIDs), target-to-source container'],
+  [1,0,'HANDOVER COMMAND','target-to-source container, data forwarding info'],
+  [0,1,'UPLINK RAN STATUS TRANSFER','PDCP SN status','?'],
+  [1,2,'DOWNLINK RAN STATUS TRANSFER','','?'],
+  [2,1,'HANDOVER NOTIFY','user location'],
+  ['*','AMF → SMF: UpdateSMContext – the UPF switches the downlink path'],
+  [1,0,'UE CONTEXT RELEASE COMMAND','cause “successful handover”'],
+  [0,1,'UE CONTEXT RELEASE COMPLETE','']]}];
+MF.n2=mfN2('gNB');MF.n2ngenb=mfN2('ng-eNB');
+const mfN3=(ran)=>mfGTPU({ul:'; PDU Session Container extension header with the QFI',dl:'; PDU Session Container with the QFI (optionally RQI, PPI)',em:{p:['Source '+ran,'UPF','Target '+ran],sw:'Path switch: AMF → SMF (UpdateSMContext), SMF → UPF: PFCP Session Modification with the target DL F-TEID',fwd:'Xn-U'}});
+MF.n3=mfN3('gNB');MF.n3ngenb=mfN3('ng-eNB');
+const mfPfcpAssoc=(cp,up)=>({t:'Association and heartbeat',s:'TS 29.244 (PFCP)',d:'Either side can set up the association; PFCP uses UDP port 8805.',p:[cp,up],m:[
+  [0,1,'PFCP Association Setup Request','node ID (FQDN or IP), recovery time stamp, CP function features'],
+  [1,0,'PFCP Association Setup Response','cause, node ID, UP function features (e.g. FTUP = the UP function allocates F-TEIDs), user plane IP resource information'],
+  [0,1,'PFCP Heartbeat Request','recovery time stamp – either side'],
+  [1,0,'PFCP Heartbeat Response','recovery time stamp; a new value means the peer restarted (its sessions are lost)']]});
+const mfPfcpDel=(cp,up)=>({t:'Session deletion',s:'TS 29.244',p:[cp,up],m:[
+  [0,1,'PFCP Session Deletion Request','addressed by the UP F-SEID'],
+  [1,0,'PFCP Session Deletion Response','cause, final usage reports']]});
+MF.n4=[
+ mfPfcpAssoc('SMF','UPF'),
+ {t:'PDU session establishment',s:'TS 29.244 · TS 23.502',m:[
+  [0,1,'PFCP Session Establishment Request','CP F-SEID, PDRs (PDI: N3 F-TEID “CHOOSE” or UE IP), FARs (forward to N6; downlink buffered until the gNB F-TEID is known), QERs (session-AMBR, MBR), URRs (usage reporting)'],
+  [1,0,'PFCP Session Establishment Response','cause, UP F-SEID, created PDR with the allocated N3 F-TEID'],
+  ['*','The SMF sends the UPF N3 F-TEID to the gNB (N2 SM info via the AMF)'],
+  [0,1,'PFCP Session Modification Request','update the DL FAR: outer header creation with the gNB N3 F-TEID'],
+  [1,0,'PFCP Session Modification Response','']]},
+ {t:'Idle UE: downlink data report and paging',s:'TS 29.244 · TS 23.502',m:[
+  [0,1,'PFCP Session Modification Request','after AN release: DL FAR apply action BUFF (buffer) + NOCP (notify the CP function)'],
+  [1,0,'PFCP Session Modification Response',''],
+  ['=','downlink data arrives'],
+  [1,0,'PFCP Session Report Request','report type DLDR (downlink data report), PDR ID / QFI'],
+  [0,1,'PFCP Session Report Response',''],
+  ['*','SMF → AMF: Namf_Communication_N1N2MessageTransfer → paging']]},
+ {t:'Usage reporting',s:'TS 29.244 · TS 32.255',m:[
+  [1,0,'PFCP Session Report Request','report type USAR: usage report (volume / duration) for a URR; trigger e.g. volume threshold, quota exhausted, periodic'],
+  [0,1,'PFCP Session Report Response',''],
+  ['*','SMF → CHF: Nchf_ConvergedCharging_Update with the usage']]},
+ mfPfcpDel('SMF','UPF')];
+MF.sxa=[
+ mfPfcpAssoc('SGW-C','SGW-U'),
+ {t:'PDN connection set-up',s:'TS 29.244 · TS 23.214',m:[
+  [0,1,'PFCP Session Establishment Request','PDRs with S1-U and S5/S8-U F-TEIDs (CHOOSE); FARs towards the PGW-U (S5/S8 F-TEID) and the eNB (buffered until known)'],
+  [1,0,'PFCP Session Establishment Response','UP F-SEID, allocated S1-U and S5/S8-U F-TEIDs'],
+  ['*','After S1 INITIAL CONTEXT SETUP: S11 Modify Bearer Request with the eNB F-TEID'],
+  [0,1,'PFCP Session Modification Request','DL FAR: forward to the eNB F-TEID'],
+  [1,0,'PFCP Session Modification Response','']]},
+ {t:'Idle UE: buffering and downlink data notification',s:'TS 29.244 · TS 23.214',m:[
+  ['*','S11 Release Access Bearers Request'],
+  [0,1,'PFCP Session Modification Request','DL FAR: BUFF + NOCP (remove the eNB F-TEID)'],
+  [1,0,'PFCP Session Modification Response',''],
+  ['=','downlink data arrives'],
+  [1,0,'PFCP Session Report Request','report type DLDR'],
+  [0,1,'PFCP Session Report Response',''],
+  ['*','SGW-C → MME: S11 Downlink Data Notification']]},
+ mfPfcpDel('SGW-C','SGW-U')];
+MF.sxb=[
+ mfPfcpAssoc('PGW-C','PGW-U'),
+ {t:'PDN connection set-up',s:'TS 29.244 · TS 23.214',m:[
+  [0,1,'PFCP Session Establishment Request','PDRs: S5/S8-U F-TEID (CHOOSE) for uplink, UE IP for downlink from SGi; FARs to SGi and to the SGW-U; QERs (APN-AMBR); URRs (Gy / Gz)'],
+  [1,0,'PFCP Session Establishment Response','UP F-SEID, allocated S5/S8-U F-TEID']]},
+ {t:'Dedicated bearer / new PCC rule',s:'TS 29.244 · TS 23.214',m:[
+  ['*','PCRF → PGW-C: Gx RAR with a new PCC rule'],
+  [0,1,'PFCP Session Modification Request','new PDR (SDF filter, S5/S8-U F-TEID CHOOSE), FAR, QER (GBR / MBR), URR'],
+  [1,0,'PFCP Session Modification Response','new S5/S8-U F-TEID'],
+  ['*','PGW-C → SGW-C: Create Bearer Request']]},
+ {t:'Usage report → online charging',s:'TS 29.244 · TS 23.214',m:[
+  [1,0,'PFCP Session Report Request','USAR: volume quota of a rating group used up (URR)'],
+  [0,1,'PFCP Session Report Response',''],
+  ['*','PGW-C → OCS: Gy CCR-Update; the new quota goes to the PGW-U with a Session Modification (URR)']]},
+ mfPfcpDel('PGW-C','PGW-U')];
+MF.n6=[{t:'User traffic',s:'TS 23.501 · TS 29.561',d:'N6 has no 3GPP signalling protocol of its own. Secondary authentication / accounting with a DN-AAA server (RADIUS / Diameter) is specified in TS 29.561.',m:[
+  [0,1,'Packet (uplink)','IP, Ethernet or unstructured PDU, decapsulated from GTP-U'],
+  [1,0,'Packet (downlink)','routed to the PSA UPF by the UE address / prefix']]}];
+MF.n9=mfGTPU({d:'Between an intermediate UPF (I-UPF, UL CL / branching point) and the PDU session anchor, or V-UPF ↔ H-UPF in home-routed roaming.',ul:'; PDU Session Container with the QFI'});
+MF.n26=[
+ {t:'5GS → EPS handover (e.g. EPS fallback for voice)',s:'TS 29.274 · TS 23.502',p:['AMF','MME'],m:[
+  [0,1,'Forward Relocation Request','IMSI, MM context (EPS security mapped from 5G), PDN connections mapped from the PDU sessions (SMF+PGW-C F-TEIDs), target eNB ID, transparent container'],
+  ['*','MME prepares the target eNB (S1 HANDOVER REQUEST)'],
+  [1,0,'Forward Relocation Response','cause, target-to-source container, bearer contexts (forwarding)'],
+  [1,0,'Forward Relocation Complete Notification','the UE has arrived in E-UTRAN'],
+  [0,1,'Forward Relocation Complete Acknowledge','']]},
+ {t:'EPS → 5GS handover',s:'TS 29.274 · TS 23.502',p:['MME','AMF'],m:[
+  [0,1,'Forward Relocation Request','IMSI, EPS MM context, PDN connections, target NG-RAN node ID, transparent container'],
+  [1,0,'Forward Relocation Response',''],
+  [1,0,'Forward Relocation Complete Notification',''],
+  [0,1,'Forward Relocation Complete Acknowledge','']]},
+ {t:'Idle mobility 5GS → EPS (TAU)',s:'TS 29.274 · TS 23.502',p:['MME','AMF'],m:[
+  [0,1,'Context Request','GUTI mapped from the 5G-GUTI, complete TAU request'],
+  [1,0,'Context Response','MM context, PDN connections'],
+  [0,1,'Context Acknowledge','']]},
+ {t:'Idle mobility EPS → 5GS (registration)',s:'TS 29.274 · TS 23.502',p:['AMF','MME'],m:[
+  [0,1,'Context Request','5G-GUTI mapped from the EPS GUTI, registration request'],
+  [1,0,'Context Response','EPS MM context, PDN connections'],
+  [0,1,'Context Acknowledge','']]}];
+MF.n32=[
+ {t:'N32-c security capability negotiation',s:'TS 29.573 · TS 33.501',p:['SEPP','Partner SEPP'],m:[
+  [0,1,'POST /n32c-handshake/v1/exchange-capability','SecNegotiateReqData: sender PLMN, supported security capabilities (TLS, PRINS)'],
+  [1,0,'200 OK','SecNegotiateRspData: selected security capability'],
+  [0,1,'POST /n32c-handshake/v1/exchange-params','PRINS only: cipher suites, protection policy, IPX provider info','?'],
+  [1,0,'200 OK','','?']]},
+ {t:'N32-f: forwarding a roaming request',s:'TS 29.573 · TS 29.500',p:['NF (visited PLMN)','vSEPP','hSEPP','NF (home PLMN)'],m:[
+  [0,1,'HTTP/2 request','e.g. Nudm_SDM_Get for an inbound roamer; telescopic FQDN or 3gpp-Sbi-Target-apiRoot'],
+  [1,2,'N32-f message','TLS: the HTTP/2 request itself; PRINS: POST /n32f-forward/v1/n32f-process with the JWE-protected message'],
+  [2,3,'HTTP/2 request','restored original request'],
+  [3,2,'HTTP/2 response',''],
+  [2,1,'N32-f response',''],
+  [1,0,'HTTP/2 response','']]},
+ {t:'N32 context termination',s:'TS 29.573',p:['SEPP','Partner SEPP'],m:[
+  [0,1,'POST /n32c-handshake/v1/n32f-context-terminate','N32 context ID'],
+  [1,0,'200 OK','']]}];
+MF.nhss=[
+ {t:'Authentication vector from the HSS',s:'TS 29.563 · TS 23.632',p:['UDM','HSS'],m:[
+  ['*','The subscriber’s data is in the HSS; the UDM serves the 5GC'],
+  [0,1,'Nhss_UEAuthentication_Get request','SUPI (IMSI), serving network name, authentication type (5G AKA / EAP-AKA′)'],
+  [1,0,'Nhss_UEAuthentication_Get response','authentication vector']]},
+ {t:'Subscriber data from the HSS',s:'TS 29.563 · TS 23.632',p:['UDM','HSS'],m:[
+  [0,1,'Nhss_SubscriberDataManagement_Get request','e.g. after mobility from EPS'],
+  [1,0,'Nhss_SubscriberDataManagement_Get response','e.g. the PGW-C+SMF FQDN used on S5/S8']]}];
+/* ---------- 5GC service-based interfaces (shared by SBI stubs and reference points) ---------- */
+const SB={
+ smCreate:{t:'Nsmf_PDUSession_CreateSMContext',s:'TS 29.502 · TS 23.502',p:['AMF','SMF'],m:[
+  [0,1,'POST /nsmf-pdusession/v1/sm-contexts','SmContextCreateData: SUPI, PDU session ID, DNN, S-NSSAI, serving network, AN type, RAT type, ULI; N1 SM message (PDU SESSION ESTABLISHMENT REQUEST) as multipart'],
+  [1,0,'201 Created','SmContextCreatedData; Location header = SM context reference'],
+  ['*','SMF: UDM (SDM / UECM), PCF (SM policy), UPF (N4 session), then Namf_Communication_N1N2MessageTransfer back to the AMF']]},
+ smUpdate:{t:'Nsmf_PDUSession_UpdateSMContext',s:'TS 29.502',p:['AMF','SMF'],m:[
+  [0,1,'POST /nsmf-pdusession/v1/sm-contexts/{smContextRef}/modify','SmContextUpdateData: N2 SM info (gNB DL F-TEID from PDU SESSION RESOURCE SETUP RESPONSE), or upCnxState DEACTIVATED / ACTIVATING, handover state, new ULI'],
+  [1,0,'200 OK or 204 No Content','SmContextUpdatedData, e.g. N2 SM info for the gNB when the user plane is reactivated']]},
+ smRelease:{t:'Nsmf_PDUSession_ReleaseSMContext',s:'TS 29.502',p:['AMF','SMF'],m:[
+  [0,1,'POST /nsmf-pdusession/v1/sm-contexts/{smContextRef}/release','cause, N2 SM info, ULI'],
+  [1,0,'204 No Content','or 200 OK with N2 SM info']]},
+ n1n2:{t:'Namf_Communication_N1N2MessageTransfer',s:'TS 29.518 · TS 23.502',p:['SMF','AMF'],m:[
+  [0,1,'POST /namf-comm/v1/ue-contexts/{ueContextId}/n1-n2-messages','N1N2MessageTransferReqData: PDU session ID, N1 message (e.g. PDU SESSION ESTABLISHMENT ACCEPT), N2 SM info (PDU session resource set-up), optional paging priority'],
+  [1,0,'200 OK','cause N1_N2_TRANSFER_INITIATED – or 202 Accepted (ATTEMPTING_TO_REACH_UE) while the idle UE is being paged']]},
+ ueCtxTransfer:{t:'Namf_Communication_UEContextTransfer (AMF change)',s:'TS 29.518 · TS 23.502',p:['New AMF','Old AMF'],m:[
+  [0,1,'POST /namf-comm/v1/ue-contexts/{ueContextId}/transfer','UeContextTransferReqData: reason INIT_REG or MOBI_REG, access type, the integrity-protected REGISTRATION REQUEST'],
+  [1,0,'200 OK','UE context: SUPI, security context, PDU sessions with their SMF IDs'],
+  [0,1,'POST /namf-comm/v1/ue-contexts/{ueContextId}/transfer-update','RegistrationStatusUpdate: transferStatus TRANSFERRED'],
+  [1,0,'200 OK','']]},
+ createUeCtx:{t:'Namf_Communication_CreateUEContext (N2 handover with AMF change)',s:'TS 29.518 · TS 23.502',p:['Source AMF','Target AMF'],m:[
+  [0,1,'PUT /namf-comm/v1/ue-contexts/{ueContextId}','UeContextCreateData: UE context, target ID, source-to-target container, PDU sessions'],
+  [1,0,'201 Created','target-to-source container, PDU sessions admitted']]},
+ amfEE:{t:'Namf_EventExposure',s:'TS 29.518',p:['Consumer (e.g. NEF, NWDAF)','AMF'],m:[
+  [0,1,'POST /namf-evts/v1/subscriptions','AmfEventSubscription: events (LOCATION_REPORT, REACHABILITY_REPORT, REGISTRATION_STATE_REPORT …), notifyUri'],
+  [1,0,'201 Created','subscription ID, optional immediate report'],
+  [1,0,'POST {notifyUri}','AmfEventNotification'],
+  [0,1,'204 No Content','']]},
+ auth:{t:'Nausf_UEAuthentication (5G AKA)',s:'TS 29.509 · TS 33.501',p:['AMF (SEAF)','AUSF'],m:[
+  [0,1,'POST /nausf-auth/v1/ue-authentications','AuthenticationInfo: SUCI or SUPI, serving network name'],
+  [1,0,'201 Created','UEAuthenticationCtx: authType 5G_AKA, 5gAuthData (RAND, AUTN, HXRES*), link to the 5g-aka-confirmation resource'],
+  ['*','AMF → UE: AUTHENTICATION REQUEST; the UE answers with RES*'],
+  [0,1,'PUT /nausf-auth/v1/ue-authentications/{authCtxId}/5g-aka-confirmation','ConfirmationData: RES*'],
+  [1,0,'200 OK','authResult AUTHENTICATION_SUCCESS, SUPI, Kseaf']]},
+ udmAuth:{t:'Nudm_UEAuthentication_Get',s:'TS 29.503 · TS 33.501',p:['AUSF','UDM'],m:[
+  [0,1,'POST /nudm-ueau/v1/{supiOrSuci}/security-information/generate-auth-data','AuthenticationInfoRequest: serving network name, AUSF instance ID, optional re-synchronisation info'],
+  [1,0,'200 OK','AuthenticationInfoResult: authType, 5G HE AV (RAND, AUTN, XRES*, KAUSF), SUPI – the UDM de-conceals the SUCI'],
+  [0,1,'POST /nudm-ueau/v1/{supi}/auth-events','AuthEvent: success, time stamp, serving network'],
+  [1,0,'201 Created','']]},
+ uecmAmf:{t:'Nudm_UECM_Registration (AMF)',s:'TS 29.503 · TS 23.502',p:['AMF','UDM'],m:[
+  [0,1,'PUT /nudm-uecm/v1/{ueId}/registrations/amf-3gpp-access','Amf3GppAccessRegistration: AMF instance ID, deregCallbackUri, GUAMI, RAT type, initialRegistrationInd'],
+  [1,0,'201 Created','200 OK if an existing registration is replaced'],
+  ['*','If another AMF was registered, the UDM sends it a DeregistrationNotification']]},
+ uecmDereg:{t:'Nudm_UECM_DeregistrationNotification',s:'TS 29.503',p:['UDM','Old AMF'],m:[
+  [0,1,'POST {deregCallbackUri}','DeregistrationData: deregReason, e.g. UE_INITIAL_REGISTRATION, SUBSCRIPTION_WITHDRAWN'],
+  [1,0,'204 No Content','']]},
+ sdmAmf:{t:'Nudm_SDM_Get / Subscribe (AMF)',s:'TS 29.503',p:['AMF','UDM'],m:[
+  [0,1,'GET /nudm-sdm/v2/{supi}?dataset-names=AM,SMF_SEL,UEC_SMF','or the individual resources …/am-data, …/smf-select-data'],
+  [1,0,'200 OK','access and mobility data (GPSIs, subscribed NSSAI, UE-AMBR, RAT restrictions), SMF selection data'],
+  [0,1,'POST /nudm-sdm/v2/{ueId}/sdm-subscriptions','SdmSubscription: callbackReference, monitored resource URIs'],
+  [1,0,'201 Created','subscription ID'],
+  [1,0,'POST {callbackReference}','ModificationNotification when subscription data changes','?'],
+  [0,1,'204 No Content','','?']]},
+ sdmSmf:{t:'Nudm_SDM_Get and Nudm_UECM_Registration (SMF)',s:'TS 29.503 · TS 23.502',p:['SMF','UDM'],m:[
+  [0,1,'GET /nudm-sdm/v2/{supi}/sm-data?single-nssai=…&dnn=…','session management subscription data'],
+  [1,0,'200 OK','allowed PDU session types and SSC modes, default 5QI / ARP, session AMBR, static IP address'],
+  [0,1,'PUT /nudm-uecm/v1/{ueId}/registrations/smf-registrations/{pduSessionId}','SmfRegistration: SMF instance ID, DNN, S-NSSAI, PLMN'],
+  [1,0,'201 Created','']]},
+ udrSub:{t:'Nudr_DataRepository: subscription data',s:'TS 29.504 · TS 29.505',p:['UDM','UDR'],m:[
+  [0,1,'GET /nudr-dr/v2/subscription-data/{ueId}/{servingPlmnId}/provisioned-data/am-data','also sm-data, smf-selection-subscription-data …'],
+  [1,0,'200 OK','AccessAndMobilitySubscriptionData'],
+  [0,1,'POST /nudr-dr/v2/subscription-data/subs-to-notify','callback URI, monitored resources'],
+  [1,0,'201 Created',''],
+  [1,0,'POST {callbackReference}','data changed by provisioning','?'],
+  [0,1,'204 No Content','','?']]},
+ udrAuth:{t:'Nudr_DataRepository: authentication data',s:'TS 29.505',p:['UDM','UDR'],m:[
+  [0,1,'GET /nudr-dr/v2/subscription-data/{ueId}/authentication-data/authentication-subscription','authentication method, permanent key reference, SQN, AMF field'],
+  [1,0,'200 OK',''],
+  [0,1,'PATCH /nudr-dr/v2/subscription-data/{ueId}/authentication-data/authentication-subscription','new SQN after vector generation'],
+  [1,0,'204 No Content','']]},
+ udrPolicy:{t:'Nudr_DataRepository: policy data',s:'TS 29.519',p:['PCF','UDR'],m:[
+  [0,1,'GET /nudr-dr/v2/policy-data/ues/{ueId}/sm-data','also …/am-data, …/ue-policy-set'],
+  [1,0,'200 OK','SmPolicyData: per S-NSSAI / DNN policy data, usage monitoring data'],
+  [0,1,'POST /nudr-dr/v2/policy-data/subs-to-notify','PolicyDataSubscription'],
+  [1,0,'201 Created',''],
+  [0,1,'POST /nudr-dr/v2/application-data/influenceData/subs-to-notify','to be told about AF traffic influence data','?'],
+  [1,0,'201 Created','','?']]},
+ udrNef:{t:'Nudr_DataRepository: AF traffic influence data',s:'TS 29.519 · TS 23.502',p:['NEF','UDR'],m:[
+  [0,1,'PUT /nudr-dr/v2/application-data/influenceData/{influenceId}','TrafficInfluData: DNN, S-NSSAI, traffic filters or application ID, DNAI and N6 routing, target UE(s)'],
+  [1,0,'201 Created',''],
+  ['*','Subscribed PCFs are notified (N36) and update the SMF (N7) → UL CL / local breakout in the UPF']]},
+ nssf:{t:'Nnssf_NSSelection_Get',s:'TS 29.531 · TS 23.502',p:['AMF','NSSF'],m:[
+  [0,1,'GET /nnssf-nsselection/v2/network-slice-information?nf-type=AMF&nf-id=…&slice-info-request-for-registration=…','requested NSSAI, subscribed S-NSSAIs, TAI'],
+  [1,0,'200 OK','AuthorizedNetworkSliceInfo: allowed NSSAI, configured NSSAI, target AMF set or candidate AMF list, NRF to use'],
+  ['=','PDU session in a slice'],
+  [0,1,'GET …/network-slice-information?…&slice-info-request-for-pdu-session=…','S-NSSAI, roaming indication','?'],
+  [1,0,'200 OK','NSI information: NRF for the slice, NSI ID','?']]},
+ nrfReg:{t:'NF registration and heartbeat',s:'TS 29.510',p:['NF (producer)','NRF'],m:[
+  [0,1,'PUT /nnrf-nfm/v1/nf-instances/{nfInstanceId}','NFProfile: NF type, services, IP / FQDN, PLMN, S-NSSAIs, capacity, priority, locality'],
+  [1,0,'201 Created','NFProfile incl. heartBeatTimer'],
+  [0,1,'PATCH /nnrf-nfm/v1/nf-instances/{nfInstanceId}','heartbeat every heartBeatTimer: JSON Patch nfStatus REGISTERED'],
+  [1,0,'204 No Content','or 200 OK with the profile'],
+  ['*','Missed heartbeats → the NRF marks the NF SUSPENDED and notifies the subscribers']]},
+ nrfDisc:{t:'NF discovery and access token',s:'TS 29.510 · TS 33.501',p:['NF (consumer)','NRF'],m:[
+  [0,1,'GET /nnrf-disc/v1/nf-instances?target-nf-type=…&requester-nf-type=…','query parameters, e.g. service names, DNN, S-NSSAI, SUPI range, TAI'],
+  [1,0,'200 OK','SearchResult: matching NF profiles, validityPeriod (cache)'],
+  [0,1,'POST /oauth2/token','x-www-form-urlencoded: grant_type=client_credentials, nfInstanceId, nfType, targetNfType, scope (service names)'],
+  [1,0,'200 OK','access_token (JWT), token_type Bearer, expires_in']]},
+ nrfSub:{t:'NF status subscription',s:'TS 29.510',p:['NF (consumer)','NRF'],m:[
+  [0,1,'POST /nnrf-nfm/v1/subscriptions','SubscriptionData: nfStatusNotificationUri, condition (e.g. NF type, service name)'],
+  [1,0,'201 Created','subscription ID, validityTime'],
+  [1,0,'POST {nfStatusNotificationUri}','NotificationData: NF_REGISTERED, NF_DEREGISTERED or NF_PROFILE_CHANGED'],
+  [0,1,'204 No Content','']]},
+ direct:{t:'Service request with discovery (model B)',s:'TS 29.500 · TS 29.510 · TS 23.501',p:['Consumer NF','NRF','Producer NF'],m:[
+  [0,1,'GET /nnrf-disc/v1/nf-instances?…','discovery, unless a cached result is still valid'],
+  [1,0,'200 OK','producer NF profiles'],
+  [0,1,'POST /oauth2/token','scope = the producer service'],
+  [1,0,'200 OK','access token'],
+  [0,2,'HTTP/2 request','e.g. POST /nsmf-pdusession/v1/sm-contexts; Authorization: Bearer <token>'],
+  [2,0,'HTTP/2 response','e.g. 201 Created, or an error with ProblemDetails (cause)']]},
+ scp:{t:'Indirect communication via the SCP (model C / D)',s:'TS 29.500 · TS 23.501',p:['Consumer NF','SCP','Producer NF'],m:[
+  [0,1,'HTTP/2 request','model C: producer selected by the consumer, 3gpp-Sbi-Target-apiRoot; model D: 3gpp-Sbi-Discovery-* headers – the SCP discovers and selects'],
+  [1,2,'HTTP/2 request','forwarded; 3gpp-Sbi-Target-apiRoot removed'],
+  [2,1,'HTTP/2 response',''],
+  [1,0,'HTTP/2 response','model D: 3gpp-Sbi-Producer-Id tells the consumer which producer answered']]},
+ sepp:{t:'Inter-PLMN request through the SEPP',s:'TS 29.500 · TS 29.573',p:['NF (local PLMN)','SEPP','Partner SEPP (N32)'],m:[
+  [0,1,'HTTP/2 request','to the other PLMN: telescopic FQDN with the SEPP domain, or 3gpp-Sbi-Target-apiRoot'],
+  [1,2,'N32-f','TLS, or PRINS (JWE-protected message)'],
+  [2,1,'N32-f response',''],
+  [1,0,'HTTP/2 response','']]},
+ pcfSmCreate:{t:'Npcf_SMPolicyControl_Create',s:'TS 29.512 · TS 23.502',p:['SMF','PCF'],m:[
+  [0,1,'POST /npcf-smpolicycontrol/v1/sm-policies','SmPolicyContextData: SUPI, PDU session ID, DNN, S-NSSAI, UE IP, RAT type, ULI, subscribed session AMBR and default QoS, notificationUri'],
+  [1,0,'201 Created','SmPolicyDecision: session rules (session AMBR, default QoS), PCC rules, QoS and charging decisions, policy control request triggers']]},
+ pcfSmUpdate:{t:'Npcf_SMPolicyControl_Update (SMF reports an event)',s:'TS 29.512',p:['SMF','PCF'],m:[
+  [0,1,'POST /npcf-smpolicycontrol/v1/sm-policies/{smPolicyId}/update','SmPolicyUpdateContextData: repPolicyCtrlReqTriggers (e.g. RAT_TY_CH, PLMN_CH, AC_TY_CH), rule reports'],
+  [1,0,'200 OK','updated SmPolicyDecision']]},
+ pcfSmNotify:{t:'Npcf_SMPolicyControl_UpdateNotify (PCF pushes rules)',s:'TS 29.512 · TS 23.502',p:['SMF','PCF'],m:[
+  ['*','Trigger: e.g. Npcf_PolicyAuthorization from the P-CSCF for a voice call'],
+  [1,0,'POST {notificationUri}/update','SmPolicyNotification: new or changed PCC rules (e.g. 5QI 1 for voice)'],
+  [0,1,'204 No Content','or 200 OK with rule reports if rules could not be enforced'],
+  ['*','SMF → UPF (N4) and AMF / gNB (N1N2MessageTransfer): QoS flow set-up']]},
+ pcfSmDelete:{t:'Npcf_SMPolicyControl_Delete',s:'TS 29.512',p:['SMF','PCF'],m:[
+  [0,1,'POST /npcf-smpolicycontrol/v1/sm-policies/{smPolicyId}/delete','usage report, ULI, cause'],
+  [1,0,'204 No Content','']]},
+ pcfAm:{t:'Npcf_AMPolicyControl',s:'TS 29.507',p:['AMF','PCF'],m:[
+  [0,1,'POST /npcf-am-policy-control/v1/policies','PolicyAssociationRequest: SUPI, notificationUri, access type, ULI, serving PLMN, allowed NSSAI'],
+  [1,0,'201 Created','PolicyAssociation: service area restrictions, RFSP index, triggers'],
+  [1,0,'POST {notificationUri}/update','PolicyUpdate: changed restrictions or RFSP','?'],
+  [0,1,'204 No Content','','?']]},
+ pcfUe:{t:'Npcf_UEPolicyControl (URSP)',s:'TS 29.525 · TS 23.502',p:['AMF','PCF'],m:[
+  [0,1,'POST /npcf-ue-policy-control/v1/policies','UE policy association: SUPI, notificationUri, PEI, ULI'],
+  [1,0,'201 Created',''],
+  ['*','PCF → AMF: Namf_Communication_N1N2MessageTransfer with the UE policy (MANAGE UE POLICY COMMAND, URSP rules)']]},
+ polAuth:{t:'Npcf_PolicyAuthorization (e.g. IMS voice)',s:'TS 29.514 · TS 23.503',p:['AF (e.g. P-CSCF)','PCF'],m:[
+  [0,1,'POST /npcf-policyauthorization/v1/app-sessions','AppSessionContext: UE IP, media components (from SDP: media type, codecs, flows, bandwidth), event subscriptions (e.g. ACCESS_TYPE_CHANGE, FAILED_RESOURCES_ALLOCATION), notifUri'],
+  [1,0,'201 Created','Location: app session ID'],
+  ['*','PCF → SMF: Npcf_SMPolicyControl_UpdateNotify with a 5QI 1 PCC rule → QoS flow set-up'],
+  [1,0,'POST {notifUri}/notify','EventsNotification, e.g. SUCCESSFUL_RESOURCES_ALLOCATION','?'],
+  [0,1,'204 No Content','','?'],
+  ['=','call ends (SIP BYE)'],
+  [0,1,'POST /npcf-policyauthorization/v1/app-sessions/{appSessionId}/delete',''],
+  [1,0,'204 No Content','or 200 OK with usage / events']]},
+ chf:{t:'Nchf_ConvergedCharging',s:'TS 32.291 · TS 32.255',p:['SMF (CTF)','CHF'],m:[
+  [0,1,'POST /nchf-convergedcharging/v3/chargingdata','ChargingDataRequest: subscriber ID, NF consumer identification, invocation sequence number, multipleUnitUsage with requested units per rating group, PDU session charging information'],
+  [1,0,'201 Created','ChargingDataResponse: granted units per rating group, triggers, validity time; Location = ChargingDataRef'],
+  [0,1,'POST /nchf-convergedcharging/v3/chargingdata/{ChargingDataRef}/update','used units per rating group, trigger (e.g. QUOTA_EXHAUSTED, VALIDITY_TIME)'],
+  [1,0,'200 OK','new granted units'],
+  ['=','PDU session released'],
+  [0,1,'POST /nchf-convergedcharging/v3/chargingdata/{ChargingDataRef}/release','final usage'],
+  [1,0,'204 No Content','']]},
+ spend:{t:'Nchf_SpendingLimitControl',s:'TS 29.594',p:['PCF','CHF'],m:[
+  [0,1,'POST /nchf-spendinglimitcontrol/v1/subscriptions','SpendingLimitContext: SUPI, policy counter IDs, notifUri'],
+  [1,0,'201 Created','status of each policy counter (operator-defined values, e.g. normal / limit reached)'],
+  [1,0,'POST {notifUri}/notify','a policy counter changed status'],
+  [0,1,'204 No Content',''],
+  [0,1,'DELETE /nchf-spendinglimitcontrol/v1/subscriptions/{subscriptionId}','unsubscribe','?'],
+  [1,0,'204 No Content','','?']]},
+ nefTI:{t:'Traffic influence (AF request)',s:'TS 29.522 · TS 23.502',p:['AF','NEF'],m:[
+  [0,1,'POST /3gpp-traffic-influence/v1/{afId}/subscriptions','TrafficInfluSub: AF transaction ID, DNN, S-NSSAI, traffic filters or application ID, traffic routes (DNAI), target UE or any UE, notification destination'],
+  [1,0,'201 Created','Location: subscription ID'],
+  ['*','NEF stores it in the UDR (N37); PCF → SMF → UPF (UL CL / local breakout)'],
+  [0,1,'DELETE /3gpp-traffic-influence/v1/{afId}/subscriptions/{subscriptionId}','','?'],
+  [1,0,'204 No Content','','?']]},
+ nefQos:{t:'QoS for an AF session (AsSessionWithQoS)',s:'TS 29.122 · TS 29.522',p:['AF','NEF'],m:[
+  [0,1,'POST /3gpp-as-session-with-qos/v1/{scsAsId}/subscriptions','UE IP address, flow information, QoS reference, notification destination'],
+  [1,0,'201 Created',''],
+  ['*','NEF → PCF: Npcf_PolicyAuthorization_Create'],
+  [1,0,'POST {notificationDestination}','UserPlaneNotificationData, e.g. SUCCESSFUL_RESOURCES_ALLOCATION','?'],
+  [0,1,'204 No Content','','?']]},
+ nefMon:{t:'Monitoring events',s:'TS 29.122',p:['AF','NEF'],m:[
+  [0,1,'POST /3gpp-monitoring-event/v1/{scsAsId}/subscriptions','monitoringType, e.g. LOCATION_REPORTING, UE_REACHABILITY, LOSS_OF_CONNECTIVITY; external ID or MSISDN'],
+  [1,0,'201 Created',''],
+  ['*','NEF subscribes at the UDM / AMF (Nudm_EventExposure, Namf_EventExposure)'],
+  [1,0,'POST {notificationDestination}','MonitoringNotification: reports'],
+  [0,1,'204 No Content','']]},
+ nwdafSub:(c)=>({t:'Nnwdaf_AnalyticsSubscription',s:'TS 29.520 · TS 23.288',p:[c,'NWDAF'],m:[
+  [0,1,'POST /nnwdaf-eventssubscription/v1/subscriptions','event (e.g. NF_LOAD, SLICE_LOAD_LEVEL, QOS_SUSTAINABILITY, UE_MOBILITY), target, notificationURI, reporting periodicity'],
+  [1,0,'201 Created',''],
+  [1,0,'POST {notificationURI}','analytics output (statistics or predictions)'],
+  [0,1,'204 No Content','']]}),
+ nwdafInfo:{t:'Nnwdaf_AnalyticsInfo_Request',s:'TS 29.520',p:['Consumer NF','NWDAF'],m:[
+  [0,1,'GET /nnwdaf-analyticsinfo/v1/analytics?event-id=…','one-off request with filters'],
+  [1,0,'200 OK','AnalyticsData']]},
+ afEE:{t:'Naf_EventExposure',s:'TS 29.517 · TS 23.288',p:['NWDAF (or NEF)','AF'],m:[
+  [0,1,'POST /naf-eventexposure/v1/subscriptions','events, e.g. SVC_EXPERIENCE, UE_MOBILITY, UE_COMM; notification target'],
+  [1,0,'201 Created',''],
+  [1,0,'POST {notifUri}','event notifications'],
+  [0,1,'204 No Content','']]}};
+MF.sbi=[SB.nrfReg,SB.direct,SB.scp,SB.nrfSub];
+MF.namf=[SB.n1n2,SB.ueCtxTransfer,SB.createUeCtx,SB.amfEE];
+MF.nausf=[SB.auth];
+MF.nudm=[SB.udmAuth,SB.uecmAmf,SB.sdmAmf,SB.sdmSmf,SB.uecmDereg];
+MF.nudr=[SB.udrSub,SB.udrAuth,SB.udrPolicy,SB.udrNef];
+MF.nnssf=[SB.nssf];
+MF.nnrf=[SB.nrfReg,SB.nrfDisc,SB.nrfSub];
+MF.nsepp=[SB.sepp];
+MF.nsmf=[SB.smCreate,SB.smUpdate,SB.smRelease];
+MF.npcf=[SB.pcfAm,SB.pcfSmCreate,SB.pcfSmNotify,SB.polAuth,SB.pcfUe];
+MF.nchf=[SB.chf,SB.spend];
+MF.nnef=[SB.nefTI,SB.nefQos,SB.nefMon];
+MF.naf=[SB.afEE];
+MF.nnwdaf=[SB.nwdafSub('Consumer NF (e.g. PCF, NSSF)'),SB.nwdafInfo];
+MF.nscp=[SB.scp];
+MF.n11=[SB.smCreate,SB.n1n2,SB.smUpdate,SB.smRelease];
+MF.n12=[SB.auth];
+MF.n13=[SB.udmAuth];
+MF.n8=[SB.uecmAmf,SB.sdmAmf,SB.uecmDereg];
+MF.n35=[SB.udrSub,SB.udrAuth];
+MF.n22=[SB.nssf];
+MF.n15=[SB.pcfAm,SB.pcfUe];
+MF.n7=[SB.pcfSmCreate,SB.pcfSmUpdate,SB.pcfSmNotify,SB.pcfSmDelete];
+MF.n10=[SB.sdmSmf];
+MF.n40=[SB.chf];
+MF.n28=[SB.spend];
+MF.n36=[SB.udrPolicy];
+MF.n37=[SB.udrNef];
+MF.n33=[SB.nefTI,SB.nefQos,SB.nefMon];
+MF.n5=[SB.polAuth];
+MF.n23=[SB.nwdafSub('PCF')];
+MF.n34=[SB.nwdafSub('NSSF')];
+MF.n14=[SB.ueCtxTransfer,SB.createUeCtx];
+MF.n5ims=[{...SB.polAuth,p:['P-CSCF (AF)','PCF']},...MF.rx.map(f=>({...f,t:'Rx: '+f.t,p:['PCF (PCRF role)','P-CSCF']}))];
+/* ---------- message flow rendering ---------- */
+state.mfi={};
+const mfSlug=t=>String(t).toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);
+const mfSplit=nm=>{const i=nm.indexOf('|');return i<0?['',nm]:[nm.slice(0,i),nm.slice(i+1)];};
+const mfIsMsg=r=>typeof r[0]==='number';
+function mfLanes(L,f){if(f.p)return f.p;const a=EM[L.a]?EM[L.a].n:'A';
+ if(L.isbus)return ['Consumer NF','Producer NF'];if(L.bus)return [a,'SBI'];if(L.a===L.b)return [a+' 1',a+' 2'];return [a,EM[L.b]?EM[L.b].n:String(L.b)];}
+function mfX(n,i){if(n<2)return 50;const m=n===2?14:12;return m+i*(100-2*m)/(n-1);}
+function mfRowText(r){return (mfIsMsg(r)?mfSplit(r[2]).join(' ')+' '+(r[3]||''):r[1]).toLowerCase();}
+function mfTokens(){return state.q?state.q.split(/\s+/).filter(Boolean):[];}
+/* a procedure matches the search if one of its messages / notes contains all search words, or its title does */
+function mfFlowHit(f){const tk=mfTokens();if(!tk.length)return false;return tk.every(t=>f.t.toLowerCase().includes(t))||f.m.some(mfRowHit);}
+function mfRowHit(r){const tk=mfTokens();if(!tk.length)return false;const txt=mfIsMsg(r)?mfSplit(r[2])[1].toLowerCase():mfRowText(r);return tk.every(t=>txt.includes(t));}
+function mfDiagram(L,f){const P=mfLanes(L,f),n=P.length,X=i=>mfX(n,i);const hw=Math.min(30,96/n);
+ let h=`<div class="mfd" style="--n:${n}"><div class="mfh">${P.map((p,i)=>`<div class="mfl" style="left:${X(i)}%;width:${Math.min(hw,2*Math.min(X(i),100-X(i))-1)}%" title="${esc(p)}">${esc(p)}</div>`).join('')}</div><div class="mfb">${P.map((p,i)=>`<i class="mfv" style="left:${X(i)}%"></i>`).join('')}`;
+ f.m.forEach(r=>{
+  if(mfIsMsg(r)){const [fr,to,nm,det,fl]=r;const [tag,name]=mfSplit(nm);const x1=X(fr),x2=X(to),lo=Math.min(x1,x2),hi=Math.max(x1,x2),mid=(lo+hi)/2;
+   const w=Math.min(100,Math.max(hi-lo,n<=2?88:64)),left=Math.min(Math.max(mid-w/2,0),100-w);const opt=fl&&fl.includes('?');
+   h+=`<div class="mfm${opt?' opt':''}${mfRowHit(r)?' hit':''}"><div class="mft" style="margin-left:${left}%;width:${w}%">${tag?`<span class="mftag">${esc(tag)}</span>`:''}<span class="bg"><b>${esc(name)}</b></span>${opt?' <span class="mfo" title="optional / conditional">opt</span>':''}</div>`+
+    `<div class="mfa ${x2>=x1?'r':'l'}" style="margin-left:${lo}%;width:${hi-lo}%"></div>`+
+    (det?`<div class="mfx" style="margin-left:${left}%;width:${w}%"><span class="bg">${esc(det)}</span></div>`:'')+`</div>`;}
+  else if(r[0]==='=')h+=`<div class="mfsep"><span>${esc(r[1])}</span></div>`;
+  else{const li=r[0].length>1?+r[0].slice(1):null;
+   if(li==null){const a=X(0)-Math.min(8,X(0)),b=X(n-1)+Math.min(8,100-X(n-1));h+=`<div class="mfn${mfRowHit(r)?' hit':''}" style="margin-left:${a}%;width:${b-a}%">${esc(r[1])}</div>`;}
+   else{const w=Math.min(46,90/n*1.6),l=Math.min(Math.max(X(li)-w/2,0),100-w);h+=`<div class="mfn lane${mfRowHit(r)?' hit':''}" style="margin-left:${l}%;width:${w}%">${esc(r[1])}</div>`;}}});
+ return h+'</div></div>';}
+/* which procedure to show: the one picked for this interface – unless a new search finds the query in another one */
+function mfIndex(L){const F=MF[L.id];if(!F)return 0;const v=state.mfi[L.id];
+ if(v&&(v.q===state.q||!state.q))return Math.min(v.i,F.length-1);
+ if(state.q){if(v&&mfFlowHit(F[v.i]))return v.i;const j=F.findIndex(mfFlowHit);if(j>=0)return j;}
+ return v?Math.min(v.i,F.length-1):0;}
+function mfInner(L,i,big){const F=MF[L.id],f=F[i];
+ return `<div class="mfchips" role="tablist">${F.map((x,j)=>`<button class="mfc${j===i?' on':''}${mfFlowHit(x)?' hit':''}" data-mfi="${j}" role="tab" aria-selected="${j===i}">${esc(x.t)}</button>`).join('')}</div>`+
+ `<div class="mfmeta"><span>${esc(f.s||'')}</span><span class="mftools"><button data-mfa="copy" title="Copy this flow as plain text">Copy as text</button>${big?'':'<button data-mfa="big" title="Open a larger view">⤢ Larger</button>'}</span></div>`+
+ (f.d?`<p class="mfdesc">${esc(f.d)}</p>`:'')+mfDiagram(L,f);}
+function mfSection(L){const F=MF[L.id];if(!F||!F.length)return '';
+ return `<h3>Message flows <span class="mfcount">${F.length}</span></h3><div class="mfbox" data-l="${L.id}">${mfInner(L,mfIndex(L),false)}</div>`+
+  `<p class="mflegend"><span class="lg-s"></span> message <span class="lg-o"></span> optional / conditional · grey boxes are steps on other interfaces or inside a node</p>`;}
+function mfText(L,i){const F=MF[L.id],f=F[i],P=mfLanes(L,f);const out=[`${L.n} – ${f.t}${f.s?' ('+f.s+')':''}`];if(f.d)out.push(f.d);out.push('');
+ f.m.forEach(r=>{if(mfIsMsg(r)){const [tag,name]=mfSplit(r[2]);out.push(`${P[r[0]]} -> ${P[r[1]]}: ${tag?'['+tag+'] ':''}${name}${r[3]?' – '+r[3]:''}${r[4]&&r[4].includes('?')?' (optional)':''}`);}
+  else if(r[0]==='=')out.push('---- '+r[1]+' ----');else out.push('   [note] '+r[1]);});
+ return out.join('\n');}
+function mfCopy(L,i){const t=mfText(L,i);const done=()=>toast('Flow copied as text');
+ const fb=()=>{const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();
+  if(ok)done();else ndModal('Copy the flow','<textarea class="mfcopy" readonly>'+esc(t)+'</textarea>',[{label:'Close',primary:true}],m=>{const x=m.querySelector('textarea');x.focus();x.select();});};
+ if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(done,fb);else fb();}
+function mfRefresh(id){document.querySelectorAll(`.mfbox[data-l="${id}"]`).forEach(b=>{b.innerHTML=mfInner(LM[id],mfIndex(LM[id]),b.classList.contains('big'));});}
+document.addEventListener('click',ev=>{const box=ev.target.closest('.mfbox');if(!box)return;const L=LM[box.dataset.l];if(!L)return;
+ const c=ev.target.closest('[data-mfi]');if(c){ev.stopPropagation();state.mfi[L.id]={i:+c.dataset.mfi,q:state.q};mfRefresh(L.id);if(state.sel&&state.sel[1]===L.id)updateHash();return;}
+ const a=ev.target.closest('[data-mfa]');if(!a)return;ev.stopPropagation();const i=mfIndex(L);
+ if(a.dataset.mfa==='copy')mfCopy(L,i);
+ else if(a.dataset.mfa==='big')ndModal(L.n+' – message flows',`<div class="mfbox big" data-l="${L.id}">${mfInner(L,i,true)}</div>`,[{label:'Close',primary:true}],m=>m.querySelector('.mbox').classList.add('wide'));});
+document.addEventListener('keydown',ev=>{const c=ev.target.closest&&ev.target.closest('.mfc');if(!c||!['ArrowLeft','ArrowRight'].includes(ev.key))return;
+ const box=c.closest('.mfbox'),L=LM[box.dataset.l],F=MF[L.id];ev.preventDefault();state.mfi[L.id]={i:(mfIndex(L)+(ev.key==='ArrowRight'?1:F.length-1))%F.length,q:state.q};mfRefresh(L.id);
+ const nb=box.querySelector('.mfc.on');if(nb)nb.focus();if(state.sel&&state.sel[1]===L.id)updateHash();});
+/* search: procedure titles and message names are searchable */
+LINKS.forEach(l=>{const F=MF[l.id];if(F)l._h+=' '+F.map(f=>f.t+' '+f.m.filter(mfIsMsg).map(r=>mfSplit(r[2])[1]).join(' ')).join(' ').toLowerCase();});
 
 /* =====================================================================
    NETWORK DATA – the user's own IP plan. Loaded from a local file, kept
@@ -2156,7 +3830,7 @@ function ndTip(type,id){if(!ND)return '';if(type==='el'){const n=ndCount(id);ret
  const L=LM[id];const n=ndLinkEps(L).reduce((a,x)=>a+x.ad.length,0);return n?`<span class="s">IP plan: ${n} address${n>1?'es':''} in ${esc(ND.network)}</span>`:'';}
 
 /* ---------- modal ---------- */
-function ndModal(title,body,buttons,onOpen){const m=$('#modal');m.querySelector('h3').textContent=title;m.querySelector('.mbody').innerHTML=body;
+function ndModal(title,body,buttons,onOpen){const m=$('#modal');m.querySelector('.mbox').className='mbox';m.querySelector('h3').textContent=title;m.querySelector('.mbody').innerHTML=body;
  const bt=m.querySelector('.mbtns');bt.innerHTML='';m._esc=null;
  buttons.forEach(b=>{const e=document.createElement('button');e.textContent=b.label;e.className=b.primary?'primary':b.danger?'danger':'';
   const run=async()=>{if(e.disabled)return;e.disabled=true;let r;try{r=b.onClick?await b.onClick(m):true;}finally{e.disabled=false;}if(r!==false)ndCloseModal();};

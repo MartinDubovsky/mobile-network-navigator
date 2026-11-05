@@ -1,12 +1,12 @@
 # Mobile Network Navigator
 
-**Version 2026.11.05.3** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
+**Version 2026.11.05.4** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
 
-An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them and the protocol stacks used on each interface.
+An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them, the protocol stacks used on each interface and message-flow diagrams of the main procedures on every interface.
 
 It is meant for network engineers who need to get their bearings quickly while troubleshooting or discussing a topic with colleagues.
 
-- **File:** `index.html` (about 245 KB) – the whole application
+- **File:** `index.html` (about 375 KB) – the whole application
 - **Online:** https://martindubovsky.github.io/mobile-network-navigator/ (once GitHub Pages is enabled for this repository)
 - **Dependencies:** none – no external scripts, fonts or network access; works offline from disk
 - **Your own IP plan:** can be loaded from a local CSV/JSON file and is shown in the element and interface details – it never becomes part of this repository (see [Network data](#network-data-your-own-ip-addresses))
@@ -96,11 +96,35 @@ Line colour = generation. Small coloured bars on top of each box show which gene
 
 **For an element:** full name, generations, summary, key functions, generation-specific notes (e.g. what changes for the eNB in EN-DC), identifiers (GUTI, GUAMI, ECGI, NCGI, …), all connected interfaces (clickable), troubleshooting quick references and key 3GPP specifications.
 
-**For an interface:** endpoints, plane, summary, protocol stack(s) (including IP and ATM transport variants where relevant), generation-specific notes, ports / SCTP PPIDs / Diameter application IDs, key procedures and messages, troubleshooting quick references (cause and result codes), and key specifications.
+**For an interface:** endpoints, plane, summary, protocol stack(s) (including IP and ATM transport variants where relevant), generation-specific notes, ports / SCTP PPIDs / Diameter application IDs, key procedures and messages, **message flows** (sequence diagrams, see below), troubleshooting quick references (cause and result codes), and key specifications.
 
 **With network data loaded:** the element panel lists your instances of that element with their addresses per interface; the interface panel lists the addresses at both ends plus the subnet / VLAN of the interface (see below).
 
 **With nothing selected:** a quick-orientation page with generation summaries, a table of well-known ports and SCTP PPIDs, and standardized QCI/5QI values.
+
+## Message flows
+
+Every interface panel has a **Message flows** section with sequence diagrams of the main procedures on that interface – 412 procedures with about 1 500 messages over all 116 interface entries.
+
+- **Pick a procedure** with the chips above the diagram (or the ← / → keys when a chip has focus).
+- **⤢ Larger** opens the diagram in a wide window; **Copy as text** copies it as plain text (`eNodeB -> MME: S1 SETUP REQUEST – …`) for a ticket or a chat.
+- **Search** also covers procedure titles and message names: searching `pfcp session report` highlights N4 (and Sxa / Sxb in the CUPS view), and opening it shows the first procedure containing that message, with the message highlighted.
+- **Deep link** to a procedure: `#if=<interface-id>&mf=<procedure>`, e.g. `index.html#if=s1mme&mf=s1-handover` (the address bar updates when you pick a procedure).
+
+**Reading a diagram**
+
+| Notation | Meaning |
+|---|---|
+| Columns | The nodes involved. Usually the two ends of the interface; some procedures show three or four, e.g. source eNB – MME – target eNB for an S1 handover, or UE – BSS – MSC on Um to show which layer-3 messages pass transparently through the BSS. |
+| Solid arrow | A message, with its name in bold and the key IEs / parameters below it. |
+| Dashed arrow, `opt` | Optional or conditional message (e.g. authentication that is not always run, a failure answer, an acknowledgement only sent when requested). |
+| Small tag before a name | Protocol layer where it helps: `RR`, `MM`, `CC`, `GMM`, `SM`, `RRC`, `MAC`, `5GMM`, `5GSM`. |
+| Grey box | A step on another interface or inside a node (e.g. “MME → SGW: Modify Bearer Request (S11)”), shown so the sequence makes sense. |
+| Dashed line with text | A separator: “or”, “later”, “release” … |
+
+**Scope:** the flows show the messages and the IEs that matter when reading a trace; they are not complete message definitions. SBI procedures are shared between the SBI stubs and the matching reference points (e.g. `Nsmf_PDUSession_CreateSMContext` appears on Nsmf and on N11); CUPS and ng-eNB interface entries reuse the flows of the classic interface with their own end names. HTTP paths use the API versions of Release 17. Message names follow the specs (S1AP / NGAP in capitals, GTP and PFCP in title case, Diameter commands by their abbreviations, MAP by operation name as decoders show them).
+
+---
 
 ## Network data (your own IP addresses)
 
@@ -209,6 +233,7 @@ The page address updates with the current selection, so a link can be sent to a 
 |---|---|---|
 | `#el=<element-id>` | `index.html#el=amf` | Element details |
 | `#if=<interface-id>` | `index.html#if=s1mme` | Interface details |
+| `#if=<interface-id>&mf=<procedure>` | `index.html#if=s1mme&mf=s1-handover` | Interface details with that message flow open (procedure title in lower case, words joined by `-`) |
 | `#gen=<gen>[,<gen>…]` | `index.html#gen=nsa,4g` | Generation filter |
 
 Generation IDs: `2g`, `3g`, `hspa`, `4g`, `nsa`, `sa`, `iw` (interworking).
@@ -301,6 +326,7 @@ All content is plain JavaScript data near the top of the `<script>` block in the
 | `ELS` | Network elements |
 | `LINKS` | Interfaces, SBI stubs (`stub(...)`) and reference points (`rp(...)`) |
 | `E2E` | End-to-end stack scenarios |
+| `MF`, `SB` | Message flows per interface ID; `SB` holds the SBI procedures shared by stubs and reference points. Helpers build repeated patterns (`mfGTPU`, `mfDia`, `mfGx`, `mfS11` …) |
 | `ND_CANON`, `ND_EXTRA`, `ND_ELALIAS` | Network data: which interface ID addresses are stored under, extra keys a link shows, and element fallbacks (CUPS functions, gNB parts) |
 | `ND_TEMPLATE_CSV` | The template offered by **Download CSV template** (keep it in step with `netdata-template.csv`) |
 
@@ -310,6 +336,8 @@ All content is plain JavaScript data near the top of the `<script>` block in the
 CUPS-only interfaces carry `cups: true` (added in the *CUPS view* block after `LINKS`); interfaces attached to `nocups` elements are hidden automatically in the CUPS view.
 Routing options: `ao` / `bo` (anchor offsets from element centre), `pts` (waypoints for orthogonal routing), `curve` (bend for reference points), `lp` (label position 0–1 along the path), `lo` (label offset), `logical` (dash-dot style).
 
+**Message flow format:** `MF[interfaceId] = [{t:'title', s:'spec', d:'optional note', p:['lane', …] (optional, default = the two ends), m:[rows]}]`. A row is `[from, to, 'TAG|MESSAGE', 'key IEs', '?']` (lane numbers from 0; the tag and `'?'` for optional are optional), `['*', 'note']` for a grey box across all lanes, `['*1', 'note']` for a box on lane 1, or `['=', 'text']` for a separator.
+
 Layer colours in the stacks are assigned automatically from the layer name (NAS, RRC, radio L2, application protocol, tunnelling, transport, IP, SS7/ATM, L2/L1).
 
 To release a new version, change `VERSION` (and the `<meta name="version">` tag) in the HTML to the release date (`YYYY.MM.DD`, or `YYYY.MM.DD.N` for a further release on the same day) and add an entry below.
@@ -317,6 +345,10 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ---
 
 ## Changelog
+
+### 2026.11.05.4
+- **Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.
+- Larger view, copy as text, keyboard navigation, search over procedure and message names, and deep links to a procedure (`&mf=`).
 
 ### 2026.11.05.3
 - **Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.
