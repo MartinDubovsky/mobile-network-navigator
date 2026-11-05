@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.05.6** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
+**Version 2026.11.05.7** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them, the protocol stacks used on each interface and message-flow diagrams of the main procedures on every interface.
 
@@ -245,6 +245,7 @@ The page address updates with the current selection, so a link can be sent to a 
 | `#if=<interface-id>` | `index.html#if=s1mme` | Interface details |
 | `#if=<interface-id>&mf=<procedure>` | `index.html#if=s1mme&mf=s1-handover` | Interface details with that message flow open (procedure title in lower case, words joined by `-`) |
 | `#gen=<gen>[,<gen>…]` | `index.html#gen=nsa,4g` | Generation filter |
+| `#releases` | `index.html#releases` | Release history |
 
 Generation IDs: `2g`, `3g`, `hspa`, `4g`, `nsa`, `sa`, `iw` (interworking).
 
@@ -336,6 +337,7 @@ All content is plain JavaScript data near the top of the `<script>` block in the
 | `ELS` | Network elements |
 | `LINKS` | Interfaces, SBI stubs (`stub(...)`) and reference points (`rp(...)`) |
 | `E2E` | End-to-end stack scenarios |
+| `RELEASES` | Release history shown in the app (same entries as the changelog below) |
 | `MF`, `SB` | Message flows per interface ID; `SB` holds the SBI procedures shared by stubs and reference points. Helpers build repeated patterns (`mfGTPU`, `mfDia`, `mfGx`, `mfS11` …) |
 | `ND_CANON`, `ND_EXTRA`, `ND_ELALIAS` | Network data: which interface ID addresses are stored under, extra keys a link shows, and element fallbacks (CUPS functions, gNB parts) |
 | `ND_TEMPLATE_CSV` | The template offered by **Download CSV template** (keep it in step with `netdata-template.csv`) |
@@ -350,11 +352,16 @@ Routing options: `ao` / `bo` (anchor offsets from element centre), `pts` (waypoi
 
 Layer colours in the stacks are assigned automatically from the layer name (NAS, RRC, radio L2, application protocol, tunnelling, transport, IP, SS7/ATM, L2/L1).
 
-To release a new version, change `VERSION` (and the `<meta name="version">` tag) in the HTML to the release date (`YYYY.MM.DD`, or `YYYY.MM.DD.N` for a further release on the same day) and add an entry below.
+To release a new version, change `VERSION` (and the `<meta name="version">` tag) in the HTML to the release date (`YYYY.MM.DD`, or `YYYY.MM.DD.N` for a further release on the same day), add the entry at the top of `RELEASES` in the HTML (shown in the app when the version number is clicked; `**bold**` and `` `code` `` are rendered) and add the same entry to the changelog below.
 
 ---
 
 ## Changelog
+
+The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.05.7
+- **Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet.
 
 ### 2026.11.05.6
 - **Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="version" content="2026.11.05.6">
+<meta name="version" content="2026.11.05.7">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mobile Network Navigator · 2G · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
@@ -25,7 +25,13 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 button{font-family:inherit;font-size:inherit;color:inherit}
 header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:6px 14px;background:var(--bg2);border-bottom:1px solid var(--line)}
 header h1{font-size:15px;margin:0;font-weight:650;letter-spacing:.2px;white-space:nowrap;cursor:help}
-header h1 .ver{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:2px}
+header h1 .ver{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:2px;background:transparent;cursor:pointer;position:relative}
+header h1 .ver:hover{color:var(--ink);border-color:var(--muted)}
+header h1 .ver.new::after{content:'';position:absolute;top:-3px;right:-3px;width:7px;height:7px;border-radius:50%;background:#f59e0b}
+.rel{border-top:1px solid var(--line);padding:8px 0 4px}.rel:first-of-type{border-top:0}
+.rel h4{margin:0 0 4px;font-size:13px;display:flex;gap:10px;align-items:baseline}.rel h4 code{font-size:12.5px}.rel h4 span{color:var(--muted);font-weight:400;font-size:12px}.rel h4 em{font-style:normal;font-size:11px;border:1px solid var(--giw);color:var(--giw);border-radius:999px;padding:0 6px}
+.rel ul{margin:0;padding-left:18px;line-height:1.5}.rel li{margin:2px 0}.rel code,.relintro code{font-family:var(--mono);font-size:12px;background:var(--panel2);border-radius:3px;padding:0 3px}
+.relintro{color:var(--muted);font-size:12.5px;margin:0 0 6px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .chip{border:1px solid var(--line);background:var(--panel);padding:4px 9px;font-size:13px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;line-height:1.1;user-select:none;transition:background .15s,border-color .15s}
 .chip:hover{border-color:var(--muted)}
@@ -331,7 +337,7 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
 </head>
 <body>
 <header id="hdr">
-  <h1 title="2G GSM/GPRS/EDGE · 3G · HSPA · 4G LTE/EPC · 5G NSA (EN-DC) · 5G SA — network elements, interfaces and protocol stacks">Mobile Network Navigator<span class="ver" id="ver"></span></h1>
+  <h1 title="2G GSM/GPRS/EDGE · 3G · HSPA · 4G LTE/EPC · 5G NSA (EN-DC) · 5G SA — network elements, interfaces and protocol stacks">Mobile Network Navigator<button class="ver" id="ver" title="Release history" aria-label="Release history"></button></h1>
   <div class="chips" id="genchips"></div>
   <div class="tabs" id="tabs">
     <button data-view="arch" class="on">Architecture</button>
@@ -372,7 +378,9 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
 <script>
 'use strict';
 const PRISTINE_DOC=document.documentElement.cloneNode(true); /* clean copy of the tool, used by “Save tool + data as one HTML file” */
-const VERSION = '2026.11.05.6';
+const VERSION = '2026.11.05.7';
+/* release history – shown when the version number is clicked; keep in step with the README changelog */
+const RELEASES = [{"v": "2026.11.05.7","items": ["**Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet."]},{"v": "2026.11.05.6","items": ["**Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.","Addresses written with a prefix length (`10.2.7.2/26`) are treated as one address, not as the whole subnet: search no longer matches other addresses of that subnet, and the duplicate check compares the address part. CIDR blocks with zero host bits stay ranges."]},{"v": "2026.11.05.5","items": ["**Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.","**Site filter** for network data: pick sites (or type part of a name) to limit panels, map badges, tooltips and search; optional export of only the filtered sites; the filter is kept with “Remember on this computer”.","Template: port lists and a second site; RAN ranges without a site."]},{"v": "2026.11.05.4","items": ["**Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.","Larger view, copy as text, keyboard navigation, search over procedure and message names, and deep links to a procedure (`&mf=`)."]},{"v": "2026.11.05.3","items": ["**Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.","Save as CSV, JSON, encrypted JSON (AES-256-GCM, PBKDF2-SHA256), or as one HTML file with the tool and the data (optionally encrypted). Optional “Remember on this computer”. Warning before leaving with unsaved changes.","Content-Security-Policy added: the page cannot load or send anything over the network.","Templates `netdata-template.csv` / `netdata-template.json` (documentation addresses only); `.gitignore` excludes exports with real data.","`/` no longer jumps to the search box while typing in another field."]},{"v": "2026.11.05.2","items": ["**E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.","Scenarios can now consist of several paths: **5G NSA** user plane (NR leg + LTE leg over X2-U) and control plane (LTE RRC/NAS, SCG configuration via X2-C, SRB3) and **HSPA Direct Tunnel** (user plane RNC ↔ GGSN + SGSN control path) – every stack now faces its real peer.","Fixed labels: GTP-U (QFI) on N3/N9 at both ends, 16 / 8 kbit/s TRAU sub-timeslots on Abis and Ater; BSC added to the GSM speech path; user IP labelled consistently."]},{"v": "2026.11.05","items": ["Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).","The CS and PS core (MSC Server/VLR, CS-MGW, HLR/AuC, EIR, SGSN, GGSN, charging) is shared with 3G and now tagged for both generations.","Integration with modern networks: CSFB and SRVCC to GERAN (SGs, Sv), LTE ↔ GERAN reselection / redirection / NACC, S4-SGSN with Gb (S3/S4), and 5G-SRVCC (R16, NG-RAN → UTRAN only, via N26 → MME_SRVCC → Sv); no direct 5GS ↔ GERAN mobility.","New end-to-end stacks: 2G GPRS/EDGE user plane, GSM CS control plane, GSM speech path.","Renamed to “Mobile Network Navigator”; shorter generation chip subtitles so the header still fits one row at 1920 px."]},{"v": "2026.11.04.3","items": ["Drew interfaces that were only described in text: **Cx / Sh** (IMS–HSS), **Ro / Rf** (IMS–OCS/OFCS), **Sy** (PCRF–OCS), **S9** (PCRF–roaming partner), **S6d** (S4-SGSN–HSS), **Gs** (SGSN–MSC/VLR), **Gc** (GGSN–HLR), **Nhss** (HSS–UDM interworking, R16), and reference points **N23** (PCF–NWDAF) and **N34** (NSSF–NWDAF).","Diameter in 5G networks made visible: N5 to the IMS is now “N5 / Rx” (PCF supports Rx per TS 23.503 Annex C), N6/SGi/Gi carry the DN-AAA (RADIUS/Diameter) option; *5G SA* + *Diameter* filter highlights Cx/Sh, Ro/Rf, N5/Rx and N6.","EPC zone label moved to the bottom-right corner."]},{"v": "2026.11.04.2","items": ["Added **ng-eNB** (E-UTRA connected to 5GC) in the NG-RAN area with LTE-Uu, N2 (NG-C) to AMF, N3 (NG-U) to UPF and Xn to the gNB; notes on Options 4/4a, 5 and 7/7a/7x.","5G SA chip now reads “5GC · Opt. 2 (4/5/7)”."]},{"v": "2026.11.04","items": ["First release: architecture map (3G, HSPA, 4G, 5G NSA, 5G SA, interworking), element/interface details with protocol stacks, end-to-end stack view, interface table, deep links, dark/light theme.","Added Gx between GGSN (PCEF) and PCRF (R7+).","Added EPC **CUPS view**: SGW-C/U, PGW-C/U, Sxa, Sxb, S5-C/U, S4-C/U.","Compact top bar (two rows at 1920 px), protocol filter as a dropdown, date-based version label."]}];
 /* =====================================================================
    DATA
    ===================================================================== */
@@ -1870,11 +1878,11 @@ function renderOverview(){
  <tr><td>6, 8, 9</td><td>Non-GBR</td><td>TCP-based data (9 is the usual default bearer / flow)</td></tr>
  <tr><td>7</td><td>Non-GBR</td><td>Voice / live video streaming, interactive gaming</td></tr></table>
  <p style="color:var(--muted);font-size:12px">5QI 1–9 keep the QCI meanings; 5G adds further values (e.g. 65–70 mission-critical, 82–90 delay-critical GBR).</p>
- <h3>Scope</h3><p style="color:var(--muted);font-size:13px">Reference architecture per GSM Phase 2+ / 3GPP R97–R18 and GSMA guidelines. Some optional nodes are left out for readability and are described in the text of the related element: SMSF, LMF, NSSAAF, BSF, 5G-EIR, N3IWF/TNGF, ePDG/3GPP AAA (S2b, SWm, SWx), SMSC, gsmSCF (CAMEL), TDF (Sd, Sxc), SCEF (T6a), CBC, BM-SC, DRA/DEA. Vendor implementations often combine nodes (e.g., GGSN/PGW/SMF+UPF, HLR/HSS/UDM). Use the EPC toggle for the R14 CUPS split (SGW-C/U, PGW-C/U, Sxa, Sxb). The ng-eNB covers LTE connected to the 5GC (Options 4, 5, 7).</p><p class="specs">Version ${esc(VERSION)}</p>`;}
+ <h3>Scope</h3><p style="color:var(--muted);font-size:13px">Reference architecture per GSM Phase 2+ / 3GPP R97–R18 and GSMA guidelines. Some optional nodes are left out for readability and are described in the text of the related element: SMSF, LMF, NSSAAF, BSF, 5G-EIR, N3IWF/TNGF, ePDG/3GPP AAA (S2b, SWm, SWx), SMSC, gsmSCF (CAMEL), TDF (Sd, Sxc), SCEF (T6a), CBC, BM-SC, DRA/DEA. Vendor implementations often combine nodes (e.g., GGSN/PGW/SMF+UPF, HLR/HSS/UDM). Use the EPC toggle for the R14 CUPS split (SGW-C/U, PGW-C/U, Sxa, Sxb). The ng-eNB covers LTE connected to the 5GC (Options 4, 5, 7).</p><p class="specs"><button class="ndlink" data-act="releases">Version ${esc(VERSION)} – release history</button></p>`;}
 panel.addEventListener('click',ev=>{const b=ev.target.closest('[data-sel],[data-gen],[data-act]');if(!b)return;
  if(b.dataset.sel){const [t,id]=b.dataset.sel.split(':');select(t,id);return;}
  if(b.dataset.gen){toggleGen(b.dataset.gen,true);return;}
- const a=b.dataset.act;if(a==='clear')clearSel();if(a==='map')setView('arch');
+ const a=b.dataset.act;if(a==='releases'){showReleases();return;}if(a==='clear')clearSel();if(a==='map')setView('arch');
  if(a==='copy'){const url=location.href;(navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>toast('Link copied')).catch(()=>toast('Copy the address bar URL: '+location.hash));}});
 function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),1800);}
 
@@ -1893,7 +1901,7 @@ function toggleGen(g,exclusive){if(g==='all'){state.gens.clear();state.lastGen=n
  state.sel=null;updateHash();apply();renderPanel();}
 function updateHash(){let h='';if(state.sel){h=(state.sel[0]==='el'?'el=':'if=')+state.sel[1];const v=state.sel[0]==='if'&&state.mfi&&state.mfi[state.sel[1]];if(v&&v.i>0&&MF[state.sel[1]])h+='&mf='+mfSlug(MF[state.sel[1]][v.i].t);}else if(state.gens.size)h='gen='+[...state.gens].join(',');
  try{history.replaceState(null,'',h?'#'+h:location.pathname+location.search);}catch(e){}}
-function readHash(){const h=decodeURIComponent(location.hash.slice(1));if(!h)return;const q={};h.split('&').forEach(p=>{const i=p.indexOf('=');if(i>0)q[p.slice(0,i)]=p.slice(i+1);});
+function readHash(){const h=decodeURIComponent(location.hash.slice(1));if(!h)return;if(h==='releases'){showReleases();return;}const q={};h.split('&').forEach(p=>{const i=p.indexOf('=');if(i>0)q[p.slice(0,i)]=p.slice(i+1);});
  if(q.if&&LM[q.if]){let j=-1;if(q.mf&&MF[q.if]){j=MF[q.if].findIndex(f=>mfSlug(f.t)===q.mf);if(j>=0)state.mfi[q.if]={i:j,q:state.q};}select('if',q.if);
   if(j>=0)setTimeout(()=>{const b=panel.querySelector('.mfbox');if(b)b.scrollIntoView({block:'start'});},60);}
  else if(q.el&&EM[q.el])select('el',q.el);
@@ -4058,6 +4066,18 @@ async function ndInit(){const emb=document.getElementById('mnn-netdata');
    const r=ndClean(j);ndSet(r.d,{kind:'embedded',enc},r.w,false);toast(`Network data “${r.d.network}” loaded from this file`);}
   catch(e){toast('The network data in this file could not be read.');}return;}
  if(ndRemember()){try{const t=localStorage.getItem(ND_LS);if(t){const r=ndClean(JSON.parse(t));try{const f=JSON.parse(localStorage.getItem(ND_LS_SITES)||'null');if(f)NDF={sel:f.sel?new Set(f.sel):null,noSite:f.noSite!==false};}catch(e){}ndSet(r.d,{kind:'browser',enc:false},r.w,false);toast(`Network data “${r.d.network}” restored from this browser`);}}catch(e){}}}
+
+/* ---------- release history ---------- */
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function relDate(v){const m=String(v).match(/^(\d{4})\.(\d{2})\.(\d{2})(?:\.(\d+))?$/);if(!m)return '';return (+m[3])+' '+MON[+m[2]-1]+' '+m[1]+(m[4]?' · release '+m[4]+' of the day':'');}
+function relFmt(t){return esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>');}
+function showReleases(){const first=RELEASES[RELEASES.length-1];
+ ndModal('Release history',`<p class="relintro">You are using version <code>${esc(VERSION)}</code>. Version numbers are dates (<code>YYYY.MM.DD</code>, with <code>.N</code> for further releases on the same day). ${RELEASES.length} releases since ${esc(relDate(first.v))}.</p>`+
+  RELEASES.map(r=>`<section class="rel"><h4><code>${esc(r.v)}</code><span>${esc(relDate(r.v))}</span>${r.v===VERSION?'<em>current</em>':''}</h4><ul>${r.items.map(i=>`<li>${relFmt(i)}</li>`).join('')}</ul></section>`).join(''),
+  [{label:'Close',primary:true}]);
+ try{localStorage.setItem('mnn-seen-version',VERSION);}catch(e){}$('#ver').classList.remove('new');$('#ver').title='Release history';}
+$('#ver').addEventListener('click',ev=>{ev.stopPropagation();showReleases();});
+try{const seen=localStorage.getItem('mnn-seen-version');if(!seen)localStorage.setItem('mnn-seen-version',VERSION);else if(seen!==VERSION){$('#ver').classList.add('new');$('#ver').title='New version – click to see what changed';}}catch(e){}
 
 /* init */
 function sizeMain(){document.documentElement.style.setProperty('--hdr',($('#hdr').offsetHeight+$('#toolbar').offsetHeight)+'px');}
