@@ -3,3 +3,8 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+
+# Network data with real (private) addresses – never commit
+*.netdata.*
+*-with-data.html
+private/

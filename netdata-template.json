@@ -1,0 +1,363 @@
+{
+  "format": "mobile-network-navigator/netdata",
+  "version": 1,
+  "network": "Example network",
+  "instances": [
+    {
+      "element": "mme",
+      "name": "MME01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "s1mme",
+          "ip": "192.0.2.11",
+          "port": "36412",
+          "vlan": "101",
+          "note": "SCTP multihoming - primary path"
+        },
+        {
+          "interface": "s1mme",
+          "ip": "192.0.2.12",
+          "port": "36412",
+          "vlan": "101",
+          "note": "SCTP multihoming - secondary path"
+        },
+        {
+          "interface": "s11",
+          "ip": "192.0.2.21",
+          "port": "2123",
+          "vlan": "102",
+          "note": ""
+        },
+        {
+          "interface": "n26",
+          "ip": "192.0.2.21",
+          "port": "2123",
+          "vlan": "102",
+          "note": "shared with S11"
+        },
+        {
+          "interface": "s6a",
+          "ip": "192.0.2.31",
+          "port": "3868",
+          "vlan": "103",
+          "note": "Diameter host mme01.epc.example"
+        },
+        {
+          "interface": "sgs",
+          "ip": "192.0.2.41",
+          "port": "29118",
+          "vlan": "104",
+          "note": ""
+        },
+        {
+          "interface": "oam",
+          "ip": "192.0.2.250",
+          "port": "",
+          "vlan": "900",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "element": "sgw",
+      "name": "SGW01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "s11",
+          "ip": "198.51.100.5",
+          "port": "2123",
+          "vlan": "102",
+          "note": ""
+        },
+        {
+          "interface": "s1u",
+          "ip": "198.51.100.6",
+          "port": "2152",
+          "vlan": "110",
+          "note": ""
+        },
+        {
+          "interface": "s5",
+          "ip": "198.51.100.7",
+          "port": "",
+          "vlan": "111",
+          "note": "GTP-C 2123 / GTP-U 2152"
+        }
+      ]
+    },
+    {
+      "element": "pgw",
+      "name": "PGW01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "s5",
+          "ip": "198.51.100.17",
+          "port": "",
+          "vlan": "111",
+          "note": ""
+        },
+        {
+          "interface": "gx",
+          "ip": "198.51.100.18",
+          "port": "3868",
+          "vlan": "103",
+          "note": ""
+        },
+        {
+          "interface": "sgi",
+          "ip": "203.0.113.1",
+          "port": "",
+          "vlan": "200",
+          "note": "SGi next hop"
+        }
+      ]
+    },
+    {
+      "element": "hss",
+      "name": "HSS01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "s6a",
+          "ip": "192.0.2.51",
+          "port": "3868",
+          "vlan": "103",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "element": "pcrf",
+      "name": "PCRF01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "gx",
+          "ip": "192.0.2.55",
+          "port": "3868",
+          "vlan": "103",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "element": "amf",
+      "name": "AMF01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "n2",
+          "ip": "192.0.2.61",
+          "port": "38412",
+          "vlan": "121",
+          "note": ""
+        },
+        {
+          "interface": "sbi",
+          "ip": "192.0.2.62",
+          "port": "443",
+          "vlan": "122",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "element": "smf",
+      "name": "SMF01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "sbi",
+          "ip": "192.0.2.71",
+          "port": "443",
+          "vlan": "122",
+          "note": ""
+        },
+        {
+          "interface": "n4",
+          "ip": "192.0.2.72",
+          "port": "8805",
+          "vlan": "123",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "element": "upf",
+      "name": "UPF01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "n4",
+          "ip": "198.51.100.33",
+          "port": "8805",
+          "vlan": "123",
+          "note": ""
+        },
+        {
+          "interface": "n3",
+          "ip": "198.51.100.34",
+          "port": "2152",
+          "vlan": "124",
+          "note": ""
+        },
+        {
+          "interface": "n6",
+          "ip": "203.0.113.33",
+          "port": "",
+          "vlan": "201",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "element": "nrf",
+      "name": "NRF01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "sbi",
+          "ip": "192.0.2.81",
+          "port": "443",
+          "vlan": "122",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "element": "ims",
+      "name": "P-CSCF01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "n5ims",
+          "ip": "192.0.2.91",
+          "port": "443",
+          "vlan": "130",
+          "note": "N5 / Rx towards PCF"
+        }
+      ]
+    },
+    {
+      "element": "mscs",
+      "name": "MSS01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "acp",
+          "ip": "192.0.2.101",
+          "port": "2905",
+          "vlan": "140",
+          "note": "M3UA"
+        },
+        {
+          "interface": "iucscp",
+          "ip": "192.0.2.102",
+          "port": "2905",
+          "vlan": "140",
+          "note": "M3UA"
+        }
+      ]
+    },
+    {
+      "element": "sgsn",
+      "name": "SGSN01",
+      "site": "Site-A",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "gb",
+          "ip": "192.0.2.111",
+          "port": "",
+          "vlan": "141",
+          "note": "Gb over IP (NS-IP)"
+        },
+        {
+          "interface": "gn",
+          "ip": "192.0.2.112",
+          "port": "",
+          "vlan": "142",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "element": "enb",
+      "name": "*",
+      "site": "All sites",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "s1mme",
+          "ip": "198.51.100.128/26",
+          "port": "36412",
+          "vlan": "101",
+          "note": "eNodeB signalling range"
+        },
+        {
+          "interface": "s1u",
+          "ip": "203.0.113.128/25",
+          "port": "2152",
+          "vlan": "110",
+          "note": "eNodeB user-plane range"
+        }
+      ]
+    },
+    {
+      "element": "gnbcucp",
+      "name": "*",
+      "site": "All sites",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "n2",
+          "ip": "2001:db8:100::/48",
+          "port": "38412",
+          "vlan": "121",
+          "note": "IPv6 example"
+        }
+      ]
+    },
+    {
+      "element": "gnbcuup",
+      "name": "*",
+      "site": "All sites",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "n3",
+          "ip": "2001:db8:200::/48",
+          "port": "2152",
+          "vlan": "124",
+          "note": "IPv6 example"
+        }
+      ]
+    }
+  ],
+  "interfaces": {
+    "s1mme": {
+      "subnet": "192.0.2.0/28",
+      "vlan": "101",
+      "note": "S1-MME core VLAN"
+    },
+    "s11": {
+      "subnet": "192.0.2.16/28",
+      "vlan": "102",
+      "note": "S11 / N26 VLAN"
+    }
+  }
+}

@@ -1,14 +1,15 @@
 # Mobile Network Navigator
 
-**Version 2026.11.05.2** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
+**Version 2026.11.05.3** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them and the protocol stacks used on each interface.
 
 It is meant for network engineers who need to get their bearings quickly while troubleshooting or discussing a topic with colleagues.
 
-- **File:** `index.html` (about 170 KB) – the whole application
+- **File:** `index.html` (about 245 KB) – the whole application
 - **Online:** https://martindubovsky.github.io/mobile-network-navigator/ (once GitHub Pages is enabled for this repository)
 - **Dependencies:** none – no external scripts, fonts or network access; works offline from disk
+- **Your own IP plan:** can be loaded from a local CSV/JSON file and is shown in the element and interface details – it never becomes part of this repository (see [Network data](#network-data-your-own-ip-addresses))
 - **Browsers:** current Chrome, Edge, Firefox or Safari (uses CSS `color-mix()`: Chrome/Edge 111+, Firefox 113+, Safari 16.2+)
 
 ---
@@ -97,7 +98,106 @@ Line colour = generation. Small coloured bars on top of each box show which gene
 
 **For an interface:** endpoints, plane, summary, protocol stack(s) (including IP and ATM transport variants where relevant), generation-specific notes, ports / SCTP PPIDs / Diameter application IDs, key procedures and messages, troubleshooting quick references (cause and result codes), and key specifications.
 
+**With network data loaded:** the element panel lists your instances of that element with their addresses per interface; the interface panel lists the addresses at both ends plus the subnet / VLAN of the interface (see below).
+
 **With nothing selected:** a quick-orientation page with generation summaries, a table of well-known ports and SCTP PPIDs, and standardized QCI/5QI values.
+
+## Network data (your own IP addresses)
+
+The tool can show the IP addresses of **your** network next to the reference content: per element instance and interface, at both ends of an interface, and in search. Because the tool is used for many networks and the addresses are private, **the data is never part of the repository or of `index.html`**. You keep it in your own file and load it when you need it.
+
+**Privacy model**
+
+- Loading reads the file in the browser. Nothing is uploaded; the page has no network access at all (its Content-Security-Policy sets `connect-src 'none'` and allows no external resources). This also holds for the GitHub Pages copy.
+- Data stays in the open tab only. It is kept after a reload only if you tick **Remember on this computer** (browser storage, unencrypted – leave it off on shared computers). For local files some browsers share this storage between all HTML files opened from disk.
+- Deep links (`#el=…`, `#if=…`) never contain any network data.
+- Leaving the page with changes that are not saved to a file asks for confirmation.
+
+### Loading, editing, saving
+
+Everything is in the **◆ Network data** menu at the right end of the toolbar:
+
+| Action | Result |
+|---|---|
+| **Load file…** (or drop a file anywhere on the page) | Reads a CSV, a JSON export, an encrypted JSON export, or an HTML file saved with data. If data is already loaded you can **replace** it or **merge** into it (instances with the same element and name are combined). |
+| **New empty dataset…** | Start from scratch and enter instances in the tool. |
+| **Rename network…**, **Data check** | Change the dataset name; list all validation warnings. |
+| **Export CSV** / **Export JSON** | `<network>.netdata.csv` / `<network>.netdata.json` |
+| **Export JSON, encrypted** | `<network>.netdata.enc.json`, protected by a passphrase |
+| **Save tool + data as one HTML file** | `mobile-network-navigator-<network>-with-data.html` – a copy of the tool with your data inside; opening it loads the data automatically. Handy for a laptop in the field or for sharing with a colleague. |
+| **… encrypted** | The same file, but the data block is encrypted; the passphrase is asked when the file is opened (Cancel = use the tool without the data). |
+| **Remember on this computer** | Keep the data in this browser’s storage until you untick it or remove the data. |
+| **Download CSV template** | The example below. |
+
+**Editing in the tool:** select an element → **+ Add … instance** or **Edit** on an instance card (name, site, note, and any number of addresses with interface, address, port, VLAN, note). Select an interface → **Add / Edit interface info** for its subnet, VLAN and a note. Invalid addresses or ports are pointed out before saving.
+
+**Where the data appears**
+
+- **Element panel:** “Network data” with one card per instance (the gNB box also lists CU-CP, CU-UP and DU instances).
+- **Interface panel:** subnet / VLAN of the interface and the addresses of both ends. If an end has no data of its own, the tool falls back: SGW-C / SGW-U → SGW, PGW-C / PGW-U → PGW, gNB-CU-CP / CU-UP / DU → gNB (and the other way round), so a classic SGW entry also shows on the CUPS view’s S11 or S5-U. The SGW S1-U address also shows on S1-U towards the en-gNB.
+- **Map:** a green `IP n` badge with the number of instances on each element; tooltips show the count.
+- **Search:** finds instance names, notes and addresses. A complete IPv4 address matches exactly that address or a subnet that contains it (`198.51.100.130` finds the eNodeB range `198.51.100.128/26`, while `192.0.2.11` does not find `192.0.2.110`); partial input such as `192.0.2.` or `2001:db8:` is a text search. Matching rows are highlighted in the panel and moved to the top of long lists (lists show 40 instances at a time).
+
+### CSV format
+
+UTF-8, one row per address. The delimiter (`,` `;` or tab) is detected automatically, so files saved by Excel in any locale work; quoted fields and a BOM are fine.
+
+```csv
+# network: Example network
+element,instance,site,interface,ip,port,vlan,note
+mme,MME01,Site-A,s1mme,192.0.2.11,36412,101,SCTP multihoming - primary path
+mme,MME01,Site-A,s1mme,192.0.2.12,36412,101,SCTP multihoming - secondary path
+sgw,SGW01,Site-A,s5,198.51.100.7,,111,GTP-C 2123 / GTP-U 2152
+amf,AMF01,Site-A,sbi,192.0.2.62,443,122,
+enb,*,All sites,s1mme,198.51.100.128/26,36412,101,eNodeB signalling range
+gnbcucp,*,All sites,n2,2001:db8:100::/48,38412,121,IPv6 example
+,,,s1mme,192.0.2.0/28,,101,S1-MME core VLAN
+```
+
+| Column | Content |
+|---|---|
+| `element` | Element ID (see [Element IDs](#deep-links)) or its name as shown on the map (`MME`, `MSC Server`, `gNB-CU-CP`, …). A few common names are accepted too (`MSS`, `VLR`, `AuC`, `P-CSCF`, `OFCS`, `CU-CP`, …). **Empty** = the row describes the interface itself (subnet in `ip`, VLAN, note). |
+| `instance` | Your node name, e.g. `MME01`. `*` stands for “all instances”, useful for RAN address ranges. Rows with the same element and instance form one instance. |
+| `site` | Optional location. |
+| `interface` | Interface ID (see [Interface IDs](#deep-links)) or name as shown on the map. Names are resolved against the interfaces of that element: `Gx` on a GGSN is the GGSN Gx, `A` on a CS-MGW is the A user plane, `S8` means S5/S8, `Gp` means Gn/Gp. The CUPS view interfaces (S11, S5-C/U, …) and the ng-eNB copies of N2/N3/Xn are stored under the classic ID. Also allowed: `oam` (O&M), `sbi` (the NF’s SBI address, shown on its SBI stub and on the SBI bus) and `other`. |
+| `ip` | IPv4 or IPv6 address, a subnet in CIDR notation, or a host name (FQDN). |
+| `port`, `vlan`, `note` | Optional. |
+
+Header names are case-insensitive and some alternatives are recognised (`name`/`hostname`/`node` for instance, `address`/`ip address`/`subnet` for ip, `comment`/`description` for note). Lines starting with `#` are comments; `# network: <name>` names the dataset.
+
+### JSON format
+
+```json
+{
+  "format": "mobile-network-navigator/netdata", "version": 1, "network": "Example network",
+  "instances": [
+    { "element": "mme", "name": "MME01", "site": "Site-A", "note": "",
+      "addresses": [ { "interface": "s1mme", "ip": "192.0.2.11", "port": "36412", "vlan": "101", "note": "" } ] }
+  ],
+  "interfaces": { "s1mme": { "subnet": "192.0.2.0/28", "vlan": "101", "note": "S1-MME core VLAN" } }
+}
+```
+
+Complete examples with documentation addresses only (RFC 5737 / RFC 3849): [`netdata-template.csv`](netdata-template.csv) and [`netdata-template.json`](netdata-template.json).
+
+### Data check
+
+On loading and after each edit the data is checked. Rows with an unknown element are skipped; everything else is kept and reported: unknown interface, interface that does not belong to the element in this tool, invalid address / subnet / host name, invalid port, and the same address used by different instances. The count is shown next to the menu button (**⚠ n**, click for the list).
+
+### Encryption
+
+Encrypted exports use the browser’s Web Crypto API: **AES-256-GCM** with a key derived from your passphrase by **PBKDF2-SHA256 with 600 000 iterations**, a random 16-byte salt and a random 12-byte IV for every save. The file contains only the parameters and the ciphertext – not the network name or any address:
+
+```json
+{ "format": "mobile-network-navigator/netdata-encrypted", "version": 1, "kdf": "PBKDF2-SHA256",
+  "iterations": 600000, "cipher": "AES-256-GCM", "salt": "…", "iv": "…", "data": "…" }
+```
+
+The passphrase (at least 10 characters) is never stored and cannot be recovered. Send it over a different channel than the file. Unlocking takes about a second because of the key derivation.
+
+### Keeping real data out of git
+
+The repository contains only the templates. `.gitignore` excludes the default export names – `*.netdata.*`, `*-with-data.html` – and a `private/` folder. Keep your real files outside the working copy or in `private/`, and check `git status` before committing.
 
 ---
 
@@ -201,6 +301,8 @@ All content is plain JavaScript data near the top of the `<script>` block in the
 | `ELS` | Network elements |
 | `LINKS` | Interfaces, SBI stubs (`stub(...)`) and reference points (`rp(...)`) |
 | `E2E` | End-to-end stack scenarios |
+| `ND_CANON`, `ND_EXTRA`, `ND_ELALIAS` | Network data: which interface ID addresses are stored under, extra keys a link shows, and element fallbacks (CUPS functions, gNB parts) |
+| `ND_TEMPLATE_CSV` | The template offered by **Download CSV template** (keep it in step with `netdata-template.csv`) |
 
 **Element fields:** `id`, `n` (label), optional `cups` / `nocups` (shown only in the CUPS / classic EPC view), `sb` (subtitle), `gens`, `x`, `y`, `w`, `h` (diagram coordinates; canvas is 1900 × 1310), `full`, `sum`, `fn` (functions), `notes` (per-generation notes, keyed by generation ID), `kv` (identifier pairs), `specs`, `tips`, optional `kind` (`ext`, `container`, `bar`) and `pc` (colour override).
 
@@ -215,6 +317,13 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ---
 
 ## Changelog
+
+### 2026.11.05.3
+- **Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.
+- Save as CSV, JSON, encrypted JSON (AES-256-GCM, PBKDF2-SHA256), or as one HTML file with the tool and the data (optionally encrypted). Optional “Remember on this computer”. Warning before leaving with unsaved changes.
+- Content-Security-Policy added: the page cannot load or send anything over the network.
+- Templates `netdata-template.csv` / `netdata-template.json` (documentation addresses only); `.gitignore` excludes exports with real data.
+- `/` no longer jumps to the search box while typing in another field.
 
 ### 2026.11.05.2
 - **E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.
