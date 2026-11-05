@@ -1,8 +1,8 @@
 # Mobile Network Navigator
 
-**Version 2026.11.05.8** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.05.9** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
-An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them, the protocol stacks used on each interface and message-flow diagrams of the main procedures on every interface.
+An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface and message-flow diagrams of the main procedures on every interface.
 
 It is meant for network engineers who need to get their bearings quickly while troubleshooting or discussing a topic with colleagues.
 
@@ -28,8 +28,8 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 
 | View | What it shows |
 |---|---|
-| **Architecture** | Zoomable diagram of all elements and interfaces, grouped into UE, RAN (UTRAN, E-UTRAN + EN-DC, NG-RAN), core (UMTS CS/PS, EPC, 5GC) and external networks. |
-| **E2E stacks** | Side-by-side protocol stacks from UE to core for 12 scenarios (see below). Stacks are bottom-aligned, so the lower layers of an interface face each other; upper layers pass through relaying nodes until they reach their peer. **Hover or tap a layer to highlight its peer(s).** Dual-connectivity and Direct Tunnel cases are drawn as several paths (one per radio leg / control path). |
+| **Architecture** | Zoomable diagram of all elements and interfaces, grouped into UE, RAN (UTRAN, E-UTRAN + EN-DC, NG-RAN), core (UMTS CS/PS, EPC with the ePDG / 3GPP AAA for Wi-Fi access, 5GC) and external networks. |
+| **E2E stacks** | Side-by-side protocol stacks from UE to core for 14 scenarios (see below). Stacks are bottom-aligned, so the lower layers of an interface face each other; upper layers pass through relaying nodes until they reach their peer. **Hover or tap a layer to highlight its peer(s).** Dual-connectivity and Direct Tunnel cases are drawn as several paths (one per radio leg / control path). |
 | **Interface table** | All interfaces in one sortable table: name, endpoints, generation, plane, protocol stack and key specs. Click a row for details. |
 
 ### End-to-end stack scenarios
@@ -48,6 +48,8 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 | `nsacp` | 5G NSA control plane (EN-DC) |
 | `saup` | 5G SA user plane (split gNB) |
 | `sacp` | 5G SA control plane |
+| `wifiup` | VoWiFi / Wi-Fi user plane (untrusted, via ePDG) |
+| `wificp` | Wi-Fi access authentication (EAP-AKA via ePDG) |
 
 ---
 
@@ -57,7 +59,7 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 
 | Control | Behaviour |
 |---|---|
-| **Generation chips** (2G GSM, 3G UMTS, HSPA, 4G LTE/EPC, 5G NSA, 5G SA, Interworking) | Click to toggle, and click several to combine. Double-click to show one generation only. **All** clears the filter. Elements that only take part through another generation’s interface (e.g., the MSC Server under 4G via SGs/Sv) are shown half-dimmed. With no item selected, the panel shows an overview of the most recently chosen generation. |
+| **Generation chips** (2G GSM, 3G UMTS, HSPA, 4G LTE/EPC, 5G NSA, 5G SA, Wi-Fi, Interworking) | Click to toggle, and click several to combine. Double-click to show one generation only. **All** clears the filter. Elements that only take part through another generation’s interface (e.g., the MSC Server under 4G via SGs/Sv) are shown half-dimmed. With no item selected, the panel shows an overview of the most recently chosen generation. |
 | **Search** (toolbar, left) | Free text over names, descriptions, protocols, procedures, ports and specs, e.g. `S1-MME`, `Diameter`, `2152`, `PFCP`, `29.274`. Several words are combined with AND. The match count is shown next to the box. |
 | **Planes** | Show/hide control-plane, user-plane and SBI interfaces. Interfaces that carry both planes stay visible while either plane is on. |
 | **5GC view** | *Service-based*: NFs attached to the SBI bus (Namf, Nsmf …). *Reference points*: point-to-point N5, N7, N8, N10, N11, N12, N13, N15, N22, N23, N28, N33, N34, N35, N36, N37, N40. |
@@ -104,7 +106,7 @@ Line colour = generation. Small coloured bars on top of each box show which gene
 
 ## Message flows
 
-Every interface panel has a **Message flows** section with sequence diagrams of the main procedures on that interface – 412 procedures with about 1 500 messages over all 116 interface entries.
+Every interface panel has a **Message flows** section with sequence diagrams of the main procedures on that interface – 448 procedures with about 1 600 messages over all 124 interface entries.
 
 - **Pick a procedure** with the chips above the diagram (or the ← / → keys when a chip has focus).
 - **⤢ Larger** opens the diagram in a wide window; **Copy as text** copies it as plain text (`eNodeB -> MME: S1 SETUP REQUEST – …`) for a ticket or a chat.
@@ -248,7 +250,7 @@ The page address updates with the current selection, so a link can be sent to a 
 | `#gen=<gen>[,<gen>…]` | `index.html#gen=nsa,4g` | Generation filter |
 | `#releases` | `index.html#releases` | Release history |
 
-Generation IDs: `2g`, `3g`, `hspa`, `4g`, `nsa`, `sa`, `iw` (interworking).
+Generation IDs: `2g`, `3g`, `hspa`, `4g`, `nsa`, `sa`, `wifi` (Wi-Fi access via ePDG), `iw` (interworking).
 
 The **Copy link to this item** button in the panel copies the current address to the clipboard. Some browsers block the clipboard for `file://` pages; in that case copy the address bar instead.
 
@@ -278,7 +280,8 @@ The **Copy link to this item** button in the panel copies the current address to
 | `sgw` | SGW | `peercs` | Peer CS core / PSTN |
 | `pgw` | PGW | `partner` | Roaming partner PLMN |
 | `pcrf` | PCRF | `ocs` | OCS / OFCS |
-| `ngenb` | ng-eNB (LTE on 5GC) | | |
+| `ngenb` | ng-eNB (LTE on 5GC) | `epdg` | ePDG (Wi-Fi access) |
+| `aaa` | 3GPP AAA server | | |
 
 CUPS view only: `sgwc` (SGW-C), `sgwu` (SGW-U), `pgwc` (PGW-C), `pgwu` (PGW-U). Classic view only: `sgw`, `pgw`.
 
@@ -298,6 +301,7 @@ CUPS view only: `sgwc` (SGW-C), `sgwu` (SGW-U), `pgwc` (PGW-C), `pgwu` (PGW-U). 
 | Interworking | `s3`, `s4`, `s12`, `sgs`, `sv`, `n26`, `s6d` (S4-SGSN–HSS), `nhss` (HSS–UDM, R16) |
 | NG-RAN | `f1c`, `f1u`, `e1`, `xn` (gNB–gNB) |
 | ng-eNB (LTE on 5GC) | `lteuu5gc` (LTE-Uu), `n2ngenb` (N2), `n3ngenb` (N3), `xnngenb` (Xn gNB–ng-eNB) |
+| Wi-Fi access (ePDG) | `swu` (UE–ePDG), `swm` (ePDG–AAA), `swx` (AAA–HSS), `s2b` (ePDG–PGW), `s6b` (PGW–AAA); CUPS view: `s2bc` (S2b-C), `s2bu` (S2b-U), `s6bc` (S6b to PGW-C) |
 | 5GC point-to-point | `n1`, `n2`, `n3`, `n4`, `n6`, `n9`, `n14`, `n32` |
 | 5GC SBI | `sbi` (bus), `namf`, `nsmf`, `nausf`, `nudm`, `nudr`, `npcf`, `nnrf`, `nnssf`, `nnef`, `nchf`, `nnwdaf`, `naf`, `nscp`, `nsepp` |
 | 5GC reference points | `n5`, `n7`, `n8`, `n10`, `n11`, `n12`, `n13`, `n15`, `n22`, `n23`, `n28`, `n33`, `n34`, `n35`, `n36`, `n37`, `n40` |
@@ -312,10 +316,10 @@ Selecting a reference point switches the 5GC view to *Reference points* automati
 ## Scope and simplifications
 
 - The content reflects GSM Phase 2+ and 3GPP Releases R97–R18 and GSMA roaming guidelines (IR.34, IR.88, NG.113). Spec numbers are listed per item so details can be checked against the release your network runs.
-- **Contents:** 43 elements in the classic view (47 including the four CUPS functions); 71 point-to-point interfaces; the SBI bus with 14 service-based NF interfaces; 17 SBA reference points; and 13 interface entries for the CUPS view (6 new – Sxa, Sxb, S5-C, S5-U, S4-C, S4-U – plus 7 re-routed variants).
+- **Contents:** 45 elements in the classic view (49 including the four CUPS functions); 76 point-to-point interfaces; the SBI bus with 14 service-based NF interfaces; 17 SBA reference points; and 16 interface entries for the CUPS view (6 new – Sxa, Sxb, S5-C, S5-U, S4-C, S4-U – plus 10 re-routed variants, including S2b-C / S2b-U and S6b towards the PGW-C).
 - **CUPS:** Sxc (TDF-C ↔ TDF-U) is described in the Sxb details but not drawn. GGSN CUPS is not shown.
 - **Mentioned in text but not drawn** (checked with a scan of all texts against the map, release 2026.11.04.3):
-  - *Nodes that would need extra layout space:* SMSF (N20/N21), LMF, NSSAAF, BSF, 5G-EIR (N17), N3IWF/TNGF, ePDG + 3GPP AAA (S2b, SWm, SWx; S2a), SMSC, gsmSCF/CAMEL (CAP, Ge), TDF (Sd, Sxc), SCEF (T6a, S6t), CBC, BM-SC.
+  - *Nodes that would need extra layout space:* SMSF (N20/N21), LMF, NSSAAF, BSF, 5G-EIR (N17), N3IWF/TNGF, trusted Wi-Fi access (TWAN: S2a, STa), SMSC, gsmSCF/CAMEL (CAP, Ge), TDF (Sd, Sxc), SCEF (T6a, S6t), CBC, BM-SC.
   - *Logical or transit only:* Gm (UE–P-CSCF SIP, carried over the user plane), DRA/DEA (Diameter routing), N16 / N24 / N27 (inter-PLMN NF pairs, carried over N32 via the SEPPs).
   - *Inside a drawn box:* P-/I-/S-CSCF, TAS, MGCF, SCC-AS/ATCF, ISC (IMS core); CDF/CGF, Bx (OCS/OFCS); PSA / I-UPF roles (UPF); V-/H-SMF, V-/H-PCRF roles.
   - *Historical:* Go, PDF, CRF, TPF (R6 policy architecture, mentioned in the GGSN Gx details).
@@ -343,7 +347,7 @@ All content is plain JavaScript data near the top of the `<script>` block in the
 | `ND_CANON`, `ND_EXTRA`, `ND_ELALIAS` | Network data: which interface ID addresses are stored under, extra keys a link shows, and element fallbacks (CUPS functions, gNB parts) |
 | `ND_TEMPLATE_CSV` | The template offered by **Download CSV template** (keep it in step with `netdata-template.csv`) |
 
-**Element fields:** `id`, `n` (label), optional `cups` / `nocups` (shown only in the CUPS / classic EPC view), `sb` (subtitle), `gens`, `x`, `y`, `w`, `h` (diagram coordinates; canvas is 1900 × 1310), `full`, `sum`, `fn` (functions), `notes` (per-generation notes, keyed by generation ID), `kv` (identifier pairs), `specs`, `tips`, optional `kind` (`ext`, `container`, `bar`) and `pc` (colour override).
+**Element fields:** `id`, `n` (label), optional `cups` / `nocups` (shown only in the CUPS / classic EPC view), `sb` (subtitle), `gens`, `x`, `y`, `w`, `h` (diagram coordinates; canvas is 1900 × 1400), `full`, `sum`, `fn` (functions), `notes` (per-generation notes, keyed by generation ID), `kv` (identifier pairs), `specs`, `tips`, optional `kind` (`ext`, `container`, `bar`) and `pc` (colour override).
 
 **Interface fields:** `id`, `n`, `a`, `b` (element IDs; `a === b` with `loop` for a self-loop), `gens`, `plane` (`cp`, `up`, `both`, `sbi`), `protos` (protocol-filter tags), `st` (stacks: `[{t:'title', l:['top layer', …, 'bottom layer']}]`), `full`, `sum`, `pr` (procedures), `kv`, `notes`, `specs`, `tips`.
 CUPS-only interfaces carry `cups: true` (added in the *CUPS view* block after `LINKS`); interfaces attached to `nocups` elements are hidden automatically in the CUPS view.
@@ -360,6 +364,10 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.05.9
+- **Wi-Fi access via ePDG** (untrusted non-3GPP, VoWiFi): new **ePDG** and **3GPP AAA** elements with **SWu**, **SWm**, **SWx**, **S2b** and **S6b** (S2b-C / S2b-U and S6b to the PGW-C in the CUPS view), a **Wi-Fi** generation chip, message flows (IKEv2 + EAP-AKA tunnel set-up, S2b PDN connection, LTE ↔ Wi-Fi handover, Diameter procedures) and two end-to-end stacks.
+- Map: the 5G rows moved down to make room below the EPC; the canvas is now 1900 × 1400.
 
 ### 2026.11.05.8
 - **Network data:** site `*` means the instance belongs to every site – it is shown whichever sites are selected and is not listed as a separate site in the site filter.
