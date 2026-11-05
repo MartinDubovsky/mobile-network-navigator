@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="version" content="2026.11.05.5">
+<meta name="version" content="2026.11.05.6">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mobile Network Navigator · 2G · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
@@ -372,7 +372,7 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
 <script>
 'use strict';
 const PRISTINE_DOC=document.documentElement.cloneNode(true); /* clean copy of the tool, used by “Save tool + data as one HTML file” */
-const VERSION = '2026.11.05.5';
+const VERSION = '2026.11.05.6';
 /* =====================================================================
    DATA
    ===================================================================== */
@@ -3627,7 +3627,9 @@ const ND_EXTRA={s1unsa:['s1u'],s1unsac:['s1u']};
 const ND_ELALIAS={sgwc:['sgw'],sgwu:['sgw'],pgwc:['pgw'],pgwu:['pgw'],gnbcucp:['gnb'],gnbcuup:['gnb'],gnbdu:['gnb']};
 const ndRev=el=>Object.keys(ND_ELALIAS).filter(k=>ND_ELALIAS[k].includes(el));
 const ndCanon=L=>L.isbus?'sbi':(ND_CANON[L.id]||L.id);
-const ndKeys=L=>[...new Set([L.id,ndCanon(L),...(ND_EXTRA[L.id]||[]),...((L.bus||L.isbus)?['sbi']:[])])];
+/* an NF's SBI stub also shows the addresses given for its reference points (N11, N8 …): they are SBI endpoints of that NF */
+const ndRpOf=el=>LINKS.filter(x=>x.rp&&(x.a===el||x.b===el)).map(x=>x.id);
+const ndKeys=L=>[...new Set([L.id,ndCanon(L),...(ND_EXTRA[L.id]||[]),...((L.bus||L.isbus)?['sbi']:[]),...(L.bus?ndRpOf(L.a):[])])];
 const ND_TEMPLATE_CSV=`# network: Example network
 # Documentation addresses only (RFC 5737 / RFC 3849) - replace them with your own. Keep files with real addresses out of git.
 # One row per address. element = element ID or name; instance = your node name ("*" = all instances, e.g. a RAN range);
@@ -3705,7 +3707,15 @@ const ND_V4=/^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?
 function ndIsV6(s){const i=s.indexOf('/');const a=i<0?s:s.slice(0,i),p=i<0?null:s.slice(i+1);if(p!=null&&(!/^\d{1,3}$/.test(p)||+p>128))return false;
  if(!a.includes(':')||!/^[0-9a-f:.]+$/i.test(a))return false;try{new URL('http://['+a+']/');return true;}catch(e){return false;}}
 const ND_FQDN=/^(?=.{1,253}\.?$)[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+\.?$/i;
-function ndAddrKind(ip){if(!ip)return 'empty';if(ND_V4.test(ip))return ip.includes('/')?'v4net':'v4';if(ndIsV6(ip))return ip.includes('/')?'v6net':'v6';if(!/^[\d.\/]+$/.test(ip)&&ND_FQDN.test(ip))return 'fqdn';return 'bad';}
+/* "10.2.7.0/26" is a subnet (host bits zero); "10.2.7.2/26" is the address 10.2.7.2 written with its prefix length */
+function ndV6groups(a){if(a.includes('.')){const i=a.lastIndexOf(':'),v4=a.slice(i+1);if(!ND_V4.test(v4)||v4.includes('/'))return null;const n=ndV4int(v4);a=a.slice(0,i+1)+Math.floor(n/65536).toString(16)+':'+(n%65536).toString(16);}
+ const dc=a.split('::');if(dc.length>2)return null;const head=dc[0]?dc[0].split(':'):[],tail=dc.length===2&&dc[1]?dc[1].split(':'):[];const fill=8-head.length-tail.length;
+ if((dc.length===1&&fill!==0)||(dc.length===2&&fill<1))return null;return [...head,...Array(dc.length===2?fill:0).fill('0'),...tail].map(x=>parseInt(x||'0',16));}
+function ndHostZero(ip){const [a,p]=ip.split('/');const n=+p;
+ if(a.includes(':')){const g=ndV6groups(a);if(!g)return true;for(let i=0;i<8;i++){const st=i*16;if(st+16<=n)continue;const k=Math.max(n-st,0);if(g[i]&((1<<(16-k))-1))return false;}return true;}
+ return ndV4int(a)%Math.pow(2,32-n)===0;}
+const ndAddrOnly=ip=>String(ip).split('/')[0].toLowerCase();
+function ndAddrKind(ip){if(!ip)return 'empty';if(ND_V4.test(ip))return ip.includes('/')?(ndHostZero(ip)?'v4net':'v4host'):'v4';if(ndIsV6(ip))return ip.includes('/')?(ndHostZero(ip)?'v6net':'v6host'):'v6';if(!/^[\d.\/]+$/.test(ip)&&ND_FQDN.test(ip))return 'fqdn';return 'bad';}
 const ndV4int=ip=>ip.split('.').reduce((a,b)=>a*256+(+b),0);
 function ndV4in(ip,net){const [n,p]=net.split('/');const size=Math.pow(2,32-(+p));const base=Math.floor(ndV4int(n)/size)*size;const x=ndV4int(ip);return x>=base&&x<base+size;}
 const ND_V4PLAIN=/^\d{1,3}(\.\d{1,3}){3}$/;
@@ -3739,7 +3749,7 @@ function ndValidate(d){const w=[],seen={};
    else if(!ok.has(A.interface))w.push(`${where}: ${ndIfLabel(A.interface)} is not an interface of ${E.n} in this tool (kept).`);
    const k=ndAddrKind(A.ip);if(k==='bad')w.push(`${where}: “${A.ip}” is not a valid IPv4 / IPv6 address, subnet or host name.`);
    if(A.port&&!ndPortOK(A.port))w.push(`${where}: port “${A.port}” is not valid – ${ND_PORTMSG}.`);
-   if(k==='v4'||k==='v6'){const key=A.ip.toLowerCase();(seen[key]=seen[key]||new Set()).add(E.n+' '+I.name);}});});
+   if(['v4','v6','v4host','v6host'].includes(k)){const key=ndAddrOnly(A.ip);(seen[key]=seen[key]||new Set()).add(E.n+' '+I.name);}});});
  Object.entries(d.interfaces).forEach(([k,v])=>{if(!ND_VALID_IF.has(k))w.push(`Interface info: unknown interface “${k}” (kept).`);if(v.subnet&&ndAddrKind(v.subnet)==='bad')w.push(`Interface info ${ndIfLabel(k)}: “${v.subnet}” is not a valid subnet.`);});
  Object.entries(seen).forEach(([ip,s])=>{if(s.size>1)w.push(`Address ${ip} is used by several instances: ${[...s].join(', ')}.`);});
  return w;}
@@ -3821,23 +3831,25 @@ function ndFilterReset(){NDF={sel:null,noSite:true};NDexpf=false;}
 function ndSideEps(L,el){if(!ND||!el||el==='bus'||!EM[el])return [];const keys=ndKeys(L);
  const has=I=>I.addresses.some(A=>keys.includes(A.interface));
  for(const grp of [[el],ND_ELALIAS[el]||[],ndRev(el)]){const r=ndInst().filter(I=>grp.includes(I.element)&&has(I));if(r.length)return r.map(I=>({I,ad:I.addresses.filter(A=>keys.includes(A.interface))}));}
+ /* a reference point without its own entry falls back to the NF’s general SBI address */
+ if(L.rp){const r=ndInst().filter(I=>I.element===el&&I.addresses.some(A=>A.interface==='sbi'));if(r.length)return r.map(I=>({I,ad:I.addresses.filter(A=>A.interface==='sbi')}));}
  return [];}
-function ndLinkEps(L){if(!ND)return [];if(L.isbus)return ndInst().map(I=>({I,ad:I.addresses.filter(A=>A.interface==='sbi')})).filter(x=>x.ad.length);
+function ndLinkEps(L){if(!ND)return [];if(L.isbus)return ndInst().map(I=>({I,ad:I.addresses.filter(A=>A.interface==='sbi'||(LM[A.interface]&&LM[A.interface].rp))})).filter(x=>x.ad.length);
  return [...ndSideEps(L,L.a),...(L.b!==L.a?ndSideEps(L,L.b):[])];}
 
 /* ---------- search index & map badges ---------- */
 function ndIndex(){ELS.forEach(e=>{e._nd='';e._ndn=[];e._ndip=new Set();});LINKS.forEach(l=>{l._nd='';l._ndn=[];l._ndip=new Set();});if(!ND)return;
- const add=(o,txt,ip)=>{o._nd+=' '+String(txt).toLowerCase();const k=ip?ndAddrKind(ip):'';if(k==='v4net')o._ndn.push(ip);if(k)o._ndip.add(ip.toLowerCase());};
+ const add=(o,txt,ip,net)=>{o._nd+=' '+String(txt).toLowerCase();const k=ip?ndAddrKind(ip):'';if(k==='v4net'||(net&&k==='v4host'))o._ndn.push(ip);if(k){o._ndip.add(ip.toLowerCase());if(k.endsWith('host'))o._ndip.add(ndAddrOnly(ip));}};
  ndInst().forEach(I=>{const E=EM[I.element];if(!E)return;add(E,I.name+' '+I.site+' '+I.note);I.addresses.forEach(A=>add(E,A.ip+' '+A.note+' '+ndPortShow(A.port),A.ip));});
  LINKS.forEach(L=>{ndLinkEps(L).forEach(({I,ad})=>ad.forEach(A=>add(L,I.name+' '+A.ip+' '+A.note+' '+ndPortShow(A.port),A.ip)));
-  ndKeys(L).forEach(k=>{const v=ND.interfaces[k];if(v)add(L,v.subnet+' '+v.note+' vlan '+v.vlan,v.subnet);});});}
+  ndKeys(L).forEach(k=>{const v=ND.interfaces[k];if(v)add(L,v.subnet+' '+v.note+' vlan '+v.vlan,v.subnet,true);});});}
 const ndTok=()=>state.q?state.q.split(/\s+/).filter(Boolean):[];
 function ndIPin(t,nets){return ND_V4PLAIN.test(t)&&ND_V4.test(t)&&nets.some(n=>ndV4in(t,n));}
 /* a complete IPv4 address matches only that address or a subnet containing it (192.0.2.11 does not find 192.0.2.110); anything else is a substring search */
 const ndFullV4=t=>ND_V4PLAIN.test(t)&&ND_V4.test(t);
 function ndMatch(t,o){if(!o._nd)return false;if(ndFullV4(t))return o._ndip.has(t)||ndIPin(t,o._ndn);return o._nd.includes(t);}
 function ndHit(A,I){const tk=ndTok();if(!tk.length)return false;const txt=(I.name+' '+I.site+' '+A.ip+' '+A.note+' '+ndPortShow(A.port)).toLowerCase();
- return tk.some(t=>ndFullV4(t)?(A.ip===t||(ndAddrKind(A.ip)==='v4net'&&ndIPin(t,[A.ip]))):txt.includes(t));}
+ return tk.some(t=>ndFullV4(t)?(A.ip===t||ndAddrOnly(A.ip)===t||(ndAddrKind(A.ip)==='v4net'&&ndIPin(t,[A.ip]))):txt.includes(t));}
 function ndCount(el){return ndInst().filter(I=>I.element===el).length;}
 function ndBadges(){Object.values(NODE).forEach(({g,E})=>{let b=g.querySelector('.ndb');const n=ndCount(E.id);
  if(!n){if(b)b.style.display='none';return;}
@@ -3846,7 +3858,7 @@ function ndBadges(){Object.values(NODE).forEach(({g,E})=>{let b=g.querySelector(
 
 /* ---------- panel sections ---------- */
 function ndAddrRows(I,adds,showIf){return `<table class="ndt"><tr>${showIf?'<th>Interface</th>':''}<th>Address</th><th>Port</th><th>VLAN</th><th>Note</th></tr>${adds.map(A=>{const L=LM[A.interface];
- return `<tr class="${ndHit(A,I)?'hit':''}">${showIf?`<td>${L&&!L.rp?`<button class="ndlink" data-sel="if:${A.interface}">${esc(ndIfLabel(A.interface))}</button>`:esc(A.interface?ndIfLabel(A.interface):'—')}</td>`:''}<td class="ip${ndAddrKind(A.ip)==='bad'?' bad':''}">${esc(A.ip)}</td><td class="pt">${esc(ndPortShow(A.port))}</td><td>${esc(A.vlan)}</td><td>${esc(A.note)}</td></tr>`;}).join('')}</table>`;}
+ return `<tr class="${ndHit(A,I)?'hit':''}">${showIf?`<td>${L?`<button class="ndlink" data-sel="if:${A.interface}"${L.rp?' title="Reference point – opens the Ref. points view of the 5GC"':''}>${esc(ndIfLabel(A.interface))}</button>`:esc(A.interface?ndIfLabel(A.interface):'—')}</td>`:''}<td class="ip${ndAddrKind(A.ip)==='bad'?' bad':''}">${esc(A.ip)}</td><td class="pt">${esc(ndPortShow(A.port))}</td><td>${esc(A.vlan)}</td><td>${esc(A.note)}</td></tr>`;}).join('')}</table>`;}
 function ndHead(){return `<h3 class="ndh">Network data <span>${esc(ND.network)}</span>${NDdirty?' <i title="Not saved to a file yet">● unsaved</i>':''}${ndFiltered()?`<em class="ndflt" title="Site filter – only these sites are shown"><button class="ndlink" data-nd="sites">${esc(ndFilterLabel())}</button><button class="ndx" data-nd="siteclear" title="Show all sites" aria-label="Show all sites">✕</button></em>`:''}</h3>`;}
 const ND_CAP=40;
 function ndCapList(list,hit,what){const tk=ndTok();let l=list;if(tk.length){const h=list.filter(hit);if(h.length)l=h.concat(list.filter(x=>!h.includes(x)));}
@@ -3858,13 +3870,13 @@ function ndElementHTML(E){if(!ND)return '';
  return ndHead()+(inst.length?inst.map(I=>`<div class="ndinst"><div class="ndinst-h"><b>${esc(ndInstName(I))}</b>${I.element!==E.id?`<span class="ndtag">${esc(EM[I.element].n)}</span>`:''}${I.site?`<span>${esc(I.site)}</span>`:''}<button class="ndlink" data-nd="edit:${I.id}">Edit</button></div>${I.note?`<div class="ndmuted">${esc(I.note)}</div>`:''}${I.addresses.length?ndAddrRows(I,I.addresses,true):'<div class="ndmuted">No addresses yet.</div>'}</div>`).join('')+more:`<p class="ndmuted">No ${esc(E.n)} instances ${hid?'in the selected sites':'in this dataset'}.</p>`)+(hid?`<p class="ndmuted">${hid} more ${hid>1?'instances are':'instance is'} hidden by the site filter. <button class="ndlink" data-nd="siteclear">Show all sites</button></p>`:'')+
  `<div class="paneltools"><button data-nd="add:${E.id}">+ Add ${esc(E.n)} instance</button></div>`;}
 function ndLinkHTML(L){if(!ND)return '';const info=ndKeys(L).filter(k=>ND.interfaces[k]).map(k=>({k,...ND.interfaces[k]}));
- const side=(nm,all)=>{const {l:eps,more}=ndCapList(all,x=>x.ad.some(A=>ndHit(A,x.I)),'instances');return `<div class="ndside"><div class="ndside-h">${esc(nm)}</div>${eps.length?eps.map(({I,ad})=>`<div class="ndep"><button class="ndlink" data-sel="el:${I.element}">${esc(ndInstName(I))}</button>${I.site?` <span>${esc(I.site)}</span>`:''}${ndAddrRows(I,ad,false)}</div>`).join('')+more:'<div class="ndmuted">no addresses</div>'}</div>`;};
+ const side=(nm,all)=>{const {l:eps,more}=ndCapList(all,x=>x.ad.some(A=>ndHit(A,x.I)),'instances');return `<div class="ndside"><div class="ndside-h">${esc(nm)}</div>${eps.length?eps.map(({I,ad})=>`<div class="ndep"><button class="ndlink" data-sel="el:${I.element}">${esc(ndInstName(I))}</button>${I.site?` <span>${esc(I.site)}</span>`:''}${ndAddrRows(I,ad,ad.some(A=>A.interface!==ndCanon(L)))}</div>`).join('')+more:'<div class="ndmuted">no addresses</div>'}</div>`;};
  let sides;
  if(L.isbus)sides=side('NFs on the SBI',ndLinkEps(L));
  else if(L.bus)sides=side(EM[L.a].n,ndSideEps(L,L.a));
  else if(L.a===L.b)sides=side(EM[L.a].n+' (both ends)',ndSideEps(L,L.a));
  else sides=side(EM[L.a].n,ndSideEps(L,L.a))+side(EM[L.b].n,ndSideEps(L,L.b));
- return ndHead()+info.map(x=>`<div class="kv ndkv"><div>Subnet</div><div>${esc(x.subnet)||'—'}</div><div>VLAN</div><div>${esc(x.vlan)||'—'}</div>${x.note?`<div>Note</div><div>${esc(x.note)}</div>`:''}</div>`).join('')+
+ return ndHead()+info.map(x=>`<div class="kv ndkv">${x.k!==ndCanon(L)?`<div>Interface</div><div>${esc(ndIfLabel(x.k))}</div>`:''}<div>Subnet</div><div>${esc(x.subnet)||'—'}</div><div>VLAN</div><div>${esc(x.vlan)||'—'}</div>${x.note?`<div>Note</div><div>${esc(x.note)}</div>`:''}</div>`).join('')+
   `<div class="ndsides">${sides}</div><div class="paneltools"><button data-nd="ifedit:${ndCanon(L)}">${info.length?'Edit':'Add'} interface info (subnet, VLAN)</button></div>`;}
 function ndHint(){return ND?'':`<p class="ndmuted ndhint">Your own IP plan can be shown here: <button class="ndlink" data-nd="menu">◆ Network data</button></p>`;}
 function ndOverviewHTML(){if(!ND)return '';const by={};ndInst().forEach(I=>{by[I.element]=(by[I.element]||0)+1;});

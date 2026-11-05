@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.05.5** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
+**Version 2026.11.05.6** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them, the protocol stacks used on each interface and message-flow diagrams of the main procedures on every interface.
 
@@ -167,9 +167,9 @@ As soon as the data contains more than one site, a **Site: all ▾** button appe
 **Where the data appears**
 
 - **Element panel:** “Network data” with one card per instance (the gNB box also lists CU-CP, CU-UP and DU instances).
-- **Interface panel:** subnet / VLAN of the interface and the addresses of both ends. If an end has no data of its own, the tool falls back: SGW-C / SGW-U → SGW, PGW-C / PGW-U → PGW, gNB-CU-CP / CU-UP / DU → gNB (and the other way round), so a classic SGW entry also shows on the CUPS view’s S11 or S5-U. The SGW S1-U address also shows on S1-U towards the en-gNB.
+- **Interface panel:** subnet / VLAN of the interface and the addresses of both ends. If an end has no data of its own, the tool falls back: SGW-C / SGW-U → SGW, PGW-C / PGW-U → PGW, gNB-CU-CP / CU-UP / DU → gNB (and the other way round), so a classic SGW entry also shows on the CUPS view’s S11 or S5-U. The SGW S1-U address also shows on S1-U towards the en-gNB. In the 5GC, addresses given for a reference point (e.g. AMF `n11`) also appear on that NF’s SBI stub and on the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address – so the data is visible in both the service-based and the reference-point view. Interface names in the address tables are links; a reference point opens the Ref. points view.
 - **Map:** a green `IP n` badge with the number of instances on each element; tooltips show the count.
-- **Search:** finds instance names, sites, notes, addresses and ports. A complete IPv4 address matches exactly that address or a subnet that contains it (`198.51.100.130` finds the eNodeB range `198.51.100.128/26`, while `192.0.2.11` does not find `192.0.2.110`); partial input such as `192.0.2.` or `2001:db8:` is a text search. Matching rows are highlighted in the panel and moved to the top of long lists (lists show 40 instances at a time).
+- **Search:** finds instance names, sites, notes, addresses and ports. A complete IPv4 address matches exactly that address (also when it is written with a prefix length, e.g. `10.2.7.2/26`) or a range that contains it (`198.51.100.130` finds the eNodeB range `198.51.100.128/26`, while `192.0.2.11` does not find `192.0.2.110`); partial input such as `192.0.2.` or `2001:db8:` is a text search. Matching rows are highlighted in the panel and moved to the top of long lists (lists show 40 instances at a time).
 
 ### CSV format
 
@@ -193,7 +193,7 @@ gnbcucp,*,,n2,2001:db8:100::/48,38412,121,IPv6 example
 | `instance` | Your node name, e.g. `MME01`. `*` stands for “all instances”, useful for RAN address ranges. Rows with the same element and instance form one instance. |
 | `site` | Optional location, used by the site filter. Leave it empty for entries that apply everywhere (e.g. RAN ranges). |
 | `interface` | Interface ID (see [Interface IDs](#deep-links)) or name as shown on the map. Names are resolved against the interfaces of that element: `Gx` on a GGSN is the GGSN Gx, `A` on a CS-MGW is the A user plane, `S8` means S5/S8, `Gp` means Gn/Gp. The CUPS view interfaces (S11, S5-C/U, …) and the ng-eNB copies of N2/N3/Xn are stored under the classic ID. Also allowed: `oam` (O&M), `sbi` (the NF’s SBI address, shown on its SBI stub and on the SBI bus) and `other`. |
-| `ip` | IPv4 or IPv6 address, a subnet in CIDR notation, or a host name (FQDN). |
+| `ip` | IPv4 or IPv6 address, a subnet / range in CIDR notation, or a host name (FQDN). An address with its prefix length (`10.2.7.2/26` – host bits set) is treated as that one address; with zero host bits (`10.2.7.0/26`) it is a range, e.g. for all eNodeBs. |
 | `port` | Optional: one port, a list (`2123;2152` – separated by `;`, `,`, `/` or spaces) or a range (`30000-30100`). If the separator is also the CSV delimiter, quote the field (`"2123;2152"`) or use another separator. Saved as `2123;2152`, shown as `2123, 2152`. |
 | `vlan`, `note` | Optional. |
 
@@ -355,6 +355,10 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ---
 
 ## Changelog
+
+### 2026.11.05.6
+- **Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.
+- Addresses written with a prefix length (`10.2.7.2/26`) are treated as one address, not as the whole subnet: search no longer matches other addresses of that subnet, and the duplicate check compares the address part. CIDR blocks with zero host bits stay ranges.
 
 ### 2026.11.05.5
 - **Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.
