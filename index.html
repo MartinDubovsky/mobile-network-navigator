@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="version" content="2026.11.04.3">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobile Network Architecture Navigator · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
+<style>
+:root{
+  --bg:#0e1319; --bg2:#121922; --panel:#151d27; --panel2:#1b2531; --node:#19222d; --ink:#e6edf3; --muted:#8d9aa8; --faint:#5b6876;
+  --line:#2a3644; --zone:#141c25; --zoneLine:#263240; --accent:#e6edf3;
+  --g3g:#f59e0b; --ghspa:#ec4899; --g4g:#3b82f6; --gnsa:#06b6d4; --gsa:#a78bfa; --giw:#22c55e; --gall:#94a3b8;
+  --k-nas:#7c3aed; --k-rrc:#be185d; --k-radio:#c2410c; --k-ap:#4f46e5; --k-tun:#047857; --k-tr:#1d4ed8; --k-ip:#0e7490; --k-phy:#475569; --k-ss7:#92400e; --k-appl:#334155;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --sans: Inter, "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+}
+body.light{
+  --bg:#f3f5f8; --bg2:#ffffff; --panel:#ffffff; --panel2:#f1f4f8; --node:#ffffff; --ink:#18212b; --muted:#5c6b7a; --faint:#94a1ae;
+  --line:#d5dde6; --zone:#f8fafc; --zoneLine:#dbe3ec;
+  --g3g:#d97706; --ghspa:#db2777; --g4g:#2563eb; --gnsa:#0891b2; --gsa:#7c3aed; --giw:#16a34a; --gall:#64748b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px}
+button{font-family:inherit;font-size:inherit;color:inherit}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:6px 14px;background:var(--bg2);border-bottom:1px solid var(--line)}
+header h1{font-size:15px;margin:0;font-weight:650;letter-spacing:.2px;white-space:nowrap;cursor:help}
+header h1 .ver{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--panel);padding:4px 9px;font-size:13px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;line-height:1.1;user-select:none;transition:background .15s,border-color .15s}
+.chip:hover{border-color:var(--muted)}
+.chip .dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.chip.on{background:color-mix(in srgb,var(--c) 22%,var(--panel));border-color:var(--c)}
+.chip.plain.on{background:var(--panel2);border-color:var(--ink)}
+.chip small{color:var(--muted);font-size:10.5px}
+.tabs{display:flex;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:2px;margin-left:auto}
+.tabs button{border:0;background:transparent;padding:4px 11px;border-radius:6px;cursor:pointer;color:var(--muted)}
+.tabs button.on{background:var(--panel2);color:var(--ink);font-weight:600}
+#toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;padding:5px 14px;border-bottom:1px solid var(--line);background:var(--bg)}
+#toolbar .grp{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+#toolbar .lbl{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.6px;margin-right:1px}
+.seg{display:inline-flex}
+.seg .tg{border-radius:0;margin-left:-1px}
+.seg .tg:first-child{border-radius:6px 0 0 6px;margin-left:0}
+.seg .tg:last-child{border-radius:0 6px 6px 0}
+.seg .tg.on{position:relative;z-index:1}
+#protosel{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:12.5px;font-family:inherit}
+#protosel.on{border-color:var(--ink);background:var(--panel2)}
+.tg{border:1px solid var(--line);background:var(--panel);padding:3px 9px;border-radius:6px;cursor:pointer;font-size:12.5px}
+.tg.on{border-color:var(--ink);background:var(--panel2)}
+.tg.off{opacity:.55;text-decoration:line-through}
+#search{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:4px 9px;width:250px;font-size:13px}
+#search:focus{outline:2px solid var(--g4g);outline-offset:-1px}
+#qcount{color:var(--muted);font-size:12px}
+main{display:flex;height:calc(100vh - var(--hdr,104px));min-height:420px}
+#views{flex:1;position:relative;min-width:0}
+.view{position:absolute;inset:0}
+.view[hidden]{display:none !important}
+#svgwrap{position:absolute;inset:0;overflow:hidden;cursor:grab;background:var(--bg)}
+#svgwrap.drag{cursor:grabbing}
+svg#map{width:100%;height:100%;display:block;user-select:none}
+#zoombox{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:4px;z-index:3}
+#zoombox button{width:32px;height:32px;border:1px solid var(--line);background:var(--panel);border-radius:6px;cursor:pointer;font-size:16px}
+#legend{position:absolute;left:10px;bottom:10px;background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:11px;z-index:3;max-width:min(620px,calc(100% - 70px))}
+#legend.mini .row{display:none}
+#legend.mini .hide{float:none;margin:0}
+#legend .row{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+#legend .row+.row{margin-top:3px}
+#legend svg{vertical-align:middle}
+#legend .hide{cursor:pointer;color:var(--muted);float:right;margin-left:10px}
+#hint{position:absolute;left:12px;top:10px;font-size:11.5px;color:var(--muted);z-index:3;pointer-events:none}
+/* SVG */
+.zone rect{fill:var(--zone);stroke:var(--zoneLine);stroke-width:1}
+.zone text{fill:var(--muted);font-size:12px;font-weight:600;letter-spacing:.4px}
+.node{cursor:pointer}
+.node .nb{fill:var(--node);stroke:var(--nc);stroke-width:1.6}
+.node.ext .nb{stroke-dasharray:5 4}
+.node .nm{fill:var(--ink);font-size:13px;font-weight:650;text-anchor:middle}
+.node .sb{fill:var(--muted);font-size:10px;text-anchor:middle}
+.node .gbar{stroke:none}
+.node:hover .nb,.node:focus .nb{stroke-width:2.6}
+.node:focus{outline:none}
+.node.container .nb{fill:transparent;stroke-dasharray:6 4;stroke-width:1.3}
+.node.container .nm{text-anchor:start;font-size:12px}
+.node.bar .nm{font-size:13px}
+.link{cursor:pointer}
+.link path.v{fill:none;stroke:var(--lc);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.link.cp path.v{stroke-dasharray:7 5}
+.link.sbi path.v{stroke-dasharray:1.5 4.5;stroke-width:2.6}
+.link.logical path.v{stroke-dasharray:12 4 2 4;stroke-width:1.6}
+.link.both path.v{stroke-width:4}
+.link path.ov{fill:none;stroke:var(--bg);stroke-width:1.4;stroke-dasharray:6 5;stroke-linecap:butt}
+.link path.hit{fill:none;stroke:transparent;stroke-width:14}
+.link:hover path.v{stroke-width:3.4}
+.link.both:hover path.v{stroke-width:5}
+.lbl rect{fill:var(--panel);stroke:var(--lc);stroke-width:1;rx:4}
+.lbl text{fill:var(--ink);font-size:11px;font-family:var(--mono);text-anchor:middle;dominant-baseline:central}
+.lbl{cursor:pointer}
+.bus line{stroke:var(--gsa);stroke-width:6;stroke-linecap:round;opacity:.85}
+.bus text{fill:var(--gsa);font-size:11px;font-weight:600}
+/* states */
+.lv0{opacity:.09}
+.lv1{opacity:.38}
+.lv3 .nb{stroke-width:3;filter:drop-shadow(0 0 6px var(--nc))}
+.link.lv3 path.v{stroke-width:3.6;filter:drop-shadow(0 0 4px var(--lc))}
+.link.both.lv3 path.v{stroke-width:5.2}
+.sel .nb{stroke-width:3.6 !important;filter:drop-shadow(0 0 10px var(--nc)) !important}
+.link.sel path.v{stroke-width:4.4 !important;filter:drop-shadow(0 0 8px var(--lc)) !important}
+.hidden{display:none}
+/* panel */
+#panel{width:440px;max-width:46vw;border-left:1px solid var(--line);background:var(--panel);overflow:auto;padding:16px 18px 40px;position:relative}
+#panel h2{margin:0 0 2px;font-size:19px}
+#panel h2 .k{font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:400;margin-left:6px}
+#panel .full{color:var(--muted);margin-bottom:8px}
+#panel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin:16px 0 6px;font-weight:650}
+#panel p{margin:6px 0;line-height:1.45}
+#panel ul{margin:4px 0;padding-left:18px}
+#panel li{margin:3px 0;line-height:1.4}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+.gb{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--c);color:var(--ink);background:color-mix(in srgb,var(--c) 18%,transparent);cursor:pointer}
+.pb{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.ends{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
+.ends button,.ifc{border:1px solid var(--line);background:var(--panel2);border-radius:6px;padding:4px 9px;cursor:pointer;font-size:12.5px}
+.ends button:hover,.ifc:hover{border-color:var(--muted)}
+.ifcs{display:flex;flex-wrap:wrap;gap:5px}
+.ifc{font-family:var(--mono);font-size:12px;display:inline-flex;gap:6px;align-items:center}
+.ifc i{font-style:normal;color:var(--muted);font-family:var(--sans);font-size:11px}
+.ifc .sw{width:14px;height:0;border-top:2.5px solid var(--lc)}
+.ifc .sw.cp{border-top-style:dashed}
+.ifc .sw.sbi{border-top-style:dotted}
+.stks{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.stk{display:flex;flex-direction:column;min-width:128px;flex:1 1 128px;max-width:200px}
+.stk-t{font-size:11px;color:var(--muted);margin-bottom:4px;text-align:center;line-height:1.25}
+.ly{font-family:var(--mono);font-size:11.5px;padding:5px 6px;text-align:center;color:#fff;border-radius:3px;margin-top:2px;line-height:1.2;background:var(--k-appl)}
+.k-nas{background:var(--k-nas)} .k-rrc{background:var(--k-rrc)} .k-radio{background:var(--k-radio)} .k-ap{background:var(--k-ap)} .k-tun{background:var(--k-tun)} .k-tr{background:var(--k-tr)} .k-ip{background:var(--k-ip)} .k-phy{background:var(--k-phy)} .k-ss7{background:var(--k-ss7)} .k-appl{background:var(--k-appl)}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;font-size:13px}
+.kv div:nth-child(odd){color:var(--muted)}
+.kv div:nth-child(even){font-family:var(--mono);font-size:12px;line-height:1.4}
+.note{border-left:3px solid var(--c);background:color-mix(in srgb,var(--c) 10%,transparent);padding:7px 10px;border-radius:0 6px 6px 0;margin:8px 0;line-height:1.45}
+.note b{color:var(--c)}
+.tip{border-left:3px solid var(--muted);background:var(--panel2);padding:7px 10px;border-radius:0 6px 6px 0;margin:6px 0;line-height:1.45;font-size:13px}
+.specs{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.6}
+.paneltools{display:flex;gap:6px;margin:10px 0 0;flex-wrap:wrap}
+.paneltools button{border:1px solid var(--line);background:var(--panel2);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px}
+.gcards{display:grid;gap:8px}
+.gcard{border:1px solid var(--line);border-left:4px solid var(--c);border-radius:6px;padding:8px 10px;cursor:pointer;background:var(--panel2)}
+.gcard b{display:block}
+.gcard span{color:var(--muted);font-size:12.5px}
+table.qr{border-collapse:collapse;width:100%;font-size:12.5px}
+table.qr td,table.qr th{border-bottom:1px solid var(--line);padding:4px 6px;text-align:left;vertical-align:top}
+table.qr th{color:var(--muted);font-weight:600;font-size:11.5px}
+table.qr td:first-child{font-family:var(--mono)}
+/* table view */
+#view-table{overflow:auto;padding:14px 18px}
+#itable{border-collapse:collapse;width:100%;font-size:13px}
+#itable th{position:sticky;top:-14px;background:var(--bg);text-align:left;color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;padding:8px;border-bottom:1px solid var(--line);cursor:pointer}
+#itable td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+#itable tr{cursor:pointer}
+#itable tbody tr:hover{background:var(--panel)}
+#itable tr.sel{background:color-mix(in srgb,var(--g4g) 16%,transparent)}
+#itable td.mono{font-family:var(--mono);font-size:12px}
+#itable td.nm{font-family:var(--mono);font-weight:650;white-space:nowrap}
+.gdots{display:flex;gap:3px;flex-wrap:wrap}
+.gdots span{font-size:10.5px;padding:1px 6px;border-radius:999px;background:color-mix(in srgb,var(--c) 22%,transparent);border:1px solid var(--c);white-space:nowrap}
+/* e2e view */
+#view-e2e{display:flex}
+#e2enav{width:250px;border-right:1px solid var(--line);overflow:auto;padding:10px}
+#e2enav button{display:block;width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:6px;padding:8px 10px;cursor:pointer;margin-bottom:3px;line-height:1.3}
+#e2enav button:hover{background:var(--panel)}
+#e2enav button.on{background:var(--panel);border-color:var(--c)}
+#e2enav button i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:7px}
+#e2enav h4{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin:12px 6px 6px}
+#e2emain{flex:1;overflow:auto;padding:18px 22px 40px}
+#e2emain h2{margin:0 0 4px;font-size:19px}
+#e2emain .sum{color:var(--muted);max-width:980px;line-height:1.45;margin:0 0 14px}
+.e2e{display:flex;align-items:flex-end;gap:0;overflow-x:auto;padding:6px 2px 10px}
+.e2e-node{display:flex;flex-direction:column;align-items:stretch;flex:0 0 auto}
+.e2e-name{text-align:center;font-weight:650;font-size:13px;padding:6px 8px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--panel)}
+.e2e-stacks{display:flex;gap:6px;align-items:flex-end;padding:8px;border:1px solid var(--line);border-radius:0 0 8px 8px;background:var(--panel)}
+.e2e-stack{display:flex;flex-direction:column;justify-content:flex-end;width:132px}
+.e2e-stack.ghost{opacity:.55}
+.e2e-side{font-size:10.5px;color:var(--muted);text-align:center;margin-bottom:3px;min-height:14px}
+.e2e-stack .ly{height:30px;display:flex;align-items:center;justify-content:center;font-size:11px}
+.e2e-stack .split{display:flex;gap:2px;margin-top:2px}
+.e2e-stack .split .ly{flex:1;margin-top:0;font-size:10px;padding:2px}
+.e2e-gap{flex:0 0 74px;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:16px;position:relative}
+.e2e-gap:before{content:"";position:absolute;left:4px;right:4px;bottom:22px;border-top:2px dashed var(--faint)}
+.e2e-gap span{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:2px 7px;font-family:var(--mono);font-size:11px;white-space:nowrap;margin-bottom:-2px}
+.e2e-notes{max-width:980px;margin-top:10px}
+.klegend{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+.klegend span{font-size:11px;padding:3px 8px;border-radius:3px;color:#fff}
+#tip{position:fixed;pointer-events:none;z-index:50;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:7px 9px;max-width:330px;font-size:12.5px;line-height:1.4;box-shadow:0 6px 20px rgba(0,0,0,.35);display:none}
+#tip b{font-family:var(--mono)}
+#tip .s{color:var(--muted);display:block;margin-top:2px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:8px 14px;border-radius:8px;z-index:60;font-size:13px}
+@media (max-width: 980px){
+  header h1{white-space:normal}
+  #search{width:170px}
+  main{flex-direction:column;height:auto}
+  #views{height:62vh;flex:none}
+  #panel{width:auto;max-width:none;border-left:0;border-top:1px solid var(--line)}
+  .tabs{margin-left:0}
+  #e2enav{width:180px}
+}
+</style>
+</head>
+<body>
+<header id="hdr">
+  <h1 title="3G · HSPA · 4G LTE/EPC · 5G NSA (EN-DC) · 5G SA — network elements, interfaces and protocol stacks">Mobile Network Architecture Navigator<span class="ver" id="ver"></span></h1>
+  <div class="chips" id="genchips"></div>
+  <div class="tabs" id="tabs">
+    <button data-view="arch" class="on">Architecture</button>
+    <button data-view="e2e">E2E stacks</button>
+    <button data-view="table">Interface table</button>
+  </div>
+</header>
+<div id="toolbar">
+  <div class="grp"><input id="search" type="search" placeholder="Search  (S1-MME, PFCP, 2152…)   /" autocomplete="off" aria-label="Search"><span id="qcount"></span></div>
+  <div class="grp"><span class="lbl">Planes</span><span class="seg">
+    <button class="tg on" data-plane="cp" title="Control-plane interfaces (dashed)">Control</button><button class="tg on" data-plane="up" title="User-plane interfaces (solid)">User</button><button class="tg on" data-plane="sbi" title="5GC service-based interfaces (dotted)">SBI</button></span></div>
+  <div class="grp"><span class="lbl">5GC</span><span class="seg">
+    <button class="tg on" data-rp="0" title="Service-based representation (SBI bus)">Service-based</button><button class="tg" data-rp="1" title="Reference-point representation (N7, N8, N11…)">Ref. points</button></span></div>
+  <div class="grp"><span class="lbl">EPC</span><span class="seg">
+    <button class="tg on" data-cups="0" title="SGW and PGW as single nodes">Classic</button><button class="tg" data-cups="1" title="R14 CUPS: SGW-C/U and PGW-C/U with Sxa / Sxb (PFCP)">CUPS</button></span></div>
+  <div class="grp"><span class="lbl">Protocol</span><select id="protosel" aria-label="Highlight interfaces by protocol"></select></div>
+  <div class="grp" style="margin-left:auto"><button class="tg" id="theme" title="Toggle light/dark">◐ Theme</button></div>
+</div>
+<main>
+  <div id="views">
+    <section class="view" id="view-arch">
+      <div id="svgwrap"><svg id="map" viewBox="0 0 1900 1310" role="img" aria-label="Mobile network architecture diagram"></svg></div>
+      <div id="zoombox"><button id="zin" title="Zoom in">+</button><button id="zout" title="Zoom out">−</button><button id="zfit" title="Fit">⤢</button></div>
+      <div id="legend"></div>
+    </section>
+    <section class="view" id="view-e2e" hidden>
+      <nav id="e2enav"></nav>
+      <div id="e2emain"></div>
+    </section>
+    <section class="view" id="view-table" hidden>
+      <table id="itable"><thead><tr><th data-sort="name">Interface</th><th data-sort="ends">Between</th><th>Generation</th><th data-sort="plane">Plane</th><th>Protocol stack</th><th>Key specs</th></tr></thead><tbody></tbody></table>
+    </section>
+  </div>
+  <aside id="panel" aria-live="polite"></aside>
+</main>
+<div id="tip"></div>
+<script>
+'use strict';
+const VERSION = '2026.11.04.3';
+/* =====================================================================
+   DATA
+   ===================================================================== */
+const GENS = {
+  '3g':  {n:'3G UMTS', s:'R99 / R4', v:'--g3g'},
+  'hspa':{n:'HSPA / HSPA+', s:'R5–R8+', v:'--ghspa'},
+  '4g':  {n:'4G LTE / EPC', s:'R8+', v:'--g4g'},
+  'nsa': {n:'5G NSA', s:'EN-DC · Opt. 3/3a/3x', v:'--gnsa'},
+  'sa':  {n:'5G SA', s:'5GC · Opt. 2 (4/5/7)', v:'--gsa'},
+  'iw':  {n:'Interworking', s:'inter-system', v:'--giw'}
+};
+const GENORDER = ['3g','hspa','4g','nsa','sa','iw'];
+
+const GENINFO = {
+ '3g':{rel:'3GPP R99 (2000) · R4 (2001)',sum:'WCDMA radio access (5 MHz, 3.84 Mcps) with an RNC-based hierarchical UTRAN and a core network split into circuit-switched (CS) and packet-switched (PS) domains.',pts:[
+  'UTRAN: Node B (mainly Layer 1) controlled by the RNC, which terminates RRC, RLC, MAC-d and PDCP and performs RRM and ciphering.',
+  'CS domain: R99 MSC/VLR; R4 splits it into MSC Server (call control) and CS-MGW (bearer), with BICC or SIP-I on Nc between servers.',
+  'PS domain: SGSN (mobility and session management) + GGSN (IP anchor) connected by GTP over Gn (Gp between PLMNs).',
+  'Subscriber data in HLR/AuC over MAP (SS7 or SIGTRAN); UMTS AKA gives mutual authentication (quintets).',
+  'Soft handover with macro-diversity combining in the RNC; R99 DCH peak 384 kbps DL.',
+  'Transport originally ATM (AAL2 user plane, AAL5 signalling); IP transport option from R5.'],specs:'TS 23.002 · 23.060 · 25.401 · 33.102'},
+ 'hspa':{rel:'R5 HSDPA (2002) · R6 HSUPA (2004) · R7+ HSPA+',sum:'Packet-data enhancement of the 3G radio. Same network elements as 3G, but fast scheduling and HARQ move from the RNC into the Node B.',pts:[
+  'HSDPA: shared HS-DSCH, 2 ms TTI, MAC-hs/ehs scheduler + HARQ in the Node B, CQI-based link adaptation; R5 peak 14.4 Mbps.',
+  'HSUPA (E-DCH): MAC-e/i in the Node B, 2 or 10 ms TTI, grants via E-AGCH/E-RGCH; R6 peak 5.76 Mbps.',
+  'HSPA+: 64QAM DL (21 Mbps) and 2×2 MIMO (28 Mbps) and 16QAM UL (11.5 Mbps) in R7; DC-HSDPA / 64QAM+MIMO (42 Mbps) in R8; CPC, Enhanced L2, Enhanced CELL_FACH.',
+  'Much higher Iub load: IP/Ethernet Iub (R5) and HS-DSCH flow control / congestion control on Iub FP.',
+  'Direct Tunnel (R7): GTP-U from the RNC straight to the GGSN (or SGW via S12); the SGSN stays in the control plane.',
+  'HS-DSCH has no soft handover (serving-cell change); E-DCH keeps soft handover.'],specs:'TS 25.308 · 25.319 · 25.435 · 23.060 · 23.919'},
+ '4g':{rel:'R8 (2008/09) · LTE-Advanced R10+ · LTE-A Pro R13+',sum:'Flat all-IP system: eNB with the complete radio stack (no RNC) and the EPC with separated control plane (MME) and user plane (SGW/PGW).',pts:[
+  'OFDMA downlink / SC-FDMA uplink, 1.4–20 MHz carriers; carrier aggregation (R10+), higher-order MIMO.',
+  'EPS bearer model: default bearer at attach (always-on IP) + dedicated bearers; QCI and ARP; APN-AMBR and UE-AMBR.',
+  'MME: NAS, security, mobility. SGW: mobility anchor. PGW: IP anchor and PCEF. HSS (Diameter). PCRF (PCC).',
+  'Voice: VoLTE over IMS (QCI 1 media / QCI 5 SIP), or CS Fallback to 2G/3G via SGs; SRVCC to CS via Sv.',
+  'Interworking with 2G/3G: S3/S4/S12 with S4-SGSN, or Gn/Gp with legacy SGSN.',
+  'R14 CUPS: SGW and PGW split into -C and -U parts controlled with PFCP over Sxa/Sxb – switch “EPC” to CUPS in the toolbar to see it.'],specs:'TS 23.401 · 36.300 · 23.203 · 23.214'},
+ 'nsa':{rel:'R15 “early drop” (Dec 2017) · Option 3 / 3a / 3x',sum:'E-UTRA–NR Dual Connectivity (EN-DC): NR is added as a secondary node to an LTE anchor and the core stays EPC. NR adds capacity and throughput, LTE keeps control and coverage.',pts:[
+  'The MeNB (eNB) is the control-plane anchor and the only node with S1-MME. The en-gNB has S1-U (3a/3x) and X2 to the MeNB, but no NG interfaces.',
+  'Option 3: MCG split bearer in the MeNB (S1-U to eNB only). Option 3a: SCG bearer, SGW → en-gNB, no split. Option 3x: SCG split bearer in the en-gNB (the most widely deployed).',
+  'The NR leg is added by SgNB Addition, typically after a B1 measurement. The UE stays camped on LTE (no NR idle mode).',
+  'EPC upgrades: DCNR support in MME/HSS (“NR as Secondary RAT” restriction), extended bit rates (> 4.2 Gbps), and Secondary RAT usage reporting for charging.',
+  'No 5GC features: no network slicing, no QoS flows/SDAP, no SBA. QoS stays QCI-based EPS bearers.',
+  'Voice stays on LTE (VoLTE) or CSFB.'],specs:'TS 37.340 · 36.423 · 38.425 · 23.401'},
+ 'sa':{rel:'R15 (SA freeze Jun 2018) · R16 (2020) · R17 (2022) · R18 5G-Advanced',sum:'The NR gNB connects to the new 5G Core (5GC), built as a Service-Based Architecture with HTTP/2 APIs and native control/user-plane separation (SMF/UPF).',pts:[
+  'NG-RAN: gNB with CU-CP / CU-UP / DU split (F1, E1); Xn between gNBs; RRC_INACTIVE state.',
+  '5GC NFs: AMF (access and mobility), SMF (sessions), UPF (user plane), AUSF/UDM/UDR (authentication and data), PCF (policy), NRF, NSSF, NEF, CHF, NWDAF; SCP and SEPP for SBI routing and roaming.',
+  'PDU session (IPv4/IPv6/Ethernet/Unstructured) with QoS flows (5QI, QFI) mapped to DRBs by SDAP.',
+  'Network slicing: S-NSSAI = SST (8 bit) + optional SD (24 bit); NSSAI negotiated at registration.',
+  'Security: SUCI concealment, 5G AKA / EAP-AKA′, SEAF in AMF, SEPP + N32 for roaming.',
+  'Voice: VoNR (IMS over 5GS) or EPS fallback to VoLTE (N26 enables seamless fallback).',
+  'LTE on the 5GC: an ng-eNB (E-UTRA radio, NG + Xn interfaces) enables Option 5 (ng-eNB alone), Option 7/7a/7x (NGEN-DC) and Option 4/4a (NE-DC). Rarely deployed – most networks use Option 2 and keep LTE on the EPC.'],specs:'TS 23.501 · 23.502 · 23.503 · 38.300 · 38.401 · 37.340'},
+ 'iw':{rel:'R8 (EPC ↔ 2G/3G, CSFB, SRVCC) · R15 (5GS ↔ EPS)',sum:'Inter-generation interfaces used for mobility, voice continuity and core interworking.',pts:[
+  'S3 (MME–SGSN, GTPv2-C) and S4 (SGSN–SGW): 2G/3G ↔ LTE mobility with an S4-SGSN; enables ISR.',
+  'S12 (RNC–SGW): Direct Tunnel user plane when 3G uses the EPC gateways.',
+  'A legacy Gn/Gp SGSN interworks with MME and PGW over Gn (GTPv1), per TS 23.401 Annex D.',
+  'SGs (MME–MSC/VLR): CSFB and SMS over SGs. Sv (MME–MSC Server): SRVCC.',
+  'N26 (AMF–MME): 5GS ↔ EPS mobility with single registration; EPS fallback for voice.',
+  'Combined nodes for 5GS–EPS interworking: SMF+PGW-C, UPF+PGW-U, PCF+PCRF, UDM+HSS.'],specs:'TS 23.401 · 23.272 · 23.216 · 23.501 §5.17 · 23.502 §4.11'}
+};
+
+const ZONES = [
+ {x:10,y:20,w:140,h:1180,t:'UE'},
+ {x:165,y:20,w:425,h:345,t:'UTRAN · 3G / HSPA'},
+ {x:605,y:20,w:905,h:345,t:'UMTS core · CS & PS domains'},
+ {x:165,y:380,w:425,h:345,t:'E-UTRAN + EN-DC · 4G / 5G NSA',pos:'bl'},
+ {x:605,y:380,w:905,h:345,t:'EPC · 4G / 5G NSA',pos:'br'},
+ {x:165,y:740,w:425,h:460,t:'NG-RAN · 5G SA'},
+ {x:605,y:740,w:905,h:460,t:'5GC · Service-Based Architecture'},
+ {x:1525,y:20,w:365,h:1180,t:'External / other networks'}
+];
+const BUS = {x1:630,x2:1505,y:935};
+
+/* Elements -------------------------------------------------------------- */
+const ELS = [
+{id:'ue',n:'UE',sb:'User Equipment',gens:['3g','hspa','4g','nsa','sa'],pc:'all',x:30,y:545,w:100,h:110,
+ full:'User Equipment (Mobile Equipment + UICC/USIM)',
+ sum:'Multi-mode terminal. Terminates the radio protocols towards the RAN and NAS signalling towards the core: MSC/SGSN in 3G, MME in 4G/NSA, AMF (and SMF via AMF) in 5G SA.',
+ fn:['NAS: 3G MM/CC/SS (CS) and GMM/SM (PS) – TS 24.008; 4G EMM/ESM – TS 24.301; 5G 5GMM/5GSM – TS 24.501.','AS: RRC, PDCP, RLC, MAC, PHY per RAT; SDAP in 5G SA.','USIM holds IMSI/SUPI and the long-term key K; runs UMTS AKA, EPS AKA, 5G AKA or EAP-AKA′.','5G SA: the SUPI is never sent in clear; it is concealed as SUCI with the home-network public key (ECIES profile A/B) unless the null scheme is configured.','Reports radio capabilities (UE capability enquiry) and NAS capabilities (e.g., the DCNR bit for EN-DC).'],
+ notes:{hspa:'The UE category sets HSDPA/HSUPA capability, e.g. Cat 10 ≈ 14 Mbps (16QAM), Cat 14 ≈ 21 Mbps (64QAM), Cat 24 ≈ 42 Mbps (DC-HSDPA + 64QAM).',nsa:'An EN-DC UE camps on LTE, attaches to the EPC (DCNR bit set in UE network capability) and gets an NR SCG configured by the MeNB, typically after a B1 measurement. The “5G” icon is commonly driven by SIB2 upperLayerIndication-r15.',sa:'Registers with the 5GC (Registration Request with SUCI or 5G-GUTI and Requested NSSAI). Supports RRC_INACTIVE. Voice via VoNR or EPS fallback.'},
+ kv:[['Permanent ID','IMSI = MCC + MNC + MSIN; 5G SUPI (imsi-… or nai-…)'],['Equipment ID','IMEI / IMEISV; 5G PEI'],['Temporary IDs','TMSI (CS), P-TMSI (PS 3G), GUTI (4G), 5G-GUTI (5G)'],['Public IDs','MSISDN; 5G GPSI']],
+ specs:['TS 23.003','24.008','24.301','24.501','33.501']},
+
+{id:'nodeb',n:'Node B',sb:'UMTS base station',gens:['3g','hspa'],x:190,y:205,w:120,h:56,
+ full:'Node B – UMTS (WCDMA) base station',
+ sum:'In R99 the Node B is essentially a Layer-1 node fully controlled by the RNC over NBAP. With HSPA it gains MAC scheduling and HARQ.',
+ fn:['WCDMA L1: channel coding/interleaving, OVSF spreading and scrambling, modulation; 5 MHz carrier at 3.84 Mcps.','Inner-loop (fast) power control at 1500 Hz.','Softer handover combining (between sectors of the same Node B).','Radio measurements reported to the RNC (NBAP common and dedicated measurements).','Terminates Iub frame protocols towards the MAC in the RNC.'],
+ notes:{hspa:'Hosts MAC-hs (R5) / MAC-ehs (R7): HS-DSCH scheduler, HARQ with fast retransmission, CQI-based link adaptation every 2 ms TTI. Hosts MAC-e (R6) / MAC-i (R8): E-DCH scheduling (absolute grants on E-AGCH, relative grants on E-RGCH) and HARQ (E-HICH). HS-DSCH data from the RNC is flow-controlled with Iub FP capacity request/allocation.'},
+ kv:[['Cell identity','UC-Id = RNC-Id + C-Id (16 bit)'],['Primary scrambling code','0–511'],['Areas','LAC (CS), RAC (PS), SAC']],
+ specs:['TS 25.401','25.211–25.215','25.433 (NBAP)','25.308 (HSDPA)','25.319 (E-DCH)'],
+ tips:['Iub transport congestion often limits HSPA throughput before the air interface does – check Iub FP congestion indications.','High uplink noise (RTWP) reduces HSUPA grants and coverage and causes access failures.']},
+
+{id:'rnc',n:'RNC',sb:'Radio Network Controller',gens:['3g','hspa'],x:385,y:205,w:130,h:56,
+ full:'Radio Network Controller',
+ sum:'Controls the Node Bs and owns the UTRAN radio protocols: RRC, RLC, MAC-d and PDCP terminate here, not in the Node B.',
+ fn:['RRC termination (TS 25.331). RRC states: Idle, CELL_DCH, CELL_FACH, CELL_PCH, URA_PCH.','Radio resource management: admission and congestion control, code allocation, channel-type switching.','Outer-loop power control (SIR target).','Handover control: soft/softer (macro-diversity combining and splitting), hard, inter-frequency, inter-RAT (to GSM/LTE).','Ciphering (UEA1 KASUMI / UEA2 SNOW 3G) and RRC integrity (UIA1/UIA2): UMTS AS security terminates in the RNC.','Iu UP framing for CS, GTP-U endpoint for PS, RANAP towards the core.','Roles: Serving RNC (SRNC), Drift RNC (DRNC), Controlling RNC (CRNC).'],
+ notes:{hspa:'Keeps RRC, RLC, MAC-d and PDCP; scheduling moves to the Node B. MAC-es/MAC-is (E-DCH reordering and macro-diversity selection combining) sit in the SRNC. HS-DSCH has no soft handover (serving-cell change); E-DCH supports soft handover. R7 Direct Tunnel: GTP-U goes from the RNC directly to the GGSN (Gn-U) or to the SGW (S12). R7 Enhanced Layer 2 allows flexible RLC PDU sizes.'},
+ kv:[['RNC-Id','12 bit (Extended RNC-Id up to 16 bit)'],['Per-UE Iu signalling','One SCCP connection per UE and domain']],
+ specs:['TS 25.401','25.331','25.322','25.321','25.323','25.413'],
+ tips:['RAB setup failures: check the RANAP RAB Assignment Response cause and Iub/Iu transport resources.','Iu Release Request cause (e.g., “Radio Connection With UE Lost”) tells whether a drop was radio-, transport- or RNC-originated.']},
+
+{id:'mscs',n:'MSC Server / VLR',sb:'CS call control',gens:['3g'],x:650,y:80,w:150,h:56,
+ full:'Mobile Switching Centre Server with VLR (R4 split architecture)',
+ sum:'Control part of the CS domain: call control, CS mobility management and the VLR. Controls one or more CS-MGWs with H.248 over Mc.',
+ fn:['CS call control (CC), supplementary services, SMS relay towards the SMSC.','CS mobility management: location update, paging, TMSI reallocation, authentication with HLR/AuC.','VLR: temporary subscriber data and current location area (LAI).','GMSC Server role for mobile-terminated calls (MAP SendRoutingInfo to HLR).','CAMEL (CAP to gsmSCF) for IN services and prepaid.','Bearer control of the MGW via H.248 (Mc); BICC/SIP-I call control towards other MSC Servers (Nc).'],
+ notes:{'4g':'With LTE: SGs for CS Fallback and SMS over SGs (combined EPS/IMSI attach), and Sv for SRVCC from VoLTE to CS. The MSC Server must be enhanced for CSFB (TS 23.272) and SRVCC (TS 23.216).'},
+ kv:[['Identities','MSC/VLR number (E.164), LAI = PLMN + LAC']],
+ specs:['TS 23.002','23.205','24.008','29.002 (MAP)','29.232 (Mc)'],
+ tips:['CSFB setup failures: check SGs Paging / Service Request and the LAU after fallback; if the target LA differs, MT calls rely on MTRF/MTRR.']},
+
+{id:'mgw',n:'CS-MGW',sb:'Media Gateway',gens:['3g'],x:650,y:180,w:150,h:50,
+ full:'Circuit-Switched Media Gateway',
+ sum:'User-plane node of the R4 CS core, controlled by the MSC Server over H.248.',
+ fn:['Terminates the Iu-CS user plane (Iu UP framing, AMR).','Transcoding (e.g., AMR/AMR-WB ↔ G.711), echo cancellation, tones/announcements, conferencing.','Nb user plane towards other MGWs (RTP/IP or AAL2/ATM) and TDM interconnect to the PSTN.','Supports transcoder-free operation (TrFO).'],
+ specs:['TS 23.205','29.232','29.414','29.415','25.415']},
+
+{id:'hlr',n:'HLR / AuC',sb:'Home Location Register',gens:['3g','hspa'],x:890,y:180,w:140,h:50,
+ full:'Home Location Register / Authentication Centre',
+ sum:'Master subscriber database for 2G/3G CS and PS, accessed with MAP over SS7 or SIGTRAN.',
+ fn:['Permanent subscription data: IMSI, MSISDN, CS services, GPRS subscription (PDP context profiles/APNs, QoS).','Current location: serving VLR/MSC and SGSN addresses.','AuC: stores K/OPc and generates UMTS AKA quintets (RAND, XRES, CK, IK, AUTN) and GSM triplets.','Routing information for mobile-terminated calls and SMS (SRI, SRI-for-SM).'],
+ notes:{'4g':'In the EPC the HSS takes over (Diameter); many networks run a combined HLR/HSS. An S4-SGSN may use S6d (Diameter) instead of Gr.'},
+ specs:['TS 23.002','29.002 (MAP)','33.102'],
+ tips:['Typical MAP errors: unknownSubscriber, roamingNotAllowed, absentSubscriber. For PDP rejects, check that the APN is in the subscription sent in InsertSubscriberData.']},
+
+{id:'eir',n:'EIR',sb:'Equipment Identity Register',gens:['3g','4g','nsa'],pc:'4g',x:1130,y:180,w:130,h:50,
+ full:'Equipment Identity Register',
+ sum:'Checks the IMEI(SV) against white, grey and black lists (for example stolen or unapproved devices).',
+ fn:['F (MSC/VLR) and Gf (SGSN): MAP CheckIMEI.','S13 (MME) / S13′ (SGSN): Diameter ME-Identity-Check (ECR/ECA).','5G SA: a 5G-EIR NF is used instead, reached over N17 / N5g-eir_EquipmentIdentityCheck (TS 29.511). It is not drawn here.'],
+ specs:['TS 22.016','29.002','29.272','29.511']},
+
+{id:'sgsn',n:'SGSN',sb:'Serving GPRS Support Node',gens:['3g','hspa'],x:650,y:280,w:150,h:56,
+ full:'Serving GPRS Support Node',
+ sum:'PS-domain control node for 2G/3G: mobility and session management. Relays user plane towards the GGSN unless Direct Tunnel is used.',
+ fn:['GMM: GPRS attach/detach, Routing Area Update, paging, P-TMSI allocation, authentication via HLR (Gr).','SM: PDP context activation/modification/deactivation and QoS negotiation (RANAP RAB Assignment to the RNC).','GGSN selection by DNS resolution of the APN (APN-NI.mnc<MNC>.mcc<MCC>.gprs).','User-plane GTP-U relay between Iu-PS and Gn (not with Direct Tunnel).','Charging (S-CDR, M-CDR), lawful interception, CAMEL (Ge).','Optional Gs to the MSC/VLR (combined attach, network mode of operation I).'],
+ notes:{hspa:'With R7 Direct Tunnel the SGSN stays in the control plane only (RANAP + GTP-C) and passes the GGSN TEID to the RNC. Direct Tunnel is not used when the SGSN must handle user data, e.g. CAMEL/online charging at the SGSN, a GGSN without support, or some roaming policies.','4g':'R8 S4-SGSN: GTPv2 on S4 (to SGW) and S3 (to MME), S6d (Diameter) to the HSS, S16 between S4-SGSNs; supports ISR together with the MME.'},
+ kv:[['Areas','RAI = LAI + RAC'],['Temporary ID','P-TMSI (+ P-TMSI signature)']],
+ specs:['TS 23.060','24.008','29.060','25.413'],
+ tips:['PDP context reject SM causes: #26 Insufficient resources, #27 Missing or unknown APN, #29 User authentication failed, #30 Activation rejected by GGSN, #33 Requested service option not subscribed.']},
+
+{id:'ggsn',n:'GGSN',sb:'Gateway GPRS Support Node',gens:['3g','hspa'],x:1130,y:280,w:130,h:56,
+ full:'Gateway GPRS Support Node',
+ sum:'IP anchor and gateway between the 2G/3G PS domain and external packet data networks (Gi).',
+ fn:['PDP context anchor; UE IP address allocation (local pool, DHCP or RADIUS).','APN handling; Gi to Internet/corporate networks (RADIUS/Diameter AAA, L2TP/IPsec/GRE).','Charging: G-CDRs over Ga to the CGF, online credit control over Gy.','PCEF with Gx to the PCRF (R7 PCC): QoS and policy enforcement, DPI.','Lawful interception.'],
+ notes:{'4g':'Often implemented as a combined GGSN/PGW; a Gn/Gp SGSN reaches the PGW over Gn (TS 23.401 Annex D).'},
+ specs:['TS 23.060','29.060','29.061']},
+
+{id:'enb',n:'eNodeB',sb:'LTE base station · MeNB in EN-DC',gens:['4g','nsa'],x:285,y:425,w:140,h:56,
+ full:'E-UTRAN Node B',
+ sum:'LTE base station hosting the complete radio protocol stack (there is no RNC). Connects to the MME (S1-MME), the SGW (S1-U) and neighbours (X2).',
+ fn:['RRC, PDCP (ROHC, ciphering, RRC integrity), RLC, MAC (dynamic UL/DL scheduling, HARQ), PHY (OFDMA DL / SC-FDMA UL).','RRM: radio bearer control, admission control, connected-mode mobility (X2/S1 handover).','MME selection (S1-flex / MME pool) and routing of user plane to the SGW.','Paging and system-information broadcast.','Measurement configuration, ANR and other SON functions.'],
+ notes:{nsa:'In EN-DC the eNB is the Master eNB (MN). It is the only node with S1-MME, holds the UE’s RRC connection (LTE RRC), decides SgNB Addition (typically on a B1 NR measurement) and forwards the SCG configuration generated by the en-gNB. Option 3: MCG split bearer, S1-U terminates in the eNB which splits towards the en-gNB over X2-U. Options 3a/3x: S1-U of SCG / SCG split bearers terminates in the en-gNB; the path is switched with E-RAB Modification Indication to the MME.',sa:'Connected to the 5GC (NG-C/NG-U instead of S1, Xn instead of X2) an LTE base station becomes an ng-eNB – see the ng-eNB in the NG-RAN area.'},
+ kv:[['ECGI','PLMN + ECI (28 bit; macro: eNB-ID 20 bit + cell 8 bit)'],['PCI','0–503'],['TAC','16 bit'],['Node ID','Global eNB ID']],
+ specs:['TS 36.300','36.331','36.413','36.423','37.340'],
+ tips:['S1 Setup failure: compare served PLMN/TAC with the MME configuration.','X2 handover failures: check neighbour relations, X2 SCTP association state and the Handover Preparation Failure cause.']},
+
+{id:'engnb',n:'en-gNB',sb:'NR secondary node (EN-DC)',gens:['nsa'],x:285,y:590,w:140,h:56,
+ full:'en-gNB – NR node in EN-DC acting as Secondary Node',
+ sum:'NR node that provides NR radio to the UE as Secondary Node of an LTE MeNB. Connected to the EPC by S1-U only; it has no NG interfaces.',
+ fn:['NR PHY/MAC/RLC for the Secondary Cell Group (PSCell + SCells).','NR PDCP for SN-terminated bearers (SCG bearer, SCG split bearer); no SDAP, because EPS bearers are used rather than QoS flows.','Own NR RRC entity: generates the SCG configuration, delivered to the UE inside MeNB RRC or directly over SRB3 (optional).','X2-C (X2AP EN-DC procedures) and X2-U to the MeNB; S1-U to the SGW in Options 3a/3x.','Secondary RAT data volume reporting via the MeNB for charging.'],
+ notes:{nsa:'Can itself be split into gNB-CU / gNB-DU (F1) and CU-CP / CU-UP (E1) exactly as in SA. Option 3: no S1-U at the en-gNB. Option 3a: SCG bearer. Option 3x: SCG split bearer (most common).'},
+ kv:[['NR CGI','PLMN + NCI (36 bit)'],['PCI','0–1007'],['System info','An NR cell need not broadcast SIB1; the UE camps on LTE']],
+ specs:['TS 37.340','38.300','36.423','38.425','38.331'],
+ tips:['SgNB Addition Reject or SCG failure (t310-Expiry, randomAccessProblem, rlc-MaxNumRetx, synchReconfigFailureSCG, scg-ReconfigFailure): check the X2AP cause and the UE’s SCGFailureInformationNR.','Low NR throughput in 3x: check split-bearer flow control (DDDS on X2-U) and the UL path configuration (primaryPath, ul-DataSplitThreshold).']},
+
+{id:'gnb',n:'gNB',sb:'',gens:['sa'],kind:'container',x:190,y:790,w:380,h:310,
+ full:'gNB – NR base station connected to the 5GC',
+ sum:'NR RAN node for SA. Logically split per TS 38.401 into one gNB-CU-CP, one or more gNB-CU-UPs and one or more gNB-DUs; a monolithic gNB is equally valid.',
+ fn:['RRC (RRC_IDLE / RRC_INACTIVE / RRC_CONNECTED), SDAP (QoS flow → DRB mapping), PDCP, RLC, MAC, PHY.','AMF selection (5G-S-TMSI / GUAMI, NSSAI) and routing of user plane to the UPF per PDU session.','Network slicing support (S-NSSAI per PDU session), beam management.','RAN-based Notification Area and RAN paging for RRC_INACTIVE.','Xn and NG handover; MR-DC (NR-DC, NGEN-DC, NE-DC) as master or secondary node.'],
+ kv:[['NCGI','PLMN + NCI (36 bit: gNB-ID 22–32 bit + cell ID)'],['PCI','0–1007'],['TAC','24 bit'],['Node ID','Global gNB ID']],
+ specs:['TS 38.300','38.401','38.331','38.413','38.423'],
+ tips:['NG Setup failure: compare the Supported TA List (TAC, PLMN, S-NSSAI) with the AMF configuration.','Registration failing right after RRC setup: check NGAP Initial UE Message and AMF selection (GUAMI / AMF Set).']},
+
+{id:'ngenb',n:'ng-eNB',sb:'LTE base station on 5GC',gens:['sa'],x:215,y:1140,w:130,h:48,
+ full:'ng-eNB – E-UTRA (LTE) base station connected to the 5GC',
+ sum:'An LTE eNB that is an NG-RAN node: E-UTRA radio towards the UE, NG interfaces towards the 5GC and Xn towards gNBs. Sometimes called “eLTE”.',
+ fn:['E-UTRA PHY/MAC/RLC/PDCP/RRC plus SDAP, which maps 5GC QoS flows onto DRBs.','NG-C (NGAP) to the AMF and NG-U (GTP-U, one tunnel per PDU session) to the UPF – the same protocols as a gNB.','Xn to gNBs and other ng-eNBs: handover, RRC_INACTIVE context retrieval, multi-radio dual connectivity.','Brings 5GC features to LTE radio: 5G NAS and security, PDU sessions, network slicing, RRC_INACTIVE.','A cell can be connected to the EPC (S1) and the 5GC (NG) at the same time; each UE is served by the core type it and its subscription support.'],
+ notes:{sa:'Deployment options with the 5GC: Option 5 – ng-eNB alone; Option 7/7a/7x (NGEN-DC) – ng-eNB master, gNB secondary; Option 4/4a (NE-DC) – gNB master, ng-eNB secondary. Uncommon in practice: most networks went from Option 3x to Option 2 and keep LTE on the EPC with N26 interworking.'},
+ kv:[['Node ID','Global ng-eNB ID (macro 20 bit, short macro 18 bit, long macro 21 bit)'],['Cell ID','E-UTRA CGI (28-bit ECI)'],['TAC','24 bit when connected to the 5GC (16 bit towards EPC)'],['PCI','0–503']],
+ specs:['TS 38.300','36.300','36.331','38.413','38.423','37.340'],
+ tips:['NG Setup failure: compare the Supported TA List (24-bit TAC, PLMN, S-NSSAI) sent by the ng-eNB with the AMF configuration.','In a cell connected to both cores, UEs that do not support E-UTRA connected to 5GC (or lack a 5GS subscription) stay on the EPC.']},
+
+{id:'gnbdu',n:'gNB-DU',sb:'RLC · MAC · PHY',gens:['sa'],x:215,y:925,w:120,h:60,
+ full:'gNB Distributed Unit',
+ sum:'Hosts RLC, MAC and PHY (or only high-PHY when an O-RAN 7.2x Radio Unit is used).',
+ fn:['RLC (AM/UM/TM), MAC (scheduling, HARQ, beam management), PHY.','One DU serves one or more cells; a cell belongs to exactly one DU.','Terminates F1-C to the CU-CP and F1-U to the CU-UP(s).','Fronthaul to the Radio Unit (CPRI/eCPRI or O-RAN Open Fronthaul 7.2x) is not a 3GPP interface.'],
+ notes:{sa:'A gNB-DU connects to only one gNB-CU-CP, but may connect to several gNB-CU-UPs under the control of the same CU-CP (TS 38.401).'},
+ specs:['TS 38.401','38.321','38.322','38.473'],
+ tips:['F1 Setup Failure: the served-cell configuration (NCGI, PCI, TAC, PLMN) must match the CU.']},
+
+{id:'gnbcucp',n:'gNB-CU-CP',sb:'RRC · PDCP-C',gens:['sa'],x:420,y:830,w:130,h:54,
+ full:'gNB Central Unit – Control Plane',
+ sum:'Hosts RRC and the PDCP of the signalling radio bearers; the control-plane part of the gNB.',
+ fn:['RRC and PDCP-C (SRBs).','Terminates N2 (NGAP), Xn-C, F1-C (to all DUs) and E1 (to the CU-UPs).','Selects the CU-UP and sets up bearer contexts over E1; manages DU UE contexts over F1AP.','Mobility decisions and admission control.'],
+ notes:{sa:'One gNB-CU-UP is connected to only one gNB-CU-CP (TS 38.401).'},
+ specs:['TS 38.401','38.473','38.463','38.413']},
+
+{id:'gnbcuup',n:'gNB-CU-UP',sb:'SDAP · PDCP-U',gens:['sa'],x:420,y:1030,w:130,h:54,
+ full:'gNB Central Unit – User Plane',
+ sum:'Hosts SDAP and the PDCP of the data radio bearers.',
+ fn:['SDAP: QoS flow (QFI) ↔ DRB mapping and reflective QoS marking.','PDCP-U: ciphering, optional integrity protection, ROHC, reordering, duplication.','Terminates N3 (GTP-U to the UPF), Xn-U, F1-U (to DUs) and E1 (to the CU-CP).'],
+ notes:{nsa:'In a split en-gNB the CU-UP has PDCP only – there is no SDAP in EN-DC.'},
+ specs:['TS 37.324 (SDAP)','38.323 (PDCP)','38.463']},
+
+{id:'mme',n:'MME',sb:'Mobility Management Entity',gens:['4g','nsa'],x:650,y:425,w:150,h:56,
+ full:'Mobility Management Entity',
+ sum:'EPC control-plane node for NAS signalling, security, mobility and bearer control. No user data passes through the MME.',
+ fn:['Terminates NAS EMM/ESM with NAS ciphering and integrity (TS 24.301).','Authentication (EPS AKA with vectors from the HSS over S6a) and GUTI allocation.','Tracking-area list management, idle-mode reachability, paging.','SGW/PGW selection (DNS S-NAPTR on TAI and APN FQDNs) and bearer management over S11.','Inter-MME (S10) and inter-RAT (S3 / Gn) mobility, ISR.','CSFB and SMS over SGs, SRVCC over Sv, IMEI check over S13.'],
+ notes:{nsa:'Must support EN-DC: understands the UE’s DCNR bit, applies the HSS “NR as Secondary RAT Not Allowed” restriction (signalled to the eNB in the Handover Restriction List), handles extended bit rates above 4.2 Gbps and supports Secondary RAT usage data reporting.'},
+ kv:[['GUMMEI','PLMN + MMEGI (16 bit) + MMEC (8 bit)'],['GUTI','GUMMEI + M-TMSI (32 bit)'],['S-TMSI','MMEC + M-TMSI'],['TAI','PLMN + TAC']],
+ specs:['TS 23.401','24.301','36.413','29.274','29.272'],
+ tips:['Attach/TAU reject EMM causes: #3 Illegal UE, #7 EPS services not allowed, #8 EPS and non-EPS services not allowed, #11 PLMN not allowed, #12 TA not allowed, #13 Roaming not allowed in this TA, #15 No suitable cells in TA, #19 ESM failure (see ESM cause), #22 Congestion.','ESM causes: #26 Insufficient resources, #27 Missing or unknown APN, #29 User authentication failed, #33 Requested service option not subscribed.']},
+
+{id:'hss',n:'HSS',sb:'Home Subscriber Server',gens:['4g','nsa'],x:890,y:425,w:140,h:56,
+ full:'Home Subscriber Server',
+ sum:'EPC and IMS master subscriber database and authentication centre, accessed over Diameter.',
+ fn:['Subscription data: APN configurations, default QoS (QCI/ARP), AMBR, access and roaming restrictions.','EPS AKA vector generation (RAND, XRES, AUTN, KASME).','Location management: stores the serving MME/SGSN and sends Cancel Location on change.','IMS: Cx (I/S-CSCF) and Sh (application servers). Non-3GPP access: SWx.'],
+ notes:{nsa:'The Access-Restriction-Data flag “NR as Secondary RAT Not Allowed” controls EN-DC per subscriber; extended AMBR AVPs allow > 4.2 Gbps.',sa:'For 5GS–EPS interworking a combined HSS+UDM serves both systems. If HSS and UDM are separate NFs they interwork over Nhss/Nudm (R16, TS 23.632). Cx/Sh towards the IMS remain Diameter in 5G SA networks.'},
+ kv:[['Keys','IMSI; MSISDN; per-APN Context-Identifier']],
+ specs:['TS 23.401','29.272','29.228/29.229 (Cx)','33.401'],
+ tips:['S6a Experimental-Result-Code: 5001 USER_UNKNOWN, 5004 ROAMING_NOT_ALLOWED, 5420 UNKNOWN_EPS_SUBSCRIPTION, 5421 RAT_NOT_ALLOWED, 4181 AUTHENTICATION_DATA_UNAVAILABLE.']},
+
+{id:'sgw',n:'SGW',sb:'Serving Gateway',gens:['4g','nsa'],nocups:true,x:650,y:610,w:150,h:56,
+ full:'Serving Gateway',
+ sum:'User-plane mobility anchor between the RAN and the PGW; buffers downlink data for idle UEs.',
+ fn:['Local mobility anchor for inter-eNB handover (path switch, End Marker).','Anchor for inter-3GPP mobility (S4/S12 towards 2G/3G).','DL buffering in ECM-IDLE and Downlink Data Notification to the MME, which triggers paging.','Packet routing and forwarding; transport-level DSCP marking per QCI/ARP.','Accounting for inter-operator charging (SGW-CDR), lawful interception.'],
+ notes:{'4g':'CUPS (R14): SGW-C + SGW-U with Sxa (PFCP, TS 29.244).'},
+ specs:['TS 23.401','29.274','29.281','23.214 (CUPS)'],
+ tips:['DDN not followed by paging/Service Request: check the S11 DDN Acknowledge cause and MME paging.','GTPv2 cause 64 “Context Not Found” after a restart: compare the Recovery IE (restart counter) of the peers.']},
+
+{id:'pgw',n:'PGW',sb:'PDN Gateway',gens:['4g','nsa'],nocups:true,x:890,y:610,w:140,h:56,
+ full:'PDN Gateway',
+ sum:'IP anchor of the PDN connection: allocates the UE IP, enforces policy and charging and connects to the PDN over SGi.',
+ fn:['UE IP allocation (IPv4, IPv6 prefix, IPv4v6) per APN.','PCEF: PCC rule enforcement, gating, QoS (APN-AMBR, GBR/MBR), dedicated-bearer initiation (Gx).','Online (Gy) and offline (Gz) charging, service data flow detection / DPI.','Anchor for mobility between 3GPP and non-3GPP access (S2a/S2b).','Lawful interception; SGi AAA (RADIUS/Diameter).'],
+ notes:{'4g':'CUPS: PGW-C + PGW-U over Sxb (PFCP).',sa:'For 5GS interworking: combined SMF+PGW-C and UPF+PGW-U.'},
+ specs:['TS 23.401','23.203','29.274','29.061','29.212'],
+ tips:['GTPv2 Create Session Response causes: 16 Request accepted, 64 Context not found, 72 System failure, 73 No resources available, 78 Missing or unknown APN, 84 All dynamic addresses are occupied, 92 User authentication failed, 93 APN access denied – no subscription, 94 Request rejected (reason not specified), 100 Remote peer not responding.']},
+
+{id:'sgwc',n:'SGW-C',sb:'SGW control plane',gens:['4g','nsa'],cups:true,x:650,y:540,w:150,h:44,
+ full:'Serving Gateway – control-plane function (CUPS, R14)',
+ sum:'Control part of a split SGW. Terminates the GTPv2-C interfaces (S11, S5/S8-C, S4-C) and controls one or more SGW-Us over Sxa (PFCP).',
+ fn:['Terminates S11 from the MME, S5/S8-C towards the PGW-C and S4-C towards an S4-SGSN.','Selects the SGW-U for a PDN connection (e.g. by UE location, APN, UE usage type, load) and creates the Sxa session.','Allocates the user-plane F-TEIDs or lets the SGW-U allocate them (PFCP CHOOSE flag).','Downlink data for an idle UE: on a Session Report (downlink data report) from the SGW-U it sends Downlink Data Notification to the MME.','Builds SGW charging data from URR usage reports.'],
+ notes:{'4g':'SGW-C and PGW-C can be one combined node; a combined SGW-U/PGW-U can then be controlled with a single combined Sxa/Sxb PFCP session.'},
+ specs:['TS 23.214','29.244','29.274'],
+ tips:['Missing DL data after Service Request: check that the SGW-C sent Sxa Session Modification with the new eNB F-TEID in the DL FAR.']},
+
+{id:'sgwu',n:'SGW-U',sb:'SGW user plane',gens:['4g','nsa'],cups:true,x:650,y:630,w:150,h:44,
+ full:'Serving Gateway – user-plane function (CUPS, R14)',
+ sum:'User-plane part of a split SGW, controlled by the SGW-C over Sxa. Relays GTP-U between the RAN and the PGW-U.',
+ fn:['Terminates S1-U (eNB / en-gNB), S12 (RNC), S4-U (S4-SGSN) and S5/S8-U towards the PGW-U.','Applies the PDRs/FARs from the SGW-C: GTP-U relay, End Marker on path switch when instructed.','DL buffering for idle UEs per BAR – or forwards DL packets to the SGW-C when buffering is done in the CP function.','Usage reporting (URR) to the SGW-C; transport-level DSCP marking.'],
+ specs:['TS 23.214','29.244','29.281']},
+
+{id:'pgwc',n:'PGW-C',sb:'PGW control plane',gens:['4g','nsa'],cups:true,x:890,y:540,w:140,h:44,
+ full:'PDN Gateway – control-plane function (CUPS, R14)',
+ sum:'Control part of a split PGW. Terminates S5/S8-C, Gx, Gy/Gz and SGi AAA signalling, handles UE IP allocation and controls PGW-Us over Sxb (PFCP).',
+ fn:['Terminates S5/S8-C (GTPv2-C), Gx towards the PCRF, Gy/Gz charging and RADIUS/Diameter on SGi.','UE IP address allocation (may be delegated to the PGW-U) and APN handling.','PGW-U selection; translates PCC rules into PDR/FAR/QER/URR in the PGW-U.','Turns PGW-U usage reports into online/offline charging and usage-monitoring reports.'],
+ notes:{sa:'For 5GS interworking the PGW-C is combined with the SMF (SMF+PGW-C) and controls a UPF+PGW-U over N4.'},
+ specs:['TS 23.214','29.244','29.274','29.212']},
+
+{id:'pgwu',n:'PGW-U',sb:'PGW user plane',gens:['4g','nsa'],cups:true,x:890,y:630,w:140,h:44,
+ full:'PDN Gateway – user-plane function (CUPS, R14)',
+ sum:'User-plane part of a split PGW, controlled by the PGW-C over Sxb. Anchors the user IP traffic and connects to the PDN over SGi.',
+ fn:['Terminates S5/S8-U and the SGi user plane.','Packet detection (incl. application detection), gating, QoS enforcement (APN-AMBR, MBR/GBR) and DL bearer binding per QER/FAR.','Usage measurement and reporting (URR) for charging and usage monitoring.','User-plane lawful interception on request of the PGW-C.'],
+ notes:{sa:'For 5GS interworking: combined UPF+PGW-U.'},
+ specs:['TS 23.214','29.244','29.281']},
+
+{id:'pcrf',n:'PCRF',sb:'Policy & Charging Rules',gens:['4g','nsa'],x:1130,y:540,w:130,h:50,
+ full:'Policy and Charging Rules Function',
+ sum:'Central PCC policy decision point for EPS (and for GPRS from R7).',
+ fn:['Provides PCC rules to the PCEF over Gx: QoS (QCI, ARP, MBR/GBR), gating, charging keys, event triggers.','Receives application/session information from the AF over Rx (e.g., the IMS P-CSCF for VoLTE) and binds it to the IP-CAN session.','Usage monitoring / fair-usage policy; Sy to the OCS for spending limits; Sd to a TDF; S9 for roaming (V-PCRF/H-PCRF).'],
+ notes:{'3g':'For 2G/3G packet core the GGSN is the PCEF on Gx (R7+).','4g':'VoLTE: P-CSCF → Rx AAR (SDP media) → PCRF → Gx RAR (Charging-Rule-Install, QCI 1) → PGW → Create Bearer Request → dedicated bearer.',sa:'For 5GS interworking: combined PCF+PCRF.'},
+ specs:['TS 23.203','29.212 (Gx)','29.214 (Rx)','29.219 (Sy)'],
+ tips:['A Gx CCR-I failure usually rejects the PDN connection – check the Result-Code and PCRF reachability (DRA).','Rx Experimental-Result 5065 IP-CAN_SESSION_NOT_AVAILABLE: the PCRF cannot bind the Rx session to a Gx session (check UE IP / APN binding).']},
+
+{id:'ocs',n:'OCS / OFCS',sb:'Online / offline charging',gens:['3g','hspa','4g','nsa'],pc:'4g',x:1130,y:405,w:130,h:56,
+ full:'Online Charging System / Offline Charging System (CDF, CGF)',
+ sum:'Charging back-end for 3G/4G packet core: real-time credit control (online) and CDR collection (offline).',
+ fn:['OCS: Diameter Credit Control on Gy (CCR/CCA, quota per rating group via MSCC); Ro for IMS.','OFCS: the CDF receives Rf (Diameter ACR/ACA); the CGF collects CDRs over Ga (GTP′) and forwards them to billing (Bx).','Sy (OCS–PCRF) for policy counters / spending limits.'],
+ notes:{sa:'In the 5GC the CHF (Converged Charging System) replaces this, reached over Nchf (N40 from SMF, N28 from PCF).'},
+ specs:['TS 32.240','32.251','32.295 (GTP′)','32.299 (Diameter charging)'],
+ tips:['Gy result codes 4012 DIAMETER_CREDIT_LIMIT_REACHED and 4010 END_USER_SERVICE_DENIED are subscriber/credit issues. On OCS time-outs, gateway behaviour follows Credit-Control-Failure-Handling (CCFH).']},
+
+{id:'amf',n:'AMF',sb:'Access & Mobility Mgmt',gens:['sa'],x:640,y:820,w:110,h:52,
+ full:'Access and Mobility Management Function',
+ sum:'5GC control-plane entry point for the UE. Terminates N1 (NAS) and N2 and handles registration, connection, reachability and mobility. Relays session signalling to the SMF.',
+ fn:['Registration management (initial, mobility, periodic), connection management (CM-IDLE / CM-CONNECTED), reachability and paging.','NAS ciphering and integrity (5GMM); SEAF security anchor; authentication via the AUSF (N12).','Relays 5GSM between UE and SMF (N11) and N2 SM information between SMF and gNB.','SMF selection (via NRF, by DNN + S-NSSAI); slice handling with the NSSF (Allowed NSSAI).','Access/mobility and UE policy from the PCF (N15); subscription from the UDM (N8).','Interworking with the EPC over N26; SMS over NAS with the SMSF; location services with the LMF.'],
+ kv:[['GUAMI','PLMN + AMF Region ID (8) + AMF Set ID (10) + AMF Pointer (6)'],['5G-GUTI','GUAMI + 5G-TMSI (32 bit)'],['5G-S-TMSI','AMF Set ID + AMF Pointer + 5G-TMSI']],
+ specs:['TS 23.501','23.502','24.501','38.413','29.518'],
+ tips:['Registration Reject 5GMM causes: #3 Illegal UE, #7 5GS services not allowed, #11 PLMN not allowed, #12 Tracking area not allowed, #13 Roaming not allowed in this TA, #15 No suitable cells in TA, #27 N1 mode not allowed, #62 No network slices available.']},
+
+{id:'ausf',n:'AUSF',sb:'Authentication Server',gens:['sa'],x:765,y:820,w:110,h:52,
+ full:'Authentication Server Function',
+ sum:'Performs primary authentication of the UE in the home network (5G AKA or EAP-AKA′).',
+ fn:['Nausf_UEAuthentication service for the AMF/SEAF (N12).','Obtains authentication vectors from the UDM (N13, Nudm_UEAuthentication).','Verifies RES* (5G AKA) or runs EAP-AKA′; derives KSEAF.','SoR and UPU protection services (Nausf_SoRProtection, Nausf_UPUProtection).'],
+ specs:['TS 33.501','29.509']},
+
+{id:'udm',n:'UDM',sb:'Unified Data Mgmt',gens:['sa'],x:890,y:820,w:110,h:52,
+ full:'Unified Data Management',
+ sum:'Front end for subscriber data and credentials – the 5G evolution of the HSS. Data is stored in the UDR.',
+ fn:['ARPF: generates authentication vectors. SIDF: de-conceals SUCI → SUPI.','Subscriber data management (Nudm_SDM): access & mobility, session management, SMF selection, slice subscription.','UE context management (Nudm_UECM): registers the serving AMF and SMFs.','Access authorization, roaming restrictions, SMS subscription.'],
+ notes:{'4g':'For EPS interworking: combined HSS+UDM.'},
+ specs:['TS 23.501','29.503']},
+
+{id:'udr',n:'UDR',sb:'Unified Data Repository',gens:['sa'],x:1015,y:820,w:110,h:52,
+ full:'Unified Data Repository',
+ sum:'Back-end database for subscription data (UDM), policy data (PCF), application data and exposure data (NEF).',
+ fn:['Nudr_DataRepository service: N35 (UDM), N36 (PCF), N37 (NEF).','Data sets: Subscription, Policy, Application, Exposure.'],
+ specs:['TS 23.501','29.504','29.505','29.519']},
+
+{id:'nssf',n:'NSSF',sb:'Slice Selection',gens:['sa'],x:1140,y:820,w:110,h:52,
+ full:'Network Slice Selection Function',
+ sum:'Selects the network slice instances serving a UE and determines the Allowed NSSAI and target AMF Set.',
+ fn:['Nnssf_NSSelection (N22 from the AMF): Allowed/Configured NSSAI, NSI, AMF Set or candidate AMFs.','Nnssf_NSSAIAvailability: slice availability per tracking area.','S-NSSAI = SST (8 bit) + optional SD (24 bit).'],
+ specs:['TS 23.501 §5.15','29.531']},
+
+{id:'nrf',n:'NRF',sb:'NF Repository',gens:['sa'],x:1265,y:820,w:110,h:52,
+ full:'Network Repository Function',
+ sum:'Service registry of the SBA: NF registration, discovery and access-token issuing.',
+ fn:['Nnrf_NFManagement: NF profile register/update/heartbeat/deregister; status subscribe/notify.','Nnrf_NFDiscovery: returns candidate NF instances (by NF type, S-NSSAI, DNN, TAI …).','Nnrf_AccessToken: OAuth 2.0 tokens for SBI authorization.','Hierarchical and roaming NRFs (N27).'],
+ specs:['TS 23.501','29.510','33.501'],
+ tips:['NF not discovered: check its NF profile (nfStatus, sNssais, dnnList, taiList) and heartbeat. HTTP 401/403 on SBI is often an OAuth2 token/scope or allowedNfTypes issue.']},
+
+{id:'sepp',n:'SEPP',sb:'Security Edge Protection',gens:['sa'],x:1390,y:820,w:110,h:52,
+ full:'Security Edge Protection Proxy',
+ sum:'Border node for SBI signalling between PLMNs (roaming); terminates N32 towards the partner SEPP.',
+ fn:['Topology hiding, message filtering and policing of inter-PLMN control-plane traffic.','N32-c: HTTP/2 over TLS for security capability negotiation and parameter exchange.','N32-f: forwarding of SBI messages protected by TLS or by PRINS (application-layer JWE/JWS, optionally via IPX).'],
+ specs:['TS 33.501 §13.2','29.573']},
+
+{id:'smf',n:'SMF',sb:'Session Mgmt Function',gens:['sa'],x:640,y:990,w:110,h:52,
+ full:'Session Management Function',
+ sum:'Controls PDU sessions (establishment, modification, release), allocates UE IP addresses and selects and controls UPFs over N4 (PFCP).',
+ fn:['PDU session management (5GSM via the AMF); SSC modes 1/2/3.','UE IP address/prefix allocation (local, DHCP or DN-AAA).','UPF selection and control: installs PDR/FAR/QER/URR/BAR over N4.','QoS: maps PCC rules (N7) to QoS flows (5QI, QFI); sends QoS rules to the UE and QoS profiles to the gNB.','Charging (N40 to the CHF), downlink data notification handling, ULCL/branching-point insertion.','Roaming: V-SMF / H-SMF (N16).'],
+ notes:{'4g':'For EPS interworking: combined SMF+PGW-C with S5-C towards the SGW.'},
+ specs:['TS 23.501','23.502','29.502','29.244'],
+ tips:['PDU Session Establishment Reject 5GSM causes: #26 Insufficient resources, #27 Missing or unknown DNN, #29 User authentication or authorization failed, #33 Requested service option not subscribed.']},
+
+{id:'pcf',n:'PCF',sb:'Policy Control Function',gens:['sa'],x:765,y:990,w:110,h:52,
+ full:'Policy Control Function',
+ sum:'Unified policy framework of the 5GS (evolution of the PCRF).',
+ fn:['SM policy to the SMF (N7, Npcf_SMPolicyControl): PCC rules, session AMBR, charging control.','AM policy (service area restrictions, RFSP) and UE policy (URSP) via the AMF (N15).','Policy authorization for AFs (N5, Npcf_PolicyAuthorization), e.g. the IMS P-CSCF for VoNR.','Reads policy data from the UDR (N36), spending limits from the CHF (N28), analytics from the NWDAF (N23).'],
+ notes:{'4g':'For EPS interworking: combined PCF+PCRF.'},
+ specs:['TS 23.503','29.507','29.512','29.514','29.525']},
+
+{id:'chf',n:'CHF',sb:'Charging Function',gens:['sa'],x:890,y:990,w:110,h:52,
+ full:'Charging Function (Converged Charging System)',
+ sum:'Converged online + offline charging for the 5GC.',
+ fn:['Nchf_ConvergedCharging (N40 from the SMF): Create/Update/Release with quota management and CDR generation.','Nchf_SpendingLimitControl (N28 to the PCF).','Replaces the OCS/OFCS split (Gy/Gz) of the EPC.'],
+ specs:['TS 32.240','32.255','32.290','32.291']},
+
+{id:'nef',n:'NEF',sb:'Network Exposure',gens:['sa'],x:1015,y:990,w:110,h:52,
+ full:'Network Exposure Function',
+ sum:'Securely exposes network capabilities and events to external or untrusted AFs through northbound APIs.',
+ fn:['Monitoring events, device triggering, traffic influence, QoS on demand, parameter provisioning.','Translates between external identifiers (GPSI, AF-ID) and internal ones.','N33 towards the AF (TS 29.522 northbound APIs); stores data in the UDR (N37).'],
+ notes:{'4g':'Counterpart of the SCEF in the EPC (a combined SCEF+NEF is used for interworking).'},
+ specs:['TS 23.501','23.502 §4.15','29.522','29.591']},
+
+{id:'af',n:'AF',sb:'Application Function',gens:['sa'],x:1140,y:990,w:110,h:52,
+ full:'Application Function',
+ sum:'Application that requests policy/QoS or influences traffic routing.',
+ fn:['Trusted AF: direct SBI access to the PCF (N5, Npcf_PolicyAuthorization).','Untrusted or external AF: via the NEF (N33).','Examples: IMS P-CSCF, MEC applications, video optimisation.'],
+ specs:['TS 23.501','29.514','29.522']},
+
+{id:'nwdaf',n:'NWDAF',sb:'Network Data Analytics',gens:['sa'],x:1265,y:990,w:110,h:52,
+ full:'Network Data Analytics Function',
+ sum:'Collects data from NFs and OAM and provides analytics (statistics or predictions) to consumers.',
+ fn:['Nnwdaf_AnalyticsSubscription and Nnwdaf_AnalyticsInfo.','Use cases: slice load, NF load, UE mobility/communication, QoS sustainability, abnormal behaviour.','Consumers: PCF (N23), NSSF (N34), AMF, SMF, and AFs via the NEF.'],
+ specs:['TS 23.288','29.520']},
+
+{id:'scp',n:'SCP',sb:'Service Comm. Proxy',gens:['sa'],x:1390,y:990,w:110,h:52,
+ full:'Service Communication Proxy (R16)',
+ sum:'Optional SBI proxy for indirect communication: routing, load balancing and delegated discovery.',
+ fn:['Indirect communication models C (discovery by the consumer) and D (delegated discovery by the SCP).','Routes on 3gpp-Sbi-* headers (Target-apiRoot, Discovery-*, Routing-Binding).','Overload control, message prioritisation, central observation point.'],
+ specs:['TS 23.501 (SCP; Annex E communication models)','29.500']},
+
+{id:'upf',n:'UPF',sb:'User Plane Function',gens:['sa'],x:640,y:1095,w:110,h:52,
+ full:'User Plane Function',
+ sum:'5GC user-plane node controlled by the SMF over N4. Anchors PDU sessions and forwards traffic between gNB (N3), other UPFs (N9) and the data network (N6).',
+ fn:['PDU Session Anchor (PSA) and intra/inter-RAT mobility anchor.','Packet detection, routing and forwarding per PDR/FAR; uplink classifier (ULCL) and branching point for local breakout/MEC.','QoS enforcement: QFI marking in the GTP-U extension header, session/flow MBR, reflective QoS.','Usage reporting (URR) for charging, DL buffering (BAR), lawful interception.','GTP-U echo / path management.'],
+ notes:{'4g':'For EPS interworking: combined UPF+PGW-U with S5-U towards the SGW.'},
+ specs:['TS 23.501','29.244','29.281'],
+ tips:['PFCP cause values: 1 Request accepted, 64 Request rejected (reason not specified), 65 Session context not found, 66 Mandatory IE missing, 72 No established PFCP Association, 73 Rule creation/modification failure.']},
+
+{id:'peercs',n:'Peer CS core / PSTN',sb:'MSC-S · GMSC-S · MGW',gens:['3g'],kind:'ext',x:1550,y:75,w:230,h:60,
+ full:'Other CS networks (peer MSC Servers / GMSC Servers, MGWs, PSTN, other PLMNs)',
+ sum:'Interconnection of the CS core.',
+ fn:['Nc (BICC or SIP-I) between MSC Servers and GMSC Servers.','Nb user plane between MGWs.','PSTN interconnect via ISUP over TDM or SIP-I.'],
+ specs:['TS 23.205','29.205','29.231']},
+
+{id:'ims',n:'IMS core',sb:'P-CSCF · I/S-CSCF · TAS · MGCF',gens:['4g','nsa','sa'],pc:'4g',kind:'ext',x:1560,y:515,w:200,h:85,
+ full:'IP Multimedia Subsystem',
+ sum:'SIP-based service core for voice/video (VoLTE, VoNR, VoWiFi) used over 4G, NSA and 5G SA access.',
+ fn:['P-CSCF: first SIP contact for the UE (Gm, IPsec), acts as AF towards the PCRF (Rx) or the PCF (N5).','I-CSCF / S-CSCF: registration (Cx to HSS), routing, service triggering (ISC to AS).','TAS / MMTel AS: supplementary services (Sh to HSS).','Charging: Ro (online) and Rf (offline) towards the OCS / OFCS.','MGCF / IM-MGW: interworking with the PSTN/CS domain (ISUP/BICC/SIP-I).','SRVCC anchoring (SCC-AS, ATCF/ATGW) towards the MSC Server.'],
+ notes:{'4g':'VoLTE: IMS APN default bearer QCI 5 (SIP) + dedicated bearer QCI 1 (RTP).',sa:'VoNR: 5QI 5 (SIP) and 5QI 1 (RTP) QoS flows on the IMS DNN. Gm (SIP) runs over the user plane (SGi/N6) and is therefore not drawn as a separate line.'},
+ specs:['TS 23.228','24.229','29.214 (Rx)','29.514 (N5)','29.228 (Cx)','29.328 (Sh)'],
+ tips:['Dedicated bearer / QoS flow not created: follow Rx AAR → Gx RAR → Create Bearer in 4G; Npcf_PolicyAuthorization → SM policy update → PDU Session Modification in 5G.','EPS fallback: check N26 availability and the IMS voice over PS indication.']},
+
+{id:'partner',n:'Roaming partner PLMN',sb:'via IPX / GRX',gens:['sa'],kind:'ext',x:1610,y:820,w:180,h:60,
+ full:'Roaming partner PLMN (reached over GRX / IPX)',
+ sum:'Another operator’s network used for roaming. Only N32 is drawn; the other roaming interfaces are listed here.',
+ fn:['3G: Gp (GTPv1, SGSN ↔ GGSN); MAP (Gr, D) over SS7/SIGTRAN.','4G: S8 (GTPv2, visited SGW ↔ home PGW, home-routed); S6a via Diameter Edge Agents (DEA); S9 between PCRFs.','5G SA: N32 between SEPPs carries all inter-PLMN SBI signalling (e.g., N8, N10, N12, N13, N16, N24); N9 between V-UPF and H-UPF for home-routed sessions.'],
+ specs:['GSMA IR.34 (IPX)','GSMA IR.88 (LTE roaming)','GSMA NG.113 (5GS roaming)','TS 29.573']},
+
+{id:'pdn',n:'Packet Data Networks',sb:'Internet · IMS · Enterprise (APN / DNN)',gens:['3g','hspa','4g','nsa','sa'],pc:'all',kind:'bar',x:1810,y:250,w:65,h:930,
+ full:'External packet data networks',
+ sum:'Internet, IMS and corporate/private networks. Identified by APN (3G/4G) or DNN (5G).',
+ fn:['Reached over Gi (GGSN), SGi (PGW) and N6 (UPF).','APN = Network Identifier + Operator Identifier (mnc<MNC>.mcc<MCC>.gprs); the DNN is equivalent to the APN Network Identifier.','Secondary authentication / IP allocation via RADIUS or Diameter (DN-AAA).'],
+ specs:['TS 23.003','29.061','29.561']}
+];
+
+/* Links ------------------------------------------------------------------ */
+const SBI_STACK = [{t:'Service-based interface',l:['Service API (JSON, OpenAPI 3)','HTTP/2','TLS','TCP','IP','L2 / L1']}];
+function stub(id,a,name,svc,specs,lo){return {id,n:name,a,b:'bus',bus:true,gens:['sa'],plane:'sbi',protos:['http2'],full:'Service-based interface of the '+a.toUpperCase(),sum:svc,st:SBI_STACK,specs,lo};}
+function rp(id,a,b,name,svc,specs,extra){return Object.assign({id,n:name,a,b,rp:true,gens:['sa'],plane:'sbi',protos:['http2'],full:'Reference point '+name,sum:svc,st:SBI_STACK,specs},extra||{});}
+
+const LINKS = [
+/* --- radio --- */
+{id:'uu3g',n:'Uu',a:'ue',b:'nodeb',gens:['3g','hspa'],plane:'both',protos:['radio'],ao:[0,-30],lp:.42,
+ full:'UMTS radio interface (WCDMA)',
+ sum:'WCDMA radio interface between UE and UTRAN. Physically it ends at the Node B, but RRC, RLC, MAC-d and PDCP peer with the RNC.',
+ st:[{t:'Control plane',l:['NAS (MM/CC · GMM/SM)','RRC','RLC','MAC','WCDMA L1']},{t:'User plane (PS)',l:['IP','PDCP','RLC','MAC','WCDMA L1']},{t:'User plane (CS speech)',l:['AMR frames','RLC (TM)','MAC','WCDMA L1']}],
+ pr:['RRC Connection Setup / Release','Radio Bearer Setup / Reconfiguration','Measurement Control / Report (events 1a–1f intra-freq, 2x inter-freq, 3x inter-RAT)','Active Set Update (soft handover)','Cell Update / URA Update','Security Mode Command','Physical Channel Reconfiguration'],
+ kv:[['Carrier','5 MHz, 3.84 Mcps (FDD; TDD variants exist)'],['Transport channels','DCH, RACH, FACH, PCH, BCH (+ HS-DSCH, E-DCH)'],['Ciphering','UEA1 / UEA2 in RLC (AM/UM) or MAC-d (TM)'],['Integrity','UIA1 / UIA2 on RRC']],
+ notes:{hspa:'HS-DSCH: HS-PDSCH (SF16, up to 15 codes), HS-SCCH (scheduling information), HS-DPCCH (CQI + HARQ ACK/NACK). E-DCH: E-DPDCH/E-DPCCH, E-AGCH (absolute grant), E-RGCH (relative grant), E-HICH (HARQ ACK). MAC-hs/ehs and MAC-e/i peer with the Node B.'},
+ specs:['TS 25.301','25.331 (RRC)','25.322 (RLC)','25.321 (MAC)','25.323 (PDCP)','25.211–25.215 (L1)'],
+ tips:['High RTWP / UL interference reduces HSUPA grants and causes RRC setup failures.','Pilot pollution (many cells with similar Ec/No) → active-set churn and drops.']},
+
+{id:'lteuu',n:'LTE-Uu',a:'ue',b:'enb',gens:['4g','nsa'],plane:'both',protos:['radio'],ao:[0,-25],bo:[0,-10],lp:.5,
+ full:'E-UTRA radio interface',
+ sum:'LTE radio interface. All radio protocols (RRC, PDCP, RLC, MAC, PHY) terminate in the eNB; NAS is carried transparently to the MME.',
+ st:[{t:'Control plane',l:['NAS (EMM / ESM)','RRC','PDCP','RLC','MAC','PHY (OFDMA / SC-FDMA)']},{t:'User plane',l:['IP','PDCP','RLC','MAC','PHY']}],
+ pr:['RRC Connection Request → Setup → Setup Complete (carries the first NAS message)','Security Mode Command (AS)','RRC Connection Reconfiguration (bearers, measurements, handover)','UE Capability Enquiry / Information','RRC Connection Re-establishment','RRC Connection Release'],
+ kv:[['Bandwidth','1.4 / 3 / 5 / 10 / 15 / 20 MHz; CA up to 5 CCs (R10–12), 32 CCs (R13)'],['Duplex','FDD and TDD'],['PCI','0–503'],['Security','EEA0–3 / EIA0–3 (SNOW 3G, AES, ZUC)'],['Radio bearers','SRB0/1/2 + one DRB per EPS bearer (EBI 5–15)']],
+ notes:{nsa:'In EN-DC, LTE-Uu carries the MCG and the LTE RRC connection. The SCG configuration from the en-gNB is embedded as an NR RRC container in RRCConnectionReconfiguration. NR measurements are configured with events B1/B2.'},
+ specs:['TS 36.300','36.331 (RRC)','36.323 (PDCP)','36.322 (RLC)','36.321 (MAC)','36.211–36.214 (PHY)','24.301 (NAS)'],
+ tips:['No RRC Connection Setup Complete: check RACH (preamble/RAR) and uplink coverage.','Re-establishment cause handoverFailure / otherFailure points at mobility settings or radio link failure.']},
+
+{id:'nruunsa',n:'NR-Uu',a:'ue',b:'engnb',gens:['nsa'],plane:'both',protos:['radio'],ao:[0,8],lp:.5,
+ full:'NR radio leg of EN-DC (Secondary Cell Group)',
+ sum:'NR radio leg of EN-DC. The UE keeps its RRC connection with the MeNB; NR RRC from the en-gNB arrives embedded in LTE RRC, or directly on SRB3 if configured.',
+ st:[{t:'Control plane',l:['NR RRC (SRB3, optional)','NR PDCP','NR RLC','NR MAC','NR PHY']},{t:'User plane',l:['IP','NR PDCP (SN-terminated bearers)','NR RLC','NR MAC','NR PHY']}],
+ pr:['SgNB Addition (delivered in MeNB RRCConnectionReconfiguration)','Random access on the PSCell','SCG failure reporting (SCGFailureInformationNR via the MeNB)','SCG change / release'],
+ kv:[['SDAP','Not used (EPS bearers, no QoS flows)'],['Idle mode','None on NR – the UE camps on LTE'],['Cells','PSCell + optional SCells (SCG)'],['PCI','0–1007']],
+ specs:['TS 37.340','38.331','38.323','38.322','38.321','38.211–38.214'],
+ tips:['SCG failure types: t310-Expiry, randomAccessProblem, rlc-MaxNumRetx, synchReconfigFailureSCG, scg-ReconfigFailure.','In UL-limited cells the uplink often stays on LTE – check primaryPath and ul-DataSplitThreshold.']},
+
+{id:'nruusa',n:'NR-Uu',a:'ue',b:'gnbdu',gens:['sa'],plane:'both',protos:['radio'],ao:[0,42],lp:.72,
+ full:'NR radio interface (5G SA)',
+ sum:'NR radio interface for SA. PHY/MAC/RLC terminate in the gNB-DU, PDCP+SDAP for DRBs in the gNB-CU-UP, RRC and PDCP for SRBs in the gNB-CU-CP. NAS (N1) continues to the AMF.',
+ st:[{t:'Control plane',l:['NAS-5GS (5GMM / 5GSM)','RRC','PDCP','RLC','MAC','PHY']},{t:'User plane',l:['PDU (IP / Ethernet / Unstructured)','SDAP','PDCP','RLC','MAC','PHY']}],
+ pr:['RRC Setup / Resume / Re-establishment','RRC Reconfiguration (bearers, measurements, handover with reconfigurationWithSync)','Security Mode Command','UE Capability Enquiry','RRC Release (including suspend to RRC_INACTIVE)'],
+ kv:[['Frequency ranges','FR1 410–7125 MHz · FR2 24.25–71 GHz'],['Numerology','SCS 15/30/60/120 kHz (+480/960 kHz in FR2-2)'],['RRC states','RRC_IDLE, RRC_INACTIVE, RRC_CONNECTED'],['PCI','0–1007'],['Security','NEA/NIA 0–3 (SNOW 3G, AES, ZUC); UP integrity optional']],
+ specs:['TS 38.300','38.331 (RRC)','37.324 (SDAP)','38.323 (PDCP)','38.322 (RLC)','38.321 (MAC)','38.211–38.215 (PHY)'],
+ tips:['Access failures: check SSB/beam coverage and RACH configuration (RRC Setup Request without Setup Complete).','Throughput: check MCS/rank/BLER and the TDD pattern; QFI→DRB mapping in SDAP for QoS issues.']},
+
+/* --- 3G RAN --- */
+{id:'iub',n:'Iub',a:'nodeb',b:'rnc',gens:['3g','hspa'],plane:'both',protos:['sctp','atm'],
+ full:'Node B ↔ RNC interface',
+ sum:'Node B ↔ RNC. NBAP controls the Node B, cells and radio links; frame protocols (FP) carry transport-channel data between the MAC in the RNC and L1 in the Node B.',
+ st:[{t:'Control plane (IP, R5+)',l:['NBAP','SCTP','IP','L2 / L1']},{t:'Control plane (ATM)',l:['NBAP','SSCF-UNI','SSCOP','AAL5','ATM']},{t:'User plane (IP)',l:['Iub FP','UDP','IP','L2 / L1']},{t:'User plane (ATM)',l:['Iub FP','AAL2','ATM']}],
+ pr:['Cell Setup / Reconfiguration','Common Transport Channel Setup','Radio Link Setup / Addition / Reconfiguration / Deletion','Audit','Resource Status Indication','Common / Dedicated Measurement','HS-DSCH Capacity Request / Allocation (FP control frames)'],
+ kv:[['FP specs','DCH and E-DCH FP: TS 25.427 · common channels and HS-DSCH FP: TS 25.435'],['ATM transport setup','ALCAP (Q.2630.2) for AAL2 connections'],['SCTP PPID','NBAP = 25']],
+ notes:{hspa:'HSPA greatly increases Iub load. HS-DSCH flow control (capacity request/allocation) and HS-DSCH/E-DCH congestion detection (frame sequence numbers, delay reference) protect the Iub transport.'},
+ specs:['TS 25.430','25.432','25.433 (NBAP)','25.434','25.427','25.435'],
+ tips:['Iub congestion caps HSDPA throughput – check FP congestion indications and transport drops.','Radio Link Setup Failure cause points at Node B resource or configuration issues.']},
+
+{id:'iur',n:'Iur',a:'rnc',b:'rnc',loop:{side:'top',dx:-35},gens:['3g','hspa'],plane:'both',protos:['sctp','atm','ss7'],
+ full:'RNC ↔ RNC interface (to a neighbouring RNC)',
+ sum:'RNC ↔ RNC. Supports soft handover across RNC borders (Drift RNC), RNC-to-RNC mobility and use of common/shared channels in a drift RNC.',
+ st:[{t:'Control plane (IP)',l:['RNSAP','SCCP','M3UA','SCTP','IP','L2 / L1']},{t:'Control plane (ATM)',l:['RNSAP','SCCP','MTP3-B','SSCF-NNI','SSCOP','AAL5','ATM']},{t:'User plane',l:['Iur FP','UDP / IP or AAL2','L2 / L1 or ATM']}],
+ pr:['Radio Link Setup / Addition / Deletion (in the DRNC)','Uplink / Downlink Signalling Transfer','Relocation Commit','Common Measurement','Information Exchange','Error Indication'],
+ specs:['TS 25.420','25.423 (RNSAP)','25.424','25.425','25.427'],
+ tips:['A missing or failing Iur forces hard handover (or SRNS relocation) at RNC borders – watch the drop rate on border cells.']},
+
+{id:'iucscp',n:'Iu-CS',a:'rnc',b:'mscs',gens:['3g'],plane:'cp',protos:['ss7','sctp','atm'],ao:[0,-20],pts:[[560,213],[560,95]],bo:[0,-13],lp:.43,
+ full:'Iu-CS control plane (RNC ↔ MSC Server)',
+ sum:'RNC ↔ MSC Server signalling for the CS domain (RANAP). In the R4 split architecture the control plane terminates in the MSC Server and the user plane in the CS-MGW.',
+ st:[{t:'IP transport (SIGTRAN)',l:['RANAP','SCCP','M3UA','SCTP','IP','L2 / L1']},{t:'ATM transport',l:['RANAP','SCCP','MTP3-B','SSCF-NNI','SSCOP','AAL5','ATM']}],
+ pr:['Initial UE Message (carries the first NAS message)','Direct Transfer (NAS)','Common ID','Security Mode Control','RAB Assignment','Iu Release Request / Command / Complete','Relocation Required / Request / Command / Complete','Paging','Location Reporting'],
+ kv:[['Connection','One SCCP connection per UE'],['SCTP PPID','M3UA = 3']],
+ specs:['TS 25.410','25.412','25.413 (RANAP)'],
+ tips:['The Iu Release Request cause (e.g., “Radio Connection With UE Lost”, “Release due to UTRAN Generated Reason”) shows where a drop originated.']},
+
+{id:'iucsup',n:'Iu-CS UP',a:'rnc',b:'mgw',gens:['3g'],plane:'up',protos:['atm'],ao:[0,-4],pts:[[580,229],[580,205]],lp:.2,
+ full:'Iu-CS user plane (RNC ↔ CS-MGW)',
+ sum:'RNC ↔ CS-MGW user plane for circuit-switched calls (AMR speech, CS data) using Iu UP framing.',
+ st:[{t:'IP transport (R5+)',l:['Iu UP','RTP / RTCP','UDP','IP','L2 / L1']},{t:'ATM transport',l:['Iu UP','AAL2','ATM']}],
+ pr:['Iu UP Initialisation (RFCI set)','Rate Control','Time Alignment'],
+ kv:[['Iu UP modes','Support mode (AMR, RFCIs) / transparent mode'],['Bearer setup','ATM: ALCAP; IP: transport address exchanged in RANAP RAB Assignment']],
+ specs:['TS 25.414','25.415 (Iu UP)']},
+
+{id:'iups',n:'Iu-PS',a:'rnc',b:'sgsn',gens:['3g','hspa'],plane:'both',protos:['ss7','sctp','gtpu','atm'],ao:[0,17],pts:[[560,250],[560,318]],bo:[0,10],lp:.7,
+ full:'Iu-PS (RNC ↔ SGSN)',
+ sum:'RNC ↔ SGSN. RANAP signalling for PS mobility and RAB management; GTP-U tunnels for user data (one per RAB).',
+ st:[{t:'Control plane (IP)',l:['RANAP','SCCP','M3UA','SCTP','IP','L2 / L1']},{t:'Control plane (ATM)',l:['RANAP','SCCP','MTP3-B','SSCF-NNI','SSCOP','AAL5','ATM']},{t:'User plane',l:['GTP-U','UDP','IP','L2 (AAL5/ATM or Ethernet)','L1']}],
+ pr:['RAB Assignment Request / Response (exchanges GTP-U TEIDs)','Security Mode Control','Iu Release','SRNS Relocation','Paging','Direct Transfer (GMM/SM)','Location Report'],
+ kv:[['GTP-U port','UDP 2152'],['Tunnel','One GTP-U tunnel per RAB (TEID per direction)']],
+ notes:{hspa:'With Direct Tunnel the RAB Assignment carries the GGSN (or SGW) GTP-U address and TEID, so user data bypasses the SGSN.'},
+ specs:['TS 25.410','25.413','25.414','29.281'],
+ tips:['GTP-U Error Indication means the receiver does not know the TEID (stale context) – check for races around Iu Release.']},
+
+{id:'dt',n:'Direct Tunnel',a:'rnc',b:'ggsn',gens:['hspa'],plane:'up',protos:['gtpu'],ao:[0,0],pts:[[450,350],[1170,350]],bo:[-25,0],lp:.5,
+ full:'Direct Tunnel – Gn-U between RNC and GGSN (R7)',
+ sum:'R7 one-tunnel approach: user plane runs directly between RNC and GGSN over GTP-U. The SGSN still controls the tunnel but carries no user data.',
+ st:[{t:'User plane',l:['GTP-U','UDP','IP','L2','L1']}],
+ pr:['SGSN sends the RNC TEID/address to the GGSN in Update PDP Context Request (Direct Tunnel Flags IE)','SGSN sends the GGSN TEID/address to the RNC in RANAP RAB Assignment','On Iu release the SGSN re-points the GGSN to itself (Update PDP Context), so DL data reaches the SGSN and triggers paging'],
+ kv:[['With EPC','S12 (RNC ↔ SGW) when an S4-SGSN is used'],['Not used when','the SGSN must see user data (e.g., CAMEL/online charging at the SGSN), the GGSN lacks support, or roaming policy forbids it']],
+ specs:['TS 23.919','23.060','29.060'],
+ tips:['An Error Indication from the RNC goes straight to the GGSN, which must then inform the SGSN. Check this handling when downlink data is silently lost.']},
+
+/* --- 3G core --- */
+{id:'mc',n:'Mc',a:'mscs',b:'mgw',gens:['3g'],plane:'cp',protos:['sctp'],
+ full:'MSC Server ↔ CS-MGW',
+ sum:'The MSC Server controls bearer terminations, codecs and connections in the MGW with H.248.',
+ st:[{t:'Control plane',l:['H.248 (3GPP profile)','SCTP','IP','L2 / L1']}],
+ pr:['Add / Modify / Subtract (terminations in contexts)','Notify (events, e.g. tones, bearer released)','Service Change (MGW registration / restart)','Audit Value / Audit Capabilities'],
+ kv:[['SCTP PPID','H.248 = 7']],
+ specs:['TS 23.205','29.232','ITU-T H.248.1']},
+
+{id:'cd',n:'C / D',a:'mscs',b:'hlr',gens:['3g'],plane:'cp',protos:['ss7'],lp:.55,
+ full:'(G)MSC Server / VLR ↔ HLR (MAP)',
+ sum:'MAP signalling between the (G)MSC Server / VLR and the HLR: location management, authentication data, subscriber data and call routing.',
+ st:[{t:'SIGTRAN',l:['MAP','TCAP','SCCP','M3UA','SCTP','IP']},{t:'Classic SS7',l:['MAP','TCAP','SCCP','MTP3','MTP2','MTP1']}],
+ pr:['D: UpdateLocation, CancelLocation, InsertSubscriberData, SendAuthenticationInfo, PurgeMS, ProvideRoamingNumber','C: SendRoutingInfo (MT call), SendRoutingInfoForSM'],
+ specs:['TS 29.002 (MAP)','23.012','23.018'],
+ tips:['MT call failure: follow SRI → PRN; check MSRN allocation in the VLR and absentSubscriber errors.']},
+
+{id:'f',n:'F',a:'mscs',b:'eir',gens:['3g'],plane:'cp',protos:['ss7'],ao:[0,8],bo:[0,-12],lp:.78,
+ full:'MSC/VLR ↔ EIR',sum:'IMEI check of the mobile equipment by the MSC/VLR (MAP CheckIMEI).',
+ st:[{t:'SIGTRAN / SS7',l:['MAP','TCAP','SCCP','M3UA or MTP3','SCTP/IP or MTP2/1']}],pr:['CheckIMEI'],specs:['TS 29.002','22.016']},
+
+{id:'gf',n:'Gf',a:'sgsn',b:'eir',gens:['3g'],plane:'cp',protos:['ss7'],ao:[0,8],bo:[0,10],lp:.78,
+ full:'SGSN ↔ EIR',sum:'IMEI check by the SGSN during PS attach/RAU (MAP CheckIMEI).',
+ st:[{t:'SIGTRAN / SS7',l:['MAP','TCAP','SCCP','M3UA or MTP3','SCTP/IP or MTP2/1']}],pr:['CheckIMEI'],specs:['TS 29.002','23.060']},
+
+{id:'gr',n:'Gr',a:'sgsn',b:'hlr',gens:['3g','hspa'],plane:'cp',protos:['ss7'],ao:[0,-6],lp:.6,
+ full:'SGSN ↔ HLR (MAP)',
+ sum:'MAP signalling for GPRS: authentication vectors, location management (UpdateGprsLocation) and download of the subscriber/PDP profile.',
+ st:[{t:'SIGTRAN',l:['MAP','TCAP','SCCP','M3UA','SCTP','IP']},{t:'Classic SS7',l:['MAP','TCAP','SCCP','MTP3','MTP2','MTP1']}],
+ pr:['SendAuthenticationInfo','UpdateGprsLocation','InsertSubscriberData (GPRS subscription, APN profiles)','CancelLocation','PurgeMS'],
+ notes:{'4g':'An S4-SGSN may use S6d (Diameter, same application as S6a) towards the HSS instead of Gr.'},
+ specs:['TS 29.002','23.060']},
+
+{id:'gn',n:'Gn / Gp',a:'sgsn',b:'ggsn',gens:['3g','hspa'],plane:'both',protos:['gtpc1','gtpu'],ao:[0,5],bo:[0,5],lp:.36,
+ full:'SGSN ↔ GGSN (Gp = inter-PLMN)',
+ sum:'GTPv1-C manages PDP contexts and GTP-U carries user data. Gp is the inter-PLMN variant used for roaming over GRX/IPX.',
+ st:[{t:'Control plane',l:['GTPv1-C','UDP','IP','L2 / L1']},{t:'User plane',l:['GTP-U','UDP','IP','L2 / L1']}],
+ pr:['Create / Update / Delete PDP Context','Echo Request / Response (path supervision)','Error Indication (GTP-U)','SGSN Context Request / Response (Gn between SGSNs)'],
+ kv:[['Ports','GTP-C UDP 2123 · GTP-U UDP 2152'],['GGSN selection','DNS on <APN-NI>.mnc<MNC>.mcc<MCC>.gprs']],
+ specs:['TS 29.060','23.060'],
+ tips:['GTPv1 cause values: 128 Request accepted, 199 No resources available, 204 System failure, 209 User authentication failed, 210 Context not found, 211 All dynamic PDP addresses are occupied, 219 Missing or unknown APN.']},
+
+{id:'gi',n:'Gi',a:'ggsn',b:'pdn',gens:['3g','hspa'],plane:'up',protos:['ip','diameter'],ao:[0,5],bo:[0,-402],lp:.28,
+ full:'GGSN ↔ external PDN',
+ sum:'Plain IP routing towards the Internet, corporate networks or IMS; optional RADIUS/Diameter AAA and tunnelling (L2TP, IPsec, GRE) for enterprise APNs.',
+ st:[{t:'User plane',l:['IP (user)','L2','L1']},{t:'AAA (optional)',l:['RADIUS / Diameter','UDP / TCP / SCTP','IP']}],
+ specs:['TS 29.061']},
+
+{id:'gy3g',n:'Gy / Ga',a:'ggsn',b:'ocs',gens:['3g','hspa'],plane:'cp',protos:['diameter'],ao:[25,0],bo:[25,0],lp:.5,
+ full:'GGSN charging interfaces',
+ sum:'Gy: online credit control with the OCS (Diameter Credit Control). Ga: transfer of G-CDRs to the charging gateway (GTP′).',
+ st:[{t:'Gy (online)',l:['Diameter CC (RFC 4006/8506)','SCTP or TCP','IP']},{t:'Ga (CDR transfer)',l:['GTP′','UDP or TCP','IP']}],
+ kv:[['Diameter App-ID','4 (Credit Control)'],['GTP′ port','3386']],
+ specs:['TS 32.251','32.299','32.295']},
+
+{id:'gx3g',n:'Gx',a:'ggsn',b:'pcrf',gens:['3g','hspa'],plane:'cp',protos:['diameter'],ao:[0,18],pts:[[1295,326],[1295,522],[1240,522]],bo:[45,0],lp:.46,
+ full:'GGSN (PCEF) ↔ PCRF (R7+)',
+ sum:'From R7 (PCC) the GGSN acts as PCEF: the PCRF provides PCC rules for the IP-CAN session (PDP contexts sharing one IP address). It uses the same Gx application as the PGW.',
+ st:[{t:'Control plane',l:['Diameter (Gx)','SCTP or TCP','IP','L2 / L1']}],
+ pr:['CCR/CCA-Initial at primary PDP context activation (IP-CAN session establishment)','CCR/CCA-Update (event triggers, e.g. QoS change, RAT change, usage report)','CCR/CCA-Termination at deactivation of the last PDP context','RAR/RAA – PCRF-initiated install/modify/remove of PCC rules, applied by PDP context modification or, in UE/NW bearer control mode, by a network-requested secondary PDP context'],
+ kv:[['Diameter App-ID','16777238 (same as on the PGW)'],['Bearer control mode','UE-only or UE/NW (negotiated per IP-CAN session)'],['Before R7','R6: Go (GGSN ↔ PDF, COPS, policy) and Gx (TPF ↔ CRF, Diameter, charging rules); merged into one Gx in R7']],
+ notes:{'4g':'Same interface as on the PGW in the EPC. A combined GGSN/PGW normally uses one Gx peering towards the PCRF.'},
+ specs:['TS 29.212','23.203','23.060'],
+ tips:['In UE-only bearer control mode the GGSN cannot create bearers itself – PCC rules must bind to UE-requested (secondary) PDP contexts; a rule that cannot be bound is reported back to the PCRF as failed.']},
+
+{id:'nc',n:'Nc',a:'mscs',b:'peercs',gens:['3g'],plane:'cp',protos:['ss7','sctp'],ao:[35,0],pts:[[760,56],[1720,56]],bo:[55,0],lp:.6,
+ full:'MSC Server ↔ (G)MSC Server',
+ sum:'Call control between CS core servers and towards interconnect.',
+ st:[{t:'BICC',l:['BICC','M3UA (or MTP3)','SCTP','IP']},{t:'SIP-I',l:['SIP-I (SIP + encapsulated ISUP)','UDP / TCP / SCTP','IP']}],
+ specs:['TS 23.205','29.205 (BICC)','29.231 (SIP-I)']},
+
+{id:'nb',n:'Nb',a:'mgw',b:'peercs',gens:['3g'],plane:'up',protos:['atm'],ao:[0,-8],pts:[[845,197],[845,68],[1600,68]],bo:[-65,0],lp:.58,
+ full:'CS-MGW ↔ CS-MGW user plane',
+ sum:'User plane (speech / CS data) between media gateways, transcoder-free where possible.',
+ st:[{t:'IP transport',l:['Nb UP framing','RTP / RTCP','UDP','IP']},{t:'ATM transport',l:['Nb UP framing','AAL2','ATM']}],
+ kv:[['Bearer control','IPBCP tunnelled in BICC, or SDP with SIP-I; AAL2 signalling for ATM']],
+ specs:['TS 29.414','29.415']},
+
+/* --- 4G / EPC --- */
+{id:'s1mme',n:'S1-MME',a:'enb',b:'mme',gens:['4g','nsa'],plane:'cp',protos:['sctp'],ao:[0,9],bo:[0,9],lp:.5,
+ full:'eNB ↔ MME control plane',
+ sum:'S1AP over SCTP. Carries NAS transparently and handles UE context and E-RAB setup, handover and paging.',
+ st:[{t:'Control plane',l:['S1AP','SCTP','IP','L2 / L1']}],
+ pr:['S1 Setup','Initial UE Message · Downlink / Uplink NAS Transport','Initial Context Setup (security key, E-RABs, UE-AMBR)','E-RAB Setup / Modify / Release','UE Context Release Request / Command','Handover Required / Request / Command / Notify','Path Switch Request (after X2 handover)','Paging','eNB / MME Configuration Transfer (SON)','Reset · Error Indication'],
+ kv:[['SCTP port','36412'],['SCTP PPID','18'],['UE IDs','eNB UE S1AP ID + MME UE S1AP ID']],
+ notes:{nsa:'EN-DC additions: E-RAB Modification Indication (the eNB asks the MME to move the S1-U of SCG / split bearers to the en-gNB), NR Restriction in the Handover Restriction List, Secondary RAT Data Usage Report.'},
+ specs:['TS 36.410','36.412','36.413 (S1AP)'],
+ tips:['Cause groups: radioNetwork, transport, nas, protocol, misc – e.g. radioNetwork “user-inactivity” is a normal release.','Initial Context Setup Failure: check security capabilities, E-RAB QoS parameters and transport.']},
+
+{id:'s1u',n:'S1-U',a:'enb',b:'sgw',gens:['4g','nsa'],plane:'up',protos:['gtpu'],ao:[0,21],pts:[[575,474],[575,622]],bo:[0,-16],lp:.62,
+ full:'eNB ↔ SGW user plane',
+ sum:'One GTP-U tunnel per E-RAB (EPS bearer) between eNB and SGW.',
+ st:[{t:'User plane',l:['GTP-U','UDP','IP','L2 / L1']}],
+ pr:['G-PDU (user data)','Echo Request / Response','Error Indication','End Marker (path switch / handover)'],
+ kv:[['Port','UDP 2152'],['TEID','Allocated by the receiving side; exchanged in S1AP / S11'],['Overhead','36 B over IPv4 (IP 20 + UDP 8 + GTP-U 8), 56 B over IPv6']],
+ notes:{nsa:'Option 3: S1-U only to the eNB (MeNB splits towards the en-gNB). Options 3a/3x: bearers moved to the en-gNB use a separate S1-U (S1-U en-gNB).'},
+ specs:['TS 36.414','29.281'],
+ tips:['Large packets failing while small ones work: check MTU / TCP MSS clamping for the GTP-U overhead.']},
+
+{id:'s1unsa',n:'S1-U',a:'engnb',b:'sgw',gens:['nsa'],plane:'up',protos:['gtpu'],ao:[0,12],bo:[0,9],lp:.5,
+ full:'en-gNB ↔ SGW user plane (Option 3a / 3x)',
+ sum:'User plane for SCG bearers (Option 3a) and SCG split bearers (Option 3x). Same protocol as the LTE S1-U.',
+ st:[{t:'User plane',l:['GTP-U','UDP','IP','L2 / L1']}],
+ pr:['Set up after SgNB Addition: MeNB → E-RAB Modification Indication → MME → S11 Modify Bearer Request switches the DL F-TEID to the en-gNB','End Marker on path switch'],
+ kv:[['Port','UDP 2152'],['Option 3','Not used (no S1-U at the en-gNB)']],
+ specs:['TS 37.340','36.414','29.281']},
+
+{id:'x2lte',n:'X2',a:'enb',b:'enb',loop:{side:'top',dx:-20},gens:['4g','nsa'],plane:'both',protos:['sctp','gtpu'],
+ full:'eNB ↔ eNB (to a neighbouring eNB)',
+ sum:'Handover preparation, data forwarding and inter-cell coordination between neighbouring eNBs.',
+ st:[{t:'Control plane',l:['X2AP','SCTP','IP','L2 / L1']},{t:'User plane',l:['GTP-U','UDP','IP','L2 / L1']}],
+ pr:['X2 Setup / eNB Configuration Update','Handover Preparation (Handover Request / Acknowledge)','SN Status Transfer','UE Context Release','Handover Cancel','Load Information (ICIC)','Resource Status Reporting','Mobility Settings Change (MRO)'],
+ kv:[['SCTP port','36422'],['SCTP PPID','27'],['X2-U','DL (optionally UL) data forwarding during handover']],
+ specs:['TS 36.420','36.422','36.423 (X2AP)','36.424'],
+ tips:['Without X2 the handover falls back to S1 (via the MME) – check ANR/X2 auto-setup and the SCTP association.']},
+
+{id:'x2endc',n:'X2 (EN-DC)',a:'enb',b:'engnb',gens:['nsa'],plane:'both',protos:['sctp','gtpu'],lp:.5,
+ full:'MeNB ↔ en-gNB',
+ sum:'X2AP EN-DC procedures add, modify and release the NR secondary node; X2-U carries split-bearer traffic with NR user-plane flow control.',
+ st:[{t:'Control plane',l:['X2AP (EN-DC procedures)','SCTP','IP','L2 / L1']},{t:'User plane',l:['NR-U (TS 38.425)','GTP-U','UDP','IP','L2 / L1']}],
+ pr:['EN-DC X2 Setup / EN-DC Configuration Update','SgNB Addition Request / Acknowledge / Reject','SgNB Reconfiguration Complete','SgNB Modification Request / Required','SgNB Release Request / Required','SgNB Change Required (SN change)','RRC Transfer','Secondary RAT Data Usage Report'],
+ kv:[['SCTP port / PPID','36422 / 27 (as LTE X2)'],['Flow control','DL Data Delivery Status (DDDS) from the node hosting the RLC'],['Direction in 3x','en-gNB NR PDCP → X2-U → MeNB LTE RLC']],
+ specs:['TS 37.340','36.423','38.425','36.424'],
+ tips:['SgNB Addition Reject: check en-gNB admission and the X2 neighbour configuration (an X2 is needed per eNB–en-gNB pair).','Low aggregated throughput in 3x: check DDDS feedback and X2-U transport delay/loss.']},
+
+{id:'s11',n:'S11',a:'mme',b:'sgw',gens:['4g','nsa'],plane:'cp',protos:['gtpc2'],lp:.5,
+ full:'MME ↔ SGW',
+ sum:'GTPv2-C session control: creates and modifies PDN connections and bearers on behalf of the UE.',
+ st:[{t:'Control plane',l:['GTPv2-C','UDP','IP','L2 / L1']}],
+ pr:['Create Session Request / Response','Modify Bearer Request / Response (eNB F-TEID, handover, Service Request)','Delete Session','Release Access Bearers (UE → idle)','Downlink Data Notification / Acknowledge','Create / Update / Delete Bearer (network-initiated, relayed from the PGW)','Modify Access Bearers (R12)','Echo'],
+ kv:[['Port','UDP 2123'],['Identifiers','F-TEID (interface type + TEID + IP), EBI 5–15']],
+ notes:{nsa:'After SgNB Addition with SCG/split bearers, Modify Bearer Request carries the en-gNB S1-U F-TEID. Secondary RAT usage data is forwarded to SGW/PGW for charging.'},
+ specs:['TS 29.274','23.401'],
+ tips:['Restart detection uses the Recovery IE in Echo / Create Session – a changed restart counter makes peers clean up all sessions with that node.']},
+
+{id:'s5',n:'S5 / S8',a:'sgw',b:'pgw',gens:['4g','nsa'],plane:'both',protos:['gtpc2','gtpu'],ao:[0,9],bo:[0,9],lp:.5,
+ full:'SGW ↔ PGW (S8 = inter-PLMN, home-routed roaming)',
+ sum:'S5 inside one PLMN; S8 between a visited SGW and the home PGW. GTP-based (a PMIPv6 variant is also specified).',
+ st:[{t:'Control plane',l:['GTPv2-C','UDP','IP','L2 / L1']},{t:'User plane',l:['GTP-U','UDP','IP','L2 / L1']}],
+ pr:['Create Session (PDN connection, IP allocation)','Modify Bearer (inter-SGW mobility, ULI/RAT change)','Delete Session','Create / Update / Delete Bearer (PCRF-triggered dedicated bearers)','Echo'],
+ kv:[['Ports','2123 (C) / 2152 (U)'],['Alternative','PMIPv6 (TS 29.275) + GRE']],
+ specs:['TS 29.274','29.281','23.401']},
+
+{id:'s6a',n:'S6a',a:'mme',b:'hss',gens:['4g','nsa'],plane:'cp',protos:['diameter','sctp'],lp:.64,
+ full:'MME ↔ HSS',
+ sum:'Diameter: authentication vectors, location update and subscription download.',
+ st:[{t:'Control plane',l:['Diameter (S6a/S6d)','SCTP or TCP','IP','L2 / L1']}],
+ pr:['AIR/AIA – Authentication-Information','ULR/ULA – Update-Location (returns Subscription-Data)','CLR/CLA – Cancel-Location','IDR/IDA – Insert-Subscriber-Data','DSR/DSA – Delete-Subscriber-Data','PUR/PUA – Purge-UE','NOR/NOA – Notify','RSR/RSA – Reset'],
+ kv:[['Diameter App-ID','16777251'],['Port','3868 (TCP / SCTP)'],['Roaming','via DEA / DRA over IPX']],
+ specs:['TS 29.272','23.401','RFC 6733'],
+ tips:['Experimental-Result-Code: 5001 USER_UNKNOWN, 5004 ROAMING_NOT_ALLOWED, 5420 UNKNOWN_EPS_SUBSCRIPTION, 5421 RAT_NOT_ALLOWED, 4181 AUTHENTICATION_DATA_UNAVAILABLE.','Peer down: check CER/CEA and DWR/DWA (watchdog) between MME, DRA and HSS.']},
+
+{id:'s10',n:'S10',a:'mme',b:'mme',loop:{side:'top',dx:-45},gens:['4g','nsa'],plane:'cp',protos:['gtpc2'],
+ full:'MME ↔ MME (to another MME)',sum:'UE context transfer when the serving MME changes (TAU or S1 handover).',
+ st:[{t:'Control plane',l:['GTPv2-C','UDP','IP','L2 / L1']}],
+ pr:['Context Request / Response / Acknowledge (TAU)','Forward Relocation Request / Response / Complete Notification (S1 handover)','Identification Request / Response'],
+ kv:[['Port','UDP 2123']],specs:['TS 29.274','23.401']},
+
+{id:'s13',n:'S13',a:'mme',b:'eir',gens:['4g','nsa'],plane:'cp',protos:['diameter'],lp:.66,
+ full:'MME ↔ EIR',sum:'ME Identity Check of the IMEI(SV).',
+ st:[{t:'Control plane',l:['Diameter (S13)','SCTP or TCP','IP','L2 / L1']}],
+ pr:['ECR/ECA – ME-Identity-Check (Equipment-Status 0 / 1 / 2 = white / black / grey list)'],
+ kv:[['Diameter App-ID','16777252']],specs:['TS 29.272']},
+
+{id:'gx',n:'Gx',a:'pgw',b:'pcrf',gens:['4g','nsa'],plane:'cp',protos:['diameter'],ao:[0,5],bo:[0,-5],lp:.5,
+ full:'PCEF (PGW) ↔ PCRF',
+ sum:'Policy and charging control for the IP-CAN session (PDN connection).',
+ st:[{t:'Control plane',l:['Diameter (Gx)','SCTP or TCP','IP','L2 / L1']}],
+ pr:['CCR/CCA-Initial at PDN connection setup (default bearer QoS, PCC rules)','CCR/CCA-Update (event triggers, usage reports)','CCR/CCA-Termination','RAR/RAA (PCRF-initiated rule install/remove → dedicated bearer)'],
+ kv:[['Diameter App-ID','16777238'],['Key AVPs','Charging-Rule-Install/Remove, QoS-Information (QCI, ARP, APN-AMBR), Event-Trigger, Usage-Monitoring-Information']],
+ notes:{'3g':'From R7 the GGSN is also a PCEF on Gx – see the Gx interface between GGSN and PCRF.'},
+ specs:['TS 29.212','23.203'],
+ tips:['A failed CCR-I normally rejects the PDN connection – check the Result-Code and PCRF reachability.']},
+
+{id:'rx',n:'Rx',a:'pcrf',b:'ims',gens:['4g','nsa'],plane:'cp',protos:['diameter'],lp:.5,
+ full:'AF (IMS P-CSCF) ↔ PCRF',
+ sum:'Provides session/media information so the PCRF can authorize QoS – e.g. the VoLTE dedicated bearer (QCI 1).',
+ st:[{t:'Control plane',l:['Diameter (Rx)','SCTP or TCP','IP','L2 / L1']}],
+ pr:['AAR/AAA – session authorization (Media-Component-Description from SDP)','RAR/RAA – PCRF notifications (e.g. loss of bearer, access network information)','STR/STA – session termination','ASR/ASA – abort session'],
+ kv:[['Diameter App-ID','16777236']],specs:['TS 29.214','23.203'],
+ tips:['Experimental-Result 5065 IP-CAN_SESSION_NOT_AVAILABLE: the PCRF cannot bind the Rx session to a Gx session (UE IP / APN binding, DRA routing).']},
+
+{id:'gy4g',n:'Gy / Gz',a:'pgw',b:'ocs',gens:['4g','nsa'],plane:'cp',protos:['diameter'],ao:[0,-10],bo:[0,15],lp:.55,
+ full:'PGW charging interfaces',
+ sum:'Gy: online credit control with the OCS. Gz: offline charging (CDRs) towards the OFCS.',
+ st:[{t:'Gy (online)',l:['Diameter CC (RFC 4006/8506)','SCTP or TCP','IP']},{t:'Gz (offline)',l:['Diameter Rf or GTP′ (CDRs)','TCP / UDP / SCTP','IP']}],
+ pr:['Gy: CCR/CCA Initial / Update / Termination with MSCC quota per Rating-Group','Gy: RAR (re-authorization from the OCS)','Gz: Rf ACR/ACA Start / Interim / Stop, or CDR transfer via GTP′'],
+ kv:[['Diameter App-IDs','Gy = 4 (DCCA) · Rf = 3 (Accounting)'],['GTP′ port','3386']],
+ specs:['TS 32.251','32.299','32.295','RFC 8506'],
+ tips:['4012 DIAMETER_CREDIT_LIMIT_REACHED / 4010 END_USER_SERVICE_DENIED are credit issues, not network faults.']},
+
+{id:'sgi',n:'SGi',a:'pgw',b:'pdn',gens:['4g','nsa'],plane:'up',protos:['ip','diameter'],ao:[0,12],bo:[0,-65],lp:.42,
+ full:'PGW ↔ PDN',
+ sum:'IP (or non-IP) routing towards the Internet, IMS or corporate networks; optional RADIUS/Diameter AAA for IP allocation and accounting.',
+ st:[{t:'User plane',l:['IP (user)','L2','L1']},{t:'AAA (optional)',l:['RADIUS / Diameter','UDP / TCP / SCTP','IP']}],
+ specs:['TS 29.061','23.401']},
+
+{id:'s3',n:'S3',a:'mme',b:'sgsn',gens:['4g','iw'],plane:'cp',protos:['gtpc2'],lp:.5,
+ full:'MME ↔ S4-SGSN',
+ sum:'Context transfer for inter-RAT mobility (LTE ↔ 2G/3G) in idle and connected mode; enables ISR.',
+ st:[{t:'Control plane',l:['GTPv2-C','UDP','IP','L2 / L1']}],
+ pr:['Context Request / Response / Acknowledge (TAU/RAU)','Forward Relocation Request / Response (inter-RAT PS handover)','Identification Request','Detach Notification (ISR)'],
+ notes:{'4g':'A pre-R8 Gn/Gp SGSN uses Gn (GTPv1-C) towards the MME instead (TS 23.401 Annex D).'},
+ specs:['TS 29.274','23.401']},
+
+{id:'s4',n:'S4',a:'sgsn',b:'sgw',gens:['4g','iw'],plane:'both',protos:['gtpc2','gtpu'],ao:[0,16],pts:[[840,324],[840,622]],bo:[0,-16],lp:.55,
+ full:'S4-SGSN ↔ SGW',
+ sum:'2G/3G access using the EPC gateways (SGW/PGW) instead of a GGSN: GTPv2-C plus GTP-U (unless S12 Direct Tunnel is used).',
+ st:[{t:'Control plane',l:['GTPv2-C','UDP','IP','L2 / L1']},{t:'User plane',l:['GTP-U','UDP','IP','L2 / L1']}],
+ specs:['TS 29.274','23.401','23.060']},
+
+{id:'s12',n:'S12',a:'rnc',b:'sgw',gens:['4g','iw'],plane:'up',protos:['gtpu'],ao:[52,0],pts:[[502,700],[725,700]],lp:.25,
+ full:'RNC ↔ SGW user plane',
+ sum:'Direct Tunnel for 3G when an S4-SGSN uses the EPC gateways.',
+ st:[{t:'User plane',l:['GTP-U','UDP','IP','L2 / L1']}],
+ specs:['TS 23.401','29.281']},
+
+{id:'sgs',n:'SGs',a:'mme',b:'mscs',gens:['4g','nsa','iw'],plane:'cp',protos:['sctp'],ao:[0,-21],pts:[[620,432],[620,110]],bo:[0,12],lp:.15,
+ full:'MME ↔ MSC/VLR',
+ sum:'Combined EPS/IMSI attach, CS paging over LTE for CS Fallback, and SMS over SGs.',
+ st:[{t:'Control plane',l:['SGsAP','SCTP','IP','L2 / L1']}],
+ pr:['Location Update Request / Accept / Reject','Paging Request (CS call / SMS)','Service Request','Uplink / Downlink Unitdata (SMS)','IMSI Detach / EPS Detach Indication','Alert Request / UE Activity Indication','Reset Indication'],
+ kv:[['SCTP port','29118']],specs:['TS 29.118','23.272'],
+ tips:['CSFB failures: check the SGs association state, the TAI→LAI mapping in the MME and the paging response on the target RAT.']},
+
+{id:'sv',n:'Sv',a:'mme',b:'mscs',gens:['4g','nsa','iw'],plane:'cp',protos:['gtpc2'],ao:[0,-9],pts:[[635,444],[635,125]],bo:[0,27],lp:.83,
+ full:'MME ↔ MSC Server (SRVCC)',
+ sum:'Single Radio Voice Call Continuity: hands an ongoing VoLTE call over to the CS domain when LTE coverage is lost.',
+ st:[{t:'Control plane',l:['GTPv2-C (Sv)','UDP','IP','L2 / L1']}],
+ pr:['SRVCC PS to CS Request / Response','SRVCC PS to CS Complete Notification / Acknowledge','SRVCC PS to CS Cancel Notification','SRVCC CS to PS (rSRVCC)'],
+ kv:[['Port','UDP 2123']],specs:['TS 29.280','23.216']},
+
+/* --- 5G NG-RAN --- */
+{id:'f1c',n:'F1-C',a:'gnbdu',b:'gnbcucp',gens:['sa'],plane:'cp',protos:['sctp'],ao:[0,-15],bo:[0,10],lp:.5,
+ full:'gNB-DU ↔ gNB-CU-CP',
+ sum:'F1AP manages the DU, its cells and UE contexts, and carries RRC messages between UE and CU.',
+ st:[{t:'Control plane',l:['F1AP','SCTP','IP','L2 / L1']}],
+ pr:['F1 Setup / gNB-DU & gNB-CU Configuration Update','Initial UL RRC Message Transfer','DL / UL RRC Message Transfer','UE Context Setup / Modification / Release','Paging','System Information Delivery'],
+ kv:[['SCTP port','38472'],['SCTP PPID','62']],
+ notes:{nsa:'Also used inside a split en-gNB.'},
+ specs:['TS 38.470','38.472','38.473 (F1AP)'],
+ tips:['F1 Setup Failure: the served-cell configuration (NCGI, PCI, TAC, PLMN) must match the CU.']},
+
+{id:'f1u',n:'F1-U',a:'gnbdu',b:'gnbcuup',gens:['sa'],plane:'up',protos:['gtpu'],ao:[0,15],bo:[0,-10],lp:.5,
+ full:'gNB-DU ↔ gNB-CU-UP',
+ sum:'User plane per DRB over GTP-U, with the NR user-plane protocol for flow control and delivery status.',
+ st:[{t:'User plane',l:['NR-U (TS 38.425)','GTP-U','UDP','IP','L2 / L1']}],
+ pr:['Transfer of DL/UL user data (PDCP PDUs)','DL Data Delivery Status (flow control, highest delivered PDCP SN)','Assistance Information'],
+ kv:[['Port','UDP 2152'],['Tunnel','One GTP-U tunnel per DRB']],
+ specs:['TS 38.474','38.425']},
+
+{id:'e1',n:'E1',a:'gnbcucp',b:'gnbcuup',gens:['sa'],plane:'cp',protos:['sctp'],lp:.5,
+ full:'gNB-CU-CP ↔ gNB-CU-UP',
+ sum:'The CU-CP sets up and modifies bearer contexts (SDAP/PDCP configuration, TEIDs) in the CU-UP.',
+ st:[{t:'Control plane',l:['E1AP','SCTP','IP','L2 / L1']}],
+ pr:['GNB-CU-UP E1 Setup / gNB-CU-CP E1 Setup','Bearer Context Setup / Modification / Release','gNB-CU-UP Configuration Update','Data Usage Report'],
+ kv:[['SCTP port','38462'],['SCTP PPID','64']],
+ specs:['TS 38.460','38.462','38.463 (E1AP)']},
+
+{id:'xn',n:'Xn',a:'gnb',b:'gnb',loop:{side:'bottom',dx:90},gens:['sa'],plane:'both',protos:['sctp','gtpu'],
+ full:'gNB ↔ gNB (to a neighbouring NG-RAN node)',
+ sum:'Xn-C (XnAP, from the CU-CP) for mobility, RRC_INACTIVE context retrieval and dual connectivity; Xn-U (from the CU-UP) for data forwarding and split bearers.',
+ st:[{t:'Xn-C',l:['XnAP','SCTP','IP','L2 / L1']},{t:'Xn-U',l:['NR-U (TS 38.425)','GTP-U','UDP','IP','L2 / L1']}],
+ pr:['Xn Setup / NG-RAN Node Configuration Update','Handover Preparation · SN Status Transfer · UE Context Release','Retrieve UE Context (RRC_INACTIVE resume)','RAN Paging','S-Node Addition / Modification / Release (MR-DC)','Xn-U Address Indication'],
+ kv:[['SCTP port','38422'],['SCTP PPID','61']],
+ specs:['TS 38.420','38.422','38.423 (XnAP)','38.424','38.425'],
+ tips:['After an Xn handover the target sends NGAP Path Switch Request to the AMF; a failure there leaves the UE without an N3 path.']},
+
+/* --- 5GC point-to-point --- */
+{id:'n1',n:'N1',a:'ue',b:'amf',gens:['sa'],plane:'cp',logical:true,protos:['nas'],ao:[0,30],pts:[[110,770],[600,770]],lp:.5,
+ full:'UE ↔ AMF (logical NAS reference point)',
+ sum:'Logical NAS reference point, carried in RRC over NR-Uu and in NGAP over N2. 5GSM messages are carried inside 5GMM transport messages and relayed by the AMF to the SMF.',
+ st:[{t:'NAS',l:['5GMM (+ 5GSM container)','RRC (NR-Uu) / NGAP (N2)']}],
+ pr:['Registration (initial / mobility / periodic) and Deregistration','Authentication · Security Mode Command','Service Request','Configuration Update','UL / DL NAS Transport (carries 5GSM: PDU Session Establishment / Modification / Release)'],
+ kv:[['Security','NAS ciphering & integrity terminate in the AMF (keys from KAMF)'],['Identities','SUCI, 5G-GUTI, 5G-S-TMSI, PEI']],
+ specs:['TS 24.501','23.502'],
+ tips:['5GMM causes: #3 Illegal UE, #7 5GS services not allowed, #11 PLMN not allowed, #12 Tracking area not allowed, #15 No suitable cells in TA, #27 N1 mode not allowed, #62 No network slices available.']},
+
+{id:'n2',n:'N2',a:'gnbcucp',b:'amf',gens:['sa'],plane:'cp',protos:['sctp'],lp:.5,
+ full:'NG-C: gNB (CU-CP) ↔ AMF',
+ sum:'NGAP over SCTP. Transports NAS (N1) and N2 SM information from the SMF; manages UE context, PDU session resources, handover and paging.',
+ st:[{t:'Control plane',l:['NGAP','SCTP','IP','L2 / L1']}],
+ pr:['NG Setup / RAN & AMF Configuration Update','Initial UE Message · DL / UL NAS Transport','Initial Context Setup','PDU Session Resource Setup / Modify / Release','UE Context Release Request / Command','Handover Required / Request / Command / Notify','Path Switch Request (Xn handover)','Paging','NG Reset · Error Indication','AMF Status Indication'],
+ kv:[['SCTP port','38412'],['SCTP PPID','60'],['UE IDs','RAN UE NGAP ID + AMF UE NGAP ID']],
+ specs:['TS 38.410','38.412','38.413 (NGAP)'],
+ tips:['NG Setup Failure (e.g. unknown PLMN, slices not supported): compare the Supported TA List (TAC, PLMN, S-NSSAI) with the AMF.','PDU Session Resource Setup Unsuccessful: check gNB admission, slice support and N3 reachability of the UPF.']},
+
+{id:'n3',n:'N3',a:'gnbcuup',b:'upf',gens:['sa'],plane:'up',protos:['gtpu'],lp:.5,
+ full:'NG-U: gNB (CU-UP) ↔ UPF',
+ sum:'One GTP-U tunnel per PDU session; QoS flows are identified by the QFI in the PDU Session Container extension header.',
+ st:[{t:'User plane',l:['GTP-U + PDU Session Container (QFI)','UDP','IP','L2 / L1']}],
+ pr:['G-PDU','Echo Request / Response','Error Indication','End Marker'],
+ kv:[['Port','UDP 2152'],['Tunnel granularity','Per PDU session (not per QoS flow)'],['Extension header','PDU Session Container (TS 38.415)']],
+ specs:['TS 38.414','38.415','29.281']},
+
+{id:'n4',n:'N4',a:'smf',b:'upf',gens:['sa'],plane:'cp',protos:['pfcp'],lp:.5,
+ full:'SMF ↔ UPF',
+ sum:'PFCP: the SMF programs packet-handling rules in the UPF and receives usage and event reports.',
+ st:[{t:'Control plane',l:['PFCP','UDP','IP','L2 / L1']}],
+ pr:['PFCP Association Setup / Update / Release','Heartbeat Request / Response','Session Establishment / Modification / Deletion','Session Report (usage report, DL data report, error indication)','Node Report'],
+ kv:[['Port','UDP 8805'],['Rules','PDR (detect), FAR (forward), QER (QoS), URR (usage), BAR (buffer), MAR (ATSSS)'],['Same protocol','Sxa / Sxb / Sxc in EPC CUPS']],
+ specs:['TS 29.244','23.501'],
+ tips:['Cause 72 “No established PFCP Association” → check Association Setup and Heartbeat. Cause 65 “Session context not found” → stale SEID, e.g. after a UPF restart (Recovery Time Stamp).']},
+
+{id:'n6',n:'N6',a:'upf',b:'pdn',gens:['sa'],plane:'up',protos:['ip','diameter'],bo:[0,406],lp:.22,
+ full:'UPF ↔ Data Network',
+ sum:'From the PDU Session Anchor to the DN. IP, Ethernet or unstructured PDU sessions; local breakout/MEC via ULCL or multi-homing.',
+ st:[{t:'User plane',l:['PDU (IP / Ethernet)','L2','L1']},{t:'DN-AAA (optional)',l:['RADIUS / Diameter','UDP / TCP / SCTP','IP']}],
+ notes:{sa:'Secondary authentication/authorization and IP allocation by an external DN-AAA server: the SMF reaches the DN-AAA through the UPF over N4/N6 using RADIUS or Diameter (TS 29.561).'},
+ specs:['TS 23.501','29.561']},
+
+{id:'n9',n:'N9',a:'upf',b:'upf',loop:{side:'bottom',dx:0},gens:['sa'],plane:'up',protos:['gtpu'],
+ full:'UPF ↔ UPF',
+ sum:'Between an intermediate UPF (I-UPF / ULCL) and the PDU Session Anchor, or V-UPF ↔ H-UPF in home-routed roaming.',
+ st:[{t:'User plane',l:['GTP-U','UDP','IP','L2 / L1']}],
+ specs:['TS 23.501','29.281']},
+
+{id:'n26',n:'N26',a:'amf',b:'mme',gens:['sa','iw'],plane:'cp',protos:['gtpc2'],ao:[35,0],pts:[[730,795],[875,795],[875,470]],bo:[0,17],lp:.6,
+ full:'AMF ↔ MME interworking',
+ sum:'Subset of S10 (GTPv2-C). Enables single-registration mobility between 5GS and EPS with context transfer – needed for seamless EPS fallback for voice.',
+ st:[{t:'Control plane',l:['GTPv2-C','UDP','IP','L2 / L1']}],
+ pr:['Forward Relocation Request / Response (inter-system handover, EPS fallback)','Context Request / Response (idle-mode mobility)','Identification Request'],
+ kv:[['Combined nodes','SMF+PGW-C, UPF+PGW-U, PCF+PCRF, UDM+HSS'],['Without N26','The UE re-registers/attaches without context transfer; IP address kept via SMF+PGW-C']],
+ specs:['TS 23.501 §5.17','23.502 §4.11','29.274']},
+
+{id:'n32',n:'N32',a:'sepp',b:'partner',gens:['sa'],plane:'sbi',protos:['http2'],bo:[0,-4],lp:.5,
+ full:'SEPP ↔ SEPP (inter-PLMN)',
+ sum:'Carries all inter-PLMN SBI signalling for roaming between the SEPPs of two operators.',
+ st:[{t:'N32-c',l:['N32-c (security capability & parameter exchange)','HTTP/2','TLS','TCP','IP']},{t:'N32-f',l:['N32-f (forwarded SBI; JWE/JWS with PRINS)','HTTP/2','TLS','TCP','IP']}],
+ kv:[['Protection','TLS between SEPPs, or PRINS (application-layer security; IPX may modify under policy)']],
+ specs:['TS 29.573','33.501 §13.2']},
+
+{id:'sbi',n:'SBI',a:null,b:null,isbus:true,gens:['sa'],plane:'sbi',protos:['http2'],
+ full:'Service-Based Interface (5GC)',
+ sum:'All 5GC control-plane NFs expose services (e.g. Namf_Communication) over a common HTTP/2 REST framework. Consumers discover producers via the NRF (or the SCP) and are authorized with OAuth 2.0 access tokens.',
+ st:SBI_STACK,
+ kv:[['Communication models','A / B direct (without / with NRF discovery), C / D indirect via SCP'],['Headers','3gpp-Sbi-Target-apiRoot, 3gpp-Sbi-Discovery-*, 3gpp-Sbi-Routing-Binding, 3gpp-Sbi-Callback'],['Errors','HTTP status + ProblemDetails “cause” (e.g. USER_NOT_FOUND, SUBSCRIPTION_NOT_FOUND)'],['Ports','Not fixed (often 80 / 443 or operator-defined)']],
+ specs:['TS 23.501 §7','29.500','29.501','33.501 §13'],
+ tips:['HTTP 429 / 503 with Retry-After → overload. 404 USER_NOT_FOUND from UDM → provisioning. 403 → OAuth2 scope / NF authorization (allowedNfTypes).']},
+
+stub('namf','amf','Namf','Namf_Communication, Namf_EventExposure, Namf_MT, Namf_Location.',['TS 29.518']),
+stub('nausf','ausf','Nausf','Nausf_UEAuthentication, Nausf_SoRProtection, Nausf_UPUProtection.',['TS 29.509']),
+stub('nudm','udm','Nudm','Nudm_SDM, Nudm_UECM, Nudm_UEAuthentication, Nudm_EventExposure, Nudm_ParameterProvision.',['TS 29.503']),
+stub('nudr','udr','Nudr','Nudr_DataRepository (subscription, policy, application and exposure data).',['TS 29.504','29.505','29.519']),
+stub('nnssf','nssf','Nnssf','Nnssf_NSSelection, Nnssf_NSSAIAvailability.',['TS 29.531']),
+stub('nnrf','nrf','Nnrf','Nnrf_NFManagement, Nnrf_NFDiscovery, Nnrf_AccessToken (OAuth 2.0).',['TS 29.510']),
+stub('nsepp','sepp','SBI','The SEPP proxies SBI messages between the local PLMN and N32; it does not expose its own N-service.',['TS 29.573']),
+stub('nsmf','smf','Nsmf','Nsmf_PDUSession, Nsmf_EventExposure, Nsmf_NIDD.',['TS 29.502','29.508']),
+stub('npcf','pcf','Npcf','Npcf_AMPolicyControl, Npcf_SMPolicyControl, Npcf_PolicyAuthorization, Npcf_UEPolicyControl, Npcf_BDTPolicyControl.',['TS 29.507','29.512','29.514','29.525']),
+stub('nchf','chf','Nchf','Nchf_ConvergedCharging, Nchf_SpendingLimitControl.',['TS 32.291','29.594']),
+stub('nnef','nef','Nnef','Nnef_EventExposure, Nnef_PFDManagement, Nnef_TrafficInfluence, … (northbound APIs in TS 29.522).',['TS 29.591','29.522']),
+stub('naf','af','Naf','Naf_EventExposure (trusted AF on the SBI).',['TS 29.517']),
+stub('nnwdaf','nwdaf','Nnwdaf','Nnwdaf_AnalyticsSubscription, Nnwdaf_AnalyticsInfo.',['TS 29.520']),
+stub('nscp','scp','SBI','The SCP sits in the signalling path for indirect communication; it does not expose its own N-service.',['TS 29.500']),
+
+rp('n11','amf','smf','N11','Nsmf_PDUSession (AMF → SMF: Create/Update/ReleaseSMContext) and Namf_Communication (SMF → AMF: N1N2MessageTransfer).',['TS 29.502','29.518'],{lp:.5}),
+rp('n12','amf','ausf','N12','Nausf_UEAuthentication.',['TS 29.509']),
+rp('n13','ausf','udm','N13','Nudm_UEAuthentication (Get – generates the AV, de-conceals SUCI).',['TS 29.503']),
+rp('n8','amf','udm','N8','Nudm_UECM (AMF registration), Nudm_SDM (AM data, SMF selection data).',['TS 29.503'],{curve:80}),
+rp('n35','udm','udr','N35','Nudr_DataRepository (subscription data).',['TS 29.504']),
+rp('n22','amf','nssf','N22','Nnssf_NSSelection.',['TS 29.531'],{curve:150,lp:.5}),
+rp('n15','amf','pcf','N15','Npcf_AMPolicyControl, Npcf_UEPolicyControl.',['TS 29.507','29.525'],{lp:.3}),
+rp('n7','smf','pcf','N7','Npcf_SMPolicyControl (Create / Update / UpdateNotify / Delete).',['TS 29.512']),
+rp('n10','smf','udm','N10','Nudm_SDM (SM data), Nudm_UECM (SMF registration).',['TS 29.503'],{lp:.7}),
+rp('n40','smf','chf','N40','Nchf_ConvergedCharging.',['TS 32.291'],{curve:-80}),
+rp('n28','pcf','chf','N28','Nchf_SpendingLimitControl.',['TS 29.594']),
+rp('n36','pcf','udr','N36','Nudr_DataRepository (policy data).',['TS 29.519'],{lp:.7}),
+rp('n37','nef','udr','N37','Nudr_DataRepository (exposure / application data).',['TS 29.519']),
+rp('n33','nef','af','N33','Nnef northbound APIs (TS 29.522).',['TS 29.522']),
+rp('n5','pcf','af','N5','Npcf_PolicyAuthorization.',['TS 29.514'],{curve:-100}),
+{id:'n14',n:'N14',a:'amf',b:'amf',loop:{side:'top',dx:-2},gens:['sa'],plane:'sbi',protos:['http2'],full:'AMF ↔ AMF (to another AMF)',sum:'Namf_Communication between AMFs: UE context transfer at AMF change (registration with AMF change, N2 handover).',st:SBI_STACK,specs:['TS 29.518','23.502']},
+{id:'n5ims',n:'N5 / Rx',a:'pcf',b:'ims',gens:['sa'],plane:'sbi',protos:['http2','diameter'],pts:[[820,1075],[1580,1075],[1580,620]],bo:[-80,0],lp:.6,
+ full:'PCF ↔ IMS P-CSCF (acting as AF)',
+ sum:'N5 (Npcf_PolicyAuthorization, HTTP/2) from the P-CSCF – or, alternatively, Diameter Rx. Either way it triggers the 5QI 1 QoS flow for VoNR media.',
+ st:SBI_STACK.concat([{t:'Rx (alternative)',l:['Diameter (Rx)','SCTP or TCP','IP','L2 / L1']}]),
+ pr:['N5: Npcf_PolicyAuthorization_Create / Update / Delete, _Notify (events, e.g. loss of resources)','Rx: AAR/AAA, RAR/RAA, STR/STA, ASR/ASA'],
+ kv:[['Rx App-ID','16777236'],['PCF discovery with Rx','BSF (Binding Support Function) finds the PCF serving the PDU session']],
+ notes:{sa:'TS 23.501/23.503 support both N5 and Rx between P-CSCF and PCF. Rx in the PCF exists for backward compatibility, so IMS can move from EPC to 5GC without upgrading the P-CSCF; networks using both choose per P-CSCF or by local routing.'},
+ specs:['TS 29.514','29.214 Annex E','23.503 Annex C','23.228']}
+];
+
+/* Additional interfaces between drawn elements ----------------------------- */
+LINKS.push(
+{id:'cxsh',n:'Cx / Sh',a:'ims',b:'hss',gens:['4g','nsa','sa'],plane:'cp',protos:['diameter'],ao:[40,0],pts:[[1700,390],[985,390]],bo:[25,0],lp:.45,
+ full:'IMS ↔ HSS (Cx: I/S-CSCF, Sh: application servers)',
+ sum:'Diameter from the IMS core to the subscriber database: Cx for IMS registration, authentication and S-CSCF assignment; Sh for application-server data (e.g. the TAS).',
+ st:[{t:'Cx (I/S-CSCF ↔ HSS)',l:['Diameter (Cx)','SCTP or TCP','IP','L2 / L1']},{t:'Sh (AS ↔ HSS)',l:['Diameter (Sh)','SCTP or TCP','IP','L2 / L1']}],
+ pr:['Cx: UAR/UAA (User-Authorization), MAR/MAA (Multimedia-Auth – IMS AKA vectors), SAR/SAA (Server-Assignment – profile download), LIR/LIA (Location-Info), RTR/RTA (Registration-Termination), PPR/PPA (Push-Profile)','Sh: UDR/UDA (User-Data), PUR/PUA (Profile-Update), SNR/SNA (Subscribe-Notifications), PNR/PNA (Push-Notification)'],
+ kv:[['Diameter App-IDs','Cx 16777216 · Sh 16777217'],['Port','3868 (TCP / SCTP)']],
+ notes:{sa:'Unchanged with 5G SA: the IMS keeps Cx/Sh towards the HSS (or a combined HSS+UDM).'},
+ specs:['TS 29.228','29.229 (Cx)','29.328','29.329 (Sh)','23.228'],
+ tips:['IMS registration rejected by the S-CSCF/I-CSCF: check the Cx UAR/MAR result (e.g. 5001 DIAMETER_ERROR_USER_UNKNOWN, 5002 DIAMETER_ERROR_IDENTITIES_DONT_MATCH) and the IMPI/IMPU provisioning in the HSS.']},
+{id:'rorf',n:'Ro / Rf',a:'ims',b:'ocs',gens:['4g','nsa','sa'],plane:'cp',protos:['diameter'],ao:[-40,0],pts:[[1620,445]],bo:[0,12],lp:.5,
+ full:'IMS ↔ OCS / OFCS (IMS charging)',
+ sum:'Charging of IMS services: Ro online credit control (e.g. from the S-CSCF, TAS or an IMS gateway function) and Rf offline accounting towards the CDF.',
+ st:[{t:'Ro (online)',l:['Diameter CC (RFC 4006/8506)','SCTP or TCP','IP']},{t:'Rf (offline)',l:['Diameter Accounting (ACR/ACA)','SCTP or TCP','IP']}],
+ pr:['Ro: CCR/CCA Initial / Update / Termination (session-based) or Event (e.g. SMS over IP)','Rf: ACR/ACA Start / Interim / Stop / Event'],
+ kv:[['Diameter App-IDs','Ro = 4 (DCCA) · Rf = 3 (Accounting)']],
+ notes:{sa:'Ro/Rf remain common for IMS in 5G SA networks; newer 3GPP releases also allow service-based (Nchf) converged charging for IMS.'},
+ specs:['TS 32.260','32.299','RFC 8506']},
+{id:'sy',n:'Sy',a:'pcrf',b:'ocs',gens:['4g','nsa'],plane:'cp',protos:['diameter'],ao:[-45,0],bo:[-45,0],lp:.5,
+ full:'PCRF ↔ OCS (spending-limit reporting)',
+ sum:'Lets the PCRF base policy decisions on the subscriber’s spending/quota status held in the OCS – e.g. throttle after the monthly volume is used up.',
+ st:[{t:'Control plane',l:['Diameter (Sy)','SCTP or TCP','IP','L2 / L1']}],
+ pr:['SLR/SLA – Spending-Limit-Request (subscribe to policy counter status)','SNR/SNA – Spending-Status-Notification (counter status changed)','STR/STA – Session-Termination (unsubscribe)'],
+ kv:[['Diameter App-ID','16777302']],
+ notes:{sa:'5GC counterpart: N28 (PCF ↔ CHF, Nchf_SpendingLimitControl).'},
+ specs:['TS 29.219','23.203']},
+{id:'s9',n:'S9',a:'pcrf',b:'partner',gens:['4g','nsa'],plane:'cp',protos:['diameter'],ao:[0,12],pts:[[1305,577],[1305,800],[1650,800]],bo:[-50,0],lp:.65,
+ full:'V-PCRF ↔ H-PCRF (roaming)',
+ sum:'Diameter between visited and home PCRF for roaming with local breakout, or home-routed roaming with QoS control in the visited network. Often not deployed – most LTE roaming is home-routed over S8 without S9.',
+ st:[{t:'Control plane',l:['Diameter (S9)','SCTP or TCP','IP','L2 / L1']}],
+ pr:['CCR/CCA – S9 session establishment / modification / termination','RAR/RAA – rule provisioning between H-PCRF and V-PCRF'],
+ kv:[['Diameter App-ID','16777267'],['Transport','IPX, typically via Diameter Edge Agents (DEA)']],
+ notes:{sa:'5GC counterpart: N24 (V-PCF ↔ H-PCF), carried over N32 between the SEPPs.'},
+ specs:['TS 29.215','23.203']},
+{id:'s6d',n:'S6d',a:'sgsn',b:'hss',gens:['4g','iw'],plane:'cp',protos:['diameter'],ao:[30,10],bo:[-40,0],lp:.62,
+ full:'S4-SGSN ↔ HSS (Diameter)',
+ sum:'Diameter alternative to MAP Gr for an R8+ S4-SGSN. It is the same application as S6a, so one HSS interface serves both MME and SGSN.',
+ st:[{t:'Control plane',l:['Diameter (S6a/S6d)','SCTP or TCP','IP','L2 / L1']}],
+ pr:['AIR/AIA, ULR/ULA, CLR/CLA, IDR/IDA, DSR/DSA, PUR/PUA, NOR/NOA, RSR/RSA'],
+ kv:[['Diameter App-ID','16777251 (shared with S6a)']],
+ specs:['TS 29.272','23.060','23.401']},
+{id:'gs',n:'Gs',a:'sgsn',b:'mscs',gens:['3g'],plane:'cp',protos:['ss7'],ao:[0,-20],pts:[[818,288],[818,100]],bo:[0,-8],lp:.3,
+ full:'SGSN ↔ MSC/VLR (optional)',
+ sum:'BSSAP+ association between SGSN and VLR (network mode of operation I): combined GPRS/IMSI attach and combined RA/LA update, CS paging through the SGSN, and SMS/alerting coordination.',
+ st:[{t:'Control plane',l:['BSSAP+','SCCP','M3UA (or MTP3)','SCTP / IP (or SS7 links)']}],
+ pr:['Location Update Request / Accept / Reject (combined attach, combined RAU/LAU)','Paging Request (CS paging through the SGSN)','IMSI Detach / GPRS Detach Indication','MS Information Request / Response','Alert Request / MS Activity Indication'],
+ kv:[['Network mode','NMO I = Gs present; NMO II = no Gs (separate CS and PS procedures)']],
+ notes:{'4g':'Its EPS counterpart is SGs (MME ↔ MSC/VLR).'},
+ specs:['TS 29.016','29.018','23.060']},
+{id:'gc',n:'Gc',a:'ggsn',b:'hlr',gens:['3g'],plane:'cp',protos:['ss7'],ao:[-35,0],pts:[[1160,270],[1000,270]],bo:[40,0],lp:.3,
+ full:'GGSN ↔ HLR (optional)',
+ sum:'MAP interface for network-requested PDP context activation: the GGSN asks the HLR which SGSN serves a UE for which a downlink PDU arrives without an active PDP context. A GGSN without SS7 can use a GTP–MAP protocol converter in another GSN.',
+ st:[{t:'SIGTRAN / SS7',l:['MAP','TCAP','SCCP','M3UA or MTP3','SCTP/IP or MTP2/1']}],
+ pr:['SendRoutingInfoForGprs','FailureReport','NoteMsPresentForGprs'],
+ specs:['TS 29.002','23.060']},
+{id:'nhss',n:'Nhss',a:'hss',b:'udm',gens:['sa','iw'],plane:'sbi',protos:['http2'],ao:[0,10],pts:[[1080,463],[1080,800],[960,800]],bo:[15,0],lp:.58,
+ full:'HSS ↔ UDM interworking (R16, separately deployed HSS and UDM)',
+ sum:'When HSS and UDM are separate network functions they interwork over service-based interfaces: the UDM consumes Nhss services from the HSS (and the HSS consumes Nudm services), e.g. for authentication vectors and UE context during 5GS ↔ EPS mobility. In a combined HSS+UDM this is internal.',
+ st:SBI_STACK,
+ pr:['Nhss_UEAuthentication – the UDM gets a 5G AKA / EAP-AKA′ vector from the HSS','Nhss_SubscriberDataManagement – e.g. the PGW-C+SMF FQDN used on S5/S8, after inter-RAT mobility','Nhss_UEContextManagement','Nhss_EventExposure'],
+ notes:{'4g':'The MME keeps using S6a (Diameter) towards the HSS.'},
+ specs:['TS 23.632','29.563']},
+rp('n23','pcf','nwdaf','N23','Nnwdaf_AnalyticsSubscription / Nnwdaf_AnalyticsInfo – the PCF consumes analytics (e.g. QoS sustainability, UE behaviour) for policy decisions.',['TS 23.288','29.520'],{curve:110,lp:.62}),
+rp('n34','nssf','nwdaf','N34','Nnwdaf analytics consumed by the NSSF, e.g. slice load level, for slice selection.',['TS 23.288','29.520'])
+);
+
+/* ng-eNB (E-UTRA connected to 5GC) ------------------------------------ */
+(function(){
+ const by=Object.fromEntries(LINKS.map(l=>[l.id,l]));
+ const GEO={ao:undefined,bo:undefined,pts:undefined,lp:undefined,lo:undefined,curve:undefined,loop:undefined};
+ const cp=(base,id,a,b,geo,over)=>{LINKS.push(Object.assign({},by[base],GEO,{id,a,b},geo||{},over||{}));};
+ LINKS.push({id:'lteuu5gc',n:'LTE-Uu',a:'ue',b:'ngenb',gens:['sa'],plane:'both',protos:['radio'],ao:[-20,0],pts:[[60,1164]],lp:.5,
+  full:'E-UTRA radio interface towards an ng-eNB (E-UTRA connected to 5GC)',
+  sum:'LTE radio, but the UE runs 5G NAS over it (N1 continues to the AMF) and the RAN maps QoS flows to DRBs with SDAP, as for NR access.',
+  st:[{t:'Control plane',l:['NAS-5GS (5GMM / 5GSM)','RRC (E-UTRA)','PDCP','RLC','MAC','PHY (E-UTRA)']},{t:'User plane',l:['PDU (IP / Ethernet)','SDAP','PDCP','RLC','MAC','PHY (E-UTRA)']}],
+  pr:['RRC Connection Establishment carrying the 5GS Registration Request','RRC Connection Reconfiguration (DRBs for QoS flows, measurements, handover)','RRC Release with suspend to RRC_INACTIVE / RRC Connection Resume'],
+  kv:[['RRC states','RRC_IDLE, RRC_INACTIVE, RRC_CONNECTED'],['Core selection','SIB1 lists 5GC support per PLMN (cellAccessRelatedInfo-5GC); the UE selects EPC or 5GC NAS'],['QoS','QoS flows (5QI, QFI) mapped to DRBs by SDAP']],
+  specs:['TS 36.300','36.331','37.324 (SDAP)','24.501']});
+ cp('n2','n2ngenb','ngenb','amf',{ao:[0,-12],pts:[[597,1152],[597,890],[655,890]],bo:[-40,0],lp:.68},{full:'NG-C: ng-eNB ↔ AMF',notes:{sa:'Same NGAP as for a gNB; the ng-eNB is identified by its Global ng-eNB ID.'}});
+ cp('n3','n3ngenb','ngenb','upf',{ao:[0,12],pts:[[615,1176],[615,1135]],bo:[0,14],lp:.45},{full:'NG-U: ng-eNB ↔ UPF'});
+ cp('xn','xnngenb','gnb','ngenb',{ao:[-100,0],lp:.5},{full:'gNB ↔ ng-eNB',notes:{sa:'Used for handover between NR and E-UTRA cells on the 5GC and for MR-DC with the 5GC: NGEN-DC (Option 7/7a/7x – ng-eNB master, gNB secondary) and NE-DC (Option 4/4a – gNB master, ng-eNB secondary).'}});
+})();
+
+/* CUPS view (R14, TS 23.214): split SGW/PGW ---------------------------- */
+(function(){
+ const by=Object.fromEntries(LINKS.map(l=>[l.id,l]));
+ const GEO={ao:undefined,bo:undefined,pts:undefined,lp:undefined,lo:undefined,curve:undefined};
+ const cp=(base,id,a,b,geo,over)=>{LINKS.push(Object.assign({},by[base],GEO,{id,a,b,cups:true},geo||{},over||{}));};
+ const PFCP=[{t:'Control plane',l:['PFCP','UDP','IP','L2 / L1']}];
+ LINKS.push(
+ {id:'sxa',n:'Sxa',a:'sgwc',b:'sgwu',gens:['4g','nsa'],plane:'cp',protos:['pfcp'],cups:true,lp:.5,
+  full:'SGW-C ↔ SGW-U (CUPS)',
+  sum:'PFCP control of the SGW user plane: the SGW-C installs the rules for GTP-U relaying, downlink buffering and usage reporting in the SGW-U.',
+  st:PFCP,
+  pr:['PFCP Association Setup / Update / Release and Heartbeat (node level)','Session Establishment (PDN connection setup)','Session Modification (eNB F-TEID update, handover, S1 release to idle, buffering on/off)','Session Report (downlink data report → DDN to the MME; usage reports)','Session Deletion'],
+  kv:[['Port','UDP 8805'],['Rules used','PDR, FAR (incl. transport-level marking), URR, BAR'],['DL buffering','In the SGW-U (BAR) or in the SGW-C (SGW-U forwards DL packets to the CP function)'],['Combined node','Sxa and Sxb may be one combined PFCP session for a combined SGW-U/PGW-U']],
+  specs:['TS 23.214','29.244'],
+  tips:['Downlink data for an idle UE should produce a Session Report Request (downlink data report) on Sxa followed by DDN on S11 – if paging never starts, check the BAR and reporting settings.','After Service Request, missing DL traffic usually means the DL FAR still points to the old/no eNB F-TEID (Session Modification not sent or rejected).']},
+ {id:'sxb',n:'Sxb',a:'pgwc',b:'pgwu',gens:['4g','nsa'],plane:'cp',protos:['pfcp'],cups:true,lp:.5,
+  full:'PGW-C ↔ PGW-U (CUPS)',
+  sum:'PFCP control of the PGW user plane: the PGW-C maps PCC rules and charging into detection, forwarding, QoS and usage-reporting rules in the PGW-U.',
+  st:PFCP,
+  pr:['PFCP Association Setup / Update / Release and Heartbeat','Session Establishment (default bearer, UE IP, SGi routing)','Session Modification (dedicated bearers, PCC rule changes, gating, new quota)','Session Report (usage reports for Gy/Gz quota and usage monitoring, application start/stop)','Session Deletion'],
+  kv:[['Port','UDP 8805'],['Rules used','PDR, FAR, QER, URR'],['Related','Sxc: TDF-C ↔ TDF-U (not drawn); N4 is the 5GC counterpart']],
+  notes:{sa:'An SMF+PGW-C controls a UPF+PGW-U over N4, which covers the Sxb functions.'},
+  specs:['TS 23.214','29.244'],
+  tips:['Quota/usage problems: check the URR thresholds and quotas the PGW-C installed and the Usage Report triggers (volume/time quota, threshold) the PGW-U returns.']},
+ {id:'s5c',n:'S5-C',a:'sgwc',b:'pgwc',gens:['4g','nsa'],plane:'cp',protos:['gtpc2'],cups:true,ao:[0,6],bo:[0,6],lp:.23,
+  full:'SGW-C ↔ PGW-C (S8-C = inter-PLMN)',
+  sum:'GTPv2-C session control between the control parts of a split SGW and PGW – unchanged from the S5/S8 control plane.',
+  st:[{t:'Control plane',l:['GTPv2-C','UDP','IP','L2 / L1']}],pr:by.s5.pr,kv:[['Port','UDP 2123']],specs:['TS 29.274','23.214']},
+ {id:'s5u',n:'S5-U',a:'sgwu',b:'pgwu',gens:['4g','nsa'],plane:'up',protos:['gtpu'],cups:true,ao:[0,6],bo:[0,6],lp:.5,
+  full:'SGW-U ↔ PGW-U (S8-U = inter-PLMN)',
+  sum:'GTP-U tunnels between the user parts of a split SGW and PGW – unchanged from the S5/S8 user plane.',
+  st:[{t:'User plane',l:['GTP-U','UDP','IP','L2 / L1']}],kv:[['Port','UDP 2152']],specs:['TS 29.281','23.214']},
+ {id:'s4c',n:'S4-C',a:'sgsn',b:'sgwc',gens:['4g','iw'],plane:'cp',protos:['gtpc2'],cups:true,ao:[0,14],pts:[[820,322],[820,552]],bo:[0,-10],lp:.5,
+  full:'S4-SGSN ↔ SGW-C',sum:'Control part of S4 towards a split SGW (GTPv2-C).',
+  st:[{t:'Control plane',l:['GTPv2-C','UDP','IP','L2 / L1']}],specs:['TS 29.274','23.401','23.214']},
+ {id:'s4u',n:'S4-U',a:'sgsn',b:'sgwu',gens:['4g','iw'],plane:'up',protos:['gtpu'],cups:true,ao:[0,24],pts:[[840,332],[840,640]],bo:[0,-12],lp:.6,
+  full:'S4-SGSN ↔ SGW-U',sum:'User part of S4 towards a split SGW (GTP-U), used when S12 Direct Tunnel is not applied.',
+  st:[{t:'User plane',l:['GTP-U','UDP','IP','L2 / L1']}],specs:['TS 29.281','23.401','23.214']}
+ );
+ cp('s11','s11c','mme','sgwc',{},{full:'MME ↔ SGW-C'});
+ cp('s1u','s1uc','enb','sgwu',{ao:[0,21],pts:[[575,474],[575,640]],bo:[0,-12],lp:.62},{full:'eNB ↔ SGW-U user plane'});
+ cp('s1unsa','s1unsac','engnb','sgwu',{ao:[0,12],bo:[0,14],lp:.5},{full:'en-gNB ↔ SGW-U user plane (Option 3a / 3x)',pr:by.s1unsa.pr.concat(['With CUPS the SGW-C then updates the DL FAR in the SGW-U over Sxa (Session Modification)'])});
+ cp('s12','s12c','rnc','sgwu',{ao:[52,0],pts:[[502,700],[725,700]],lp:.25},{full:'RNC ↔ SGW-U user plane'});
+ cp('gx','gxc','pgwc','pcrf',{ao:[0,3],lp:.5},{full:'PCEF (PGW-C) ↔ PCRF',notes:Object.assign({},by.gx.notes,{'4g':'With CUPS, Gx terminates in the PGW-C, which translates PCC rules into Sxb rules for the PGW-U.'})});
+ cp('gy4g','gy4gc','pgwc','ocs',{ao:[0,-10],bo:[0,15],lp:.55},{full:'PGW-C charging interfaces',notes:{'4g':'With CUPS, the PGW-C terminates Gy/Gz and builds charging from the PGW-U usage reports (URR over Sxb).'}});
+ cp('sgi','sgic','pgwu','pdn',{ao:[0,6],bo:[0,-57],lp:.42},{full:'PGW-U ↔ PDN',notes:{'4g':'With CUPS the SGi user plane leaves the PGW-U; SGi AAA signalling (RADIUS/Diameter) is handled by the PGW-C.'}});
+})();
+
+/* End-to-end stack scenarios --------------------------------------------- */
+const E2E = [
+{id:'3gup',g:'3g',t:'3G PS user plane (R99 / R4)',sum:'User IP packets are tunnelled from the GGSN to the RNC in GTP-U; the RNC hosts PDCP/RLC/MAC and the Node B only provides L1 via the Iub frame protocol.',
+ nodes:[{n:'UE',s:[{l:['Application','IP / PPP','PDCP','RLC','MAC','WCDMA L1']}]},
+  {n:'Node B',s:[{h:'Uu',l:['WCDMA L1']},{h:'Iub',l:['Iub FP','UDP/IP | AAL2','L2/L1 | ATM']}]},
+  {n:'RNC',s:[{h:'Iub',l:['PDCP','RLC','MAC','Iub FP','UDP/IP | AAL2','L2/L1 | ATM']},{h:'Iu-PS',l:['GTP-U','UDP','IP','L2','L1']}]},
+  {n:'SGSN',s:[{h:'Iu-PS',l:['GTP-U','UDP','IP','L2','L1']},{h:'Gn',l:['GTP-U','UDP','IP','L2','L1']}]},
+  {n:'GGSN',s:[{h:'Gn',l:['GTP-U','UDP','IP','L2','L1']},{h:'Gi',l:['IP (user)','L2','L1']}]},
+  {n:'Server',s:[{l:['Application','IP','L2','L1']}]}],
+ gaps:['Uu','Iub','Iu-PS','Gn','Gi'],
+ notes:['R99/R4 Iu-PS user plane ran GTP-U over IP over AAL5/ATM; Ethernet/IP became common later.','The SGSN relays GTP-U between Iu-PS and Gn tunnels (two tunnels, different TEIDs).']},
+{id:'3gcp',g:'3g',t:'3G PS control plane (UE ↔ SGSN)',sum:'GMM/SM NAS is carried transparently in RRC (UE–RNC) and in RANAP Direct Transfer (RNC–SGSN).',
+ nodes:[{n:'UE',s:[{l:['GMM / SM','RRC','RLC','MAC','WCDMA L1']}]},
+  {n:'Node B',s:[{h:'Uu',l:['WCDMA L1']},{h:'Iub',l:['Iub FP','UDP/IP | AAL2','L2/L1 | ATM']}]},
+  {n:'RNC',s:[{h:'Iub',l:['RRC','RLC','MAC','Iub FP','UDP/IP | AAL2','L2/L1 | ATM']},{h:'Iu-PS',l:['RANAP','SCCP','M3UA','SCTP','IP','L2 / L1']}]},
+  {n:'SGSN',s:[{h:'Iu-PS',l:['GMM / SM','RANAP','SCCP','M3UA','SCTP','IP','L2 / L1']}]}],
+ gaps:['Uu','Iub','Iu-PS'],
+ notes:['ATM-based Iu: RANAP / SCCP / MTP3-B / SSCF-NNI / SSCOP / AAL5 / ATM.','NBAP (RNC ↔ Node B) is the Node B’s own control protocol and is not on this UE signalling path.']},
+{id:'hspaup',g:'hspa',t:'HSPA user plane with Direct Tunnel (R7+)',sum:'Scheduling and HARQ move to the Node B (MAC-ehs/MAC-i); the SGSN is bypassed in the user plane.',
+ nodes:[{n:'UE',s:[{l:['Application','IP','PDCP','RLC','MAC-d','MAC-ehs | MAC-i/is','WCDMA L1']}]},
+  {n:'Node B',s:[{h:'Uu',l:['MAC-ehs | MAC-i','WCDMA L1']},{h:'Iub',l:['HS-DSCH | E-DCH FP','UDP','IP','L2 / L1']}]},
+  {n:'RNC',s:[{h:'Iub',l:['PDCP','RLC','MAC-d','MAC-is (UL)','HS-DSCH | E-DCH FP','UDP','IP','L2 / L1']},{h:'Iu-PS (DT)',l:['GTP-U','UDP','IP','L2','L1']}]},
+  {n:'SGSN',s:[{h:'control only',ghost:true,l:['RANAP ↔ RNC','GTPv1-C ↔ GGSN']}]},
+  {n:'GGSN',s:[{h:'Gn-U',l:['GTP-U','UDP','IP','L2','L1']},{h:'Gi',l:['IP (user)','L2','L1']}]},
+  {n:'Server',s:[{l:['Application','IP','L2','L1']}]}],
+ gaps:['Uu','Iub','(SGSN bypassed)','Gn-U','Gi'],
+ notes:['DL: MAC-d (RNC) → HS-DSCH FP → MAC-hs/ehs (Node B scheduler + HARQ). UL: MAC-e/i (Node B HARQ, scheduling) → E-DCH FP → MAC-es/is in the SRNC (reordering, macro-diversity combining).','Without Direct Tunnel the SGSN relays GTP-U exactly as in R99.']},
+{id:'lteup',g:'4g',t:'LTE user plane',sum:'The eNB terminates all radio layers and maps each radio bearer to one S1-U GTP-U tunnel; the SGW relays to the PGW over S5/S8.',
+ nodes:[{n:'UE',s:[{l:['Application','IP','PDCP','RLC','MAC','PHY']}]},
+  {n:'eNodeB',s:[{h:'LTE-Uu',l:['PDCP','RLC','MAC','PHY']},{h:'S1-U',l:['GTP-U','UDP','IP','L2','L1']}]},
+  {n:'SGW',s:[{h:'S1-U',l:['GTP-U','UDP','IP','L2','L1']},{h:'S5/S8',l:['GTP-U','UDP','IP','L2','L1']}]},
+  {n:'PGW',s:[{h:'S5/S8',l:['GTP-U','UDP','IP','L2','L1']},{h:'SGi',l:['IP (user)','L2','L1']}]},
+  {n:'Server',s:[{l:['Application','IP','L2','L1']}]}],
+ gaps:['LTE-Uu','S1-U','S5/S8','SGi'],
+ notes:['EPS bearer = radio bearer + S1 bearer + S5/S8 bearer (1:1:1), identified by EBI 5–15.']},
+{id:'ltecp',g:'4g',t:'LTE control plane',sum:'NAS (EMM/ESM) runs end-to-end UE ↔ MME inside RRC and S1AP. The MME controls the gateways with GTPv2-C.',
+ nodes:[{n:'UE',s:[{l:['NAS (EMM / ESM)','RRC','PDCP','RLC','MAC','PHY']}]},
+  {n:'eNodeB',s:[{h:'LTE-Uu',l:['RRC','PDCP','RLC','MAC','PHY']},{h:'S1-MME',l:['S1AP','SCTP','IP','L2','L1']}]},
+  {n:'MME',s:[{h:'S1-MME',l:['NAS (EMM / ESM)','S1AP','SCTP','IP','L2','L1']},{h:'S11',l:['GTPv2-C','UDP','IP','L2','L1']}]},
+  {n:'SGW',s:[{h:'S11',l:['GTPv2-C','UDP','IP','L2','L1']},{h:'S5/S8',l:['GTPv2-C','UDP','IP','L2','L1']}]},
+  {n:'PGW',s:[{h:'S5/S8',l:['GTPv2-C','UDP','IP','L2','L1']}]}],
+ gaps:['LTE-Uu','S1-MME','S11','S5/S8'],
+ notes:['RRC and NAS are both integrity-protected; NAS security terminates in the MME, AS security in the eNB.']},
+{id:'nsaup',g:'nsa',t:'5G NSA user plane – Option 3x (SCG split bearer)',sum:'S1-U terminates in the en-gNB. Its NR PDCP sends traffic either over its own NR leg or over X2-U to the MeNB’s LTE RLC.',
+ nodes:[{n:'UE',s:[{l:['Application','IP','NR PDCP','RLC (LTE) | RLC (NR)','MAC (LTE) | MAC (NR)','PHY (LTE) | PHY (NR)']}]},
+  {n:'MeNB (eNB)',s:[{h:'LTE-Uu',l:['LTE RLC','LTE MAC','LTE PHY']},{h:'X2-U',l:['NR-U','GTP-U','UDP','IP','L2 / L1']}]},
+  {n:'en-gNB',s:[{h:'X2-U',l:['NR-U','GTP-U','UDP','IP','L2 / L1']},{h:'NR-Uu',l:['NR PDCP (split)','NR RLC','NR MAC','NR PHY']},{h:'S1-U',l:['GTP-U','UDP','IP','L2','L1']}]},
+  {n:'SGW',s:[{h:'S1-U',l:['GTP-U','UDP','IP','L2','L1']},{h:'S5/S8',l:['GTP-U','UDP','IP','L2','L1']}]},
+  {n:'PGW',s:[{h:'S5/S8',l:['GTP-U','UDP','IP','L2','L1']},{h:'SGi',l:['IP (user)','L2','L1']}]}],
+ gaps:['LTE-Uu / NR-Uu','X2-U','S1-U','S5/S8'],
+ notes:['Option 3: split in the MeNB (S1-U to eNB only, X2-U MeNB → en-gNB).','Option 3a: SCG bearer – S1-U to the en-gNB, no split, no X2-U for that bearer.','Option 3x: as shown; flow control over X2-U with DL Data Delivery Status (TS 38.425). The UE uses one NR PDCP entity feeding two RLC entities.']},
+{id:'nsacp',g:'nsa',t:'5G NSA control plane (EN-DC)',sum:'The UE has one RRC connection, with the MeNB. The en-gNB’s NR RRC (SCG configuration) travels in X2AP to the MeNB and inside LTE RRC to the UE, or directly on SRB3 if configured.',
+ nodes:[{n:'UE',s:[{h:'LTE side',l:['NAS (EMM / ESM)','LTE RRC','PDCP','RLC','MAC','PHY']},{h:'NR side (SRB3)',l:['NR RRC','NR PDCP','NR RLC','NR MAC','NR PHY']}]},
+  {n:'en-gNB',s:[{h:'NR-Uu (SRB3)',l:['NR RRC','NR PDCP','NR RLC','NR MAC','NR PHY']},{h:'X2-C',l:['X2AP','SCTP','IP','L2 / L1']}]},
+  {n:'MeNB (eNB)',s:[{h:'X2-C',l:['X2AP','SCTP','IP','L2 / L1']},{h:'LTE-Uu',l:['LTE RRC','PDCP','RLC','MAC','PHY']},{h:'S1-MME',l:['S1AP','SCTP','IP','L2 / L1']}]},
+  {n:'MME',s:[{h:'S1-MME',l:['NAS (EMM / ESM)','S1AP','SCTP','IP','L2 / L1']}]}],
+ gaps:['NR-Uu (SRB3, optional)','X2-C','S1-MME'],
+ notes:['The UE’s LTE stack peers with the MeNB’s LTE-Uu stack (not adjacent in this drawing); NAS continues to the MME.','Default path for SCG configuration: en-gNB → X2AP (SgNB Addition Request Acknowledge) → MeNB → RRCConnectionReconfiguration (nr-SecondaryCellGroupConfig) → UE.','The en-gNB has no S1-MME – the MME is unaware of the NR leg except via E-RAB Modification Indication and usage reports.']},
+{id:'saup',g:'sa',t:'5G SA user plane (split gNB)',sum:'SDAP maps QoS flows to DRBs in the CU-UP; one N3 GTP-U tunnel per PDU session carries QFI-tagged packets to the UPF (optionally via an I-UPF on N9).',
+ nodes:[{n:'UE',s:[{l:['Application','PDU (IP / Ethernet)','SDAP','PDCP','RLC','MAC','PHY']}]},
+  {n:'gNB-DU',s:[{h:'NR-Uu',l:['RLC','MAC','PHY']},{h:'F1-U',l:['NR-U','GTP-U','UDP','IP','L2 / L1']}]},
+  {n:'gNB-CU-UP',s:[{h:'F1-U',l:['SDAP','PDCP','NR-U','GTP-U','UDP','IP','L2 / L1']},{h:'N3',l:['GTP-U (QFI)','UDP','IP','L2','L1']}]},
+  {n:'UPF (I-UPF, opt.)',s:[{h:'N3',l:['GTP-U','UDP','IP','L2','L1']},{h:'N9',l:['GTP-U','UDP','IP','L2','L1']}]},
+  {n:'UPF (PSA)',s:[{h:'N9 / N3',l:['GTP-U','UDP','IP','L2','L1']},{h:'N6',l:['PDU (IP / Ethernet)','L2','L1']}]},
+  {n:'Server',s:[{l:['Application','IP','L2','L1']}]}],
+ gaps:['NR-Uu','F1-U','N3','N9','N6'],
+ notes:['F1-U has one tunnel per DRB; N3 has one tunnel per PDU session (QoS flows distinguished by QFI in the PDU Session Container, TS 38.415).','With a monolithic gNB the DU/CU-UP columns collapse into one node.']},
+{id:'sacp',g:'sa',t:'5G SA control plane',sum:'NAS-MM terminates in the AMF; NAS-SM is relayed by the AMF to the SMF over SBI (N11). The SMF controls the UPF with PFCP.',
+ nodes:[{n:'UE',s:[{l:['NAS-SM (5GSM)','NAS-MM (5GMM)','RRC','PDCP','RLC','MAC','PHY']}]},
+  {n:'gNB-DU',s:[{h:'NR-Uu',l:['RLC','MAC','PHY']},{h:'F1-C',l:['F1AP','SCTP','IP','L2 / L1']}]},
+  {n:'gNB-CU-CP',s:[{h:'F1-C',l:['RRC','PDCP','F1AP','SCTP','IP','L2 / L1']},{h:'N2',l:['NGAP','SCTP','IP','L2','L1']}]},
+  {n:'AMF',s:[{h:'N2',l:['NAS-MM','NGAP','SCTP','IP','L2','L1']},{h:'N11 (SBI)',l:['Nsmf / Namf (JSON)','HTTP/2','TLS','TCP','IP']}]},
+  {n:'SMF',s:[{h:'N11 (SBI)',l:['NAS-SM','Nsmf / Namf (JSON)','HTTP/2','TLS','TCP','IP']},{h:'N4',l:['PFCP','UDP','IP','L2','L1']}]},
+  {n:'UPF',s:[{h:'N4',l:['PFCP','UDP','IP','L2','L1']}]}],
+ gaps:['NR-Uu','F1-C','N2','N11','N4'],
+ notes:['RRC messages travel inside F1AP RRC Message Transfer between DU and CU-CP.','N2 SM information (QoS profiles, UPF TEID) is created by the SMF and transported by the AMF in NGAP PDU Session Resource messages.']}
+];
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+const $ = s=>document.querySelector(s);
+const NS = 'http://www.w3.org/2000/svg';
+const EM = Object.fromEntries(ELS.map(e=>[e.id,e]));
+const LM = Object.fromEntries(LINKS.map(l=>[l.id,l]));
+function mk(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function gcol(g){return `var(${GENS[g]?GENS[g].v:'--gall'})`;}
+function elColor(E){return E.pc==='all'?'var(--gall)':gcol(E.pc||E.gens[0]);}
+function lnColor(L){return L.gens.includes('iw')?gcol('iw'):gcol(L.gens[0]);}
+function cen(E){return [E.x+E.w/2,E.y+E.h/2];}
+function clip(from,to,E){const dx=to[0]-from[0],dy=to[1]-from[1];let t=Infinity;
+ if(dx>0)t=Math.min(t,(E.x+E.w-from[0])/dx);else if(dx<0)t=Math.min(t,(E.x-from[0])/dx);
+ if(dy>0)t=Math.min(t,(E.y+E.h-from[1])/dy);else if(dy<0)t=Math.min(t,(E.y-from[1])/dy);
+ if(!isFinite(t)||t<0)t=0;return [from[0]+dx*t,from[1]+dy*t];}
+function kind(x){const s=x.toLowerCase();
+ if(/^application|^pdu \(|ip \(user\)|^ip \/ ppp|^amr frames|^server|^service api|n32-[cf]|nsmf \/ namf/.test(s))return 'appl';
+ if(/nas|gmm|emm|esm|5gmm|5gsm|^mm\b/.test(s))return 'nas';
+ if(/rrc/.test(s))return 'rrc';
+ if(/gtp-u|nr-u|\bfp\b|iu up|nb up|rtp/.test(s))return 'tun';
+ if(/sdap|pdcp|rlc|mac|phy|wcdma l1/.test(s))return 'radio';
+ if(/s1ap|ngap|x2ap|xnap|f1ap|e1ap|nbap|ranap|rnsap|sgsap|pfcp|gtpv1-c|gtpv2-c|gtp′|diameter|^map|tcap|h\.248|bicc|sip|http|radius|control only|↔/.test(s))return 'ap';
+ if(/sccp|m3ua|mtp|sscf|sscop|aal|atm/.test(s))return 'ss7';
+ if(/sctp|udp|tcp|tls/.test(s))return 'tr';
+ if(/^ip\b|^ipv/.test(s))return 'ip';
+ if(/l1|l2|ethernet/.test(s))return 'phy';
+ return 'appl';}
+const KINDNAMES={nas:'NAS',rrc:'RRC',radio:'Radio L2/L1',ap:'Application / signalling protocol',tun:'User-plane tunnelling / framing',tr:'Transport (SCTP/UDP/TCP/TLS)',ip:'IP',ss7:'SS7 / ATM',phy:'L2 / L1',appl:'User data / service'};
+function hay(o){const parts=[o.n,o.full,o.sb,o.sum,(o.fn||[]).join(' '),(o.pr||[]).join(' '),(o.kv||[]).flat().join(' '),(o.specs||[]).join(' '),(o.tips||[]).join(' '),(o.protos||[]).join(' ')];
+ if(o.st)o.st.forEach(s=>parts.push(s.t,s.l.join(' ')));if(o.notes)parts.push(Object.values(o.notes).join(' '));return parts.join(' ').toLowerCase();}
+ELS.forEach(e=>e._h=hay(e)); LINKS.forEach(l=>l._h=hay(l)+' '+(l.a?EM[l.a].n:'')+' '+(l.b&&EM[l.b]?EM[l.b].n:''));
+function linksOf(id){return LINKS.filter(l=>l.a===id||l.b===id||(l.isbus&&false));}
+function peerName(L,id){if(L.bus)return 'SBI bus';const o=L.a===id?L.b:L.a;return o===id?'peer '+EM[id].n:(EM[o]?EM[o].n:'');}
+function endsText(L){if(L.isbus)return 'all 5GC control-plane NFs';if(L.bus)return EM[L.a].n+' ↔ SBI';if(L.a===L.b)return EM[L.a].n+' ↔ '+EM[L.a].n;return EM[L.a].n+' ↔ '+EM[L.b].n;}
+const PLANES={cp:'Control plane',up:'User plane',both:'Control + user plane',sbi:'Service-based (SBI)'};
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+const state={gens:new Set(),planes:{cp:true,up:true,sbi:true},rp:false,cups:false,q:'',proto:null,sel:null,view:'arch',lastGen:null,e2e:'lteup'};
+const PROTOS=[['gtpu','GTP-U'],['gtpc1','GTPv1-C'],['gtpc2','GTPv2-C'],['pfcp','PFCP'],['diameter','Diameter'],['ss7','MAP / SS7'],['sctp','SCTP'],['http2','HTTP/2 SBI'],['atm','ATM (legacy)']];
+
+/* =====================================================================
+   SVG RENDER
+   ===================================================================== */
+const svg=$('#map');
+const gZ=mk('g',{},svg), gBus=mk('g',{class:'bus'},svg), gL=mk('g',{},svg), gN=mk('g',{},svg), gLb=mk('g',{},svg);
+const NODE={}, LINK={};
+function drawZones(){ZONES.forEach(z=>{const g=mk('g',{class:'zone'},gZ);mk('rect',{x:z.x,y:z.y,width:z.w,height:z.h,rx:10},g);const pos=z.pos||'tl';const right=pos==='tr'||pos==='br',bottom=pos==='bl'||pos==='br';const t=mk('text',{x:right?z.x+z.w-12:z.x+12,y:bottom?z.y+z.h-10:z.y+19,'text-anchor':right?'end':'start'},g);t.textContent=z.t;});}
+function drawBus(){const L=LM.sbi;const g=mk('g',{class:'link sbi bus','data-id':'sbi',tabindex:0},gBus);g.style.setProperty('--lc',gcol('sa'));
+ mk('line',{x1:BUS.x1,y1:BUS.y,x2:BUS.x2,y2:BUS.y},g);mk('line',{x1:BUS.x1,y1:BUS.y,x2:BUS.x2,y2:BUS.y,stroke:'transparent','stroke-width':16,style:'stroke:transparent;opacity:1'},g);
+ const t=mk('text',{x:BUS.x1+2,y:BUS.y-9,'text-anchor':'start'},g);t.textContent='SBI';LINK.sbi={g,L};bindItem(g,'if','sbi');}
+function fitText(t,maxW){let fs=parseFloat(getComputedStyle(t).fontSize)||12;let len=t.getComputedTextLength();while(len>maxW&&fs>7){fs-=.5;t.style.fontSize=fs+'px';len=t.getComputedTextLength();}}
+function drawNodes(){
+ const order=ELS.slice().sort((a,b)=>(a.kind==='container'?-1:0)-(b.kind==='container'?-1:0));
+ order.forEach(E=>{const g=mk('g',{class:'node '+(E.kind||''),'data-id':E.id,tabindex:0,role:'button','aria-label':E.n},gN);
+  g.style.setProperty('--nc',elColor(E));
+  mk('rect',{class:'nb',x:E.x,y:E.y,width:E.w,height:E.h,rx:E.kind==='bar'?12:8},g);
+  if(E.kind==='container'){const t=mk('text',{class:'nm',x:E.x+E.w-12,y:E.y+20,style:'text-anchor:end'},g);t.textContent='gNB (5G SA) — CU/DU split';}
+  else if(E.kind==='bar'){const cx=E.x+E.w/2,cy=E.y+E.h/2;const t=mk('text',{class:'nm',x:cx,y:cy-4,transform:`rotate(-90 ${cx} ${cy})`},g);t.textContent=E.n;const s=mk('text',{class:'sb',x:cx,y:cy+14,transform:`rotate(-90 ${cx} ${cy})`},g);s.textContent=E.sb;}
+  else{const cx=E.x+E.w/2;const hasSb=!!E.sb;const t=mk('text',{class:'nm',x:cx,y:E.y+E.h/2+(hasSb?-3:5)},g);t.textContent=E.n;
+   fitText(t,E.w-10);
+   if(hasSb){const s=mk('text',{class:'sb',x:cx,y:E.y+E.h/2+12},g);s.textContent=E.sb;fitText(s,E.w-8);}
+   if(E.id==='ue'){const s2=mk('text',{class:'sb',x:cx,y:E.y+E.h/2+26},g);s2.textContent='multi-mode';}}
+  // generation bars
+  const gs=E.gens; const bw=Math.min(14,(E.w-16)/gs.length-2);
+  if(E.kind!=='container'&&E.kind!=='bar') gs.forEach((gk,i)=>mk('rect',{class:'gbar',x:E.x+8+i*(bw+3),y:E.y+4,width:bw,height:3,rx:1.5,style:`fill:${gcol(gk)}`},g));
+  NODE[E.id]={g,E};bindItem(g,'el',E.id);});}
+function linkPath(L){
+ if(L.loop){const E=EM[L.a];const [cx,cy]=cen(E);const dx=L.loop.dx||0;const s=L.loop.side;let d,lab;
+  if(s==='top'){const y=E.y,x=cx+dx;d=`M${x-13},${y} C${x-24},${y-44} ${x+24},${y-44} ${x+13},${y}`;lab=[x,y-38];}
+  else{const y=E.y+E.h,x=cx+dx;d=`M${x-13},${y} C${x-24},${y+44} ${x+24},${y+44} ${x+13},${y}`;lab=[x,y+38];}
+  return {d,lab};}
+ if(L.bus){const E=EM[L.a];const [cx]=cen(E);const above=E.y+E.h<BUS.y;const y1=above?E.y+E.h:E.y;return {d:`M${cx},${y1} L${cx},${BUS.y}`,lab:null};}
+ const A=EM[L.a],B=EM[L.b];const ca=cen(A),cb=cen(B);const ao=L.ao||[0,0],bo=L.bo||[0,0];const pa=[ca[0]+ao[0],ca[1]+ao[1]],pb=[cb[0]+bo[0],cb[1]+bo[1]];
+ if(L.pts){const s=clip(pa,L.pts[0],A),e=clip(pb,L.pts[L.pts.length-1],B);return {d:'M'+[s,...L.pts,e].map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' L')};}
+ if(L.curve){const mx=(pa[0]+pb[0])/2,my=(pa[1]+pb[1])/2;const dx=pb[0]-pa[0],dy=pb[1]-pa[1];const len=Math.hypot(dx,dy)||1;const c=[mx+dy/len*L.curve,my-dx/len*L.curve];
+  const s=clip(pa,c,A),e=clip(pb,c,B);return {d:`M${s[0]},${s[1]} Q${c[0]},${c[1]} ${e[0]},${e[1]}`};}
+ const s=clip(pa,pb,A),e=clip(pb,pa,B);return {d:`M${s[0]},${s[1]} L${e[0]},${e[1]}`};}
+function drawLinks(){
+ LINKS.forEach(L=>{if(L.isbus)return;const {d,lab}=linkPath(L);
+  const g=mk('g',{class:'link '+L.plane+(L.logical?' logical':''),'data-id':L.id,tabindex:0,role:'button','aria-label':L.n},gL);g.style.setProperty('--lc',lnColor(L));
+  const p=mk('path',{class:'v',d},g); if(L.plane==='both')mk('path',{class:'ov',d},g); mk('path',{class:'hit',d},g);
+  // label
+  const lg=mk('g',{class:'lbl','data-id':L.id},gLb);lg.style.setProperty('--lc',lnColor(L));
+  let pt; if(lab)pt=lab; else{const tl=p.getTotalLength();const q=p.getPointAtLength(tl*(L.lp!=null?L.lp:.5));pt=[q.x,q.y];}
+  if(L.lo){pt=[pt[0]+L.lo[0],pt[1]+L.lo[1]];}
+  const r=mk('rect',{},lg);const t=mk('text',{x:pt[0],y:pt[1]},lg);t.textContent=L.n;
+  const bb=t.getBBox();mk; r.setAttribute('x',bb.x-5);r.setAttribute('y',bb.y-2);r.setAttribute('width',bb.width+10);r.setAttribute('height',bb.height+4);r.setAttribute('rx',4);
+  if(L.bus){lg.classList.add('stublbl');}
+  LINK[L.id]={g,lg,L};bindItem(g,'if',L.id);bindItem(lg,'if',L.id);});}
+
+/* interactions on SVG items */
+let dragMoved=false;
+function bindItem(g,type,id){
+ g.addEventListener('click',ev=>{if(dragMoved)return;ev.stopPropagation();select(type,id);});
+ g.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();select(type,id);}});
+ g.addEventListener('mouseenter',ev=>showTip(ev,type,id));g.addEventListener('mousemove',moveTip);g.addEventListener('mouseleave',hideTip);}
+const tip=$('#tip');
+function showTip(ev,type,id){const o=type==='el'?EM[id]:LM[id];if(!o)return;
+ tip.innerHTML=`<b>${esc(o.n)}</b> ${type==='if'?'<span style="color:var(--muted)">'+esc(endsText(o))+'</span>':''}<span class="s">${esc(o.full||'')}</span>`;tip.style.display='block';moveTip(ev);}
+function moveTip(ev){const w=tip.offsetWidth,h=tip.offsetHeight;let x=ev.clientX+14,y=ev.clientY+14;if(x+w>innerWidth-8)x=ev.clientX-w-14;if(y+h>innerHeight-8)y=ev.clientY-h-14;tip.style.left=x+'px';tip.style.top=y+'px';}
+function hideTip(){tip.style.display='none';}
+
+/* pan / zoom */
+const VB0={x:0,y:0,w:1900,h:1310};let vb={...VB0};
+function setVB(){svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);}
+function zoomAt(f,cx,cy){const r=svg.getBoundingClientRect();const sc=Math.max(vb.w/r.width,vb.h/r.height);
+ // map client to svg coords honoring preserveAspectRatio xMidYMid meet
+ const offX=(r.width-vb.w/sc)/2,offY=(r.height-vb.h/sc)/2;const px=vb.x+(cx-r.left-offX)*sc,py=vb.y+(cy-r.top-offY)*sc;
+ const nw=Math.min(Math.max(vb.w*f,250),4000),k=nw/vb.w;vb={x:px-(px-vb.x)*k,y:py-(py-vb.y)*k,w:vb.w*k,h:vb.h*k};setVB();}
+const wrap=$('#svgwrap');
+wrap.addEventListener('wheel',ev=>{ev.preventDefault();zoomAt(ev.deltaY>0?1.12:1/1.12,ev.clientX,ev.clientY);},{passive:false});
+let drag=null;const pointers=new Map();let pinch0=null;
+wrap.addEventListener('pointerdown',ev=>{pointers.set(ev.pointerId,{x:ev.clientX,y:ev.clientY});
+ if(pointers.size===2){const [a,b]=[...pointers.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),vb:{...vb}};drag=null;return;}
+ drag={x:ev.clientX,y:ev.clientY,vb:{...vb}};dragMoved=false;});
+wrap.addEventListener('pointermove',ev=>{if(!pointers.has(ev.pointerId))return;pointers.set(ev.pointerId,{x:ev.clientX,y:ev.clientY});
+ if(pinch0&&pointers.size===2){const [a,b]=[...pointers.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(d>0){vb={...pinch0.vb};zoomAt(pinch0.d/d,(a.x+b.x)/2,(a.y+b.y)/2);}dragMoved=true;return;}
+ if(!drag)return;const dx=ev.clientX-drag.x,dy=ev.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>4){dragMoved=true;wrap.classList.add('drag');}
+ if(dragMoved){const r=svg.getBoundingClientRect();const sc=Math.max(vb.w/r.width,vb.h/r.height);vb.x=drag.vb.x-dx*sc;vb.y=drag.vb.y-dy*sc;setVB();}});
+function endPtr(ev){pointers.delete(ev.pointerId);if(pointers.size<2)pinch0=null;if(pointers.size===0){wrap.classList.remove('drag');setTimeout(()=>{drag=null;},0);}}
+wrap.addEventListener('pointerup',endPtr);wrap.addEventListener('pointercancel',endPtr);
+svg.addEventListener('click',ev=>{if(dragMoved){dragMoved=false;return;}if(ev.target===svg||ev.target.closest('.zone'))clearSel();});
+$('#zin').onclick=()=>{const r=svg.getBoundingClientRect();zoomAt(1/1.25,r.left+r.width/2,r.top+r.height/2);};
+$('#zout').onclick=()=>{const r=svg.getBoundingClientRect();zoomAt(1.25,r.left+r.width/2,r.top+r.height/2);};
+$('#zfit').onclick=()=>{vb={...VB0};setVB();};
+
+/* =====================================================================
+   STATE APPLICATION
+   ===================================================================== */
+function elVisible(E){if(E.cups)return state.cups;if(E.nocups)return !state.cups;return true;}
+function cupsOK(L){if(L.cups)return state.cups;if(!state.cups)return true;return ![L.a,L.b].some(x=>x&&EM[x]&&EM[x].nocups);}
+function linkVisible(L){
+ if(!cupsOK(L))return false;
+ if(L.isbus)return state.planes.sbi&&!state.rp;
+ if(L.bus)return state.planes.sbi&&!state.rp;
+ if(L.rp)return state.planes.sbi&&state.rp;
+ if(L.plane==='both')return state.planes.cp||state.planes.up;
+ return !!state.planes[L.plane];}
+function matchQ(o){if(!state.q)return true;return state.q.split(/\s+/).filter(Boolean).every(t=>o._h.includes(t));}
+function compute(){
+ const hasF=state.gens.size>0||!!state.q||!!state.proto;
+ const lv={};// id -> level
+ const linkOn=new Set(),elOn=new Set(),ctx=new Set();
+ LINKS.forEach(L=>{if(!linkVisible(L))return;let ok=true;
+  if(state.gens.size)ok=L.gens.some(g=>state.gens.has(g));
+  if(ok&&state.proto)ok=(L.protos||[]).includes(state.proto);
+  if(ok&&state.q)ok=matchQ(L);
+  if(ok)linkOn.add(L.id);});
+ ELS.forEach(E=>{if(!elVisible(E))return;let ok=true;if(state.gens.size)ok=E.gens.some(g=>state.gens.has(g));if(ok&&state.proto)ok=false;if(ok&&state.q)ok=matchQ(E);if(ok)elOn.add(E.id);});
+ linkOn.forEach(id=>{const L=LM[id];[L.a,L.b].forEach(x=>{if(!x||x==='bus')return;if(elOn.has(x))return;if(state.gens.size&&!state.q&&!state.proto)ctx.add(x);else elOn.add(x);});
+  if(L.bus)lv.__bus=1;});
+ // containers: if a child is on, mark container ctx
+ ['gnbdu','gnbcucp','gnbcuup'].forEach(c=>{if(elOn.has(c)&&!elOn.has('gnb'))ctx.add('gnb');});
+ ELS.forEach(E=>{lv['el:'+E.id]=!hasF?2:(elOn.has(E.id)?2:(ctx.has(E.id)?1:0));});
+ LINKS.forEach(L=>{lv['if:'+L.id]=!hasF?2:(linkOn.has(L.id)?2:0);});
+ // selection
+ if(state.sel){const R=new Set();const [t,id]=state.sel;R.add(t+':'+id);
+  if(t==='el'){LINKS.forEach(L=>{if(!linkVisible(L))return;if(L.a===id||L.b===id){R.add('if:'+L.id);[L.a,L.b].forEach(x=>x&&x!=='bus'&&R.add('el:'+x));if(L.bus)R.add('if:sbi');}});
+   if(id==='gnb')['gnbdu','gnbcucp','gnbcuup'].forEach(c=>{R.add('el:'+c);LINKS.forEach(L=>{if((L.a===c||L.b===c)&&linkVisible(L)){R.add('if:'+L.id);R.add('el:'+L.a);R.add('el:'+L.b);}});});
+   if(['gnbdu','gnbcucp','gnbcuup'].includes(id))R.add('el:gnb');}
+  else{const L=LM[id];if(L.isbus){LINKS.forEach(x=>{if(x.bus){R.add('if:'+x.id);R.add('el:'+x.a);}});}
+   else{[L.a,L.b].forEach(x=>x&&x!=='bus'&&R.add('el:'+x));if(L.bus)R.add('if:sbi');
+    if(['gnbdu','gnbcucp','gnbcuup'].some(c=>c===L.a||c===L.b))R.add('el:gnb');}}
+  Object.keys(lv).forEach(k=>{lv[k]=R.has(k)?3:Math.min(lv[k],1);});
+  if(!('if:sbi' in lv))lv['if:sbi']=R.has('if:sbi')?3:1;}
+ return {lv,linkOn,elOn,hasF};}
+function apply(){
+ const {lv,linkOn,elOn,hasF}=compute();
+ const cls=n=>n===3?'lv3':n===1?'lv1':n===0?'lv0':'';
+ Object.values(NODE).forEach(({g,E})=>{g.classList.toggle('hidden',!elVisible(E));g.classList.remove('lv0','lv1','lv3','sel');const c=cls(lv['el:'+E.id]);if(c)g.classList.add(c);if(state.sel&&state.sel[0]==='el'&&state.sel[1]===E.id)g.classList.add('sel');});
+ Object.values(LINK).forEach(({g,lg,L})=>{const vis=linkVisible(L);g.classList.toggle('hidden',!vis);if(lg)lg.classList.toggle('hidden',!vis);
+  [g,lg].forEach(x=>{if(!x)return;x.classList.remove('lv0','lv1','lv3','sel');});
+  let n=lv['if:'+L.id];if(L.isbus&&!state.sel){n=hasF?(state.gens.size?(state.gens.has('sa')?2:0):(lv.__bus?2:0)):2;if(state.q&&matchQ(L))n=2;}
+  const c=cls(n);if(c){g.classList.add(c);if(lg)lg.classList.add(c);}
+  if(state.sel&&state.sel[0]==='if'&&state.sel[1]===L.id){g.classList.add('sel');}});
+ // count
+ const qc=$('#qcount');if(state.q||state.proto){qc.textContent=`${linkOn.size} interfaces · ${elOn.size} elements`;}else qc.textContent='';
+ // chips
+ document.querySelectorAll('#genchips .chip[data-g]').forEach(c=>c.classList.toggle('on',state.gens.has(c.dataset.g)));
+ $('#genchips .chip[data-g="all"]')&&$('#genchips .chip[data-g="all"]').classList.toggle('on',state.gens.size===0);
+ const ps=$('#protosel');ps.value=state.proto||'';ps.classList.toggle('on',!!state.proto);
+ document.querySelectorAll('[data-cups]').forEach(b=>b.classList.toggle('on',(b.dataset.cups==='1')===state.cups));
+ document.querySelectorAll('[data-plane]').forEach(b=>{b.classList.toggle('on',state.planes[b.dataset.plane]);b.classList.toggle('off',!state.planes[b.dataset.plane]);});
+ document.querySelectorAll('[data-rp]').forEach(b=>b.classList.toggle('on',(b.dataset.rp==='1')===state.rp));
+ if(state.view==='table')renderTable();}
+
+/* =====================================================================
+   PANEL
+   ===================================================================== */
+const panel=$('#panel');
+function badgeHTML(gens){return `<div class="badges">${gens.map(g=>`<span class="gb" data-gen="${g}" style="--c:${gcol(g)}">${esc(GENS[g].n)}</span>`).join('')}</div>`;}
+function listHTML(a){return a&&a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'';}
+function kvHTML(a){return a&&a.length?`<div class="kv">${a.map(([k,v])=>`<div>${esc(k)}</div><div>${esc(v)}</div>`).join('')}</div>`:'';}
+function notesHTML(n){if(!n)return '';return Object.entries(n).map(([g,t])=>`<div class="note" style="--c:${gcol(g)}"><b>${esc(GENS[g]?GENS[g].n:g)}:</b> ${esc(t)}</div>`).join('');}
+function stacksHTML(st){if(!st)return '';return `<div class="stks">${st.map(s=>`<div class="stk"><div class="stk-t">${esc(s.t||'')}</div>${s.l.map(x=>`<div class="ly k-${kind(x)}">${esc(x)}</div>`).join('')}</div>`).join('')}</div>`;}
+function tipsHTML(t){return t&&t.length?t.map(x=>`<div class="tip">${esc(x)}</div>`).join(''):'';}
+function specsHTML(s){return s&&s.length?`<div class="specs">${s.map(esc).join(' · ')}</div>`:'';}
+function ifcBtn(L,ctxId){return `<button class="ifc" data-sel="if:${L.id}" style="--lc:${lnColor(L)}"><span class="sw ${L.plane==='cp'?'cp':L.plane==='sbi'?'sbi':''}"></span>${esc(L.n)} <i>${esc(ctxId?peerName(L,ctxId):endsText(L))}${L.rp?' · ref.pt':''}</i></button>`;}
+function renderPanel(){
+ const s=state.sel;
+ if(!s){renderOverview();return;}
+ const [t,id]=s;
+ if(t==='el'){const E=EM[id];let ls=LINKS.filter(L=>(L.a===id||L.b===id)&&cupsOK(L));
+  if(id==='gnb')ls=LINKS.filter(L=>['gnb','gnbdu','gnbcucp','gnbcuup'].some(c=>L.a===c||L.b===c));
+  const sbiNF=ls.some(L=>L.bus);
+  panel.innerHTML=`<h2>${esc(E.n)}</h2><div class="full">${esc(E.full)}</div>${badgeHTML(E.gens)}
+  <p>${esc(E.sum)}</p>
+  ${E.fn?`<h3>Key functions</h3>${listHTML(E.fn)}`:''}
+  ${notesHTML(E.notes)}
+  ${E.kv?`<h3>Identifiers</h3>${kvHTML(E.kv)}`:''}
+  ${ls.length?`<h3>Interfaces (${ls.length})</h3><div class="ifcs">${ls.map(L=>ifcBtn(L,id)).join('')}${sbiNF?ifcBtn(LM.sbi,null):''}</div>`:''}
+  ${E.tips?`<h3>Troubleshooting quick refs</h3>${tipsHTML(E.tips)}`:''}
+  ${E.specs?`<h3>Key specifications</h3>${specsHTML(E.specs)}`:''}
+  ${toolsHTML()}`;}
+ else{const L=LM[id];const ends=L.isbus?'':(L.a===L.b?`<button data-sel="el:${L.a}">${esc(EM[L.a].n)}</button><span>↔</span><span style="color:var(--muted)">neighbouring ${esc(EM[L.a].n)}</span>`:`<button data-sel="el:${L.a}">${esc(EM[L.a].n)}</button><span>↔</span>${L.b==='bus'?`<button data-sel="if:sbi">SBI bus</button>`:`<button data-sel="el:${L.b}">${esc(EM[L.b].n)}</button>`}`);
+  panel.innerHTML=`<h2>${esc(L.n)}<span class="k">${esc(PLANES[L.plane])}${L.logical?' · logical':''}${L.rp?' · reference point':''}</span></h2><div class="full">${esc(L.full)}</div>
+  ${ends?`<div class="ends">${ends}</div>`:''}${badgeHTML(L.gens)}
+  <p>${esc(L.sum)}</p>
+  <h3>Protocol stack</h3>${stacksHTML(L.st)}
+  ${notesHTML(L.notes)}
+  ${L.kv?`<h3>Ports · IDs · parameters</h3>${kvHTML(L.kv)}`:''}
+  ${L.pr?`<h3>Key procedures / messages</h3>${listHTML(L.pr)}`:''}
+  ${L.isbus?`<h3>Attached NFs</h3><div class="ifcs">${LINKS.filter(x=>x.bus).map(x=>ifcBtn(x,null)).join('')}</div>`:''}
+  ${L.tips?`<h3>Troubleshooting quick refs</h3>${tipsHTML(L.tips)}`:''}
+  ${L.specs?`<h3>Key specifications</h3>${specsHTML(L.specs)}`:''}
+  ${toolsHTML()}`;}
+ panel.scrollTop=0;}
+function toolsHTML(){return `<div class="paneltools"><button data-act="copy">Copy link to this item</button>${state.view!=='arch'?'<button data-act="map">Show on map</button>':''}<button data-act="clear">Close</button></div>`;}
+function renderOverview(){
+ const g=state.lastGen&&state.gens.has(state.lastGen)?state.lastGen:null;
+ if(g){const I=GENINFO[g];panel.innerHTML=`<h2 style="color:${gcol(g)}">${esc(GENS[g].n)}</h2><div class="full">${esc(I.rel)}</div><p>${esc(I.sum)}</p><h3>Architecture highlights</h3>${listHTML(I.pts)}
+  <h3>Elements</h3><div class="ifcs">${ELS.filter(e=>e.gens.includes(g)&&elVisible(e)).map(e=>`<button class="ifc" data-sel="el:${e.id}" style="font-family:var(--sans)">${esc(e.n)}</button>`).join('')||'<span style="color:var(--muted)">—</span>'}</div>
+  <h3>Interfaces</h3><div class="ifcs">${LINKS.filter(l=>l.gens.includes(g)&&!l.bus&&cupsOK(l)).map(l=>ifcBtn(l,null)).join('')}</div>
+  <h3>Key specifications</h3><div class="specs">${esc(I.specs)}</div>`;return;}
+ panel.innerHTML=`<h2>Quick orientation</h2>
+ <p style="color:var(--muted)">Click any element or interface on the map for its role, protocol stack, key procedures, ports and spec references. Generation chips highlight what belongs to each system (click several to combine, double-click for one only); elements that only take part through another generation’s interface are shown half-dimmed. Coloured bars on a box show which generations use it.</p>
+ <p style="color:var(--muted);font-size:12.5px">Mouse wheel / pinch to zoom · drag to pan · <b>/</b> focuses search · <b>Esc</b> clears · the URL updates with your selection, so you can send a colleague a link straight to an interface.</p>
+ <h3>Generations</h3><div class="gcards">${GENORDER.map(k=>`<div class="gcard" data-gen="${k}" style="--c:${gcol(k)}"><b>${esc(GENS[k].n)} <small style="color:var(--muted);font-weight:400">${esc(GENS[k].s)}</small></b><span>${esc(GENINFO[k].sum)}</span></div>`).join('')}</div>
+ <h3>Well-known ports &amp; SCTP PPIDs</h3>
+ <table class="qr"><tr><th>Protocol</th><th>Transport</th><th>Used on</th></tr>
+ <tr><td>GTP-C v1/v2</td><td>UDP 2123</td><td>Gn/Gp, S11, S5/S8, S10, S3, S4, Sv, N26</td></tr>
+ <tr><td>GTP-U</td><td>UDP 2152</td><td>Iu-PS, Gn, S1-U, S5/S8, X2-U, S12, N3, N9, F1-U, Xn-U</td></tr>
+ <tr><td>GTP′</td><td>UDP/TCP 3386</td><td>Ga / Gz (CDR transfer)</td></tr>
+ <tr><td>PFCP</td><td>UDP 8805</td><td>N4, Sxa/Sxb/Sxc</td></tr>
+ <tr><td>Diameter</td><td>TCP/SCTP 3868 (TLS/DTLS 5868)</td><td>S6a, S13, Gx, Rx, Gy, Rf, Cx, Sh</td></tr>
+ <tr><td>S1AP</td><td>SCTP 36412 · PPID 18</td><td>S1-MME</td></tr>
+ <tr><td>X2AP</td><td>SCTP 36422 · PPID 27</td><td>X2-C (LTE and EN-DC)</td></tr>
+ <tr><td>NGAP</td><td>SCTP 38412 · PPID 60</td><td>N2</td></tr>
+ <tr><td>XnAP</td><td>SCTP 38422 · PPID 61</td><td>Xn-C</td></tr>
+ <tr><td>F1AP</td><td>SCTP 38472 · PPID 62</td><td>F1-C</td></tr>
+ <tr><td>E1AP</td><td>SCTP 38462 · PPID 64</td><td>E1</td></tr>
+ <tr><td>SGsAP</td><td>SCTP 29118</td><td>SGs</td></tr>
+ <tr><td>M3UA</td><td>SCTP 2905 · PPID 3</td><td>Iu (SIGTRAN), MAP over IP</td></tr>
+ <tr><td>NBAP</td><td>SCTP · PPID 25</td><td>Iub (IP)</td></tr>
+ <tr><td>SBI</td><td>HTTP/2 over TCP (TLS)</td><td>5GC NFs, N32 – port not fixed</td></tr></table>
+ <h3>Standardized QCI / 5QI (selection)</h3>
+ <table class="qr"><tr><th>Value</th><th>Type</th><th>Typical service</th></tr>
+ <tr><td>1</td><td>GBR</td><td>Conversational voice (VoLTE / VoNR media)</td></tr>
+ <tr><td>2</td><td>GBR</td><td>Conversational video</td></tr>
+ <tr><td>5</td><td>Non-GBR</td><td>IMS signalling (SIP)</td></tr>
+ <tr><td>6, 8, 9</td><td>Non-GBR</td><td>TCP-based data (9 is the usual default bearer / flow)</td></tr>
+ <tr><td>7</td><td>Non-GBR</td><td>Voice / live video streaming, interactive gaming</td></tr></table>
+ <p style="color:var(--muted);font-size:12px">5QI 1–9 keep the QCI meanings; 5G adds further values (e.g. 65–70 mission-critical, 82–90 delay-critical GBR).</p>
+ <h3>Scope</h3><p style="color:var(--muted);font-size:13px">Reference architecture per 3GPP R99–R18 and GSMA guidelines. Some optional nodes are left out for readability and are described in the text of the related element: SMSF, LMF, NSSAAF, BSF, 5G-EIR, N3IWF/TNGF, ePDG/3GPP AAA (S2b, SWm, SWx), SMSC, gsmSCF (CAMEL), TDF (Sd, Sxc), SCEF (T6a), CBC, BM-SC, DRA/DEA. Vendor implementations often combine nodes (e.g., GGSN/PGW/SMF+UPF, HLR/HSS/UDM). Use the EPC toggle for the R14 CUPS split (SGW-C/U, PGW-C/U, Sxa, Sxb). The ng-eNB covers LTE connected to the 5GC (Options 4, 5, 7).</p><p class="specs">Version ${esc(VERSION)}</p>`;}
+panel.addEventListener('click',ev=>{const b=ev.target.closest('[data-sel],[data-gen],[data-act]');if(!b)return;
+ if(b.dataset.sel){const [t,id]=b.dataset.sel.split(':');select(t,id);return;}
+ if(b.dataset.gen){toggleGen(b.dataset.gen,true);return;}
+ const a=b.dataset.act;if(a==='clear')clearSel();if(a==='map')setView('arch');
+ if(a==='copy'){const url=location.href;(navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>toast('Link copied')).catch(()=>toast('Copy the address bar URL: '+location.hash));}});
+function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),1800);}
+
+/* =====================================================================
+   ACTIONS
+   ===================================================================== */
+function select(t,id){if(t==='if'&&!LM[id])return;if(t==='el'&&!EM[id])return;
+ {const o=t==='el'?EM[id]:LM[id];if(o.cups&&!state.cups)state.cups=true;else if(state.cups&&(t==='el'?o.nocups:!cupsOK(o)))state.cups=false;}
+ const L=t==='if'?LM[id]:null; if(L&&L.rp&&!state.rp){state.rp=true;} if(L&&L.bus&&state.rp){state.rp=false;}
+ if(L){const pl=L.plane==='both'?null:L.plane;if(pl&&!state.planes[pl])state.planes[pl]=true;if(L.plane==='both'&&!state.planes.cp&&!state.planes.up)state.planes.cp=true;}
+ state.sel=[t,id];updateHash();apply();renderPanel();if(state.view==='table')renderTable();}
+function clearSel(){state.sel=null;updateHash();apply();renderPanel();}
+function toggleGen(g,exclusive){if(g==='all'){state.gens.clear();state.lastGen=null;}
+ else if(exclusive){state.gens=new Set([g]);state.lastGen=g;}
+ else{if(state.gens.has(g)){state.gens.delete(g);if(state.lastGen===g)state.lastGen=[...state.gens].pop()||null;}else{state.gens.add(g);state.lastGen=g;}}
+ state.sel=null;updateHash();apply();renderPanel();}
+function updateHash(){let h='';if(state.sel)h=(state.sel[0]==='el'?'el=':'if=')+state.sel[1];else if(state.gens.size)h='gen='+[...state.gens].join(',');
+ try{history.replaceState(null,'',h?'#'+h:location.pathname+location.search);}catch(e){}}
+function readHash(){const h=decodeURIComponent(location.hash.slice(1));if(!h)return;const [k,v]=h.split('=');
+ if(k==='el'&&EM[v])select('el',v);else if(k==='if'&&LM[v])select('if',v);else if(k==='gen'){v.split(',').forEach(g=>{if(GENS[g]){state.gens.add(g);state.lastGen=g;}});apply();renderPanel();}}
+
+/* header controls */
+function buildChips(){const c=$('#genchips');
+ c.innerHTML=`<span class="chip plain" data-g="all" title="Show everything">All</span>`+GENORDER.map(g=>`<span class="chip" data-g="${g}" style="--c:${gcol(g)}" title="Click to toggle; double-click to show only this"><span class="dot"></span>${esc(GENS[g].n)}<small>${esc(GENS[g].s)}</small></span>`).join('');
+ c.addEventListener('click',ev=>{const ch=ev.target.closest('.chip');if(!ch)return;toggleGen(ch.dataset.g,false);});
+ c.addEventListener('dblclick',ev=>{const ch=ev.target.closest('.chip');if(!ch||ch.dataset.g==='all')return;toggleGen(ch.dataset.g,true);});
+ const ps=$('#protosel');ps.innerHTML='<option value="">any</option>'+PROTOS.map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join('');
+ ps.addEventListener('change',()=>{state.proto=ps.value||null;apply();});}
+document.querySelectorAll('[data-plane]').forEach(b=>b.onclick=()=>{state.planes[b.dataset.plane]=!state.planes[b.dataset.plane];apply();});
+document.querySelectorAll('[data-cups]').forEach(b=>b.onclick=()=>{state.cups=b.dataset.cups==='1';if(state.sel){const [t,id]=state.sel;const o=t==='el'?EM[id]:LM[id];if(t==='el'?!elVisible(o):!cupsOK(o))state.sel=null;}updateHash();apply();renderPanel();});
+document.querySelectorAll('[data-rp]').forEach(b=>b.onclick=()=>{state.rp=b.dataset.rp==='1';if(state.sel&&state.sel[0]==='if'){const L=LM[state.sel[1]];if((L.rp&&!state.rp)||((L.bus||L.isbus)&&state.rp))state.sel=null;}apply();renderPanel();});
+let qT;$('#search').addEventListener('input',ev=>{clearTimeout(qT);qT=setTimeout(()=>{state.q=ev.target.value.trim().toLowerCase();apply();},120);});
+$('#theme').onclick=()=>{document.body.classList.toggle('light');try{localStorage.setItem('mna-theme',document.body.classList.contains('light')?'light':'dark');}catch(e){}};
+try{if(localStorage.getItem('mna-theme')==='light')document.body.classList.add('light');}catch(e){}
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if(document.activeElement===$('#search')&&state.q){$('#search').value='';state.q='';apply();return;}clearSel();}
+ if(ev.key==='/'&&document.activeElement!==$('#search')){ev.preventDefault();$('#search').focus();}});
+
+/* views */
+function setView(v){state.view=v;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+ ['arch','e2e','table'].forEach(k=>$('#view-'+k).hidden=k!==v);$('#toolbar').style.opacity=v==='e2e'?.45:1;
+ if(v==='table')renderTable();if(v==='e2e')renderE2E();renderPanel();}
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+
+/* table */
+let sortKey=null;
+function renderTable(){const {linkOn,hasF}=compute();const tb=$('#itable tbody');
+ let rows=LINKS.filter(L=>{if(L.bus||!cupsOK(L))return false;if(L.plane==='both'){if(!state.planes.cp&&!state.planes.up)return false;}else if(!state.planes[L.plane])return false;
+  if(state.gens.size&&!L.gens.some(g=>state.gens.has(g)))return false;if(state.proto&&!(L.protos||[]).includes(state.proto))return false;if(state.q&&!matchQ(L))return false;return true;});
+ if(sortKey==='name')rows.sort((a,b)=>a.n.localeCompare(b.n,undefined,{numeric:true}));
+ if(sortKey==='ends')rows.sort((a,b)=>endsText(a).localeCompare(endsText(b)));
+ if(sortKey==='plane')rows.sort((a,b)=>a.plane.localeCompare(b.plane));
+ tb.innerHTML=rows.map(L=>`<tr data-id="${L.id}" class="${state.sel&&state.sel[1]===L.id?'sel':''}"><td class="nm" style="color:${lnColor(L)}">${esc(L.n)}${L.rp?' <small style="color:var(--muted);font-weight:400">ref.pt</small>':''}</td><td>${esc(endsText(L))}</td><td><div class="gdots">${L.gens.map(g=>`<span style="--c:${gcol(g)}">${esc(GENS[g].n)}</span>`).join('')}</div></td><td>${esc(PLANES[L.plane])}</td><td class="mono">${esc((L.st||[]).map(s=>s.l.join(' / ')).join('  ‖  '))}</td><td class="mono">${esc((L.specs||[]).slice(0,3).join(', '))}</td></tr>`).join('');}
+$('#itable tbody').addEventListener('click',ev=>{const tr=ev.target.closest('tr');if(tr)select('if',tr.dataset.id);});
+document.querySelectorAll('#itable th[data-sort]').forEach(th=>th.onclick=()=>{sortKey=th.dataset.sort;renderTable();});
+
+/* e2e */
+function layerHTML(x){if(x.includes(' | ')){const [a,b]=x.split(' | ');return `<div class="split"><div class="ly k-${kind(a)}">${esc(a)}</div><div class="ly k-${kind(b)}">${esc(b)}</div></div>`;}return `<div class="ly k-${kind(x)}">${esc(x)}</div>`;}
+function renderE2E(){const nav=$('#e2enav');
+ nav.innerHTML=GENORDER.filter(g=>E2E.some(s=>s.g===g)).map(g=>`<h4>${esc(GENS[g].n)}</h4>`+E2E.filter(s=>s.g===g).map(s=>`<button data-e="${s.id}" class="${state.e2e===s.id?'on':''}" style="--c:${gcol(g)}"><i></i>${esc(s.t)}</button>`).join('')).join('');
+ const S=E2E.find(s=>s.id===state.e2e)||E2E[0];
+ let h=`<h2 style="color:${gcol(S.g)}">${esc(S.t)}</h2><p class="sum">${esc(S.sum)}</p><div class="e2e">`;
+ S.nodes.forEach((n,i)=>{h+=`<div class="e2e-node"><div class="e2e-name">${esc(n.n)}</div><div class="e2e-stacks">${n.s.map(st=>`<div class="e2e-stack ${st.ghost?'ghost':''}"><div class="e2e-side">${esc(st.h||'')}</div>${st.l.map(layerHTML).join('')}</div>`).join('')}</div></div>`;
+  if(i<S.nodes.length-1)h+=`<div class="e2e-gap"><span>${esc(S.gaps[i]||'')}</span></div>`;});
+ h+=`</div><div class="klegend">${Object.entries(KINDNAMES).map(([k,v])=>`<span class="k-${k}">${esc(v)}</span>`).join('')}</div>`;
+ h+=`<div class="e2e-notes"><h3 style="font-size:11.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)">Notes</h3>${listHTML(S.notes)}</div>`;
+ $('#e2emain').innerHTML=h;}
+$('#e2enav').addEventListener('click',ev=>{const b=ev.target.closest('button[data-e]');if(!b)return;state.e2e=b.dataset.e;renderE2E();});
+
+/* legend */
+function buildLegend(){const sw=(dash,w,ov)=>`<svg width="26" height="10"><line x1="2" y1="5" x2="24" y2="5" stroke="var(--ink)" stroke-width="${w}" ${dash?`stroke-dasharray="${dash}"`:''} stroke-linecap="round"/>${ov?`<line x1="2" y1="5" x2="24" y2="5" stroke="var(--panel)" stroke-width="1.4" stroke-dasharray="6 5"/>`:''}</svg>`;
+ $('#legend').innerHTML=`<span class="hide" id="leghide">hide</span><div class="row"><span>${sw('7 5',2.2)} Control</span><span>${sw('',2.2)} User</span><span>${sw('',4,true)} Control + user</span><span>${sw('1.5 4.5',2.6)} SBI</span><span>${sw('12 4 2 4',1.6)} Logical (NAS)</span><span style="color:var(--muted)">colour = generation (see chips)</span></div>`;
+ $('#leghide').onclick=()=>{const l=$('#legend');l.classList.toggle('mini');$('#leghide').textContent=l.classList.contains('mini')?'Legend ▸':'hide';};}
+
+/* init */
+function sizeMain(){document.documentElement.style.setProperty('--hdr',($('#hdr').offsetHeight+$('#toolbar').offsetHeight)+'px');}
+window.addEventListener('resize',sizeMain);
+$('#ver').textContent='v'+VERSION;buildChips();buildLegend();if(innerWidth<700){$('#legend').classList.add('mini');$('#leghide').textContent='Legend ▸';}drawZones();drawBus();drawNodes();drawLinks();sizeMain();apply();renderPanel();readHash();
+window.addEventListener('hashchange',readHash);
+</script>
+</body>
+</html>
