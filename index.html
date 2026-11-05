@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="version" content="2026.11.05">
+<meta name="version" content="2026.11.05.2">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mobile Network Navigator · 2G · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
 <style>
@@ -176,16 +176,24 @@ table.qr td:first-child{font-family:var(--mono)}
 .e2e-node{display:flex;flex-direction:column;align-items:stretch;flex:0 0 auto}
 .e2e-name{text-align:center;font-weight:650;font-size:13px;padding:6px 8px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--panel)}
 .e2e-stacks{display:flex;gap:6px;align-items:flex-end;padding:8px;border:1px solid var(--line);border-radius:0 0 8px 8px;background:var(--panel)}
-.e2e-stack{display:flex;flex-direction:column;justify-content:flex-end;width:132px}
+.e2e-stack{display:flex;flex-direction:column;justify-content:flex-end;width:120px}
 .e2e-stack.ghost{opacity:.55}
 .e2e-side{font-size:10.5px;color:var(--muted);text-align:center;margin-bottom:3px;min-height:14px}
 .e2e-stack .ly{height:30px;display:flex;align-items:center;justify-content:center;font-size:11px}
 .e2e-stack .split{display:flex;gap:2px;margin-top:2px}
 .e2e-stack .split .ly{flex:1;margin-top:0;font-size:10px;padding:2px}
-.e2e-gap{flex:0 0 74px;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:16px;position:relative}
+.e2e-gap{flex:0 0 66px;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:16px;position:relative}
 .e2e-gap:before{content:"";position:absolute;left:4px;right:4px;bottom:22px;border-top:2px dashed var(--faint)}
 .e2e-gap span{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:2px 7px;font-family:var(--mono);font-size:11px;white-space:nowrap;margin-bottom:-2px}
 .e2e-notes{max-width:980px;margin-top:10px}
+.e2e-hint{color:var(--muted);font-size:12px;margin:-6px 0 12px}
+.e2e-path-t{font-size:12px;font-weight:650;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:14px 0 2px}
+.e2e .ly{transition:opacity .12s;cursor:default}
+.e2e.peering .ly{opacity:.22}
+.e2e.peering .ly.peer{opacity:1;box-shadow:0 0 0 2px var(--ink) inset}
+.e2e-tail{flex:0 0 auto;padding-left:6px}
+.e2e-tail:before{right:auto;width:40px}
+.e2e-tail span{margin-left:44px}
 .klegend{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
 .klegend span{font-size:11px;padding:3px 8px;border-radius:3px;color:#fff}
 #tip{position:fixed;pointer-events:none;z-index:50;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:7px 9px;max-width:330px;font-size:12.5px;line-height:1.4;box-shadow:0 6px 20px rgba(0,0,0,.35);display:none}
@@ -244,7 +252,7 @@ table.qr td:first-child{font-family:var(--mono)}
 <div id="tip"></div>
 <script>
 'use strict';
-const VERSION = '2026.11.05';
+const VERSION = '2026.11.05.2';
 /* =====================================================================
    DATA
    ===================================================================== */
@@ -1338,11 +1346,11 @@ rp('n34','nssf','nwdaf','N34','Nnwdaf analytics consumed by the NSSF, e.g. slice
 /* End-to-end stack scenarios --------------------------------------------- */
 const E2E = [
 {id:'2gup',g:'2g',t:'2G GPRS / EDGE user plane (Gb mode)',sum:'LLC and SNDCP run end to end between MS and SGSN; the BSS (PCU) terminates RLC/MAC and relays LLC frames over Gb. GPRS ciphering (GEA) is in LLC.',
- nodes:[{n:'MS',s:[{l:['Application','IP','SNDCP','LLC','RLC / MAC','GSM L1']}]},
+ nodes:[{n:'MS',s:[{l:['Application','IP (user)','SNDCP','LLC','RLC / MAC','GSM L1']}]},
   {n:'BSS (BTS + BSC/PCU)',s:[{h:'Um',l:['RLC / MAC','GSM L1']},{h:'Gb',l:['BSSGP','Network Service','FR | UDP/IP','L1']}]},
   {n:'SGSN',s:[{h:'Gb',l:['SNDCP','LLC','BSSGP','Network Service','FR | UDP/IP','L1']},{h:'Gn',l:['GTP-U','UDP','IP','L2','L1']}]},
   {n:'GGSN',s:[{h:'Gn',l:['GTP-U','UDP','IP','L2','L1']},{h:'Gi',l:['IP (user)','L2','L1']}]},
-  {n:'Server',s:[{l:['Application','IP','L2','L1']}]}],
+  {n:'Server',s:[{l:['Application','IP (user)','L2','L1']}]}],
  gaps:['Um','Gb','Gn','Gi'],
  notes:['Between BTS and PCU the RLC/MAC blocks travel in PCU frames over Abis (vendor-specific).','There is no Direct Tunnel in Gb mode – the SGSN is always in the user plane.','With an S4-SGSN the Gn side is replaced by S4 to an SGW and S5 to a PGW.']},
 {id:'2gcp',g:'2g',t:'GSM CS control plane (MS ↔ MSC)',sum:'CM and MM (carried as DTAP) run end to end between MS and MSC; RR terminates in the BSC, LAPDm runs on the radio, RSL on Abis and BSSAP on the A interface.',
@@ -1352,20 +1360,21 @@ const E2E = [
   {n:'MSC Server',s:[{h:'A',l:['CM (CC / SS / SMS)','MM','BSSMAP / DTAP','SCCP','MTP3 | M3UA','MTP2 | SCTP','MTP1 | IP']}]}],
  gaps:['Um','Abis','A'],
  notes:['The BTS relays RR messages inside RSL (Data Request / Indication); a few RR functions such as ciphering start and measurement pre-processing are performed in the BTS.','CM and MM pass transparently through the BSC as DTAP.']},
-{id:'2gcs',g:'2g',t:'GSM CS speech path (A over TDM)',sum:'The radio speech codec is converted to 64 kbit/s G.711 in the TRAU. With A over IP the transcoder can move into the MGW, so the compressed codec (e.g. AMR) travels as RTP over the A interface.',
+{id:'2gcs',g:'2g',t:'GSM CS speech path (A over TDM)',sum:'The radio speech codec is carried in TRAU frames from the BTS, switched by the BSC, and converted to 64 kbit/s G.711 in the TRAU. With A over IP the transcoder can move into the MGW, so the compressed codec (e.g. AMR) travels as RTP over the A interface.',
  nodes:[{n:'MS',s:[{l:['Speech codec (FR / EFR / HR / AMR)','Channel coding','GSM L1']}]},
   {n:'BTS',s:[{h:'Um',l:['Channel coding','GSM L1']},{h:'Abis',l:['TRAU frames','16 / 8 kbit/s sub-TS','E1']}]},
-  {n:'TRAU (in the BSS)',s:[{h:'Ater',l:['TRAU frames','16 kbit/s sub-TS','E1']},{h:'A',l:['G.711 PCM','64 kbit/s TS','E1']}]},
+  {n:'BSC (switching only)',s:[{h:'Abis',l:['16 / 8 kbit/s sub-TS','E1']},{h:'Ater',l:['16 / 8 kbit/s sub-TS','E1']}]},
+  {n:'TRAU (in the BSS)',s:[{h:'Ater',l:['Speech codec (FR / EFR / HR / AMR)','TRAU frames','16 / 8 kbit/s sub-TS','E1']},{h:'A',l:['G.711 PCM','64 kbit/s TS','E1']}]},
   {n:'CS-MGW',s:[{h:'A',l:['G.711 PCM','64 kbit/s TS','E1']},{h:'Nb',l:['Nb UP (G.711 / AMR)','RTP','UDP','IP']}]}],
- gaps:['Um','Abis · BSC · Ater','A'],
- notes:['The BSC switches the 16 kbit/s sub-timeslots between Abis and Ater; it does not process the speech itself.','TFO (tandem-free operation) and TrFO avoid double transcoding for mobile-to-mobile calls.']},
+ gaps:['Um','Abis','Ater','A'],
+ notes:['The BSC switches the 16 / 8 kbit/s sub-timeslots between Abis and Ater; it does not process the speech itself.','TFO (tandem-free operation) and TrFO avoid double transcoding for mobile-to-mobile calls.']},
 {id:'3gup',g:'3g',t:'3G PS user plane (R99 / R4)',sum:'User IP packets are tunnelled from the GGSN to the RNC in GTP-U; the RNC hosts PDCP/RLC/MAC and the Node B only provides L1 via the Iub frame protocol.',
- nodes:[{n:'UE',s:[{l:['Application','IP / PPP','PDCP','RLC','MAC','WCDMA L1']}]},
+ nodes:[{n:'UE',s:[{l:['Application','IP / PPP (user)','PDCP','RLC','MAC','WCDMA L1']}]},
   {n:'Node B',s:[{h:'Uu',l:['WCDMA L1']},{h:'Iub',l:['Iub FP','UDP/IP | AAL2','L2/L1 | ATM']}]},
   {n:'RNC',s:[{h:'Iub',l:['PDCP','RLC','MAC','Iub FP','UDP/IP | AAL2','L2/L1 | ATM']},{h:'Iu-PS',l:['GTP-U','UDP','IP','L2','L1']}]},
   {n:'SGSN',s:[{h:'Iu-PS',l:['GTP-U','UDP','IP','L2','L1']},{h:'Gn',l:['GTP-U','UDP','IP','L2','L1']}]},
   {n:'GGSN',s:[{h:'Gn',l:['GTP-U','UDP','IP','L2','L1']},{h:'Gi',l:['IP (user)','L2','L1']}]},
-  {n:'Server',s:[{l:['Application','IP','L2','L1']}]}],
+  {n:'Server',s:[{l:['Application','IP (user)','L2','L1']}]}],
  gaps:['Uu','Iub','Iu-PS','Gn','Gi'],
  notes:['R99/R4 Iu-PS user plane ran GTP-U over IP over AAL5/ATM; Ethernet/IP became common later.','The SGSN relays GTP-U between Iu-PS and Gn tunnels (two tunnels, different TEIDs).']},
 {id:'3gcp',g:'3g',t:'3G PS control plane (UE ↔ SGSN)',sum:'GMM/SM NAS is carried transparently in RRC (UE–RNC) and in RANAP Direct Transfer (RNC–SGSN).',
@@ -1375,24 +1384,30 @@ const E2E = [
   {n:'SGSN',s:[{h:'Iu-PS',l:['GMM / SM','RANAP','SCCP','M3UA','SCTP','IP','L2 / L1']}]}],
  gaps:['Uu','Iub','Iu-PS'],
  notes:['ATM-based Iu: RANAP / SCCP / MTP3-B / SSCF-NNI / SSCOP / AAL5 / ATM.','NBAP (RNC ↔ Node B) is the Node B’s own control protocol and is not on this UE signalling path.']},
-{id:'hspaup',g:'hspa',t:'HSPA user plane with Direct Tunnel (R7+)',sum:'Scheduling and HARQ move to the Node B (MAC-ehs/MAC-i); the SGSN is bypassed in the user plane.',
- nodes:[{n:'UE',s:[{l:['Application','IP','PDCP','RLC','MAC-d','MAC-ehs | MAC-i/is','WCDMA L1']}]},
-  {n:'Node B',s:[{h:'Uu',l:['MAC-ehs | MAC-i','WCDMA L1']},{h:'Iub',l:['HS-DSCH | E-DCH FP','UDP','IP','L2 / L1']}]},
-  {n:'RNC',s:[{h:'Iub',l:['PDCP','RLC','MAC-d','MAC-is (UL)','HS-DSCH | E-DCH FP','UDP','IP','L2 / L1']},{h:'Iu-PS (DT)',l:['GTP-U','UDP','IP','L2','L1']}]},
-  {n:'SGSN',s:[{h:'control only',ghost:true,l:['RANAP ↔ RNC','GTPv1-C ↔ GGSN']}]},
-  {n:'GGSN',s:[{h:'Gn-U',l:['GTP-U','UDP','IP','L2','L1']},{h:'Gi',l:['IP (user)','L2','L1']}]},
-  {n:'Server',s:[{l:['Application','IP','L2','L1']}]}],
- gaps:['Uu','Iub','(SGSN bypassed)','Gn-U','Gi'],
- notes:['DL: MAC-d (RNC) → HS-DSCH FP → MAC-hs/ehs (Node B scheduler + HARQ). UL: MAC-e/i (Node B HARQ, scheduling) → E-DCH FP → MAC-es/is in the SRNC (reordering, macro-diversity combining).','Without Direct Tunnel the SGSN relays GTP-U exactly as in R99.']},
+{id:'hspaup',g:'hspa',t:'HSPA user plane with Direct Tunnel (R7+)',sum:'Scheduling and HARQ move to the Node B (MAC-ehs / MAC-i); with Direct Tunnel the GTP-U tunnel runs from the RNC straight to the GGSN, while the SGSN only controls it.',
+ paths:[
+ {t:'User plane (Direct Tunnel)',
+  nodes:[{n:'UE',s:[{l:['Application','IP (user)','PDCP','RLC','MAC-d','MAC-ehs | MAC-i/is@mac-i+mac-is','WCDMA L1']}]},
+   {n:'Node B',s:[{h:'Uu',l:['MAC-ehs | MAC-i','WCDMA L1']},{h:'Iub',l:['HS-DSCH FP | E-DCH FP','UDP','IP','L2 / L1']}]},
+   {n:'RNC',s:[{h:'Iub',l:['PDCP','RLC','MAC-d','MAC-is (UL)','HS-DSCH FP | E-DCH FP','UDP','IP','L2 / L1']},{h:'Iu-PS (DT)',l:['GTP-U','UDP','IP','L2','L1']}]},
+   {n:'GGSN',s:[{h:'Gn-U',l:['GTP-U','UDP','IP','L2','L1']},{h:'Gi',l:['IP (user)','L2','L1']}]},
+   {n:'Server',s:[{l:['Application','IP (user)','L2','L1']}]}],
+  gaps:['Uu','Iub','Direct Tunnel','Gi']},
+ {t:'Control of the tunnel (SGSN in the control plane only)',
+  nodes:[{n:'RNC',s:[{h:'Iu-PS',l:['RANAP','SCCP','M3UA','SCTP','IP','L2 / L1']}]},
+   {n:'SGSN',s:[{h:'Iu-PS',l:['RANAP','SCCP','M3UA','SCTP','IP','L2 / L1']},{h:'Gn-C',l:['GTPv1-C','UDP','IP','L2 / L1']}]},
+   {n:'GGSN',s:[{h:'Gn-C',l:['GTPv1-C','UDP','IP','L2 / L1']}]}],
+  gaps:['Iu-PS (RANAP)','Gn-C']}],
+ notes:['DL: MAC-d (RNC) → HS-DSCH FP → MAC-hs/ehs in the Node B (scheduler + HARQ). UL: MAC-e/i in the Node B (HARQ, scheduling) → E-DCH FP → MAC-es/is in the SRNC (reordering, macro-diversity combining).','The SGSN gives the RNC the GGSN’s TEID (RANAP RAB Assignment) and the GGSN the RNC’s TEID (Update PDP Context), then stays out of the user plane.','Without Direct Tunnel the SGSN relays GTP-U exactly as in R99.']},
 {id:'lteup',g:'4g',t:'LTE user plane',sum:'The eNB terminates all radio layers and maps each radio bearer to one S1-U GTP-U tunnel; the SGW relays to the PGW over S5/S8.',
- nodes:[{n:'UE',s:[{l:['Application','IP','PDCP','RLC','MAC','PHY']}]},
+ nodes:[{n:'UE',s:[{l:['Application','IP (user)','PDCP','RLC','MAC','PHY']}]},
   {n:'eNodeB',s:[{h:'LTE-Uu',l:['PDCP','RLC','MAC','PHY']},{h:'S1-U',l:['GTP-U','UDP','IP','L2','L1']}]},
   {n:'SGW',s:[{h:'S1-U',l:['GTP-U','UDP','IP','L2','L1']},{h:'S5/S8',l:['GTP-U','UDP','IP','L2','L1']}]},
   {n:'PGW',s:[{h:'S5/S8',l:['GTP-U','UDP','IP','L2','L1']},{h:'SGi',l:['IP (user)','L2','L1']}]},
-  {n:'Server',s:[{l:['Application','IP','L2','L1']}]}],
+  {n:'Server',s:[{l:['Application','IP (user)','L2','L1']}]}],
  gaps:['LTE-Uu','S1-U','S5/S8','SGi'],
  notes:['EPS bearer = radio bearer + S1 bearer + S5/S8 bearer (1:1:1), identified by EBI 5–15.']},
-{id:'ltecp',g:'4g',t:'LTE control plane',sum:'NAS (EMM/ESM) runs end-to-end UE ↔ MME inside RRC and S1AP. The MME controls the gateways with GTPv2-C.',
+{id:'ltecp',g:'4g',t:'LTE control plane',sum:'NAS (EMM/ESM) runs end to end UE ↔ MME inside RRC and S1AP. The MME controls the gateways with GTPv2-C.',
  nodes:[{n:'UE',s:[{l:['NAS (EMM / ESM)','RRC','PDCP','RLC','MAC','PHY']}]},
   {n:'eNodeB',s:[{h:'LTE-Uu',l:['RRC','PDCP','RLC','MAC','PHY']},{h:'S1-MME',l:['S1AP','SCTP','IP','L2','L1']}]},
   {n:'MME',s:[{h:'S1-MME',l:['NAS (EMM / ESM)','S1AP','SCTP','IP','L2','L1']},{h:'S11',l:['GTPv2-C','UDP','IP','L2','L1']}]},
@@ -1400,30 +1415,47 @@ const E2E = [
   {n:'PGW',s:[{h:'S5/S8',l:['GTPv2-C','UDP','IP','L2','L1']}]}],
  gaps:['LTE-Uu','S1-MME','S11','S5/S8'],
  notes:['RRC and NAS are both integrity-protected; NAS security terminates in the MME, AS security in the eNB.']},
-{id:'nsaup',g:'nsa',t:'5G NSA user plane – Option 3x (SCG split bearer)',sum:'S1-U terminates in the en-gNB. Its NR PDCP sends traffic either over its own NR leg or over X2-U to the MeNB’s LTE RLC.',
- nodes:[{n:'UE',s:[{l:['Application','IP','NR PDCP','RLC (LTE) | RLC (NR)','MAC (LTE) | MAC (NR)','PHY (LTE) | PHY (NR)']}]},
-  {n:'MeNB (eNB)',s:[{h:'LTE-Uu',l:['LTE RLC','LTE MAC','LTE PHY']},{h:'X2-U',l:['NR-U','GTP-U','UDP','IP','L2 / L1']}]},
-  {n:'en-gNB',s:[{h:'X2-U',l:['NR-U','GTP-U','UDP','IP','L2 / L1']},{h:'NR-Uu',l:['NR PDCP (split)','NR RLC','NR MAC','NR PHY']},{h:'S1-U',l:['GTP-U','UDP','IP','L2','L1']}]},
-  {n:'SGW',s:[{h:'S1-U',l:['GTP-U','UDP','IP','L2','L1']},{h:'S5/S8',l:['GTP-U','UDP','IP','L2','L1']}]},
-  {n:'PGW',s:[{h:'S5/S8',l:['GTP-U','UDP','IP','L2','L1']},{h:'SGi',l:['IP (user)','L2','L1']}]}],
- gaps:['LTE-Uu / NR-Uu','X2-U','S1-U','S5/S8'],
- notes:['Option 3: split in the MeNB (S1-U to eNB only, X2-U MeNB → en-gNB).','Option 3a: SCG bearer – S1-U to the en-gNB, no split, no X2-U for that bearer.','Option 3x: as shown; flow control over X2-U with DL Data Delivery Status (TS 38.425). The UE uses one NR PDCP entity feeding two RLC entities.']},
-{id:'nsacp',g:'nsa',t:'5G NSA control plane (EN-DC)',sum:'The UE has one RRC connection, with the MeNB. The en-gNB’s NR RRC (SCG configuration) travels in X2AP to the MeNB and inside LTE RRC to the UE, or directly on SRB3 if configured.',
- nodes:[{n:'UE',s:[{h:'LTE side',l:['NAS (EMM / ESM)','LTE RRC','PDCP','RLC','MAC','PHY']},{h:'NR side (SRB3)',l:['NR RRC','NR PDCP','NR RLC','NR MAC','NR PHY']}]},
-  {n:'en-gNB',s:[{h:'NR-Uu (SRB3)',l:['NR RRC','NR PDCP','NR RLC','NR MAC','NR PHY']},{h:'X2-C',l:['X2AP','SCTP','IP','L2 / L1']}]},
-  {n:'MeNB (eNB)',s:[{h:'X2-C',l:['X2AP','SCTP','IP','L2 / L1']},{h:'LTE-Uu',l:['LTE RRC','PDCP','RLC','MAC','PHY']},{h:'S1-MME',l:['S1AP','SCTP','IP','L2 / L1']}]},
-  {n:'MME',s:[{h:'S1-MME',l:['NAS (EMM / ESM)','S1AP','SCTP','IP','L2 / L1']}]}],
- gaps:['NR-Uu (SRB3, optional)','X2-C','S1-MME'],
- notes:['The UE’s LTE stack peers with the MeNB’s LTE-Uu stack (not adjacent in this drawing); NAS continues to the MME.','Default path for SCG configuration: en-gNB → X2AP (SgNB Addition Request Acknowledge) → MeNB → RRCConnectionReconfiguration (nr-SecondaryCellGroupConfig) → UE.','The en-gNB has no S1-MME – the MME is unaware of the NR leg except via E-RAB Modification Indication and usage reports.']},
+{id:'nsaup',g:'nsa',t:'5G NSA user plane – Option 3x (SCG split bearer)',sum:'The UE is connected to two base stations at once, so the bearer is shown as two paths, one per radio leg. S1-U terminates in the en-gNB, whose NR PDCP sends traffic over its own NR leg or over X2-U to the MeNB’s LTE leg.',
+ paths:[
+ {t:'NR leg',
+  nodes:[{n:'UE',s:[{l:['Application','IP (user)','NR PDCP','NR RLC','NR MAC','NR PHY']}]},
+   {n:'en-gNB',s:[{h:'NR-Uu',l:['NR PDCP (split)','NR RLC','NR MAC','NR PHY']},{h:'S1-U',l:['GTP-U','UDP','IP','L2','L1']}]},
+   {n:'SGW',s:[{h:'S1-U',l:['GTP-U','UDP','IP','L2','L1']},{h:'S5/S8',l:['GTP-U','UDP','IP','L2','L1']}]},
+   {n:'PGW',s:[{h:'S5/S8',l:['GTP-U','UDP','IP','L2','L1']},{h:'SGi',l:['IP (user)','L2','L1']}]},
+   {n:'Server',s:[{l:['Application','IP (user)','L2','L1']}]}],
+  gaps:['NR-Uu','S1-U','S5/S8','SGi']},
+ {t:'LTE leg (split bearer over X2-U)',tail:'S1-U → SGW → PGW, as in the NR leg',
+  nodes:[{n:'UE',s:[{l:['Application','IP (user)','NR PDCP','LTE RLC','LTE MAC','LTE PHY']}]},
+   {n:'MeNB (eNB)',s:[{h:'LTE-Uu',l:['LTE RLC','LTE MAC','LTE PHY']},{h:'X2-U',l:['NR-U','GTP-U','UDP','IP','L2 / L1']}]},
+   {n:'en-gNB',s:[{h:'X2-U',l:['NR PDCP (split)','NR-U','GTP-U','UDP','IP','L2 / L1']}]}],
+  gaps:['LTE-Uu','X2-U']}],
+ notes:['One NR PDCP entity in the UE and one in the en-gNB serve both legs (SCG split bearer); the MeNB only provides LTE RLC/MAC/PHY for the LTE leg.','Option 3: the split is in the MeNB instead (S1-U to the eNB, X2-U MeNB → en-gNB). Option 3a: SCG bearer – NR leg only, no X2-U for that bearer.','Flow control over X2-U uses DL Data Delivery Status (TS 38.425).']},
+{id:'nsacp',g:'nsa',t:'5G NSA control plane (EN-DC)',sum:'The UE has one RRC connection, with the MeNB, and NAS always goes to the MME. The en-gNB’s NR RRC (SCG configuration) reaches the UE via X2AP and the MeNB’s LTE RRC – or directly over SRB3 if configured.',
+ paths:[
+ {t:'LTE RRC and NAS',
+  nodes:[{n:'UE',s:[{l:['NAS (EMM / ESM)','LTE RRC','PDCP','RLC','MAC','PHY']}]},
+   {n:'MeNB (eNB)',s:[{h:'LTE-Uu',l:['LTE RRC','PDCP','RLC','MAC','PHY']},{h:'S1-MME',l:['S1AP','SCTP','IP','L2 / L1']}]},
+   {n:'MME',s:[{h:'S1-MME',l:['NAS (EMM / ESM)','S1AP','SCTP','IP','L2 / L1']}]}],
+  gaps:['LTE-Uu','S1-MME']},
+ {t:'SCG configuration from the en-gNB (embedded in LTE RRC)',
+  nodes:[{n:'UE',s:[{l:['NR RRC (SCG config)','LTE RRC','PDCP','RLC','MAC','PHY']}]},
+   {n:'MeNB (eNB)',s:[{h:'LTE-Uu',l:['LTE RRC','PDCP','RLC','MAC','PHY']},{h:'X2-C',l:['X2AP','SCTP','IP','L2 / L1']}]},
+   {n:'en-gNB',s:[{h:'X2-C',l:['NR RRC (SCG config)','X2AP','SCTP','IP','L2 / L1']}]}],
+  gaps:['LTE-Uu','X2-C']},
+ {t:'SRB3 (optional, direct NR RRC)',
+  nodes:[{n:'UE',s:[{l:['NR RRC','NR PDCP','NR RLC','NR MAC','NR PHY']}]},
+   {n:'en-gNB',s:[{h:'NR-Uu',l:['NR RRC','NR PDCP','NR RLC','NR MAC','NR PHY']}]}],
+  gaps:['NR-Uu (SRB3)']}],
+ notes:['Default path for SCG configuration: en-gNB → X2AP (SgNB Addition Request Acknowledge) → MeNB → RRCConnectionReconfiguration (nr-SecondaryCellGroupConfig) → UE.','The en-gNB has no S1-MME – the MME learns about the NR leg only via E-RAB Modification Indication and usage reports.']},
 {id:'saup',g:'sa',t:'5G SA user plane (split gNB)',sum:'SDAP maps QoS flows to DRBs in the CU-UP; one N3 GTP-U tunnel per PDU session carries QFI-tagged packets to the UPF (optionally via an I-UPF on N9).',
  nodes:[{n:'UE',s:[{l:['Application','PDU (IP / Ethernet)','SDAP','PDCP','RLC','MAC','PHY']}]},
   {n:'gNB-DU',s:[{h:'NR-Uu',l:['RLC','MAC','PHY']},{h:'F1-U',l:['NR-U','GTP-U','UDP','IP','L2 / L1']}]},
   {n:'gNB-CU-UP',s:[{h:'F1-U',l:['SDAP','PDCP','NR-U','GTP-U','UDP','IP','L2 / L1']},{h:'N3',l:['GTP-U (QFI)','UDP','IP','L2','L1']}]},
-  {n:'UPF (I-UPF, opt.)',s:[{h:'N3',l:['GTP-U','UDP','IP','L2','L1']},{h:'N9',l:['GTP-U','UDP','IP','L2','L1']}]},
-  {n:'UPF (PSA)',s:[{h:'N9 / N3',l:['GTP-U','UDP','IP','L2','L1']},{h:'N6',l:['PDU (IP / Ethernet)','L2','L1']}]},
-  {n:'Server',s:[{l:['Application','IP','L2','L1']}]}],
+  {n:'UPF (I-UPF, opt.)',s:[{h:'N3',l:['GTP-U (QFI)','UDP','IP','L2','L1']},{h:'N9',l:['GTP-U (QFI)','UDP','IP','L2','L1']}]},
+  {n:'UPF (PSA)',s:[{h:'N9 / N3',l:['GTP-U (QFI)','UDP','IP','L2','L1']},{h:'N6',l:['PDU (IP / Ethernet)','L2','L1']}]},
+  {n:'Server',s:[{l:['Application','IP (user)@pdu','L2','L1']}]}],
  gaps:['NR-Uu','F1-U','N3','N9','N6'],
- notes:['F1-U has one tunnel per DRB; N3 has one tunnel per PDU session (QoS flows distinguished by QFI in the PDU Session Container, TS 38.415).','With a monolithic gNB the DU/CU-UP columns collapse into one node.']},
+ notes:['F1-U has one tunnel per DRB; N3 and N9 have one tunnel per PDU session, with QoS flows distinguished by the QFI in the PDU Session Container (TS 38.415).','With a monolithic gNB the DU/CU-UP columns collapse into one node.']},
 {id:'sacp',g:'sa',t:'5G SA control plane',sum:'NAS-MM terminates in the AMF; NAS-SM is relayed by the AMF to the SMF over SBI (N11). The SMF controls the UPF with PFCP.',
  nodes:[{n:'UE',s:[{l:['NAS-SM (5GSM)','NAS-MM (5GMM)','RRC','PDCP','RLC','MAC','PHY']}]},
   {n:'gNB-DU',s:[{h:'NR-Uu',l:['RLC','MAC','PHY']},{h:'F1-C',l:['F1AP','SCTP','IP','L2 / L1']}]},
@@ -1468,7 +1500,7 @@ function kind(x){const s=x.toLowerCase();
  if(/gtp-u|nr-u|\bfp\b|iu up|nb up|rtp|trau frames|pcu frames|g\.711|speech/.test(s))return 'tun';
  if(/sndcp|llc|lapdm|channel coding|gsm l1/.test(s))return 'radio';
  if(/bssgp|bssap|bssmap|dtap|^rsl|oml/.test(s))return 'ap';
- if(/network service|frame relay|lapd|^fr \||sub-t|timeslot|^e1/.test(s))return 'ss7';
+ if(/network service|frame relay|lapd|^fr$|^fr \||sub-t|timeslot|kbit\/s|^e1/.test(s))return 'ss7';
  if(/sdap|pdcp|rlc|mac|phy|wcdma l1/.test(s))return 'radio';
  if(/s1ap|ngap|x2ap|xnap|f1ap|e1ap|nbap|ranap|rnsap|sgsap|pfcp|gtpv1-c|gtpv2-c|gtp′|diameter|^map|tcap|h\.248|bicc|sip|http|radius|control only|↔/.test(s))return 'ap';
  if(/sccp|m3ua|mtp|sscf|sscop|aal|atm/.test(s))return 'ss7';
@@ -1775,16 +1807,44 @@ $('#itable tbody').addEventListener('click',ev=>{const tr=ev.target.closest('tr'
 document.querySelectorAll('#itable th[data-sort]').forEach(th=>th.onclick=()=>{sortKey=th.dataset.sort;renderTable();});
 
 /* e2e */
-function layerHTML(x){if(x.includes(' | ')){const [a,b]=x.split(' | ');return `<div class="split"><div class="ly k-${kind(a)}">${esc(a)}</div><div class="ly k-${kind(b)}">${esc(b)}</div></div>`;}return `<div class="ly k-${kind(x)}">${esc(x)}</div>`;}
+function e2eParse(x){const i=x.indexOf('@');const text=(i>=0?x.slice(0,i):x).trim();
+ const keys=i>=0?x.slice(i+1).split('+').map(k=>k.trim()):[e2eKey(text)];return {text,keys};}
+function e2eKey(t){const k=t.toLowerCase();if(/\(user\)/.test(k))return 'user-ip';return k.replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim();}
+function e2eHop(text,keys){return ['tr','ip','phy','ss7','tun'].includes(kind(text))||keys.some(k=>/^gtpv/.test(k));}
+function layerCell(x,p,n,st){const {text,keys}=e2eParse(x);return `<div class="ly k-${kind(text)}" data-p="${p}" data-n="${n}" data-s="${st}" data-k="${esc(keys.join('+'))}" data-hop="${e2eHop(text,keys)?1:0}">${esc(text)}</div>`;}
+function layerHTML(x,p,n,st){if(x.includes(' | ')){const [a1,b1]=x.split(' | ');return `<div class="split">${layerCell(a1,p,n,st)}${layerCell(b1,p,n,st)}</div>`;}return layerCell(x,p,n,st);}
+function e2ePaths(S){return S.paths||[{nodes:S.nodes,gaps:S.gaps}];}
 function renderE2E(){const nav=$('#e2enav');
  nav.innerHTML=GENORDER.filter(g=>E2E.some(s=>s.g===g)).map(g=>`<h4>${esc(GENS[g].n)}</h4>`+E2E.filter(s=>s.g===g).map(s=>`<button data-e="${s.id}" class="${state.e2e===s.id?'on':''}" style="--c:${gcol(g)}"><i></i>${esc(s.t)}</button>`).join('')).join('');
  const S=E2E.find(s=>s.id===state.e2e)||E2E[0];
- let h=`<h2 style="color:${gcol(S.g)}">${esc(S.t)}</h2><p class="sum">${esc(S.sum)}</p><div class="e2e">`;
- S.nodes.forEach((n,i)=>{h+=`<div class="e2e-node"><div class="e2e-name">${esc(n.n)}</div><div class="e2e-stacks">${n.s.map(st=>`<div class="e2e-stack ${st.ghost?'ghost':''}"><div class="e2e-side">${esc(st.h||'')}</div>${st.l.map(layerHTML).join('')}</div>`).join('')}</div></div>`;
-  if(i<S.nodes.length-1)h+=`<div class="e2e-gap"><span>${esc(S.gaps[i]||'')}</span></div>`;});
- h+=`</div><div class="klegend">${Object.entries(KINDNAMES).map(([k,v])=>`<span class="k-${k}">${esc(v)}</span>`).join('')}</div>`;
+ let h=`<h2 style="color:${gcol(S.g)}">${esc(S.t)}</h2><p class="sum">${esc(S.sum)}</p><p class="e2e-hint">Hover or tap a layer to highlight its peer. Lower layers (transport, tunnels, L1/L2) are hop-by-hop; upper layers pass through relaying nodes until they reach their peer.</p>`;
+ e2ePaths(S).forEach((P,pi)=>{
+  if(P.t)h+=`<div class="e2e-path-t">${esc(P.t)}</div>`;
+  h+=`<div class="e2e" data-p="${pi}">`;
+  P.nodes.forEach((nd,i)=>{h+=`<div class="e2e-node"><div class="e2e-name">${esc(nd.n)}</div><div class="e2e-stacks">${nd.s.map((st,si)=>`<div class="e2e-stack ${st.ghost?'ghost':''}"><div class="e2e-side">${esc(st.h||'')}</div>${st.l.map(x=>layerHTML(x,pi,i,si)).join('')}</div>`).join('')}</div></div>`;
+   if(i<P.nodes.length-1)h+=`<div class="e2e-gap"><span>${esc(P.gaps[i]||'')}</span></div>`;});
+  if(P.tail)h+=`<div class="e2e-gap e2e-tail"><span>${esc(P.tail)}</span></div>`;
+  h+=`</div>`;});
+ h+=`<div class="klegend">${Object.entries(KINDNAMES).map(([k,v])=>`<span class="k-${k}">${esc(v)}</span>`).join('')}</div>`;
  h+=`<div class="e2e-notes"><h3 style="font-size:11.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)">Notes</h3>${listHTML(S.notes)}</div>`;
- $('#e2emain').innerHTML=h;}
+ $('#e2emain').innerHTML=h;e2ePinned=null;}
+/* peer highlighting */
+let e2ePinned=null;
+function e2ePeers(el){const S=E2E.find(s=>s.id===state.e2e)||E2E[0];const p=+el.dataset.p,n=+el.dataset.n,si=+el.dataset.s;const keys=el.dataset.k.split('+');
+ const P=e2ePaths(S)[p];const root=$('#e2emain');const out=[el];
+ const match=x=>x.dataset.k.split('+').some(k=>keys.includes(k));
+ const cells=(nn,ss)=>[...root.querySelectorAll(`.ly[data-p="${p}"][data-n="${nn}"]`+(ss!=null?`[data-s="${ss}"]`:''))];
+ if(el.dataset.hop!=='1'){root.querySelectorAll(`.ly[data-p="${p}"]`).forEach(x=>{if(x!==el&&match(x))out.push(x);});return out;}
+ const nst=P.nodes[n].s.length;let dir=0;
+ if(nst===1)dir=n===0?1:-1;else if(si===nst-1&&n<P.nodes.length-1)dir=1;else if(si===0&&n>0)dir=-1;
+ if(!dir)return out;
+ for(let k=n+dir;k>=0&&k<P.nodes.length;k+=dir){const facing=dir>0?0:P.nodes[k].s.length-1;const hit=cells(k,facing).filter(match);if(hit.length){out.push(...hit);break;}}
+ return out;}
+function e2eShow(el){const root=$('#e2emain');root.querySelectorAll('.ly.peer').forEach(x=>x.classList.remove('peer'));root.querySelectorAll('.e2e.peering').forEach(x=>x.classList.remove('peering'));
+ if(!el)return;const peers=e2ePeers(el);const row=el.closest('.e2e');if(row)row.classList.add('peering');peers.forEach(x=>x.classList.add('peer'));}
+$('#e2emain').addEventListener('mouseover',ev=>{if(e2ePinned)return;const el=ev.target.closest('.ly[data-k]');e2eShow(el||null);});
+$('#e2emain').addEventListener('mouseleave',()=>{if(!e2ePinned)e2eShow(null);});
+$('#e2emain').addEventListener('click',ev=>{const el=ev.target.closest('.ly[data-k]');if(!el||e2ePinned===el){e2ePinned=null;e2eShow(null);return;}e2ePinned=el;e2eShow(el);});
 $('#e2enav').addEventListener('click',ev=>{const b=ev.target.closest('button[data-e]');if(!b)return;state.e2e=b.dataset.e;renderE2E();});
 
 /* legend */

@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.05** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
+**Version 2026.11.05.2** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them and the protocol stacks used on each interface.
 
@@ -28,7 +28,7 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 | View | What it shows |
 |---|---|
 | **Architecture** | Zoomable diagram of all elements and interfaces, grouped into UE, RAN (UTRAN, E-UTRAN + EN-DC, NG-RAN), core (UMTS CS/PS, EPC, 5GC) and external networks. |
-| **E2E stacks** | Side-by-side protocol stacks from UE to core for 9 scenarios (see below). Layers are colour-coded by type, so peer layers are easy to match. |
+| **E2E stacks** | Side-by-side protocol stacks from UE to core for 12 scenarios (see below). Stacks are bottom-aligned, so the lower layers of an interface face each other; upper layers pass through relaying nodes until they reach their peer. **Hover or tap a layer to highlight its peer(s).** Dual-connectivity and Direct Tunnel cases are drawn as several paths (one per radio leg / control path). |
 | **Interface table** | All interfaces in one sortable table: name, endpoints, generation, plane, protocol stack and key specs. Click a row for details. |
 
 ### End-to-end stack scenarios
@@ -215,6 +215,11 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ---
 
 ## Changelog
+
+### 2026.11.05.2
+- **E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.
+- Scenarios can now consist of several paths: **5G NSA** user plane (NR leg + LTE leg over X2-U) and control plane (LTE RRC/NAS, SCG configuration via X2-C, SRB3) and **HSPA Direct Tunnel** (user plane RNC ↔ GGSN + SGSN control path) – every stack now faces its real peer.
+- Fixed labels: GTP-U (QFI) on N3/N9 at both ends, 16 / 8 kbit/s TRAU sub-timeslots on Abis and Ater; BSC added to the GSM speech path; user IP labelled consistently.
 
 ### 2026.11.05
 - Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).
