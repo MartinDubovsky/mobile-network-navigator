@@ -83,9 +83,9 @@
         {
           "interface": "s5",
           "ip": "198.51.100.7",
-          "port": "",
+          "port": "2123;2152",
           "vlan": "111",
-          "note": "GTP-C 2123 / GTP-U 2152"
+          "note": "GTP-C and GTP-U"
         }
       ]
     },
@@ -164,9 +164,9 @@
         {
           "interface": "sbi",
           "ip": "192.0.2.62",
-          "port": "443",
+          "port": "443;8080",
           "vlan": "122",
-          "note": ""
+          "note": "TLS and plain HTTP/2"
         }
       ]
     },
@@ -298,7 +298,7 @@
     {
       "element": "enb",
       "name": "*",
-      "site": "All sites",
+      "site": "",
       "note": "",
       "addresses": [
         {
@@ -320,7 +320,7 @@
     {
       "element": "gnbcucp",
       "name": "*",
-      "site": "All sites",
+      "site": "",
       "note": "",
       "addresses": [
         {
@@ -335,7 +335,7 @@
     {
       "element": "gnbcuup",
       "name": "*",
-      "site": "All sites",
+      "site": "",
       "note": "",
       "addresses": [
         {
@@ -344,6 +344,50 @@
           "port": "2152",
           "vlan": "124",
           "note": "IPv6 example"
+        }
+      ]
+    },
+    {
+      "element": "mme",
+      "name": "MME02",
+      "site": "Site-B",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "s1mme",
+          "ip": "198.51.100.41",
+          "port": "36412",
+          "vlan": "201",
+          "note": ""
+        },
+        {
+          "interface": "s11",
+          "ip": "198.51.100.42",
+          "port": "2123",
+          "vlan": "202",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "element": "upf",
+      "name": "UPF02",
+      "site": "Site-B",
+      "note": "",
+      "addresses": [
+        {
+          "interface": "n3",
+          "ip": "203.0.113.70",
+          "port": "2152",
+          "vlan": "224",
+          "note": ""
+        },
+        {
+          "interface": "n6",
+          "ip": "203.0.113.71",
+          "port": "",
+          "vlan": "225",
+          "note": ""
         }
       ]
     }

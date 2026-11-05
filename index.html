@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="version" content="2026.11.05.4">
+<meta name="version" content="2026.11.05.5">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mobile Network Navigator · 2G · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
@@ -246,7 +246,7 @@ textarea.mfcopy{width:100%;height:50vh;font-family:var(--mono);font-size:12px;ba
 #ndstat{font-size:12px;color:var(--muted);max-width:230px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #ndstat i{font-style:normal;color:#f59e0b}#ndstat b{color:#f59e0b;cursor:pointer;font-weight:600}
 #ndmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:70;width:340px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.35);padding:6px}
-#ndmenu[hidden],#modal[hidden]{display:none !important}
+#ndmenu[hidden],#modal[hidden],#ndsitemenu[hidden],#ndsite[hidden]{display:none !important}
 #ndmenu .ndm-h{padding:6px 8px 8px;display:flex;flex-direction:column;gap:2px;border-bottom:1px solid var(--line);margin-bottom:4px}
 #ndmenu .ndm-h span{color:var(--muted);font-size:12px;line-height:1.35}
 #ndmenu button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:13px}
@@ -257,6 +257,21 @@ textarea.mfcopy{width:100%;height:50vh;font-family:var(--mono);font-size:12px;ba
 #ndmenu hr{border:0;border-top:1px solid var(--line);margin:4px 0}
 #ndmenu .ndm-chk{display:flex;gap:8px;align-items:flex-start;padding:6px 8px;font-size:13px;cursor:pointer}
 #ndmenu .ndm-chk input{margin-top:3px}
+#ndsite{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:1700px){#ndstat .ndn{display:none}#ndsite{max-width:150px}}
+#ndsite.on{border-color:#f59e0b;background:color-mix(in srgb,#f59e0b 16%,var(--panel))}
+#ndsitemenu{position:absolute;right:0;top:calc(100% + 6px);z-index:70;width:330px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.35);padding:8px;display:flex;flex-direction:column;gap:6px}
+#ndsitemenu .ndm-h{display:flex;flex-direction:column;gap:2px}#ndsitemenu .ndm-h span{color:var(--muted);font-size:12px}
+#ndsiteq{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:5px 7px;font:inherit;font-size:13px}
+.ndsite-btns{display:flex;gap:4px}.ndsite-btns button{border:1px solid var(--line);background:var(--panel2);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:12px}
+#ndsitemenu .ndm-chk{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;cursor:pointer}#ndsitemenu .ndm-chk small{display:block;color:var(--muted);font-size:11px}
+.ndsite-list{max-height:46vh;overflow:auto;border-top:1px solid var(--line);padding-top:4px}
+.ndsite-list label{display:flex;gap:7px;align-items:center;padding:3px 4px;border-radius:5px;font-size:13px;cursor:pointer}
+.ndsite-list label:hover{background:var(--panel2)}.ndsite-list label span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ndsite-list small{color:var(--muted);font-family:var(--mono);font-size:11px}
+#panel h3.ndh em.ndflt{font-style:normal;font-size:11px;text-transform:none;letter-spacing:0;display:inline-flex;align-items:center;gap:2px;border:1px solid #f59e0b;border-radius:999px;padding:0 2px 0 7px;color:var(--ink)}
+#panel h3.ndh em.ndflt .ndlink{color:var(--ink);text-decoration:none;font-size:11px}
+.ndx{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:11px;padding:0 4px}.ndx:hover{color:#ef4444}
+table.ndt td.pt{font-family:var(--mono);font-size:11.5px}
 #modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:flex;align-items:flex-start;justify-content:center;padding:8vh 16px 16px}
 #modal .mbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 48px rgba(0,0,0,.45);width:min(860px,100%);max-height:84vh;display:flex;flex-direction:column}
 #modal h3{margin:0;padding:14px 16px 8px;font-size:15px}
@@ -272,7 +287,8 @@ textarea.mfcopy{width:100%;height:50vh;font-family:var(--mono);font-size:12px;ba
 table.ndedit{width:100%;border-collapse:collapse;margin-top:8px}
 table.ndedit th{color:var(--muted);font-weight:600;font-size:11.5px;text-align:left;padding:2px 4px}
 table.ndedit td{padding:2px 3px}table.ndedit td input,table.ndedit td select{width:100%}
-table.ndedit td:nth-child(1){width:30%}table.ndedit td:nth-child(2){width:28%}table.ndedit td:nth-child(3){width:9%}table.ndedit td:nth-child(4){width:8%}
+table.ndedit td:nth-child(1){width:28%}table.ndedit td:nth-child(2){width:26%}table.ndedit td:nth-child(3){width:13%}table.ndedit td:nth-child(4){width:8%}
+table.ndedit .nd-port{font-family:var(--mono);font-size:12px}
 table.ndedit .nd-ip{font-family:var(--mono);font-size:12px}
 .nd-del{border:0;background:transparent;cursor:pointer;color:var(--muted);padding:2px 6px}.nd-del:hover{color:#ef4444}
 .nderr{color:#ef4444;font-size:12.5px;min-height:1.2em;margin-top:6px}
@@ -332,7 +348,7 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
   <div class="grp"><span class="lbl">EPC</span><span class="seg">
     <button class="tg on" data-cups="0" title="SGW and PGW as single nodes">Classic</button><button class="tg" data-cups="1" title="R14 CUPS: SGW-C/U and PGW-C/U with Sxa / Sxb (PFCP)">CUPS</button></span></div>
   <div class="grp"><span class="lbl">Protocol</span><select id="protosel" aria-label="Highlight interfaces by protocol"></select></div>
-  <div class="grp" style="margin-left:auto"><span id="ndwrap"><span id="ndstat"></span><button class="tg" id="ndbtn" title="Load, edit and save your own IP plan – stays on this computer" aria-haspopup="true">◆ Network data</button><div id="ndmenu" hidden></div></span><button class="tg" id="theme" title="Toggle light/dark">◐ Theme</button></div>
+  <div class="grp" style="margin-left:auto"><span id="ndwrap"><span id="ndstat"></span><button class="tg" id="ndsite" hidden title="Filter the network data by site" aria-haspopup="true">Site: all ▾</button><div id="ndsitemenu" hidden></div><button class="tg" id="ndbtn" title="Load, edit and save your own IP plan – stays on this computer" aria-haspopup="true">◆ Network data</button><div id="ndmenu" hidden></div></span><button class="tg" id="theme" title="Toggle light/dark">◐ Theme</button></div>
 </div>
 <main>
   <div id="views">
@@ -356,7 +372,7 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
 <script>
 'use strict';
 const PRISTINE_DOC=document.documentElement.cloneNode(true); /* clean copy of the tool, used by “Save tool + data as one HTML file” */
-const VERSION = '2026.11.05.4';
+const VERSION = '2026.11.05.5';
 /* =====================================================================
    DATA
    ===================================================================== */
@@ -1896,7 +1912,7 @@ document.querySelectorAll('[data-rp]').forEach(b=>b.onclick=()=>{state.rp=b.data
 let qT;$('#search').addEventListener('input',ev=>{clearTimeout(qT);qT=setTimeout(()=>{state.q=ev.target.value.trim().toLowerCase();apply();},120);});
 $('#theme').onclick=()=>{document.body.classList.toggle('light');try{localStorage.setItem('mna-theme',document.body.classList.contains('light')?'light':'dark');}catch(e){}};
 try{if(localStorage.getItem('mna-theme')==='light')document.body.classList.add('light');}catch(e){}
-document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if(ndModalOpen()){const m=$('#modal');if(m._esc)m._esc();else ndCloseModal();return;}if(!$('#ndmenu').hidden){$('#ndmenu').hidden=true;return;}
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if(ndModalOpen()){const m=$('#modal');if(m._esc)m._esc();else ndCloseModal();return;}if(!$('#ndmenu').hidden){$('#ndmenu').hidden=true;return;}if(!$('#ndsitemenu').hidden){$('#ndsitemenu').hidden=true;return;}
   if(document.activeElement===$('#search')&&state.q){$('#search').value='';state.q='';apply();return;}clearSel();}
  if(ndModalOpen())return;
  if(ev.key==='/'&&!(ev.target.closest&&ev.target.closest('input,textarea,select'))){ev.preventDefault();$('#search').focus();}});
@@ -3616,6 +3632,7 @@ const ND_TEMPLATE_CSV=`# network: Example network
 # Documentation addresses only (RFC 5737 / RFC 3849) - replace them with your own. Keep files with real addresses out of git.
 # One row per address. element = element ID or name; instance = your node name ("*" = all instances, e.g. a RAN range);
 # interface = interface ID or name, or oam / sbi / other. Rows with an empty element describe the interface itself (subnet, VLAN).
+# port = one port, a list (2123;2152 - separated by ; , / or spaces) or a range (30000-30100).
 element,instance,site,interface,ip,port,vlan,note
 mme,MME01,Site-A,s1mme,192.0.2.11,36412,101,SCTP multihoming - primary path
 mme,MME01,Site-A,s1mme,192.0.2.12,36412,101,SCTP multihoming - secondary path
@@ -3626,14 +3643,14 @@ mme,MME01,Site-A,sgs,192.0.2.41,29118,104,
 mme,MME01,Site-A,oam,192.0.2.250,,900,
 sgw,SGW01,Site-A,s11,198.51.100.5,2123,102,
 sgw,SGW01,Site-A,s1u,198.51.100.6,2152,110,
-sgw,SGW01,Site-A,s5,198.51.100.7,,111,GTP-C 2123 / GTP-U 2152
+sgw,SGW01,Site-A,s5,198.51.100.7,2123;2152,111,GTP-C and GTP-U
 pgw,PGW01,Site-A,s5,198.51.100.17,,111,
 pgw,PGW01,Site-A,gx,198.51.100.18,3868,103,
 pgw,PGW01,Site-A,sgi,203.0.113.1,,200,SGi next hop
 hss,HSS01,Site-A,s6a,192.0.2.51,3868,103,
 pcrf,PCRF01,Site-A,gx,192.0.2.55,3868,103,
 amf,AMF01,Site-A,n2,192.0.2.61,38412,121,
-amf,AMF01,Site-A,sbi,192.0.2.62,443,122,
+amf,AMF01,Site-A,sbi,192.0.2.62,443;8080,122,TLS and plain HTTP/2
 smf,SMF01,Site-A,sbi,192.0.2.71,443,122,
 smf,SMF01,Site-A,n4,192.0.2.72,8805,123,
 upf,UPF01,Site-A,n4,198.51.100.33,8805,123,
@@ -3645,10 +3662,14 @@ mscs,MSS01,Site-A,acp,192.0.2.101,2905,140,M3UA
 mscs,MSS01,Site-A,iucscp,192.0.2.102,2905,140,M3UA
 sgsn,SGSN01,Site-A,gb,192.0.2.111,,141,Gb over IP (NS-IP)
 sgsn,SGSN01,Site-A,gn,192.0.2.112,,142,
-enb,*,All sites,s1mme,198.51.100.128/26,36412,101,eNodeB signalling range
-enb,*,All sites,s1u,203.0.113.128/25,2152,110,eNodeB user-plane range
-gnbcucp,*,All sites,n2,2001:db8:100::/48,38412,121,IPv6 example
-gnbcuup,*,All sites,n3,2001:db8:200::/48,2152,124,IPv6 example
+enb,*,,s1mme,198.51.100.128/26,36412,101,eNodeB signalling range
+enb,*,,s1u,203.0.113.128/25,2152,110,eNodeB user-plane range
+gnbcucp,*,,n2,2001:db8:100::/48,38412,121,IPv6 example
+gnbcuup,*,,n3,2001:db8:200::/48,2152,124,IPv6 example
+mme,MME02,Site-B,s1mme,198.51.100.41,36412,201,
+mme,MME02,Site-B,s11,198.51.100.42,2123,202,
+upf,UPF02,Site-B,n3,203.0.113.70,2152,224,
+upf,UPF02,Site-B,n6,203.0.113.71,,225,
 ,,,s1mme,192.0.2.0/28,,101,S1-MME core VLAN
 ,,,s11,192.0.2.16/28,,102,S11 / N26 VLAN
 `;
@@ -3688,6 +3709,15 @@ function ndAddrKind(ip){if(!ip)return 'empty';if(ND_V4.test(ip))return ip.includ
 const ndV4int=ip=>ip.split('.').reduce((a,b)=>a*256+(+b),0);
 function ndV4in(ip,net){const [n,p]=net.split('/');const size=Math.pow(2,32-(+p));const base=Math.floor(ndV4int(n)/size)*size;const x=ndV4int(ip);return x>=base&&x<base+size;}
 const ND_V4PLAIN=/^\d{1,3}(\.\d{1,3}){3}$/;
+/* ports: one value, a list (8080;443 – separated by ; , / | or spaces) or ranges (30000-30100) */
+function ndPortParse(v){const t=(Array.isArray(v)?v.join(';'):String(v==null?'':v)).trim();if(!t)return {ok:true,list:[]};const list=[];let ok=true;
+ t.split(/[\s,;\/|]+/).filter(Boolean).forEach(p=>{const m=p.match(/^(\d{1,5})(?:-(\d{1,5}))?$/);if(!m){ok=false;return;}const a=+m[1],b=m[2]==null?a:+m[2];
+  if(a<1||b>65535||b<a){ok=false;return;}list.push(m[2]==null?String(a):a+'-'+b);});
+ return {ok,list};}
+const ndPortOK=v=>ndPortParse(v).ok;
+const ndPortNorm=v=>{const r=ndPortParse(v);return r.ok?r.list.join(';'):(Array.isArray(v)?v.join(';'):String(v==null?'':v)).trim();};
+const ndPortShow=v=>{const r=ndPortParse(v);return r.ok?r.list.join(', '):String(v);};
+const ND_PORTMSG='use one port, a list such as 8080;443 or a range such as 30000-30100';
 
 /* ---------- normalisation, validation, merge ---------- */
 function ndEmpty(name){return {network:name||'Unnamed network',instances:[],interfaces:{}};}
@@ -3696,7 +3726,7 @@ function ndClean(raw){const w=[];const d=ndEmpty(String(raw.network||raw.name||'
  (Array.isArray(raw.instances)?raw.instances:[]).forEach((I,ix)=>{const el=ndResolveEl(I.element);
   if(!el){w.push(`Instance ${ix+1} “${I.name||I.instance||''}”: unknown element “${I.element}” – skipped.`);return;}
   const inst={id:NDuid(),element:el,name:String(I.name||I.instance||'(unnamed)').trim(),site:String(I.site||'').trim(),note:String(I.note||'').trim(),addresses:[]};
-  (Array.isArray(I.addresses)?I.addresses:[]).forEach(A=>inst.addresses.push({interface:ndResolveIf(A.interface||A.if||'',el),ip:String(A.ip||A.address||'').trim(),port:A.port==null?'':String(A.port).trim(),vlan:A.vlan==null?'':String(A.vlan).trim(),note:String(A.note||'').trim()}));
+  (Array.isArray(I.addresses)?I.addresses:[]).forEach(A=>inst.addresses.push({interface:ndResolveIf(A.interface||A.if||'',el),ip:String(A.ip||A.address||'').trim(),port:A.port==null?'':ndPortNorm(A.port),vlan:A.vlan==null?'':String(A.vlan).trim(),note:String(A.note||'').trim()}));
   d.instances.push(inst);});
  const ifs=raw.interfaces&&typeof raw.interfaces==='object'?raw.interfaces:{};
  Object.keys(ifs).forEach(k=>{const v=ifs[k]||{};d.interfaces[ndResolveIf(k,null)]={subnet:String(v.subnet||v.ip||'').trim(),vlan:v.vlan==null?'':String(v.vlan).trim(),note:String(v.note||'').trim()};});
@@ -3708,7 +3738,7 @@ function ndValidate(d){const w=[],seen={};
    else if(!ND_VALID_IF.has(A.interface))w.push(`${where}: unknown interface “${A.interface}” (kept).`);
    else if(!ok.has(A.interface))w.push(`${where}: ${ndIfLabel(A.interface)} is not an interface of ${E.n} in this tool (kept).`);
    const k=ndAddrKind(A.ip);if(k==='bad')w.push(`${where}: “${A.ip}” is not a valid IPv4 / IPv6 address, subnet or host name.`);
-   if(A.port&&!(/^\d{1,5}$/.test(A.port)&&+A.port<65536))w.push(`${where}: port “${A.port}” is not a valid port number.`);
+   if(A.port&&!ndPortOK(A.port))w.push(`${where}: port “${A.port}” is not valid – ${ND_PORTMSG}.`);
    if(k==='v4'||k==='v6'){const key=A.ip.toLowerCase();(seen[key]=seen[key]||new Set()).add(E.n+' '+I.name);}});});
  Object.entries(d.interfaces).forEach(([k,v])=>{if(!ND_VALID_IF.has(k))w.push(`Interface info: unknown interface “${k}” (kept).`);if(v.subnet&&ndAddrKind(v.subnet)==='bad')w.push(`Interface info ${ndIfLabel(k)}: “${v.subnet}” is not a valid subnet.`);});
  Object.entries(seen).forEach(([ip,s])=>{if(s.size>1)w.push(`Address ${ip} is used by several instances: ${[...s].join(', ')}.`);});
@@ -3724,7 +3754,7 @@ function ndMerge(base,add){const out={network:base.network,instances:base.instan
 
 /* ---------- CSV ---------- */
 const ND_COLS={element:['element','el','elementtype','nodetype','networkelement','type'],instance:['instance','name','node','nodename','hostname','host'],site:['site','location'],
- interface:['interface','if','referencepoint','refpoint'],ip:['ip','address','ipaddress','addr','ipsubnet','subnet','prefix'],port:['port'],vlan:['vlan','vlanid'],note:['note','notes','comment','comments','description','remark'],network:['network']};
+ interface:['interface','if','referencepoint','refpoint'],ip:['ip','address','ipaddress','addr','ipsubnet','subnet','prefix'],port:['port','ports'],vlan:['vlan','vlanid'],note:['note','notes','comment','comments','description','remark'],network:['network']};
 function ndParseCSV(text){text=text.replace(/^﻿/,'');
  const first=(text.split(/\r?\n/).find(l=>l.trim()&&!l.trim().startsWith('#'))||'');const cnt=ch=>first.split(ch).length-1;
  const dl=cnt('\t')>cnt(',')&&cnt('\t')>cnt(';')?'\t':(cnt(';')>cnt(',')?';':',');
@@ -3774,45 +3804,58 @@ async function ndDecrypt(w,pass){if(w.cipher!=='AES-256-GCM'||w.kdf!=='PBKDF2-SH
  const key=await ndKey(pass,ndUnB64(w.salt),+w.iterations||ND_ITER);
  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ndUnB64(w.iv)},key,ndUnB64(w.data));return JSON.parse(new TextDecoder().decode(pt));}
 
+/* ---------- site filter (view only: panels, badges, search; optional for exports) ---------- */
+const ND_LS_SITES='mnn-netdata-sites';
+let NDF={sel:null,noSite:true}, NDexpf=false;      /* sel: null = all sites, otherwise a Set of site names */
+const ndVis=I=>!NDF.sel||(I.site?NDF.sel.has(I.site):NDF.noSite);
+const ndInst=()=>ND?ND.instances.filter(ndVis):[];
+function ndSites(){const m=new Map();if(ND)ND.instances.forEach(I=>{if(I.site)m.set(I.site,(m.get(I.site)||0)+1);});return [...m.entries()].sort((a,b)=>a[0].localeCompare(b[0],undefined,{numeric:true,sensitivity:'base'}));}
+const ndNoSiteN=()=>ND?ND.instances.filter(I=>!I.site).length:0;
+const ndFiltered=()=>!!(ND&&NDF.sel);
+function ndFilterClean(){if(!NDF.sel)return;const all=ndSites().map(x=>x[0]);NDF.sel=new Set([...NDF.sel].filter(x=>all.includes(x)));if(all.length&&NDF.sel.size===all.length&&NDF.noSite)NDF.sel=null;}
+function ndFilterLabel(){if(!NDF.sel)return 'all sites';const n=NDF.sel.size,t=ndSites().length;if(n===0)return NDF.noSite?'only instances without a site':'no sites';
+ if(n===1){const x=[...NDF.sel][0];return x.length>22?x.slice(0,21)+'…':x;}return n+' of '+t+' sites';}
+function ndFilterReset(){NDF={sel:null,noSite:true};NDexpf=false;}
+
 /* ---------- which instances / addresses belong to an interface end ---------- */
 function ndSideEps(L,el){if(!ND||!el||el==='bus'||!EM[el])return [];const keys=ndKeys(L);
  const has=I=>I.addresses.some(A=>keys.includes(A.interface));
- for(const grp of [[el],ND_ELALIAS[el]||[],ndRev(el)]){const r=ND.instances.filter(I=>grp.includes(I.element)&&has(I));if(r.length)return r.map(I=>({I,ad:I.addresses.filter(A=>keys.includes(A.interface))}));}
+ for(const grp of [[el],ND_ELALIAS[el]||[],ndRev(el)]){const r=ndInst().filter(I=>grp.includes(I.element)&&has(I));if(r.length)return r.map(I=>({I,ad:I.addresses.filter(A=>keys.includes(A.interface))}));}
  return [];}
-function ndLinkEps(L){if(!ND)return [];if(L.isbus)return ND.instances.map(I=>({I,ad:I.addresses.filter(A=>A.interface==='sbi')})).filter(x=>x.ad.length);
+function ndLinkEps(L){if(!ND)return [];if(L.isbus)return ndInst().map(I=>({I,ad:I.addresses.filter(A=>A.interface==='sbi')})).filter(x=>x.ad.length);
  return [...ndSideEps(L,L.a),...(L.b!==L.a?ndSideEps(L,L.b):[])];}
 
 /* ---------- search index & map badges ---------- */
 function ndIndex(){ELS.forEach(e=>{e._nd='';e._ndn=[];e._ndip=new Set();});LINKS.forEach(l=>{l._nd='';l._ndn=[];l._ndip=new Set();});if(!ND)return;
  const add=(o,txt,ip)=>{o._nd+=' '+String(txt).toLowerCase();const k=ip?ndAddrKind(ip):'';if(k==='v4net')o._ndn.push(ip);if(k)o._ndip.add(ip.toLowerCase());};
- ND.instances.forEach(I=>{const E=EM[I.element];if(!E)return;add(E,I.name+' '+I.site+' '+I.note);I.addresses.forEach(A=>add(E,A.ip+' '+A.note,A.ip));});
- LINKS.forEach(L=>{ndLinkEps(L).forEach(({I,ad})=>ad.forEach(A=>add(L,I.name+' '+A.ip+' '+A.note,A.ip)));
+ ndInst().forEach(I=>{const E=EM[I.element];if(!E)return;add(E,I.name+' '+I.site+' '+I.note);I.addresses.forEach(A=>add(E,A.ip+' '+A.note+' '+ndPortShow(A.port),A.ip));});
+ LINKS.forEach(L=>{ndLinkEps(L).forEach(({I,ad})=>ad.forEach(A=>add(L,I.name+' '+A.ip+' '+A.note+' '+ndPortShow(A.port),A.ip)));
   ndKeys(L).forEach(k=>{const v=ND.interfaces[k];if(v)add(L,v.subnet+' '+v.note+' vlan '+v.vlan,v.subnet);});});}
 const ndTok=()=>state.q?state.q.split(/\s+/).filter(Boolean):[];
 function ndIPin(t,nets){return ND_V4PLAIN.test(t)&&ND_V4.test(t)&&nets.some(n=>ndV4in(t,n));}
 /* a complete IPv4 address matches only that address or a subnet containing it (192.0.2.11 does not find 192.0.2.110); anything else is a substring search */
 const ndFullV4=t=>ND_V4PLAIN.test(t)&&ND_V4.test(t);
 function ndMatch(t,o){if(!o._nd)return false;if(ndFullV4(t))return o._ndip.has(t)||ndIPin(t,o._ndn);return o._nd.includes(t);}
-function ndHit(A,I){const tk=ndTok();if(!tk.length)return false;const txt=(I.name+' '+A.ip+' '+A.note).toLowerCase();
+function ndHit(A,I){const tk=ndTok();if(!tk.length)return false;const txt=(I.name+' '+I.site+' '+A.ip+' '+A.note+' '+ndPortShow(A.port)).toLowerCase();
  return tk.some(t=>ndFullV4(t)?(A.ip===t||(ndAddrKind(A.ip)==='v4net'&&ndIPin(t,[A.ip]))):txt.includes(t));}
-function ndCount(el){return ND?ND.instances.filter(I=>I.element===el).length:0;}
+function ndCount(el){return ndInst().filter(I=>I.element===el).length;}
 function ndBadges(){Object.values(NODE).forEach(({g,E})=>{let b=g.querySelector('.ndb');const n=ndCount(E.id);
  if(!n){if(b)b.style.display='none';return;}
  if(!b){b=mk('g',{class:'ndb'},g);const x=E.kind==='container'?E.x+40:E.x+E.w-4,y=E.y;mk('rect',{x:x-32,y:y-8,width:36,height:16,rx:8},b);mk('text',{x:x-14,y:y+.5},b);mk('title',{},b);}
- b.style.display='';b.querySelector('text').textContent='IP '+(n>99?'99+':n);b.querySelector('title').textContent=`${n} ${E.n} instance${n>1?'s':''} in “${ND.network}”`;});}
+ b.style.display='';b.querySelector('text').textContent='IP '+(n>99?'99+':n);b.querySelector('title').textContent=`${n} ${E.n} instance${n>1?'s':''} in “${ND.network}”${ndFiltered()?' ('+ndFilterLabel()+')':''}`;});}
 
 /* ---------- panel sections ---------- */
 function ndAddrRows(I,adds,showIf){return `<table class="ndt"><tr>${showIf?'<th>Interface</th>':''}<th>Address</th><th>Port</th><th>VLAN</th><th>Note</th></tr>${adds.map(A=>{const L=LM[A.interface];
- return `<tr class="${ndHit(A,I)?'hit':''}">${showIf?`<td>${L&&!L.rp?`<button class="ndlink" data-sel="if:${A.interface}">${esc(ndIfLabel(A.interface))}</button>`:esc(A.interface?ndIfLabel(A.interface):'—')}</td>`:''}<td class="ip${ndAddrKind(A.ip)==='bad'?' bad':''}">${esc(A.ip)}</td><td>${esc(A.port)}</td><td>${esc(A.vlan)}</td><td>${esc(A.note)}</td></tr>`;}).join('')}</table>`;}
-function ndHead(){return `<h3 class="ndh">Network data <span>${esc(ND.network)}</span>${NDdirty?' <i title="Not saved to a file yet">● unsaved</i>':''}</h3>`;}
+ return `<tr class="${ndHit(A,I)?'hit':''}">${showIf?`<td>${L&&!L.rp?`<button class="ndlink" data-sel="if:${A.interface}">${esc(ndIfLabel(A.interface))}</button>`:esc(A.interface?ndIfLabel(A.interface):'—')}</td>`:''}<td class="ip${ndAddrKind(A.ip)==='bad'?' bad':''}">${esc(A.ip)}</td><td class="pt">${esc(ndPortShow(A.port))}</td><td>${esc(A.vlan)}</td><td>${esc(A.note)}</td></tr>`;}).join('')}</table>`;}
+function ndHead(){return `<h3 class="ndh">Network data <span>${esc(ND.network)}</span>${NDdirty?' <i title="Not saved to a file yet">● unsaved</i>':''}${ndFiltered()?`<em class="ndflt" title="Site filter – only these sites are shown"><button class="ndlink" data-nd="sites">${esc(ndFilterLabel())}</button><button class="ndx" data-nd="siteclear" title="Show all sites" aria-label="Show all sites">✕</button></em>`:''}</h3>`;}
 const ND_CAP=40;
 function ndCapList(list,hit,what){const tk=ndTok();let l=list;if(tk.length){const h=list.filter(hit);if(h.length)l=h.concat(list.filter(x=>!h.includes(x)));}
  const more=l.length-ND_CAP;return {l:l.slice(0,ND_CAP),more:more>0?`<p class="ndmuted">+ ${more} more ${what} – type a name or address in the search box to bring matches to the top.</p>`:''};}
 function ndInstName(I){return I.name==='*'?'All instances (range)':I.name;}
 function ndElementHTML(E){if(!ND)return '';
- const parts=E.id==='gnb'?['gnb','gnbcucp','gnbcuup','gnbdu']:[E.id];const all=ND.instances.filter(I=>parts.includes(I.element));
+ const parts=E.id==='gnb'?['gnb','gnbcucp','gnbcuup','gnbdu']:[E.id];const all=ndInst().filter(I=>parts.includes(I.element)),hid=ND.instances.filter(I=>parts.includes(I.element)&&!ndVis(I)).length;
  const {l:inst,more}=ndCapList(all,I=>I.addresses.some(A=>ndHit(A,I))||ndTok().some(t=>I.name.toLowerCase().includes(t)),'instances');
- return ndHead()+(inst.length?inst.map(I=>`<div class="ndinst"><div class="ndinst-h"><b>${esc(ndInstName(I))}</b>${I.element!==E.id?`<span class="ndtag">${esc(EM[I.element].n)}</span>`:''}${I.site?`<span>${esc(I.site)}</span>`:''}<button class="ndlink" data-nd="edit:${I.id}">Edit</button></div>${I.note?`<div class="ndmuted">${esc(I.note)}</div>`:''}${I.addresses.length?ndAddrRows(I,I.addresses,true):'<div class="ndmuted">No addresses yet.</div>'}</div>`).join('')+more:`<p class="ndmuted">No ${esc(E.n)} instances in this dataset.</p>`)+
+ return ndHead()+(inst.length?inst.map(I=>`<div class="ndinst"><div class="ndinst-h"><b>${esc(ndInstName(I))}</b>${I.element!==E.id?`<span class="ndtag">${esc(EM[I.element].n)}</span>`:''}${I.site?`<span>${esc(I.site)}</span>`:''}<button class="ndlink" data-nd="edit:${I.id}">Edit</button></div>${I.note?`<div class="ndmuted">${esc(I.note)}</div>`:''}${I.addresses.length?ndAddrRows(I,I.addresses,true):'<div class="ndmuted">No addresses yet.</div>'}</div>`).join('')+more:`<p class="ndmuted">No ${esc(E.n)} instances ${hid?'in the selected sites':'in this dataset'}.</p>`)+(hid?`<p class="ndmuted">${hid} more ${hid>1?'instances are':'instance is'} hidden by the site filter. <button class="ndlink" data-nd="siteclear">Show all sites</button></p>`:'')+
  `<div class="paneltools"><button data-nd="add:${E.id}">+ Add ${esc(E.n)} instance</button></div>`;}
 function ndLinkHTML(L){if(!ND)return '';const info=ndKeys(L).filter(k=>ND.interfaces[k]).map(k=>({k,...ND.interfaces[k]}));
  const side=(nm,all)=>{const {l:eps,more}=ndCapList(all,x=>x.ad.some(A=>ndHit(A,x.I)),'instances');return `<div class="ndside"><div class="ndside-h">${esc(nm)}</div>${eps.length?eps.map(({I,ad})=>`<div class="ndep"><button class="ndlink" data-sel="el:${I.element}">${esc(ndInstName(I))}</button>${I.site?` <span>${esc(I.site)}</span>`:''}${ndAddrRows(I,ad,false)}</div>`).join('')+more:'<div class="ndmuted">no addresses</div>'}</div>`;};
@@ -3824,8 +3867,8 @@ function ndLinkHTML(L){if(!ND)return '';const info=ndKeys(L).filter(k=>ND.interf
  return ndHead()+info.map(x=>`<div class="kv ndkv"><div>Subnet</div><div>${esc(x.subnet)||'—'}</div><div>VLAN</div><div>${esc(x.vlan)||'—'}</div>${x.note?`<div>Note</div><div>${esc(x.note)}</div>`:''}</div>`).join('')+
   `<div class="ndsides">${sides}</div><div class="paneltools"><button data-nd="ifedit:${ndCanon(L)}">${info.length?'Edit':'Add'} interface info (subnet, VLAN)</button></div>`;}
 function ndHint(){return ND?'':`<p class="ndmuted ndhint">Your own IP plan can be shown here: <button class="ndlink" data-nd="menu">◆ Network data</button></p>`;}
-function ndOverviewHTML(){if(!ND)return '';const by={};ND.instances.forEach(I=>{by[I.element]=(by[I.element]||0)+1;});
- return ndHead()+`<div class="ifcs">${ELS.filter(e=>by[e.id]).map(e=>`<button class="ifc" data-sel="el:${e.id}" style="font-family:var(--sans)">${esc(e.n)} <i>${by[e.id]}</i></button>`).join('')||'<span class="ndmuted">Empty dataset – select an element and use “+ Add instance”.</span>'}</div>${NDwarn.length?`<p><button class="ndlink" data-nd="warn">⚠ ${NDwarn.length} data warning${NDwarn.length>1?'s':''}</button></p>`:''}`;}
+function ndOverviewHTML(){if(!ND)return '';const by={};ndInst().forEach(I=>{by[I.element]=(by[I.element]||0)+1;});
+ return ndHead()+`<div class="ifcs">${ELS.filter(e=>by[e.id]).map(e=>`<button class="ifc" data-sel="el:${e.id}" style="font-family:var(--sans)">${esc(e.n)} <i>${by[e.id]}</i></button>`).join('')||(ndFiltered()?'<span class="ndmuted">No instances in the selected sites.</span>':'<span class="ndmuted">Empty dataset – select an element and use “+ Add instance”.</span>')}</div>${NDwarn.length?`<p><button class="ndlink" data-nd="warn">⚠ ${NDwarn.length} data warning${NDwarn.length>1?'s':''}</button></p>`:''}`;}
 function ndTip(type,id){if(!ND)return '';if(type==='el'){const n=ndCount(id);return n?`<span class="s">IP plan: ${n} instance${n>1?'s':''} in ${esc(ND.network)}</span>`:'';}
  const L=LM[id];const n=ndLinkEps(L).reduce((a,x)=>a+x.ad.length,0);return n?`<span class="s">IP plan: ${n} address${n>1?'es':''} in ${esc(ND.network)}</span>`:'';}
 
@@ -3849,7 +3892,7 @@ function ndWarnHTML(w){return w&&w.length?`<ul class="ndwarn">${w.slice(0,300).m
 function ndShowWarnings(){ndModal('Data check'+(ND?' – '+ND.network:''),ndWarnHTML(NDwarn),[{label:'Close',primary:true}]);}
 
 /* ---------- apply / load ---------- */
-function ndRefresh(){ndIndex();ndBadges();ndPersist();ndStatus();apply();renderPanel();}
+function ndRefresh(){ndFilterClean();ndIndex();ndBadges();ndPersist();ndStatus();apply();renderPanel();}
 function ndSet(d,src,warn,dirty){ND=d;NDsrc=src||NDsrc;NDwarn=warn||[];NDdirty=!!dirty;ndRefresh();}
 function ndTouch(){NDdirty=true;NDwarn=ndValidate(ND);ndRefresh();}
 async function ndUnlock(j,label,note){if(!ndCryptoOK()){await ndAsk('Cannot decrypt','<p>This browser does not offer Web Crypto here. Open the file in a current Chrome, Edge, Firefox or Safari.</p>',[{label:'Close',primary:true}]);return null;}
@@ -3866,7 +3909,7 @@ async function ndLoadText(text,fname){let parsed;fname=fname||'the file';
  if(!parsed.d.instances.length&&!Object.keys(parsed.d.interfaces).length){await ndAsk('Nothing to load',`<p>No usable rows in ${esc(fname)}.</p>${ndWarnHTML(parsed.w)}`,[{label:'Close',primary:true}]);return;}
  let mode='replace';
  if(ND){mode=await ndAsk('Network data already loaded',`<p>“${esc(ND.network)}” is loaded${NDdirty?' and has <b>unsaved changes</b>':''}. Replace it with ${esc(fname)}, or merge the new data into it (instances with the same element and name are combined)?</p>`,[{label:'Cancel',v:null},{label:'Merge',v:'merge'},{label:'Replace',v:'replace',primary:true}]);if(!mode)return;}
- const merge=mode==='merge';const d=merge?ndMerge(ND,parsed.d):parsed.d;const w=merge?ndValidate(d):parsed.w;
+ const merge=mode==='merge';if(!merge)ndFilterReset();const d=merge?ndMerge(ND,parsed.d):parsed.d;const w=merge?ndValidate(d):parsed.w;
  ndSet(d,{kind:'file',enc:!!parsed.enc||(merge&&NDsrc.enc)},w,merge);
  toast(`Loaded “${d.network}”: ${d.instances.length} instance${d.instances.length===1?'':'s'}${w.length?' · '+w.length+' warning'+(w.length>1?'s':''):''}`);if(w.length)ndShowWarnings();}
 function ndPickFile(){const i=document.createElement('input');i.type='file';i.accept='.csv,.tsv,.txt,.json,.html,.htm,text/csv,application/json';i.style.display='none';document.body.appendChild(i);
@@ -3878,8 +3921,10 @@ function ndDownload(name,text,type){const a=document.createElement('a');a.href=U
 function ndHTMLwith(payload,enc){const doc=PRISTINE_DOC.cloneNode(true);doc.querySelectorAll('#mnn-netdata').forEach(x=>x.remove());
  const s=document.createElement('script');s.type='application/json';s.id='mnn-netdata';if(enc)s.setAttribute('data-encrypted','1');
  s.textContent=JSON.stringify(payload).replace(/</g,'\\u003c');doc.querySelector('head').appendChild(s);return '<!DOCTYPE html>\n'+doc.outerHTML+'\n';}
-async function ndSave(kind){if(!ND){toast('No network data loaded.');return;}const base=ndSlug(ND.network);const json=ndToJSON(ND);
- if(kind==='csv')ndDownload(base+'.netdata.csv','﻿'+ndToCSV(ND),'text/csv;charset=utf-8');
+async function ndSave(kind){if(!ND){toast('No network data loaded.');return;}
+ const part=NDexpf&&ndFiltered(),D=part?{...ND,instances:ndInst()}:ND;
+ const base=ndSlug(ND.network)+(part?'-'+ndSlug(NDF.sel.size===1?[...NDF.sel][0]:NDF.sel.size+'-sites'):'');const json=ndToJSON(D);
+ if(kind==='csv')ndDownload(base+'.netdata.csv','\uFEFF'+ndToCSV(D),'text/csv;charset=utf-8');
  else if(kind==='json')ndDownload(base+'.netdata.json',JSON.stringify(json,null,1),'application/json');
  else if(kind==='html')ndDownload('mobile-network-navigator-'+base+'-with-data.html',ndHTMLwith(json,false),'text/html;charset=utf-8');
  else{if(!ndCryptoOK()){toast('Encryption needs Web Crypto, available in current browsers.');return;}
@@ -3887,24 +3932,26 @@ async function ndSave(kind){if(!ND){toast('No network data loaded.');return;}con
   const w=await ndEncrypt(json,p);
   if(kind==='json-enc')ndDownload(base+'.netdata.enc.json',JSON.stringify(w),'application/json');
   else ndDownload('mobile-network-navigator-'+base+'-with-data.html',ndHTMLwith(w,true),'text/html;charset=utf-8');}
- NDdirty=false;ndStatus();renderPanel();toast('Saved – check your downloads folder');}
+ if(!part)NDdirty=false;ndStatus();renderPanel();toast(part?`Saved ${D.instances.length} of ${ND.instances.length} instances (site filter) – check your downloads folder`:'Saved – check your downloads folder');}
 
 /* ---------- remember on this computer (browser storage, unencrypted) ---------- */
 function ndRemember(){try{return localStorage.getItem(ND_LS_FLAG)==='1';}catch(e){return false;}}
-function ndPersist(){try{if(ndRemember()&&ND)localStorage.setItem(ND_LS,JSON.stringify(ndToJSON(ND)));else localStorage.removeItem(ND_LS);}catch(e){}}
+function ndPersist(){try{if(ndRemember()&&ND){localStorage.setItem(ND_LS,JSON.stringify(ndToJSON(ND)));localStorage.setItem(ND_LS_SITES,JSON.stringify({sel:NDF.sel?[...NDF.sel]:null,noSite:NDF.noSite}));}else{localStorage.removeItem(ND_LS);localStorage.removeItem(ND_LS_SITES);}}catch(e){}}
 
 /* ---------- toolbar: button, status, menu ---------- */
-function ndStatus(){const s=$('#ndstat'),b=$('#ndbtn');
- if(!ND){s.innerHTML='';s.title='';b.classList.remove('on');return;}
+function ndStatus(){const s=$('#ndstat'),b=$('#ndbtn'),sb=$('#ndsite');
+ if(!ND){s.innerHTML='';s.title='';b.classList.remove('on');sb.hidden=true;$('#ndsitemenu').hidden=true;return;}
+ const ns=ndSites().length;sb.hidden=!(ns>1||ndFiltered()||(ns===1&&ndNoSiteN()));sb.textContent=(ndFiltered()&&NDF.sel.size>1?'Sites: ':'Site: ')+ndFilterLabel().replace(/ sites$/,'')+' ▾';sb.classList.toggle('on',ndFiltered());
  const na=ND.instances.reduce((a,I)=>a+I.addresses.length,0);b.classList.add('on');
- s.innerHTML=`${NDsrc.enc?'<span title="Loaded from an encrypted file">🔒</span> ':''}${esc(ND.network)}${NDdirty?' <i title="Changes not saved to a file">●</i>':''}${NDwarn.length?` <b data-nd="warn" title="Data warnings – click to view">⚠${NDwarn.length}</b>`:''}`;
- s.title=`${ND.instances.length} instances · ${na} addresses${NDdirty?' · changes not saved to a file':''}${ndRemember()?' · kept in this browser':''}`;}
+ s.innerHTML=`${NDsrc.enc?'<span title="Loaded from an encrypted file">🔒</span> ':''}<span class="ndn">${esc(ND.network)}</span>${NDdirty?' <i title="Changes not saved to a file">●</i>':''}${NDwarn.length?` <b data-nd="warn" title="Data warnings – click to view">⚠${NDwarn.length}</b>`:''}`;
+ s.title=`${ND.instances.length} instances · ${na} addresses${ndFiltered()?' · showing '+ndInst().length+' ('+ndFilterLabel()+')':''}${NDdirty?' · changes not saved to a file':''}${ndRemember()?' · kept in this browser':''}`;}
 function ndMenu(){const m=$('#ndmenu');if(!m.hidden){m.hidden=true;return;}const has=!!ND,cr=ndCryptoOK();
  m.innerHTML=`<div class="ndm-h">${has?`<b>${esc(ND.network)}</b><span>${ND.instances.length} instances · ${ND.instances.reduce((a,I)=>a+I.addresses.length,0)} addresses${NDdirty?' · <i>unsaved changes</i>':''}</span>`:'<b>No network data loaded</b><span>Load your IP plan to see it in element and interface details. Data stays on this computer – nothing is uploaded.</span>'}</div>
  <button data-ndm="load">Load file… <small>CSV · JSON · encrypted JSON · saved HTML – or drop a file on the page</small></button>
  <button data-ndm="new">New empty dataset…</button>
  ${has?`<button data-ndm="rename">Rename network…</button><button data-ndm="warn">Data check <small>${NDwarn.length} warning${NDwarn.length===1?'':'s'}</small></button>`:''}
  <hr>
+ ${has&&ndFiltered()?`<label class="ndm-chk"><input type="checkbox" id="ndexpf" ${NDexpf?'checked':''}><span>Export only the filtered sites<small>${ndInst().length} of ${ND.instances.length} instances (${esc(ndFilterLabel())}); interface info is always included</small></span></label>`:''}
  <button data-ndm="csv" ${has?'':'disabled'}>Export CSV</button>
  <button data-ndm="json" ${has?'':'disabled'}>Export JSON</button>
  <button data-ndm="json-enc" ${has&&cr?'':'disabled'}>Export JSON, encrypted 🔒</button>
@@ -3918,19 +3965,41 @@ function ndMenu(){const m=$('#ndmenu');if(!m.hidden){m.hidden=true;return;}const
 async function ndMenuAction(a){$('#ndmenu').hidden=true;
  if(a==='load')ndPickFile();
  else if(a==='new'){if(ND&&NDdirty&&!await ndAsk('Discard unsaved changes?',`<p>“${esc(ND.network)}” has changes that are not saved to a file.</p>`,[{label:'Cancel',v:false},{label:'Discard',v:true,danger:true}]))return;
-  ndModal('New dataset','<label>Network name<input id="ndname" placeholder="e.g. Operator X – lab"></label>',[{label:'Cancel'},{label:'Create',primary:true,onClick:m=>{ndSet(ndEmpty(m.querySelector('#ndname').value.trim()||'Unnamed network'),{kind:'new',enc:false},[],true);}}]);}
+  ndModal('New dataset','<label>Network name<input id="ndname" placeholder="e.g. Operator X – lab"></label>',[{label:'Cancel'},{label:'Create',primary:true,onClick:m=>{ndFilterReset();ndSet(ndEmpty(m.querySelector('#ndname').value.trim()||'Unnamed network'),{kind:'new',enc:false},[],true);}}]);}
  else if(a==='rename')ndModal('Rename network',`<label>Network name<input id="ndname" value="${esc(ND.network)}"></label>`,[{label:'Cancel'},{label:'Save',primary:true,onClick:m=>{ND.network=m.querySelector('#ndname').value.trim()||ND.network;ndTouch();}}]);
  else if(a==='warn')ndShowWarnings();
  else if(['csv','json','json-enc','html','html-enc'].includes(a))ndSave(a);
  else if(a==='template')ndDownload('netdata-template.csv','﻿'+ND_TEMPLATE_CSV,'text/csv;charset=utf-8');
  else if(a==='clear'){if(!await ndAsk('Remove network data?',`<p>Removes “${esc(ND.network)}” from this page${ndRemember()?' and from this browser’s storage':''}. ${NDdirty?'<b>Changes not saved to a file will be lost.</b>':'Your files are not affected.'}</p>`,[{label:'Cancel',v:false},{label:'Remove',v:true,danger:true}]))return;
-  ND=null;NDdirty=false;NDwarn=[];NDsrc={kind:'',enc:false};ndRefresh();}}
+  ND=null;NDdirty=false;NDwarn=[];NDsrc={kind:'',enc:false};ndFilterReset();ndRefresh();}}
 $('#ndbtn').addEventListener('click',ev=>{ev.stopPropagation();ndMenu();});
 $('#ndstat').addEventListener('click',ev=>{if(ev.target.closest('[data-nd="warn"]'))ndShowWarnings();});
 $('#ndmenu').addEventListener('click',ev=>{const b=ev.target.closest('button[data-ndm]');if(b&&!b.disabled)ndMenuAction(b.dataset.ndm);});
-$('#ndmenu').addEventListener('change',ev=>{if(ev.target.id!=='ndrem')return;try{localStorage.setItem(ND_LS_FLAG,ev.target.checked?'1':'0');}catch(e){toast('Browser storage is not available here.');}
+$('#ndmenu').addEventListener('change',ev=>{if(ev.target.id==='ndexpf'){NDexpf=ev.target.checked;return;}if(ev.target.id!=='ndrem')return;try{localStorage.setItem(ND_LS_FLAG,ev.target.checked?'1':'0');}catch(e){toast('Browser storage is not available here.');}
  ndPersist();ndStatus();toast(ev.target.checked?'Network data will be kept in this browser':'Network data removed from this browser’s storage');});
 document.addEventListener('click',ev=>{const m=$('#ndmenu');if(!m.hidden&&!ev.target.closest('#ndmenu,#ndbtn'))m.hidden=true;});
+/* site filter popover */
+function ndSiteMenu(){const m=$('#ndsitemenu');if(!m.hidden){m.hidden=true;return;}$('#ndmenu').hidden=true;
+ m.innerHTML=`<div class="ndm-h"><b>Show network data of …</b><span>${ndSites().length} sites · applies to panels, map badges and search</span></div>
+ <input id="ndsiteq" type="search" placeholder="Find sites, e.g. bb1, bb2" autocomplete="off" spellcheck="false">
+ <div class="ndsite-btns"><button data-ns="all">All</button><button data-ns="none">None</button><button data-ns="match" title="Select exactly the sites in the list below (Enter)">Only listed</button></div>
+ <label class="ndm-chk"><input type="checkbox" id="ndsitenone" ${NDF.noSite?'checked':''}><span>Also show instances without a site<small>${ndNoSiteN()} instance${ndNoSiteN()===1?'':'s'} (e.g. RAN address ranges)</small></span></label>
+ <div class="ndsite-list"></div>`;m.hidden=false;ndSiteList();m.querySelector('#ndsiteq').focus();}
+function ndSiteMatches(){const q=($('#ndsiteq')||{}).value||'';const parts=q.toLowerCase().split(',').map(x=>x.trim()).filter(Boolean);
+ return ndSites().filter(([x])=>!parts.length||parts.some(p=>x.toLowerCase().includes(p)));}
+function ndSiteList(){const m=$('#ndsitemenu');if(m.hidden)return;const S=ndSiteMatches();
+ m.querySelector('.ndsite-list').innerHTML=S.map(([x,n])=>`<label title="${esc(x)}"><input type="checkbox" data-site="${esc(x)}" ${!NDF.sel||NDF.sel.has(x)?'checked':''}><span>${esc(x)}</span><small>${n}</small></label>`).join('')||'<div class="ndmuted">No site matches.</div>';}
+function ndSiteApply(){ndFilterClean();ndIndex();ndBadges();ndPersist();ndStatus();apply();renderPanel();ndSiteList();}
+$('#ndsite').addEventListener('click',ev=>{ev.stopPropagation();ndSiteMenu();});
+$('#ndsitemenu').addEventListener('input',ev=>{if(ev.target.id==='ndsiteq')ndSiteList();});
+$('#ndsitemenu').addEventListener('keydown',ev=>{if(ev.target.id==='ndsiteq'&&ev.key==='Enter'){ev.preventDefault();$('#ndsitemenu [data-ns="match"]').click();}});
+$('#ndsitemenu').addEventListener('click',ev=>{const b=ev.target.closest('[data-ns]');if(!b)return;const a=b.dataset.ns;
+ if(a==='all')NDF.sel=null;else if(a==='none')NDF.sel=new Set();else NDF.sel=new Set(ndSiteMatches().map(x=>x[0]));ndSiteApply();});
+$('#ndsitemenu').addEventListener('change',ev=>{const t=ev.target;
+ if(t.id==='ndsitenone')NDF.noSite=t.checked;
+ else if(t.dataset.site!=null){if(!NDF.sel)NDF.sel=new Set(ndSites().map(x=>x[0]));if(t.checked)NDF.sel.add(t.dataset.site);else NDF.sel.delete(t.dataset.site);}
+ else return;ndSiteApply();});
+document.addEventListener('click',ev=>{const m=$('#ndsitemenu');if(!m.hidden&&!ev.target.closest('#ndsitemenu,#ndsite'))m.hidden=true;});
 /* drag & drop a file anywhere on the page */
 let ndDragN=0;
 const ndHasFiles=ev=>[...(ev.dataTransfer&&ev.dataTransfer.types||[])].includes('Files');
@@ -3943,20 +4012,21 @@ window.addEventListener('beforeunload',ev=>{if(ND&&NDdirty&&!ndRemember()){ev.pr
 /* ---------- editor ---------- */
 function ndRowHTML(el,A){const opts=ndElIfs(el);if(A.interface&&!opts.some(o=>o.k===A.interface))opts.unshift({k:A.interface,label:ndIfLabel(A.interface)+' (not on this element)'});
  return `<tr><td><select class="nd-if">${opts.map(o=>`<option value="${esc(o.k)}"${o.k===A.interface?' selected':''}>${esc(o.label)}</option>`).join('')}</select></td>
- <td><input class="nd-ip" value="${esc(A.ip)}" placeholder="address · subnet/len · FQDN" spellcheck="false"></td><td><input class="nd-port" value="${esc(A.port)}" inputmode="numeric"></td><td><input class="nd-vlan" value="${esc(A.vlan)}"></td><td><input class="nd-note" value="${esc(A.note)}"></td><td><button class="nd-del" title="Remove this address" aria-label="Remove">✕</button></td></tr>`;}
-function ndEditInstance(el,id){const I=id?ND.instances.find(x=>x.id===id):{id:null,element:el,name:'',site:'',note:'',addresses:[{interface:(ndElIfs(el)[0]||{}).k||'',ip:'',port:'',vlan:'',note:''}]};if(!I)return;const E=EM[I.element];
+ <td><input class="nd-ip" value="${esc(A.ip)}" placeholder="address · subnet/len · FQDN" spellcheck="false"></td><td><input class="nd-port" value="${esc(A.port)}" placeholder="443;8080" spellcheck="false" title="One port, a list (2123;2152) or a range (30000-30100)"></td><td><input class="nd-vlan" value="${esc(A.vlan)}"></td><td><input class="nd-note" value="${esc(A.note)}"></td><td><button class="nd-del" title="Remove this address" aria-label="Remove">✕</button></td></tr>`;}
+function ndEditInstance(el,id){const I=id?ND.instances.find(x=>x.id===id):{id:null,element:el,name:'',site:NDF.sel&&NDF.sel.size===1?[...NDF.sel][0]:'',note:'',addresses:[{interface:(ndElIfs(el)[0]||{}).k||'',ip:'',port:'',vlan:'',note:''}]};if(!I)return;const E=EM[I.element];
  ndModal((id?'Edit ':'New ')+E.n+' instance',
- `<div class="ndgrid"><label>Name<input id="nd-name" value="${esc(I.name)}" placeholder="e.g. ${esc(E.n.split(/[ /]/)[0])}01 – or * for a range"></label><label>Site<input id="nd-site" value="${esc(I.site)}"></label><label class="wide">Note<input id="nd-inote" value="${esc(I.note)}"></label></div>
+ `<div class="ndgrid"><label>Name<input id="nd-name" value="${esc(I.name)}" placeholder="e.g. ${esc(E.n.split(/[ /]/)[0])}01 – or * for a range"></label><label>Site<input id="nd-site" value="${esc(I.site)}" list="nd-sitelist" autocomplete="off"><datalist id="nd-sitelist">${ndSites().map(([x])=>`<option value="${esc(x)}">`).join('')}</datalist></label><label class="wide">Note<input id="nd-inote" value="${esc(I.note)}"></label></div>
  <table class="ndedit"><thead><tr><th>Interface</th><th>Address</th><th>Port</th><th>VLAN</th><th>Note</th><th></th></tr></thead><tbody>${I.addresses.map(A=>ndRowHTML(I.element,A)).join('')}</tbody></table>
  <button id="nd-addrow" class="ndlink">+ Add address</button><div class="nderr" id="nderr"></div>`,
  [...(id?[{label:'Delete instance',danger:true,onClick:async()=>{if(!await ndAsk('Delete instance?',`<p>Delete ${esc(E.n)} “${esc(I.name)}” and its ${I.addresses.length} address${I.addresses.length===1?'':'es'}?</p>`,[{label:'Cancel',v:false},{label:'Delete',v:true,danger:true}]))return false;ND.instances=ND.instances.filter(x=>x.id!==id);ndTouch();}}]:[]),
   {label:'Cancel'},
   {label:'Save',primary:true,onClick:m=>{const er=m.querySelector('#nderr');const name=m.querySelector('#nd-name').value.trim();if(!name){er.textContent='Enter a name.';return false;}
    if(ND.instances.some(x=>x.id!==I.id&&x.element===I.element&&x.name.toLowerCase()===name.toLowerCase())){er.textContent=`There already is a ${E.n} called “${name}”.`;return false;}
-   const rows=[...m.querySelectorAll('.ndedit tbody tr')].map(tr=>({interface:tr.querySelector('.nd-if').value,ip:tr.querySelector('.nd-ip').value.trim(),port:tr.querySelector('.nd-port').value.trim(),vlan:tr.querySelector('.nd-vlan').value.trim(),note:tr.querySelector('.nd-note').value.trim()})).filter(r=>r.ip||r.note||r.port||r.vlan);
-   const bad=rows.filter(r=>r.ip&&ndAddrKind(r.ip)==='bad').map(r=>r.ip).concat(rows.filter(r=>r.port&&!(/^\d{1,5}$/.test(r.port)&&+r.port<65536)).map(r=>'port '+r.port));
+   const rows=[...m.querySelectorAll('.ndedit tbody tr')].map(tr=>({interface:tr.querySelector('.nd-if').value,ip:tr.querySelector('.nd-ip').value.trim(),port:tr.querySelector('.nd-port').value.trim(),vlan:tr.querySelector('.nd-vlan').value.trim(),note:tr.querySelector('.nd-note').value.trim()})).filter(r=>r.ip||r.note||r.port||r.vlan).map(r=>({...r,port:ndPortNorm(r.port)}));
+   const bad=rows.filter(r=>r.ip&&ndAddrKind(r.ip)==='bad').map(r=>r.ip).concat(rows.filter(r=>r.port&&!ndPortOK(r.port)).map(r=>'port '+r.port+' ('+ND_PORTMSG+')'));
    const sig=bad.join('|');if(bad.length&&m.dataset.ack!==sig){m.dataset.ack=sig;er.textContent=`Please check: ${bad.join(', ')}. Click Save again to keep as entered.`;return false;}
-   const T=id?I:{id:NDuid(),element:I.element};Object.assign(T,{name,site:m.querySelector('#nd-site').value.trim(),note:m.querySelector('#nd-inote').value.trim(),addresses:rows});if(!id)ND.instances.push(T);ndTouch();}}],
+   const T=id?I:{id:NDuid(),element:I.element};Object.assign(T,{name,site:m.querySelector('#nd-site').value.trim(),note:m.querySelector('#nd-inote').value.trim(),addresses:rows});if(!id)ND.instances.push(T);
+   if(!ndVis(T)){if(T.site)NDF.sel.add(T.site);else NDF.noSite=true;toast('Site filter extended so the instance stays visible');}ndTouch();}}],
  m=>{delete m.dataset.ack;m.querySelector('#nd-addrow').onclick=()=>{const tb=m.querySelector('.ndedit tbody');tb.insertAdjacentHTML('beforeend',ndRowHTML(I.element,{interface:'',ip:'',port:'',vlan:'',note:''}));tb.lastElementChild.querySelector('.nd-ip').focus();};
   m.querySelector('.ndedit').addEventListener('click',ev=>{const b=ev.target.closest('.nd-del');if(b)b.closest('tr').remove();});});}
 function ndEditIf(k){const v=ND.interfaces[k]||{subnet:'',vlan:'',note:''};
@@ -3965,7 +4035,8 @@ function ndEditIf(k){const v=ND.interfaces[k]||{subnet:'',vlan:'',note:''};
   {label:'Save',primary:true,onClick:m=>{const sub=m.querySelector('#nd-sub').value.trim();if(sub&&ndAddrKind(sub)==='bad'&&m.dataset.ack!==sub){m.dataset.ack=sub;m.querySelector('#nderr').textContent=`“${sub}” is not a valid subnet. Click Save again to keep it.`;return false;}
    ND.interfaces[k]={subnet:sub,vlan:m.querySelector('#nd-vl').value.trim(),note:m.querySelector('#nd-in').value.trim()};ndTouch();}}],m=>{delete m.dataset.ack;});}
 panel.addEventListener('click',ev=>{const b=ev.target.closest('[data-nd]');if(!b)return;ev.stopPropagation();const i=b.dataset.nd.indexOf(':');const a=i<0?b.dataset.nd:b.dataset.nd.slice(0,i),x=i<0?'':b.dataset.nd.slice(i+1);
- if(a==='menu'){ndMenu();return;}if(a==='warn'){ndShowWarnings();return;}if(!ND){ndMenuAction('new');return;}
+ if(a==='menu'){ndMenu();return;}if(a==='warn'){ndShowWarnings();return;}
+ if(a==='siteclear'){NDF.sel=null;ndSiteApply();return;}if(a==='sites'){ndSiteMenu();return;}if(!ND){ndMenuAction('new');return;}
  if(a==='add')ndEditInstance(x,null);else if(a==='edit')ndEditInstance(null,x);else if(a==='ifedit')ndEditIf(x);});
 
 /* ---------- start-up: data embedded in a saved HTML file, else data remembered in this browser ---------- */
@@ -3974,7 +4045,7 @@ async function ndInit(){const emb=document.getElementById('mnn-netdata');
    if(j.format===ND_ENC){j=await ndUnlock(j,'Unlock network data','This copy of the tool contains encrypted network data. Enter the passphrase, or cancel to use the tool without it.');if(!j)return;enc=true;}
    const r=ndClean(j);ndSet(r.d,{kind:'embedded',enc},r.w,false);toast(`Network data “${r.d.network}” loaded from this file`);}
   catch(e){toast('The network data in this file could not be read.');}return;}
- if(ndRemember()){try{const t=localStorage.getItem(ND_LS);if(t){const r=ndClean(JSON.parse(t));ndSet(r.d,{kind:'browser',enc:false},r.w,false);toast(`Network data “${r.d.network}” restored from this browser`);}}catch(e){}}}
+ if(ndRemember()){try{const t=localStorage.getItem(ND_LS);if(t){const r=ndClean(JSON.parse(t));try{const f=JSON.parse(localStorage.getItem(ND_LS_SITES)||'null');if(f)NDF={sel:f.sel?new Set(f.sel):null,noSite:f.noSite!==false};}catch(e){}ndSet(r.d,{kind:'browser',enc:false},r.w,false);toast(`Network data “${r.d.network}” restored from this browser`);}}catch(e){}}}
 
 /* init */
 function sizeMain(){document.documentElement.style.setProperty('--hdr',($('#hdr').offsetHeight+$('#toolbar').offsetHeight)+'px');}

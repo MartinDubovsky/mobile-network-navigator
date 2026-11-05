@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.05.4** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
+**Version 2026.11.05.5** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them, the protocol stacks used on each interface and message-flow diagrams of the main procedures on every interface.
 
@@ -150,17 +150,26 @@ Everything is in the **◆ Network data** menu at the right end of the toolbar:
 | **Export JSON, encrypted** | `<network>.netdata.enc.json`, protected by a passphrase |
 | **Save tool + data as one HTML file** | `mobile-network-navigator-<network>-with-data.html` – a copy of the tool with your data inside; opening it loads the data automatically. Handy for a laptop in the field or for sharing with a colleague. |
 | **… encrypted** | The same file, but the data block is encrypted; the passphrase is asked when the file is opened (Cancel = use the tool without the data). |
-| **Remember on this computer** | Keep the data in this browser’s storage until you untick it or remove the data. |
+| **Export only the filtered sites** | Shown while a site filter is active: the exports and HTML copies then contain only the instances you see (interface info is always included). The file name gets the site name, and the data still counts as unsaved. |
+| **Remember on this computer** | Keep the data (and the site filter) in this browser’s storage until you untick it or remove the data. |
 | **Download CSV template** | The example below. |
 
-**Editing in the tool:** select an element → **+ Add … instance** or **Edit** on an instance card (name, site, note, and any number of addresses with interface, address, port, VLAN, note). Select an interface → **Add / Edit interface info** for its subnet, VLAN and a note. Invalid addresses or ports are pointed out before saving.
+**Editing in the tool:** select an element → **+ Add … instance** or **Edit** on an instance card (name, site, note, and any number of addresses with interface, address, port, VLAN, note). Select an interface → **Add / Edit interface info** for its subnet, VLAN and a note. Ports can be entered as a list or range (`443;8080`, `2123, 2152`, `30000-30100`). Invalid addresses or ports are pointed out before saving. While a site filter is active, a new instance gets that site by default, and the site field suggests the existing site names.
+
+**Site filter**
+
+As soon as the data contains more than one site, a **Site: all ▾** button appears next to the Network data menu. It filters what is shown – element and interface panels, map badges, tooltips and search – without changing the data:
+
+- Tick or untick sites, or type part of a name (several parts comma-separated, e.g. `bb1, bb2`) and press **Enter** / **Only listed** to keep exactly the listed sites. **All** and **None** reset the selection.
+- **Also show instances without a site** (on by default) keeps entries such as RAN address ranges visible whatever sites are selected.
+- Panels show the active filter next to the dataset name (click it to change it, ✕ to show all sites) and say how many instances of the element are hidden.
 
 **Where the data appears**
 
 - **Element panel:** “Network data” with one card per instance (the gNB box also lists CU-CP, CU-UP and DU instances).
 - **Interface panel:** subnet / VLAN of the interface and the addresses of both ends. If an end has no data of its own, the tool falls back: SGW-C / SGW-U → SGW, PGW-C / PGW-U → PGW, gNB-CU-CP / CU-UP / DU → gNB (and the other way round), so a classic SGW entry also shows on the CUPS view’s S11 or S5-U. The SGW S1-U address also shows on S1-U towards the en-gNB.
 - **Map:** a green `IP n` badge with the number of instances on each element; tooltips show the count.
-- **Search:** finds instance names, notes and addresses. A complete IPv4 address matches exactly that address or a subnet that contains it (`198.51.100.130` finds the eNodeB range `198.51.100.128/26`, while `192.0.2.11` does not find `192.0.2.110`); partial input such as `192.0.2.` or `2001:db8:` is a text search. Matching rows are highlighted in the panel and moved to the top of long lists (lists show 40 instances at a time).
+- **Search:** finds instance names, sites, notes, addresses and ports. A complete IPv4 address matches exactly that address or a subnet that contains it (`198.51.100.130` finds the eNodeB range `198.51.100.128/26`, while `192.0.2.11` does not find `192.0.2.110`); partial input such as `192.0.2.` or `2001:db8:` is a text search. Matching rows are highlighted in the panel and moved to the top of long lists (lists show 40 instances at a time).
 
 ### CSV format
 
@@ -171,10 +180,10 @@ UTF-8, one row per address. The delimiter (`,` `;` or tab) is detected automatic
 element,instance,site,interface,ip,port,vlan,note
 mme,MME01,Site-A,s1mme,192.0.2.11,36412,101,SCTP multihoming - primary path
 mme,MME01,Site-A,s1mme,192.0.2.12,36412,101,SCTP multihoming - secondary path
-sgw,SGW01,Site-A,s5,198.51.100.7,,111,GTP-C 2123 / GTP-U 2152
-amf,AMF01,Site-A,sbi,192.0.2.62,443,122,
-enb,*,All sites,s1mme,198.51.100.128/26,36412,101,eNodeB signalling range
-gnbcucp,*,All sites,n2,2001:db8:100::/48,38412,121,IPv6 example
+sgw,SGW01,Site-A,s5,198.51.100.7,2123;2152,111,GTP-C and GTP-U
+amf,AMF01,Site-A,sbi,192.0.2.62,443;8080,122,TLS and plain HTTP/2
+enb,*,,s1mme,198.51.100.128/26,36412,101,eNodeB signalling range
+gnbcucp,*,,n2,2001:db8:100::/48,38412,121,IPv6 example
 ,,,s1mme,192.0.2.0/28,,101,S1-MME core VLAN
 ```
 
@@ -182,12 +191,13 @@ gnbcucp,*,All sites,n2,2001:db8:100::/48,38412,121,IPv6 example
 |---|---|
 | `element` | Element ID (see [Element IDs](#deep-links)) or its name as shown on the map (`MME`, `MSC Server`, `gNB-CU-CP`, …). A few common names are accepted too (`MSS`, `VLR`, `AuC`, `P-CSCF`, `OFCS`, `CU-CP`, …). **Empty** = the row describes the interface itself (subnet in `ip`, VLAN, note). |
 | `instance` | Your node name, e.g. `MME01`. `*` stands for “all instances”, useful for RAN address ranges. Rows with the same element and instance form one instance. |
-| `site` | Optional location. |
+| `site` | Optional location, used by the site filter. Leave it empty for entries that apply everywhere (e.g. RAN ranges). |
 | `interface` | Interface ID (see [Interface IDs](#deep-links)) or name as shown on the map. Names are resolved against the interfaces of that element: `Gx` on a GGSN is the GGSN Gx, `A` on a CS-MGW is the A user plane, `S8` means S5/S8, `Gp` means Gn/Gp. The CUPS view interfaces (S11, S5-C/U, …) and the ng-eNB copies of N2/N3/Xn are stored under the classic ID. Also allowed: `oam` (O&M), `sbi` (the NF’s SBI address, shown on its SBI stub and on the SBI bus) and `other`. |
 | `ip` | IPv4 or IPv6 address, a subnet in CIDR notation, or a host name (FQDN). |
-| `port`, `vlan`, `note` | Optional. |
+| `port` | Optional: one port, a list (`2123;2152` – separated by `;`, `,`, `/` or spaces) or a range (`30000-30100`). If the separator is also the CSV delimiter, quote the field (`"2123;2152"`) or use another separator. Saved as `2123;2152`, shown as `2123, 2152`. |
+| `vlan`, `note` | Optional. |
 
-Header names are case-insensitive and some alternatives are recognised (`name`/`hostname`/`node` for instance, `address`/`ip address`/`subnet` for ip, `comment`/`description` for note). Lines starting with `#` are comments; `# network: <name>` names the dataset.
+Header names are case-insensitive and some alternatives are recognised (`ports` for port, `name`/`hostname`/`node` for instance, `address`/`ip address`/`subnet` for ip, `comment`/`description` for note). Lines starting with `#` are comments; `# network: <name>` names the dataset.
 
 ### JSON format
 
@@ -206,7 +216,7 @@ Complete examples with documentation addresses only (RFC 5737 / RFC 3849): [`net
 
 ### Data check
 
-On loading and after each edit the data is checked. Rows with an unknown element are skipped; everything else is kept and reported: unknown interface, interface that does not belong to the element in this tool, invalid address / subnet / host name, invalid port, and the same address used by different instances. The count is shown next to the menu button (**⚠ n**, click for the list).
+On loading and after each edit the data is checked. Rows with an unknown element are skipped; everything else is kept and reported: unknown interface, interface that does not belong to the element in this tool, invalid address / subnet / host name, invalid port, port list or range, and the same address used by different instances. The count is shown next to the menu button (**⚠ n**, click for the list).
 
 ### Encryption
 
@@ -345,6 +355,11 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ---
 
 ## Changelog
+
+### 2026.11.05.5
+- **Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.
+- **Site filter** for network data: pick sites (or type part of a name) to limit panels, map badges, tooltips and search; optional export of only the filtered sites; the filter is kept with “Remember on this computer”.
+- Template: port lists and a second site; RAN ranges without a site.
 
 ### 2026.11.05.4
 - **Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.
