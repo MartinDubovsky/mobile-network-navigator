@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.05.7** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.05.8** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**. It shows the network elements, the interfaces between them, the protocol stacks used on each interface and message-flow diagrams of the main procedures on every interface.
 
@@ -161,7 +161,8 @@ Everything is in the **◆ Network data** menu at the right end of the toolbar:
 As soon as the data contains more than one site, a **Site: all ▾** button appears next to the Network data menu. It filters what is shown – element and interface panels, map badges, tooltips and search – without changing the data:
 
 - Tick or untick sites, or type part of a name (several parts comma-separated, e.g. `bb1, bb2`) and press **Enter** / **Only listed** to keep exactly the listed sites. **All** and **None** reset the selection.
-- **Also show instances without a site** (on by default) keeps entries such as RAN address ranges visible whatever sites are selected.
+- Instances with site **`*`** belong to every site: they are shown whichever sites are selected (only **None** hides them) and are not listed as a site of their own – use it for e.g. RAN address ranges or a central NRF.
+- **Also show instances without a site** (on by default) keeps entries with an empty site visible as well.
 - Panels show the active filter next to the dataset name (click it to change it, ✕ to show all sites) and say how many instances of the element are hidden.
 
 **Where the data appears**
@@ -182,8 +183,8 @@ mme,MME01,Site-A,s1mme,192.0.2.11,36412,101,SCTP multihoming - primary path
 mme,MME01,Site-A,s1mme,192.0.2.12,36412,101,SCTP multihoming - secondary path
 sgw,SGW01,Site-A,s5,198.51.100.7,2123;2152,111,GTP-C and GTP-U
 amf,AMF01,Site-A,sbi,192.0.2.62,443;8080,122,TLS and plain HTTP/2
-enb,*,,s1mme,198.51.100.128/26,36412,101,eNodeB signalling range
-gnbcucp,*,,n2,2001:db8:100::/48,38412,121,IPv6 example
+enb,*,*,s1mme,198.51.100.128/26,36412,101,eNodeB signalling range
+gnbcucp,*,*,n2,2001:db8:100::/48,38412,121,IPv6 example
 ,,,s1mme,192.0.2.0/28,,101,S1-MME core VLAN
 ```
 
@@ -191,7 +192,7 @@ gnbcucp,*,,n2,2001:db8:100::/48,38412,121,IPv6 example
 |---|---|
 | `element` | Element ID (see [Element IDs](#deep-links)) or its name as shown on the map (`MME`, `MSC Server`, `gNB-CU-CP`, …). A few common names are accepted too (`MSS`, `VLR`, `AuC`, `P-CSCF`, `OFCS`, `CU-CP`, …). **Empty** = the row describes the interface itself (subnet in `ip`, VLAN, note). |
 | `instance` | Your node name, e.g. `MME01`. `*` stands for “all instances”, useful for RAN address ranges. Rows with the same element and instance form one instance. |
-| `site` | Optional location, used by the site filter. Leave it empty for entries that apply everywhere (e.g. RAN ranges). |
+| `site` | Optional location, used by the site filter. `*` = the entry belongs to every site (e.g. RAN ranges); it is shown as “all sites”. |
 | `interface` | Interface ID (see [Interface IDs](#deep-links)) or name as shown on the map. Names are resolved against the interfaces of that element: `Gx` on a GGSN is the GGSN Gx, `A` on a CS-MGW is the A user plane, `S8` means S5/S8, `Gp` means Gn/Gp. The CUPS view interfaces (S11, S5-C/U, …) and the ng-eNB copies of N2/N3/Xn are stored under the classic ID. Also allowed: `oam` (O&M), `sbi` (the NF’s SBI address, shown on its SBI stub and on the SBI bus) and `other`. |
 | `ip` | IPv4 or IPv6 address, a subnet / range in CIDR notation, or a host name (FQDN). An address with its prefix length (`10.2.7.2/26` – host bits set) is treated as that one address; with zero host bits (`10.2.7.0/26`) it is a range, e.g. for all eNodeBs. |
 | `port` | Optional: one port, a list (`2123;2152` – separated by `;`, `,`, `/` or spaces) or a range (`30000-30100`). If the separator is also the CSV delimiter, quote the field (`"2123;2152"`) or use another separator. Saved as `2123;2152`, shown as `2123, 2152`. |
@@ -359,6 +360,9 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.05.8
+- **Network data:** site `*` means the instance belongs to every site – it is shown whichever sites are selected and is not listed as a separate site in the site filter.
 
 ### 2026.11.05.7
 - **Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet.
