@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.06** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.06.1** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
@@ -144,6 +144,7 @@ Every interface panel has a **Message flows** section with sequence diagrams of 
 
 - **On the map:** opening a procedure widens the panel, zooms the map to the area involved and dims everything else. Hovering a procedure in the list previews its nodes.
 - **Step through it:** click a message, use **◀ Prev / Next ▶** or the `←` / `→` keys, or **▷ Play**. The current message is highlighted on the map – its interface(s) and both ends, a label with the message name and a dot that travels along the path in the message’s direction (NAS between UE and MME runs over LTE-Uu and S1-MME, an SBI call over the two NF stubs and the bus).
+- **NAS messages:** when a NAS message rides inside an RRC, S1AP, NGAP or RANAP message that also does something else (RRC Connection Setup Complete, INITIAL UE MESSAGE, INITIAL CONTEXT SETUP REQUEST, RRC reconfiguration, E-RAB / PDU session resource set-up), the carrier is drawn on each hop and the NAS message is named on it, e.g. `INITIAL UE MESSAGE` with **NAS: Attach Request + PDN Connectivity Request**. NAS messages that RRC and S1AP / NGAP / RANAP only relay (UL / DL Information Transfer, UPLINK / DOWNLINK NAS TRANSPORT, Direct Transfer) are drawn as one arrow between UE and MME / AMF / SGSN / MSC. Layer tags: `EMM` / `ESM` (4G), `5GMM` (5G), `MM` / `CC` / `GMM` / `SM` (2G/3G).
 - **Interfaces:** every message shows the interface it uses (`S11`, `LTE-Uu › S1-MME`, `N11` …). The 5GC and EPC toggles keep working: service-based calls are drawn on the SBI bus or on the reference point, and in the CUPS view S11 / S5 / Gx / S1-U map to their SGW-C / PGW-C / SGW-U copies, with Sxa / Sxb shown as involved.
 - **IP addresses:** with [network data](#network-data-your-own-ip-addresses) loaded, a row of selectors above the lanes picks the instance of each node (e.g. MME01 or MME02, source and target eNB), and every single-hop message shows `source address → destination address · port` taken from those instances. Ranges (instance `*`) are used for RAN nodes; an SBI call uses the NF’s reference-point or SBI address. A `—` means your data has no address for that end; multi-hop messages (NAS, RRC through the DU) show none. The destination port is the protocol’s well-known port when it is in the list (e.g. 2123 out of `2123;2152`).
 - **Element and interface panels** list the procedures they take part in (**End-to-end procedures**), and selecting something on the map while a procedure is open offers **← Back** to it at the same step.
@@ -382,7 +383,7 @@ Routing options: `ao` / `bo` (anchor offsets from element centre), `pts` (waypoi
 
 **Message flow format:** `MF[interfaceId] = [{t:'title', s:'spec', d:'optional note', p:['lane', …] (optional, default = the two ends), m:[rows]}]`. A row is `[from, to, 'TAG|MESSAGE', 'key IEs', '?']` (lane numbers from 0; the tag and `'?'` for optional are optional), `['*', 'note']` for a grey box across all lanes, `['*1', 'note']` for a box on lane 1, or `['=', 'text']` for a separator.
 
-**End-to-end procedure format:** `PROC = [{id, g:['4g', …], t:'title', s:'specs', d:'description', p:[{e:'element-id', l:'optional lane label'}, …], m:[rows]}]`. Rows are as in message flows plus a sixth field, the interface: `[from, to, 'TAG|MESSAGE', 'key IEs', '?' or '', 'iface']`, where `iface` is a link ID (`'s11'`), several joined with `+` for a multi-hop path (`'lteuu+s1mme'` for NAS, `'nruusa+f1c'` for NR RRC) in UE-to-core order, or `'sbi'` for a service-based call between two 5GC NFs. Use the classic EPC IDs; the CUPS view maps them itself. Two lanes may use the same element (source / target eNB).
+**End-to-end procedure format:** `PROC = [{id, g:['4g', …], t:'title', s:'specs', d:'description', p:[{e:'element-id', l:'optional lane label'}, …], m:[rows]}]`. Rows are as in message flows plus a sixth field, the interface: `[from, to, 'TAG|MESSAGE', 'key IEs', '?' or '', 'iface']`; `'TAG|MESSAGE|NAS'` names the NAS message carried inside (shown as **NAS: …**); where `iface` is a link ID (`'s11'`), several joined with `+` for a multi-hop path (`'lteuu+s1mme'` for NAS, `'nruusa+f1c'` for NR RRC) in UE-to-core order, or `'sbi'` for a service-based call between two 5GC NFs. Use the classic EPC IDs; the CUPS view maps them itself. Two lanes may use the same element (source / target eNB).
 
 Layer colours in the stacks are assigned automatically from the layer name (NAS, RRC, radio L2, application protocol, tunnelling, transport, IP, SS7/ATM, L2/L1).
 
@@ -393,6 +394,12 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.06.1
+- **End-to-end procedures – NAS messages made explicit:** a NAS message carried inside an RRC, S1AP, NGAP or RANAP message is now named on that message (e.g. RRC Connection Setup Complete and INITIAL UE MESSAGE with **NAS: Attach Request + PDN Connectivity Request**, INITIAL CONTEXT SETUP REQUEST and RRC Connection Reconfiguration with **NAS: Attach Accept + Activate Default EPS Bearer Context Request**). Before, these were only mentioned in the parameter text. NAS messages that RRC / S1AP / NGAP / RANAP only relay stay one arrow UE ↔ core; the rule is stated in each flow.
+- NAS layer tags are now precise: **EMM / ESM** (4G), **5GMM** (5G), **MM / CC / GMM / SM** (3G) instead of a generic NAS tag. Attach Complete is named with its ESM message (Activate Default EPS Bearer Context Accept).
+- Added the optional **Identity Request / Response** to LTE attach, 5G registration and 3G attach, and a note on the optional EIR check (S13) in LTE attach. In UTRAN the first NAS message (CM Service Request, GPRS Attach Request) is shown per hop: RRC Initial Direct Transfer, then RANAP INITIAL UE MESSAGE.
+- RRC IE names corrected: LTE RRC Connection Reconfiguration carries NAS in **dedicatedInfoNASList**, NR RRCReconfiguration in **dedicatedNAS-MessageList** (also fixed in the LTE-Uu message flow).
 
 ### 2026.11.06
 - **End-to-end procedures** (▶ Procedures in the toolbar): 17 multi-node call flows – LTE attach, service request, paging, S1 release, X2 handover, VoLTE dedicated bearer, detach, CS fallback, EN-DC secondary node addition, 5G registration, PDU session, service request, AN release, Xn handover, 3G attach + PDP context, Wi-Fi calling attach and LTE → Wi-Fi handover – with the interface of every message.

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="version" content="2026.11.06">
+<meta name="version" content="2026.11.06.1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mobile Network Navigator · 2G · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
@@ -361,6 +361,8 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
 .pdno{display:inline-block;min-width:16px;font-size:9.5px;font-family:var(--sans);color:var(--faint);margin-right:3px;text-align:right}
 .pdm.focus .pdno{color:var(--ink);font-weight:700}
 .pdif{font-family:var(--sans);font-size:9.5px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:0 5px;white-space:nowrap;vertical-align:1px}
+
+.pdnas{font-family:var(--sans);font-size:10.5px;font-weight:600;color:var(--ink);background:color-mix(in srgb,var(--g4g) 15%,transparent);border:1px solid color-mix(in srgb,var(--g4g) 45%,transparent);border-radius:4px;padding:0 4px;white-space:normal;display:inline-block;max-width:100%;line-height:1.35}
 .pdip{text-align:center;font-family:var(--mono);font-size:10.5px;color:var(--g4g);line-height:1.35;margin-top:1px}
 .pdip .pdna{color:var(--faint)}.pdip sup{font-size:8px;color:var(--muted)}.pdip .pdport{color:var(--muted)}
 .pdinst{position:relative;height:24px;margin:-2px 0 4px}
@@ -420,9 +422,9 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
 <script>
 'use strict';
 const PRISTINE_DOC=document.documentElement.cloneNode(true); /* clean copy of the tool, used by “Save tool + data as one HTML file” */
-const VERSION = '2026.11.06';
+const VERSION = '2026.11.06.1';
 /* release history – shown when the version number is clicked; keep in step with the README changelog */
-const RELEASES = [{"v": "2026.11.06", "items": ["**End-to-end procedures** (▶ Procedures in the toolbar): 17 multi-node call flows – LTE attach, service request, paging, S1 release, X2 handover, VoLTE dedicated bearer, detach, CS fallback, EN-DC secondary node addition, 5G registration, PDU session, service request, AN release, Xn handover, 3G attach + PDP context, Wi-Fi calling attach and LTE → Wi-Fi handover – with the interface of every message.", "**Map integration:** the map zooms to the procedure and dims everything else; stepping through the messages (click, ← / →, Play) highlights each hop and animates it along its path. Works in the CUPS and reference-point views.", "**IP addresses in the flows:** with network data loaded, pick the instance of each node above its lane and every message shows source → destination address and port.", "Element and interface panels list the procedures they appear in; deep links `#proc=<id>&step=<n>`; copy as text and larger view."]},{"v": "2026.11.05.9", "items": ["**Wi-Fi access via ePDG** (untrusted non-3GPP, VoWiFi): new **ePDG** and **3GPP AAA** elements with **SWu**, **SWm**, **SWx**, **S2b** and **S6b** (S2b-C / S2b-U and S6b to the PGW-C in the CUPS view), a **Wi-Fi** generation chip, message flows (IKEv2 + EAP-AKA tunnel set-up, S2b PDN connection, LTE ↔ Wi-Fi handover, Diameter procedures) and two end-to-end stacks.", "Map: the 5G rows moved down to make room below the EPC; the canvas is now 1900 × 1400."]},{"v": "2026.11.05.8", "items": ["**Network data:** site `*` means the instance belongs to every site – it is shown whichever sites are selected and is not listed as a separate site in the site filter."]},{"v": "2026.11.05.7","items": ["**Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet."]},{"v": "2026.11.05.6","items": ["**Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.","Addresses written with a prefix length (`10.2.7.2/26`) are treated as one address, not as the whole subnet: search no longer matches other addresses of that subnet, and the duplicate check compares the address part. CIDR blocks with zero host bits stay ranges."]},{"v": "2026.11.05.5","items": ["**Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.","**Site filter** for network data: pick sites (or type part of a name) to limit panels, map badges, tooltips and search; optional export of only the filtered sites; the filter is kept with “Remember on this computer”.","Template: port lists and a second site; RAN ranges without a site."]},{"v": "2026.11.05.4","items": ["**Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.","Larger view, copy as text, keyboard navigation, search over procedure and message names, and deep links to a procedure (`&mf=`)."]},{"v": "2026.11.05.3","items": ["**Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.","Save as CSV, JSON, encrypted JSON (AES-256-GCM, PBKDF2-SHA256), or as one HTML file with the tool and the data (optionally encrypted). Optional “Remember on this computer”. Warning before leaving with unsaved changes.","Content-Security-Policy added: the page cannot load or send anything over the network.","Templates `netdata-template.csv` / `netdata-template.json` (documentation addresses only); `.gitignore` excludes exports with real data.","`/` no longer jumps to the search box while typing in another field."]},{"v": "2026.11.05.2","items": ["**E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.","Scenarios can now consist of several paths: **5G NSA** user plane (NR leg + LTE leg over X2-U) and control plane (LTE RRC/NAS, SCG configuration via X2-C, SRB3) and **HSPA Direct Tunnel** (user plane RNC ↔ GGSN + SGSN control path) – every stack now faces its real peer.","Fixed labels: GTP-U (QFI) on N3/N9 at both ends, 16 / 8 kbit/s TRAU sub-timeslots on Abis and Ater; BSC added to the GSM speech path; user IP labelled consistently."]},{"v": "2026.11.05","items": ["Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).","The CS and PS core (MSC Server/VLR, CS-MGW, HLR/AuC, EIR, SGSN, GGSN, charging) is shared with 3G and now tagged for both generations.","Integration with modern networks: CSFB and SRVCC to GERAN (SGs, Sv), LTE ↔ GERAN reselection / redirection / NACC, S4-SGSN with Gb (S3/S4), and 5G-SRVCC (R16, NG-RAN → UTRAN only, via N26 → MME_SRVCC → Sv); no direct 5GS ↔ GERAN mobility.","New end-to-end stacks: 2G GPRS/EDGE user plane, GSM CS control plane, GSM speech path.","Renamed to “Mobile Network Navigator”; shorter generation chip subtitles so the header still fits one row at 1920 px."]},{"v": "2026.11.04.3","items": ["Drew interfaces that were only described in text: **Cx / Sh** (IMS–HSS), **Ro / Rf** (IMS–OCS/OFCS), **Sy** (PCRF–OCS), **S9** (PCRF–roaming partner), **S6d** (S4-SGSN–HSS), **Gs** (SGSN–MSC/VLR), **Gc** (GGSN–HLR), **Nhss** (HSS–UDM interworking, R16), and reference points **N23** (PCF–NWDAF) and **N34** (NSSF–NWDAF).","Diameter in 5G networks made visible: N5 to the IMS is now “N5 / Rx” (PCF supports Rx per TS 23.503 Annex C), N6/SGi/Gi carry the DN-AAA (RADIUS/Diameter) option; *5G SA* + *Diameter* filter highlights Cx/Sh, Ro/Rf, N5/Rx and N6.","EPC zone label moved to the bottom-right corner."]},{"v": "2026.11.04.2","items": ["Added **ng-eNB** (E-UTRA connected to 5GC) in the NG-RAN area with LTE-Uu, N2 (NG-C) to AMF, N3 (NG-U) to UPF and Xn to the gNB; notes on Options 4/4a, 5 and 7/7a/7x.","5G SA chip now reads “5GC · Opt. 2 (4/5/7)”."]},{"v": "2026.11.04","items": ["First release: architecture map (3G, HSPA, 4G, 5G NSA, 5G SA, interworking), element/interface details with protocol stacks, end-to-end stack view, interface table, deep links, dark/light theme.","Added Gx between GGSN (PCEF) and PCRF (R7+).","Added EPC **CUPS view**: SGW-C/U, PGW-C/U, Sxa, Sxb, S5-C/U, S4-C/U.","Compact top bar (two rows at 1920 px), protocol filter as a dropdown, date-based version label."]}];
+const RELEASES = [{"v": "2026.11.06.1", "items": ["**End-to-end procedures – NAS messages made explicit:** a NAS message carried inside an RRC, S1AP, NGAP or RANAP message is now named on that message (e.g. RRC Connection Setup Complete and INITIAL UE MESSAGE with **NAS: Attach Request + PDN Connectivity Request**, INITIAL CONTEXT SETUP REQUEST and RRC Connection Reconfiguration with **NAS: Attach Accept + Activate Default EPS Bearer Context Request**). Before, these were only mentioned in the parameter text. NAS messages that RRC / S1AP / NGAP / RANAP only relay stay one arrow UE ↔ core; the rule is stated in each flow.", "NAS layer tags are now precise: **EMM / ESM** (4G), **5GMM** (5G), **MM / CC / GMM / SM** (3G) instead of a generic NAS tag. Attach Complete is named with its ESM message (Activate Default EPS Bearer Context Accept).", "Added the optional **Identity Request / Response** to LTE attach, 5G registration and 3G attach, and a note on the optional EIR check (S13) in LTE attach. In UTRAN the first NAS message (CM Service Request, GPRS Attach Request) is shown per hop: RRC Initial Direct Transfer, then RANAP INITIAL UE MESSAGE.", "RRC IE names corrected: LTE RRC Connection Reconfiguration carries NAS in **dedicatedInfoNASList**, NR RRCReconfiguration in **dedicatedNAS-MessageList** (also fixed in the LTE-Uu message flow)."]},{"v": "2026.11.06", "items": ["**End-to-end procedures** (▶ Procedures in the toolbar): 17 multi-node call flows – LTE attach, service request, paging, S1 release, X2 handover, VoLTE dedicated bearer, detach, CS fallback, EN-DC secondary node addition, 5G registration, PDU session, service request, AN release, Xn handover, 3G attach + PDP context, Wi-Fi calling attach and LTE → Wi-Fi handover – with the interface of every message.", "**Map integration:** the map zooms to the procedure and dims everything else; stepping through the messages (click, ← / →, Play) highlights each hop and animates it along its path. Works in the CUPS and reference-point views.", "**IP addresses in the flows:** with network data loaded, pick the instance of each node above its lane and every message shows source → destination address and port.", "Element and interface panels list the procedures they appear in; deep links `#proc=<id>&step=<n>`; copy as text and larger view."]},{"v": "2026.11.05.9", "items": ["**Wi-Fi access via ePDG** (untrusted non-3GPP, VoWiFi): new **ePDG** and **3GPP AAA** elements with **SWu**, **SWm**, **SWx**, **S2b** and **S6b** (S2b-C / S2b-U and S6b to the PGW-C in the CUPS view), a **Wi-Fi** generation chip, message flows (IKEv2 + EAP-AKA tunnel set-up, S2b PDN connection, LTE ↔ Wi-Fi handover, Diameter procedures) and two end-to-end stacks.", "Map: the 5G rows moved down to make room below the EPC; the canvas is now 1900 × 1400."]},{"v": "2026.11.05.8", "items": ["**Network data:** site `*` means the instance belongs to every site – it is shown whichever sites are selected and is not listed as a separate site in the site filter."]},{"v": "2026.11.05.7","items": ["**Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet."]},{"v": "2026.11.05.6","items": ["**Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.","Addresses written with a prefix length (`10.2.7.2/26`) are treated as one address, not as the whole subnet: search no longer matches other addresses of that subnet, and the duplicate check compares the address part. CIDR blocks with zero host bits stay ranges."]},{"v": "2026.11.05.5","items": ["**Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.","**Site filter** for network data: pick sites (or type part of a name) to limit panels, map badges, tooltips and search; optional export of only the filtered sites; the filter is kept with “Remember on this computer”.","Template: port lists and a second site; RAN ranges without a site."]},{"v": "2026.11.05.4","items": ["**Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.","Larger view, copy as text, keyboard navigation, search over procedure and message names, and deep links to a procedure (`&mf=`)."]},{"v": "2026.11.05.3","items": ["**Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.","Save as CSV, JSON, encrypted JSON (AES-256-GCM, PBKDF2-SHA256), or as one HTML file with the tool and the data (optionally encrypted). Optional “Remember on this computer”. Warning before leaving with unsaved changes.","Content-Security-Policy added: the page cannot load or send anything over the network.","Templates `netdata-template.csv` / `netdata-template.json` (documentation addresses only); `.gitignore` excludes exports with real data.","`/` no longer jumps to the search box while typing in another field."]},{"v": "2026.11.05.2","items": ["**E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.","Scenarios can now consist of several paths: **5G NSA** user plane (NR leg + LTE leg over X2-U) and control plane (LTE RRC/NAS, SCG configuration via X2-C, SRB3) and **HSPA Direct Tunnel** (user plane RNC ↔ GGSN + SGSN control path) – every stack now faces its real peer.","Fixed labels: GTP-U (QFI) on N3/N9 at both ends, 16 / 8 kbit/s TRAU sub-timeslots on Abis and Ater; BSC added to the GSM speech path; user IP labelled consistently."]},{"v": "2026.11.05","items": ["Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).","The CS and PS core (MSC Server/VLR, CS-MGW, HLR/AuC, EIR, SGSN, GGSN, charging) is shared with 3G and now tagged for both generations.","Integration with modern networks: CSFB and SRVCC to GERAN (SGs, Sv), LTE ↔ GERAN reselection / redirection / NACC, S4-SGSN with Gb (S3/S4), and 5G-SRVCC (R16, NG-RAN → UTRAN only, via N26 → MME_SRVCC → Sv); no direct 5GS ↔ GERAN mobility.","New end-to-end stacks: 2G GPRS/EDGE user plane, GSM CS control plane, GSM speech path.","Renamed to “Mobile Network Navigator”; shorter generation chip subtitles so the header still fits one row at 1920 px."]},{"v": "2026.11.04.3","items": ["Drew interfaces that were only described in text: **Cx / Sh** (IMS–HSS), **Ro / Rf** (IMS–OCS/OFCS), **Sy** (PCRF–OCS), **S9** (PCRF–roaming partner), **S6d** (S4-SGSN–HSS), **Gs** (SGSN–MSC/VLR), **Gc** (GGSN–HLR), **Nhss** (HSS–UDM interworking, R16), and reference points **N23** (PCF–NWDAF) and **N34** (NSSF–NWDAF).","Diameter in 5G networks made visible: N5 to the IMS is now “N5 / Rx” (PCF supports Rx per TS 23.503 Annex C), N6/SGi/Gi carry the DN-AAA (RADIUS/Diameter) option; *5G SA* + *Diameter* filter highlights Cx/Sh, Ro/Rf, N5/Rx and N6.","EPC zone label moved to the bottom-right corner."]},{"v": "2026.11.04.2","items": ["Added **ng-eNB** (E-UTRA connected to 5GC) in the NG-RAN area with LTE-Uu, N2 (NG-C) to AMF, N3 (NG-U) to UPF and Xn to the gNB; notes on Options 4/4a, 5 and 7/7a/7x.","5G SA chip now reads “5GC · Opt. 2 (4/5/7)”."]},{"v": "2026.11.04","items": ["First release: architecture map (3G, HSPA, 4G, 5G NSA, 5G SA, interworking), element/interface details with protocol stacks, end-to-end stack view, interface table, deep links, dark/light theme.","Added Gx between GGSN (PCEF) and PCRF (R7+).","Added EPC **CUPS view**: SGW-C/U, PGW-C/U, Sxa, Sxb, S5-C/U, S4-C/U.","Compact top bar (two rows at 1920 px), protocol filter as a dropdown, date-based version label."]}];
 /* =====================================================================
    DATA
    ===================================================================== */
@@ -2726,7 +2728,7 @@ const mfLteUu=(c5)=>[
   [0,1,'RRC|SecurityModeComplete',''],
   [1,0,'RRC|UECapabilityEnquiry','requested RAT types (E-UTRA, NR, UTRA, GERAN …)','?'],
   [0,1,'RRC|UECapabilityInformation','','?'],
-  [1,0,'RRC|RRCConnectionReconfiguration','SRB2, DRBs ('+(c5?'mapped from QoS flows, with SDAP':'one per EPS bearer')+'), measConfig, dedicatedInfoNAS (e.g. '+(c5?'REGISTRATION ACCEPT':'ATTACH ACCEPT')+')'],
+  [1,0,'RRC|RRCConnectionReconfiguration','SRB2, DRBs ('+(c5?'mapped from QoS flows, with SDAP':'one per EPS bearer')+'), measConfig, dedicatedInfoNASList (e.g. '+(c5?'REGISTRATION ACCEPT':'ATTACH ACCEPT')+')'],
   [0,1,'RRC|RRCConnectionReconfigurationComplete',''],
   [0,1,'RRC|ULInformationTransfer','dedicatedInfoNAS (e.g. '+(c5?'REGISTRATION COMPLETE':'ATTACH COMPLETE')+')']]},
  {t:'Handover',s:'TS 36.331',d:'The UE completes the handover towards the target cell: random access, then RRCConnectionReconfigurationComplete.',m:[
@@ -4375,7 +4377,9 @@ try{const seen=localStorage.getItem('mnn-seen-version');if(!seen)localStorage.se
    END-TO-END PROCEDURES – multi-node call flows that can be stepped
    through on the map. Lanes are element IDs; each message names the
    interface(s) it travels on so the map can highlight the hop.
-   Message rows: [from, to, 'TAG|NAME', 'detail', 'flags ("?" = optional)', 'iface']
+   Message rows: [from, to, 'TAG|NAME', 'detail', 'flags ("?" = optional)', 'iface'];
+   'TAG|NAME|NAS' names the NAS message carried inside an RRC / S1AP / NGAP / RANAP message.
+   NAS messages that RRC and S1AP / NGAP / RANAP only relay are drawn as one UE ↔ core arrow.
    iface: a link ID, several joined with "+" for a multi-hop path (e.g. NAS
    carried over LTE-Uu and S1-MME), or "sbi" for a service-based call between
    two 5GC NFs (drawn on the SBI bus or on the reference point, following the
@@ -4391,18 +4395,21 @@ const PROC=[
   ['*0','Random access (preamble, random access response) precedes the first RRC message'],
   [0,1,'RRC|RRC Connection Request','S-TMSI (or a random value), establishmentCause mo-Signalling','','lteuu'],
   [1,0,'RRC|RRC Connection Setup','SRB1 configuration','','lteuu'],
-  [0,1,'RRC|RRC Connection Setup Complete','dedicatedInfoNAS: Attach Request + PDN Connectivity Request; selected PLMN, registered MME (GUMMEI) if known','','lteuu'],
-  [1,2,'S1AP|INITIAL UE MESSAGE','NAS-PDU (Attach Request), TAI, E-UTRAN CGI, RRC establishment cause; eNB UE S1AP ID allocated','','s1mme'],
+  [0,1,'RRC|RRC Connection Setup Complete|Attach Request + PDN Connectivity Request','dedicatedInfoNAS carries the Attach Request (IMSI or old GUTI, EPS attach type, UE network capability, DRX parameters) with the PDN Connectivity Request in its ESM container; selected PLMN, registered MME (GUMMEI) if known','','lteuu'],
+  [1,2,'S1AP|INITIAL UE MESSAGE|Attach Request + PDN Connectivity Request','NAS-PDU, TAI, E-UTRAN CGI, RRC establishment cause; the eNB allocates the eNB UE S1AP ID – this creates the S1 UE association','','s1mme'],
   ['=','Authentication and NAS security'],
-  ['*','NAS messages between UE and MME travel in RRC UL/DL Information Transfer and S1AP UPLINK / DOWNLINK NAS TRANSPORT'],
+  ['*','NAS messages that RRC and S1AP only relay (RRC UL / DL Information Transfer, S1AP UPLINK / DOWNLINK NAS TRANSPORT) are drawn as one arrow UE ↔ MME'],
+  [2,0,'EMM|Identity Request','identity type IMSI – only if the UE attached with a GUTI that the MME cannot resolve','?',PD_NAS4],
+  [0,2,'EMM|Identity Response','IMSI','?',PD_NAS4],
   [2,3,'Diameter|Authentication-Information-Request (AIR)','IMSI, visited PLMN ID, number of requested E-UTRAN vectors','','s6a'],
   [3,2,'Diameter|Authentication-Information-Answer (AIA)','E-UTRAN vectors: RAND, AUTN, XRES, KASME','','s6a'],
-  [2,0,'NAS|Authentication Request','RAND, AUTN, NAS key set identifier (KSIASME)','',PD_NAS4],
-  [0,2,'NAS|Authentication Response','RES – the MME compares it with XRES','',PD_NAS4],
-  [2,0,'NAS|Security Mode Command','selected EEA / EIA algorithms, replayed UE security capabilities; integrity protected','',PD_NAS4],
-  [0,2,'NAS|Security Mode Complete','first ciphered and integrity-protected NAS message; IMEISV if requested','',PD_NAS4],
-  [2,0,'NAS|ESM Information Request','only if the UE set the ESM information transfer flag','?',PD_NAS4],
-  [0,2,'NAS|ESM Information Response','APN and protocol configuration options, now sent ciphered','?',PD_NAS4],
+  [2,0,'EMM|Authentication Request','RAND, AUTN, NAS key set identifier (KSIASME)','',PD_NAS4],
+  [0,2,'EMM|Authentication Response','RES – the MME compares it with XRES','',PD_NAS4],
+  [2,0,'EMM|Security Mode Command','selected EEA / EIA algorithms, replayed UE security capabilities, IMEISV request; integrity protected','',PD_NAS4],
+  [0,2,'EMM|Security Mode Complete','first ciphered and integrity-protected NAS message; IMEISV if requested','',PD_NAS4],
+  ['*2','Optional: ME identity check with the EIR on S13 (ME-Identity-Check-Request / Answer)'],
+  [2,0,'ESM|ESM Information Request','only if the UE set the ESM information transfer flag','?',PD_NAS4],
+  [0,2,'ESM|ESM Information Response','APN and protocol configuration options, now sent ciphered','?',PD_NAS4],
   ['=','Registration in the HSS'],
   [2,3,'Diameter|Update-Location-Request (ULR)','IMSI, RAT type, ULR-Flags (S6a indicator, initial attach), visited PLMN ID','','s6a'],
   [3,2,'Diameter|Update-Location-Answer (ULA)','Subscription-Data: MSISDN, APN configuration profile (default APN, QCI, ARP, APN-AMBR), UE-AMBR','','s6a'],
@@ -4415,16 +4422,16 @@ const PROC=[
   [5,4,'GTPv2-C|Create Session Response','PGW S5/S8 F-TEIDs, PDN address allocation (UE IP), bearer QoS, APN-AMBR, charging ID','','s5'],
   [4,2,'GTPv2-C|Create Session Response','SGW S11 F-TEID, SGW S1-U F-TEID for the default bearer, PDN address allocation','','s11'],
   ['=','Radio bearer and S1-U set-up'],
-  [2,1,'S1AP|INITIAL CONTEXT SETUP REQUEST','E-RAB to set up (E-RAB ID, QoS, SGW S1-U address and UL TEID), UE-AMBR, security key KeNB, UE security capabilities; NAS-PDU: Attach Accept + Activate Default EPS Bearer Context Request','','s1mme'],
+  [2,1,'S1AP|INITIAL CONTEXT SETUP REQUEST|Attach Accept + Activate Default EPS Bearer Context Request','E-RAB to be set up (E-RAB ID, QoS, SGW S1-U address and UL TEID), UE-AMBR, security key (KeNB), UE security capabilities; the NAS-PDU (Attach Accept: GUTI, TAI list, T3412; ESM container: APN, PDN address, EPS bearer ID) is in the E-RAB item','','s1mme'],
   [1,0,'RRC|UE Capability Enquiry','only if the MME did not provide the UE radio capability','?','lteuu'],
   [0,1,'RRC|UE Capability Information','','?','lteuu'],
   [1,2,'S1AP|UE CAPABILITY INFO INDICATION','the eNB stores the radio capability in the MME for later connections','?','s1mme'],
   [1,0,'RRC|Security Mode Command','AS integrity and ciphering algorithms (keys derived from KeNB)','','lteuu'],
   [0,1,'RRC|Security Mode Complete','','','lteuu'],
-  [1,0,'RRC|RRC Connection Reconfiguration','DRB for the default bearer; dedicatedInfoNAS: Attach Accept (GUTI, TAI list, T3412) + Activate Default EPS Bearer Context Request (APN, PDN address, EPS bearer ID)','','lteuu'],
+  [1,0,'RRC|RRC Connection Reconfiguration|Attach Accept + Activate Default EPS Bearer Context Request','DRB for the default bearer, measurement configuration; dedicatedInfoNASList carries the NAS message','','lteuu'],
   [0,1,'RRC|RRC Connection Reconfiguration Complete','','','lteuu'],
   [1,2,'S1AP|INITIAL CONTEXT SETUP RESPONSE','eNB S1-U address and DL TEID for the E-RAB','','s1mme'],
-  [0,2,'NAS|Attach Complete','contains Activate Default EPS Bearer Context Accept; the UE can now send uplink data','',PD_NAS4],
+  [0,2,'EMM|Attach Complete + Activate Default EPS Bearer Context Accept','the ESM message is in the ESM container; relayed in RRC UL Information Transfer and S1AP UPLINK NAS TRANSPORT. The UE can now send uplink data','',PD_NAS4],
   [2,4,'GTPv2-C|Modify Bearer Request','eNB S1-U F-TEID (downlink) for the default bearer','','s11'],
   [4,2,'GTPv2-C|Modify Bearer Response','downlink path complete','','s11'],
   [2,3,'Diameter|Notify-Request (NOR)','only if the selected PGW differs from the one in the subscription – stores the PGW identity for mobility to non-3GPP access','?','s6a'],
@@ -4435,8 +4442,8 @@ const PROC=[
  p:[{e:'ue'},{e:'enb'},{e:'mme'},{e:'sgw'},{e:'pgw'}],
  m:[[0,1,'RRC|RRC Connection Request','S-TMSI, establishmentCause mo-Data','','lteuu'],
   [1,0,'RRC|RRC Connection Setup','','','lteuu'],
-  [0,1,'RRC|RRC Connection Setup Complete','dedicatedInfoNAS: Service Request (KSI and sequence number, short MAC)','','lteuu'],
-  [1,2,'S1AP|INITIAL UE MESSAGE','NAS-PDU (Service Request), TAI, E-UTRAN CGI, S-TMSI','','s1mme'],
+  [0,1,'RRC|RRC Connection Setup Complete|Service Request','dedicatedInfoNAS carries the Service Request (KSI and sequence number, short MAC)','','lteuu'],
+  [1,2,'S1AP|INITIAL UE MESSAGE|Service Request','NAS-PDU, TAI, E-UTRAN CGI, S-TMSI, RRC establishment cause','','s1mme'],
   ['*2','MME checks the short MAC; NAS authentication and security mode only if needed'],
   [2,1,'S1AP|INITIAL CONTEXT SETUP REQUEST','all active E-RABs (QoS, SGW S1-U addresses and UL TEIDs), KeNB, UE security capabilities','','s1mme'],
   [1,0,'RRC|Security Mode Command','','','lteuu'],
@@ -4460,8 +4467,8 @@ const PROC=[
   [1,0,'RRC|Paging','S-TMSI in the paging record on the paging occasion','','lteuu'],
   [0,1,'RRC|RRC Connection Request','S-TMSI, establishmentCause mt-Access','','lteuu'],
   [1,0,'RRC|RRC Connection Setup','','','lteuu'],
-  [0,1,'RRC|RRC Connection Setup Complete','dedicatedInfoNAS: Service Request','','lteuu'],
-  [1,2,'S1AP|INITIAL UE MESSAGE','NAS-PDU (Service Request), TAI, E-UTRAN CGI','','s1mme'],
+  [0,1,'RRC|RRC Connection Setup Complete|Service Request','dedicatedInfoNAS carries the Service Request','','lteuu'],
+  [1,2,'S1AP|INITIAL UE MESSAGE|Service Request','NAS-PDU, TAI, E-UTRAN CGI, S-TMSI, RRC establishment cause mt-Access','','s1mme'],
   [2,1,'S1AP|INITIAL CONTEXT SETUP REQUEST','E-RABs with SGW S1-U F-TEIDs, KeNB','','s1mme'],
   [1,0,'RRC|Security Mode Command','','','lteuu'],
   [0,1,'RRC|Security Mode Complete','','','lteuu'],
@@ -4514,11 +4521,11 @@ const PROC=[
   [4,5,'Diameter|Re-Auth-Answer (RAA)','','','gx'],
   [4,3,'GTPv2-C|Create Bearer Request','linked EPS bearer ID, bearer QoS (QCI 1, ARP, GBR, MBR), TFT, PGW S5/S8-U F-TEID, charging ID','','s5'],
   [3,2,'GTPv2-C|Create Bearer Request','SGW S1-U F-TEID, bearer QoS, TFT','','s11'],
-  [2,1,'S1AP|E-RAB SETUP REQUEST','E-RAB ID, QoS, SGW S1-U F-TEID; NAS-PDU: Activate Dedicated EPS Bearer Context Request (TFT, QoS, linked bearer)','','s1mme'],
-  [1,0,'RRC|RRC Connection Reconfiguration','new DRB (RLC UM) for the voice bearer, dedicatedInfoNAS','','lteuu'],
+  [2,1,'S1AP|E-RAB SETUP REQUEST|Activate Dedicated EPS Bearer Context Request','E-RAB ID, QoS, SGW S1-U F-TEID; the NAS-PDU (TFT, EPS QoS, linked EPS bearer ID) is in the E-RAB item','','s1mme'],
+  [1,0,'RRC|RRC Connection Reconfiguration|Activate Dedicated EPS Bearer Context Request','new DRB (RLC UM) for the voice bearer; dedicatedInfoNASList carries the NAS message','','lteuu'],
   [0,1,'RRC|RRC Connection Reconfiguration Complete','','','lteuu'],
   [1,2,'S1AP|E-RAB SETUP RESPONSE','eNB S1-U F-TEID for the new E-RAB','','s1mme'],
-  [0,2,'NAS|Activate Dedicated EPS Bearer Context Accept','in RRC UL Information Transfer and S1AP UPLINK NAS TRANSPORT','',PD_NAS4],
+  [0,2,'ESM|Activate Dedicated EPS Bearer Context Accept','relayed in RRC UL Information Transfer and S1AP UPLINK NAS TRANSPORT','',PD_NAS4],
   [2,3,'GTPv2-C|Create Bearer Response','EPS bearer ID, eNB and SGW S1-U F-TEIDs','','s11'],
   [3,4,'GTPv2-C|Create Bearer Response','SGW S5/S8-U F-TEID','','s5'],
   [4,5,'Diameter|Credit-Control-Request (CCR-U)','Charging-Rule-Report: resources successfully allocated (if the PCRF asked for it)','?','gx'],
@@ -4529,14 +4536,14 @@ const PROC=[
 {id:'lte-detach',g:['4g'],t:'UE-initiated detach',s:'TS 23.401 §5.3.8.2.1 · TS 24.301 · TS 29.274',
  d:'The UE deregisters from the EPS, for example at power-off: the PDN connections are deleted in SGW and PGW (and the IP-CAN session in the PCRF) and the S1 connection is released.',
  p:[{e:'ue'},{e:'enb'},{e:'mme'},{e:'sgw'},{e:'pgw'},{e:'pcrf'}],
- m:[[0,2,'NAS|Detach Request','detach type EPS detach, switch-off indication, GUTI','',PD_NAS4],
+ m:[[0,2,'EMM|Detach Request','detach type EPS detach, switch-off indication, GUTI','',PD_NAS4],
   [2,3,'GTPv2-C|Delete Session Request','per PDN connection: linked EPS bearer ID, user location','','s11'],
   [3,4,'GTPv2-C|Delete Session Request','','','s5'],
   [4,5,'Diameter|Credit-Control-Request (CCR-T)','IP-CAN session termination','?','gx'],
   [5,4,'Diameter|Credit-Control-Answer (CCA-T)','','?','gx'],
   [4,3,'GTPv2-C|Delete Session Response','','','s5'],
   [3,2,'GTPv2-C|Delete Session Response','','','s11'],
-  [2,0,'NAS|Detach Accept','not sent when the detach was due to switch-off','?',PD_NAS4],
+  [2,0,'EMM|Detach Accept','not sent when the detach was due to switch-off','?',PD_NAS4],
   [2,1,'S1AP|UE CONTEXT RELEASE COMMAND','cause: NAS – detach','','s1mme'],
   [1,0,'RRC|RRC Connection Release','if the UE is still connected','?','lteuu'],
   [1,2,'S1AP|UE CONTEXT RELEASE COMPLETE','','','s1mme']]},
@@ -4545,7 +4552,7 @@ const PROC=[
  d:'A UE attached with combined EPS/IMSI attach starts a voice call: the MME tells the eNB to move the UE to UTRAN (here RRC release with redirection), where the call is set up as a normal circuit-switched call.',
  p:[{e:'ue'},{e:'enb'},{e:'mme'},{e:'mscs',l:'MSC / VLR'},{e:'rnc',l:'RNC (via Node B)'}],
  m:[['*','Pre-condition: combined EPS/IMSI attach – the MME has an SGs association with the MSC/VLR'],
-  [0,2,'NAS|Extended Service Request','service type: mobile-originating CS fallback','',PD_NAS4],
+  [0,2,'EMM|Extended Service Request','service type: mobile-originating CS fallback (from ECM-IDLE it rides in RRC Connection Setup Complete and INITIAL UE MESSAGE)','',PD_NAS4],
   [2,1,'S1AP|UE CONTEXT MODIFICATION REQUEST','CS Fallback Indicator, registered LAI (INITIAL CONTEXT SETUP REQUEST if the UE was idle)','','s1mme'],
   [1,2,'S1AP|UE CONTEXT MODIFICATION RESPONSE','','','s1mme'],
   ['*1','The eNB selects a UTRAN target, optionally after measurements'],
@@ -4557,7 +4564,9 @@ const PROC=[
   [4,0,'RRC|RRC Connection Setup','','',PD_RRC3],
   [0,4,'RRC|RRC Connection Setup Complete','','',PD_RRC3],
   ['*0','If the cell is in another location area than the one registered over SGs, the UE first runs a location area update'],
-  [0,3,'MM|CM Service Request','CSMO flag (CS fallback mobile originating); in RRC Initial Direct Transfer and RANAP INITIAL UE MESSAGE','',PD_CS3],
+  [0,4,'RRC|Initial Direct Transfer|CM Service Request','CN domain CS; CM Service Request: CM service type, mobile identity (TMSI), CSMO flag (CS fallback mobile originating)','',PD_RRC3],
+  [4,3,'RANAP|INITIAL UE MESSAGE|CM Service Request','CN domain indicator CS, LAI, SAI, NAS-PDU; sets up the Iu-CS signalling connection (SCCP)','','iucscp'],
+  ['*','Further MM / CC messages are relayed in RRC Direct Transfer and RANAP DIRECT TRANSFER and drawn as one arrow UE ↔ MSC'],
   [3,4,'RANAP|SECURITY MODE COMMAND','UMTS integrity (UIA) and ciphering (UEA) algorithms, IK / CK – authentication may come first','','iucscp'],
   [4,0,'RRC|Security Mode Command','','',PD_RRC3],
   [0,4,'RRC|Security Mode Complete','','',PD_RRC3],
@@ -4600,19 +4609,22 @@ const PROC=[
  m:[['=','RRC connection'],
   [0,1,'RRC|RRCSetupRequest','ue-Identity (5G-S-TMSI part 1 or random value), establishmentCause mo-Signalling','',PD_RRC5],
   [1,0,'RRC|RRCSetup','SRB1, master cell group configuration','',PD_RRC5],
-  [0,1,'RRC|RRCSetupComplete','dedicatedNAS-Message: Registration Request (SUCI or 5G-GUTI, requested NSSAI, UE security capability); selected PLMN','',PD_RRC5],
-  [1,2,'NGAP|INITIAL UE MESSAGE','NAS-PDU (Registration Request), user location (NR CGI, TAI), RRC establishment cause, UE context request','','n2'],
+  [0,1,'RRC|RRCSetupComplete|Registration Request','dedicatedNAS-Message carries the Registration Request (registration type initial, SUCI or 5G-GUTI, requested NSSAI, UE security capability); selected PLMN','',PD_RRC5],
+  [1,2,'NGAP|INITIAL UE MESSAGE|Registration Request','NAS-PDU, user location (NR CGI, TAI), RRC establishment cause, UE context request; the gNB allocates the RAN UE NGAP ID – this creates the UE-associated N2 connection','','n2'],
+  ['*','NAS messages that RRC and NGAP only relay (RRC UL / DL Information Transfer, NGAP UPLINK / DOWNLINK NAS TRANSPORT) are drawn as one arrow UE ↔ AMF (N1)'],
+  [2,0,'5GMM|Identity Request','identity type SUCI – only if the AMF cannot resolve the 5G-GUTI','?','n1'],
+  [0,2,'5GMM|Identity Response','SUCI','?','n1'],
   ['=','Authentication (5G AKA)'],
   [2,3,'Nausf|POST /nausf-auth/v1/ue-authentications','Nausf_UEAuthentication_Authenticate: SUCI or SUPI, serving network name','','sbi'],
   [3,4,'Nudm|POST /nudm-ueau/v1/{suci}/security-information/generate-auth-data','Nudm_UEAuthentication_Get – the UDM (SIDF) de-conceals the SUCI','','sbi'],
   [4,3,'Nudm|200 OK','5G HE AV (RAND, AUTN, XRES*, KAUSF), SUPI','','sbi'],
   [3,2,'Nausf|201 Created','5G SE AV (RAND, AUTN, HXRES*), link to the 5g-aka-confirmation resource','','sbi'],
-  [2,0,'NAS|Authentication Request','RAND, AUTN, ngKSI, ABBA','','n1'],
-  [0,2,'NAS|Authentication Response','RES*','','n1'],
+  [2,0,'5GMM|Authentication Request','RAND, AUTN, ngKSI, ABBA','','n1'],
+  [0,2,'5GMM|Authentication Response','RES*','','n1'],
   [2,3,'Nausf|PUT …/ue-authentications/{authCtxId}/5g-aka-confirmation','RES* – the AUSF compares it with XRES*','','sbi'],
   [3,2,'Nausf|200 OK','authentication result, SUPI, KSEAF','','sbi'],
-  [2,0,'NAS|Security Mode Command','selected NAS ciphering and integrity algorithms, replayed UE security capabilities, ngKSI','','n1'],
-  [0,2,'NAS|Security Mode Complete','NAS message container with the complete Registration Request if requested','','n1'],
+  [2,0,'5GMM|Security Mode Command','selected NAS ciphering and integrity algorithms, replayed UE security capabilities, ngKSI','','n1'],
+  [0,2,'5GMM|Security Mode Complete','NAS message container with the complete Registration Request if requested','','n1'],
   ['=','UDM registration, subscription and policy'],
   [2,4,'Nudm|PUT /nudm-uecm/v1/{supi}/registrations/amf-3gpp-access','Nudm_UECM_Registration: AMF instance ID, GUAMI, RAT type','','sbi'],
   [4,2,'Nudm|201 Created','','','sbi'],
@@ -4623,21 +4635,21 @@ const PROC=[
   [2,5,'Npcf|POST /npcf-am-policy-control/v1/policies','Npcf_AMPolicyControl_Create','?','sbi'],
   [5,2,'Npcf|201 Created','access and mobility policy: RFSP index, service area restrictions','?','sbi'],
   ['=','Registration accept'],
-  [2,1,'NGAP|INITIAL CONTEXT SETUP REQUEST','UE security capabilities, security key (KgNB), allowed NSSAI, GUAMI; NAS-PDU: Registration Accept (5G-GUTI, allowed NSSAI, TAI list) – some AMFs send it in DOWNLINK NAS TRANSPORT instead','','n2'],
+  [2,1,'NGAP|INITIAL CONTEXT SETUP REQUEST|Registration Accept','GUAMI, allowed NSSAI, UE security capabilities, security key (KgNB); NAS-PDU: Registration Accept (5G-GUTI, allowed NSSAI, TAI list). Some AMFs send the Registration Accept in DOWNLINK NAS TRANSPORT instead','','n2'],
   [1,0,'RRC|UECapabilityEnquiry','only if the AMF did not provide the UE radio capability','?',PD_RRC5],
   [0,1,'RRC|UECapabilityInformation','','?',PD_RRC5],
   [1,2,'NGAP|UE RADIO CAPABILITY INFO INDICATION','','?','n2'],
   [1,0,'RRC|SecurityModeCommand','AS integrity and ciphering algorithms','',PD_RRC5],
   [0,1,'RRC|SecurityModeComplete','','',PD_RRC5],
-  [1,0,'RRC|RRCReconfiguration','dedicatedNAS-Message: Registration Accept','',PD_RRC5],
+  [1,0,'RRC|RRCReconfiguration|Registration Accept','dedicatedNAS-MessageList carries the NAS message (a gNB may use DLInformationTransfer instead)','',PD_RRC5],
   [0,1,'RRC|RRCReconfigurationComplete','','',PD_RRC5],
   [1,2,'NGAP|INITIAL CONTEXT SETUP RESPONSE','','','n2'],
-  [0,2,'NAS|Registration Complete','acknowledges the new 5G-GUTI','','n1'],
+  [0,2,'5GMM|Registration Complete','acknowledges the new 5G-GUTI','','n1'],
   ['*','UE is RM-REGISTERED and CM-CONNECTED, still without a PDU session']]},
 {id:'nr-pdu',g:['sa'],t:'5G PDU session establishment',s:'TS 23.502 §4.3.2.2.1 · TS 24.501 · TS 38.413 · TS 29.502 · TS 29.518 · TS 29.512 · TS 29.244',
  d:'UE-requested PDU session in the non-roaming case: the AMF creates an SM context in the SMF, which fetches the subscription, gets policy from the PCF, sets up the UPF over N4 and has the AMF deliver the N2 and N1 parts; the gNB’s N3 tunnel endpoint is then given back to the UPF.',
  p:[{e:'ue'},{e:'gnb'},{e:'amf'},{e:'smf'},{e:'udm'},{e:'pcf'},{e:'upf'}],
- m:[[0,2,'NAS|UL NAS Transport (PDU Session Establishment Request)','PDU session ID, request type initial request, S-NSSAI, DNN; N1 SM container: PDU session type, SSC mode','','n1'],
+ m:[[0,2,'5GMM|UL NAS Transport (PDU Session Establishment Request)','payload container: 5GSM PDU Session Establishment Request (PDU session type, SSC mode); PDU session ID, request type initial request, S-NSSAI, DNN','','n1'],
   ['*2','AMF selects an SMF (NRF discovery with S-NSSAI and DNN)'],
   [2,3,'Nsmf|POST /nsmf-pdusession/v1/sm-contexts','Nsmf_PDUSession_CreateSMContext: SUPI, DNN, S-NSSAI, PDU session ID, AMF ID, N1 SM container, user location, RAT type','','sbi'],
   [3,4,'Nudm|PUT /nudm-uecm/v1/{supi}/registrations/smf-registrations/{pduSessionId}','Nudm_UECM_Registration: SMF instance serving the PDU session','','sbi'],
@@ -4652,9 +4664,9 @@ const PROC=[
   [6,3,'PFCP|PFCP Session Establishment Response','UP F-SEID, allocated N3 F-TEID (UPF address and UL TEID)','','n4'],
   [3,2,'Namf|POST /namf-comm/v1/ue-contexts/{ueContextId}/n1-n2-messages','Namf_Communication_N1N2MessageTransfer: N2 SM information (UPF N3 F-TEID, QoS flows) + N1 SM container (PDU Session Establishment Accept)','','sbi'],
   [2,3,'Namf|200 OK','','','sbi'],
-  [2,1,'NGAP|PDU SESSION RESOURCE SETUP REQUEST','PDU session ID, S-NSSAI, transfer IE (UPF UL F-TEID, QoS flows with 5QI); NAS-PDU: PDU Session Establishment Accept (UE IP address, QoS rules, session AMBR)','','n2'],
+  [2,1,'NGAP|PDU SESSION RESOURCE SETUP REQUEST|DL NAS Transport (PDU Session Establishment Accept)','PDU session ID, S-NSSAI, PDU Session Resource Setup Request Transfer (UPF UL F-TEID, QoS flows with 5QI); NAS-PDU: PDU Session Establishment Accept (UE IP address, QoS rules, session AMBR)','','n2'],
   ['*1','gNB-CU-CP sets up the bearer context in the CU-UP (E1 BEARER CONTEXT SETUP) and the DU (F1 UE CONTEXT MODIFICATION)'],
-  [1,0,'RRC|RRCReconfiguration','DRB(s) and SDAP mapping of the QoS flows; dedicatedNAS-Message','',PD_RRC5],
+  [1,0,'RRC|RRCReconfiguration|DL NAS Transport (PDU Session Establishment Accept)','DRB(s) and SDAP mapping of the QoS flows; dedicatedNAS-MessageList carries the NAS message','',PD_RRC5],
   [0,1,'RRC|RRCReconfigurationComplete','','',PD_RRC5],
   [1,2,'NGAP|PDU SESSION RESOURCE SETUP RESPONSE','transfer IE: gNB N3 F-TEID (address and DL TEID), accepted QoS flows','','n2'],
   [0,6,'GTP-U|First uplink data','UE → gNB → UPF: uplink can flow before the downlink path is known','?',PD_UP5],
@@ -4668,16 +4680,16 @@ const PROC=[
  p:[{e:'ue'},{e:'gnb'},{e:'amf'},{e:'smf'},{e:'upf'}],
  m:[[0,1,'RRC|RRCSetupRequest','ng-5G-S-TMSI-Part1, establishmentCause mo-Data','',PD_RRC5],
   [1,0,'RRC|RRCSetup','','',PD_RRC5],
-  [0,1,'RRC|RRCSetupComplete','ng-5G-S-TMSI-Part2; dedicatedNAS-Message: Service Request (5G-S-TMSI, uplink data status, PDU session status)','',PD_RRC5],
-  [1,2,'NGAP|INITIAL UE MESSAGE','NAS-PDU (Service Request), user location, 5G-S-TMSI','','n2'],
+  [0,1,'RRC|RRCSetupComplete|Service Request','ng-5G-S-TMSI-Part2; dedicatedNAS-Message carries the Service Request (5G-S-TMSI, uplink data status, PDU session status)','',PD_RRC5],
+  [1,2,'NGAP|INITIAL UE MESSAGE|Service Request','NAS-PDU, user location, RRC establishment cause, 5G-S-TMSI','','n2'],
   [2,3,'Nsmf|POST /nsmf-pdusession/v1/sm-contexts/{smContextRef}/modify','Nsmf_PDUSession_UpdateSMContext: upCnxState ACTIVATING, for each PDU session to re-activate','','sbi'],
   [3,4,'PFCP|PFCP Session Modification Request','only if a new UPF / I-UPF is selected or the N3 tunnel is re-allocated','?','n4'],
   [4,3,'PFCP|PFCP Session Modification Response','','?','n4'],
   [3,2,'Nsmf|200 OK','N2 SM information: UPF N3 F-TEID, QoS profiles','','sbi'],
-  [2,1,'NGAP|INITIAL CONTEXT SETUP REQUEST','PDU session resources to set up (N2 SM information), security key; NAS-PDU: Service Accept','','n2'],
+  [2,1,'NGAP|INITIAL CONTEXT SETUP REQUEST|Service Accept','PDU session resources to set up (N2 SM information), security key, UE security capabilities; NAS-PDU: Service Accept','','n2'],
   [1,0,'RRC|SecurityModeCommand','','',PD_RRC5],
   [0,1,'RRC|SecurityModeComplete','','',PD_RRC5],
-  [1,0,'RRC|RRCReconfiguration','DRBs for the PDU sessions, dedicatedNAS-Message: Service Accept','',PD_RRC5],
+  [1,0,'RRC|RRCReconfiguration|Service Accept','DRBs for the PDU sessions; dedicatedNAS-MessageList carries the NAS message','',PD_RRC5],
   [0,1,'RRC|RRCReconfigurationComplete','','',PD_RRC5],
   [1,2,'NGAP|INITIAL CONTEXT SETUP RESPONSE','per PDU session: gNB N3 F-TEID','','n2'],
   [2,3,'Nsmf|POST /nsmf-pdusession/v1/sm-contexts/{smContextRef}/modify','Nsmf_PDUSession_UpdateSMContext: N2 SM information with the gNB N3 F-TEID','','sbi'],
@@ -4724,7 +4736,11 @@ const PROC=[
  m:[[0,1,'RRC|RRC Connection Request','establishmentCause registration','',PD_RRC3],
   [1,0,'RRC|RRC Connection Setup','','',PD_RRC3],
   [0,1,'RRC|RRC Connection Setup Complete','','',PD_RRC3],
-  [0,2,'GMM|Attach Request','attach type GPRS attach, P-TMSI or IMSI, old RAI, MS network capability, DRX parameters – in RRC Initial Direct Transfer and RANAP INITIAL UE MESSAGE','',PD_PS3],
+  [0,1,'RRC|Initial Direct Transfer|Attach Request','CN domain PS; Attach Request: attach type GPRS attach, P-TMSI or IMSI, old RAI, MS network capability, DRX parameters','',PD_RRC3],
+  [1,2,'RANAP|INITIAL UE MESSAGE|Attach Request','CN domain indicator PS, LAI + RAC, SAI, NAS-PDU; sets up the Iu-PS signalling connection (SCCP)','','iups'],
+  ['*','Further GMM / SM messages are relayed in RRC Direct Transfer and RANAP DIRECT TRANSFER and drawn as one arrow UE ↔ SGSN'],
+  [2,0,'GMM|Identity Request','identity type IMSI – only if the P-TMSI is unknown and the old SGSN cannot provide the IMSI','?',PD_PS3],
+  [0,2,'GMM|Identity Response','IMSI','?',PD_PS3],
   [2,3,'MAP|SendAuthenticationInfo','IMSI – if the SGSN has no unused vectors','?','gr'],
   [3,2,'MAP|SendAuthenticationInfo ack','quintets: RAND, XRES, CK, IK, AUTN','?','gr'],
   [2,0,'GMM|Authentication and Ciphering Request','RAND, AUTN, CKSN','',PD_PS3],
@@ -4819,6 +4835,9 @@ const PD_PARTS=['gnbdu','gnbcucp','gnbcuup'];
 const PD_GROUP=e=>[e,...ndRev(e),...(ND_ELALIAS[e]||[])];
 const PD_UPTAG=/^(GTP-U|PDCP)$/;
 const PD_WK={'GTPv2-C':['2123'],'GTPv1-C':['2123'],'GTP-U':['2152'],'PFCP':['8805'],'Diameter':['3868','5868'],'S1AP':['36412'],'NGAP':['38412'],'X2AP':['36422'],'XnAP':['38422'],'SGsAP':['29118'],'IKEv2':['500','4500']};
+/* 'TAG|MESSAGE|NAS carried inside' → [tag, message, nas] */
+const pdNm=r=>{const [t,x]=mfSplit(r[2]);const i=x.indexOf('|');return i<0?[t,x,'']:[t,x.slice(0,i),x.slice(i+1)];};
+const pdShort=r=>{const [,n,c]=pdNm(r);return c?n+' ('+c.split(' + ')[0]+')':n;};
 const pdLane=(P,i)=>P.p[i].l||(EM[P.p[i].e]?EM[P.p[i].e].n:P.p[i].e);
 const pdMsgs=P=>P.m.map((r,k)=>mfIsMsg(r)?k:-1).filter(k=>k>=0);
 const pdNum=(P,k)=>pdMsgs(P).indexOf(k)+1;
@@ -4883,7 +4902,7 @@ function pdSegs(P,r){const segs=[];
 function pdAt(segs,d){for(const s of segs){if(d<=s.len||s===segs[segs.length-1])return s.f(s.len?Math.min(1,Math.max(0,d/s.len)):1);d-=s.len;}return [0,0];}
 function pdOverlay(){cancelAnimationFrame(pdAnimId);gP.innerHTML='';if(!state.proc||state.view!=='arch')return;const P=PM[state.proc],k=state.procStep,r=P&&P.m[k];if(!r||!mfIsMsg(r))return;
  const segs=pdSegs(P,r);if(!segs.length)return;const tot=segs.reduce((s,x)=>s+x.len,0);const lg0=segs.reduce((a,x)=>x.len>a.len?x:a,segs[0]);const m=lg0.f(.5);
- const lg=mk('g',{class:'pdlbl'},gP);const rc=mk('rect',{rx:5},lg);const t=mk('text',{x:m[0],y:m[1]-16},lg);t.textContent=pdNum(P,k)+'. '+mfSplit(r[2])[1];
+ const lg=mk('g',{class:'pdlbl'},gP);const rc=mk('rect',{rx:5},lg);const t=mk('text',{x:m[0],y:m[1]-16},lg);t.textContent=pdNum(P,k)+'. '+pdShort(r);
  const bb=t.getBBox();rc.setAttribute('x',bb.x-6);rc.setAttribute('y',bb.y-3);rc.setAttribute('width',bb.width+12);rc.setAttribute('height',bb.height+6);
  const end=pdAt(segs,tot),dot=mk('circle',{class:'pddot',r:7,cx:end[0],cy:end[1]},gP);if(pdReduced())return;
  const dur=Math.min(2400,Math.max(650,tot*1.1)),hold=650,t0=performance.now();
@@ -4917,7 +4936,7 @@ function pdIfLabel(P,r){const a=P.p[r[0]].e,b=P.p[r[1]].e,sp=r[5]||'';if(sp==='s
  return pdHops(P,r).map(id=>id==='sbi'?'SBI':LM[id].n).join(' › ');}
 function pdCtlHTML(P){const ms=pdMsgs(P),k=state.procStep,n=pdNum(P,k);
  return `<div class="pdctl"><button data-pa="prev" title="Previous message (←)"${n<=1?' disabled':''}>◀ Prev</button><button data-pa="next" title="Next message (→)"${n>=ms.length?' disabled':''}>Next ▶</button><button data-pa="play" title="Step through the messages automatically">${pdPlayT?'❚❚ Pause':'▷ Play'}</button>`+
-  `<span class="pdpos">${n?`<b>${n}</b> / ${ms.length} · ${esc(mfSplit(P.m[k][2])[1])}`:`${ms.length} messages – click one or press Next`}</span>`+
+  `<span class="pdpos">${n?`<b>${n}</b> / ${ms.length} · ${esc(pdShort(P.m[k]))}`:`${ms.length} messages – click one or press Next`}</span>`+
   `<span class="mftools"><button data-pa="copy" title="Copy the procedure as plain text">Copy as text</button><button data-pa="big" title="Open a larger view">⤢ Larger</button></span></div>`;}
 function pdInstRow(P,X,hw){return `<div class="pdinst">${P.p.map((x,i)=>{const w=Math.min(hw,2*Math.min(X(i),100-X(i))-1),st=`left:${X(i)}%;width:${w}%`;const c=pdCands(P,i);
   if(!c.length)return `<span class="pdis none" style="${st}" title="No ${esc(pdLane(P,i))} instance in your network data">—</span>`;const sel=pdLaneSel(P,i);
@@ -4926,9 +4945,9 @@ function pdDiagram(P){const n=P.p.length,X=i=>mfX(n,i),hw=Math.min(30,96/n);cons
  let h=`<div class="mfd pdd" style="--n:${n}"><div class="mfh">${names.map((p,i)=>`<div class="mfl" style="left:${X(i)}%;width:${Math.min(hw,2*Math.min(X(i),100-X(i))-1)}%" title="${esc(p)}">${esc(p)}</div>`).join('')}</div>`+(ND?pdInstRow(P,X,hw):'')+
   `<div class="mfb">${names.map((p,i)=>`<i class="mfv" style="left:${X(i)}%"></i>`).join('')}`;let num=0;
  P.m.forEach((r,k)=>{
-  if(mfIsMsg(r)){num++;const [fr,to,nm,det,fl]=r;const [tag,name]=mfSplit(nm);const x1=X(fr),x2=X(to),lo=Math.min(x1,x2),hi=Math.max(x1,x2),mid=(lo+hi)/2;
+  if(mfIsMsg(r)){num++;const [fr,to,,det,fl]=r;const [tag,name,nas]=pdNm(r);const x1=X(fr),x2=X(to),lo=Math.min(x1,x2),hi=Math.max(x1,x2),mid=(lo+hi)/2;
    const w=Math.min(100,Math.max(hi-lo,n<=2?88:64)),left=Math.min(Math.max(mid-w/2,0),100-w),opt=fl&&fl.includes('?'),ifl=pdIfLabel(P,r),ip=ND?pdIPs(P,r):'',bx=`margin-left:${left}%;width:${w}%`;
-   h+=`<div class="mfm pdm${opt?' opt':''}${k===state.procStep?' focus':''}" data-ps="${k}" role="button" tabindex="-1" aria-label="${num}. ${esc(name)}"><div class="mft" style="${bx}"><span class="pdno">${num}</span>${tag?`<span class="mftag">${esc(tag)}</span>`:''}<span class="bg"><b>${esc(name)}</b></span>${opt?' <span class="mfo" title="optional / conditional">opt</span>':''}${ifl?` <span class="pdif">${esc(ifl)}</span>`:''}</div>`+
+   h+=`<div class="mfm pdm${opt?' opt':''}${k===state.procStep?' focus':''}" data-ps="${k}" role="button" tabindex="-1" aria-label="${num}. ${esc(name)}${nas?' – NAS: '+esc(nas):''}"><div class="mft" style="${bx}"><span class="pdno">${num}</span>${tag?`<span class="mftag">${esc(tag)}</span>`:''}<span class="bg"><b>${esc(name)}</b></span>${nas?` <span class="pdnas" title="NAS message carried inside this message">NAS: ${esc(nas)}</span>`:''}${opt?' <span class="mfo" title="optional / conditional">opt</span>':''}${ifl?` <span class="pdif">${esc(ifl)}</span>`:''}</div>`+
     `<div class="mfa ${x2>=x1?'r':'l'}" style="margin-left:${lo}%;width:${hi-lo}%"></div>`+(det?`<div class="mfx" style="${bx}"><span class="bg">${esc(det)}</span></div>`:'')+(ip?`<div class="pdip" style="${bx}"><span class="bg">${ip}</span></div>`:'')+`</div>`;}
   else if(r[0]==='=')h+=`<div class="mfsep"><span>${esc(r[1])}</span></div>`;
   else{const li=r[0].length>1?+r[0].slice(1):null;
@@ -4937,7 +4956,7 @@ function pdDiagram(P){const n=P.p.length,X=i=>mfX(n,i),hw=Math.min(30,96/n);cons
  return h+'</div></div>';}
 function pdBoxHTML(P,big){return pdCtlHTML(P)+pdDiagram(P,big);}
 function pdQHit(P){const tk=state.procQ.toLowerCase().split(/\s+/).filter(Boolean);if(!tk.length)return true;
- const txt=(P.t+' '+P.s+' '+P.d+' '+P.p.map((x,i)=>pdLane(P,i)).join(' ')+' '+P.m.filter(mfIsMsg).map(r=>mfSplit(r[2]).join(' ')+' '+pdIfLabel(P,r)).join(' ')).toLowerCase();return tk.every(t=>txt.includes(t));}
+ const txt=(P.t+' '+P.s+' '+P.d+' '+P.p.map((x,i)=>pdLane(P,i)).join(' ')+' '+P.m.filter(mfIsMsg).map(r=>pdNm(r).join(' ')+' '+pdIfLabel(P,r)).join(' ')).toLowerCase();return tk.every(t=>txt.includes(t));}
 function pdListBody(){const seen=new Set();let h='';
  [...new Set(['4g','nsa','sa','3g','wifi',...GENORDER])].forEach(g=>{const ps=PROC.filter(P=>P.g[0]===g&&pdQHit(P));if(!ps.length)return;
   h+=`<h3 style="color:${gcol(g)}">${esc(GENS[g].n)}</h3><div class="pdlist">${ps.map(P=>{seen.add(P.id);return `<button class="pdcard" data-proc="${P.id}" style="--c:${gcol(g)}"><b>${esc(P.t)}</b><span>${esc(P.d)}</span><small>${pdMsgs(P).length} messages · ${esc(P.p.map((x,i)=>pdLane(P,i)).join(' · '))}</small></button>`;}).join('')}</div>`;});
@@ -4949,7 +4968,7 @@ function pdViewHTML(P){const ret=`<div class="pdnav"><button data-pa="list">← 
  return ret+`<h2>${esc(P.t)}</h2><div class="full">${esc(P.s)}</div>${badgeHTML(P.g)}<p>${esc(P.d)}</p>`+
  (ND?'':`<p class="pdhint">Load your network data (◆ Network data) to see the IP addresses and ports of every hop.</p>`)+
  `<div class="pdbox" data-p="${P.id}">${pdBoxHTML(P,false)}</div>`+
- `<p class="mflegend"><span class="lg-s"></span> message <span class="lg-o"></span> optional / conditional · click a message to show it on the map, ← → to step · grey boxes are steps inside a node${ND?' · addresses: source → destination, destination port':''}</p>`+
+ `<p class="mflegend"><span class="lg-s"></span> message <span class="lg-o"></span> optional / conditional · <span class="pdnas">NAS: …</span> NAS message carried inside; NAS messages that RRC / S1AP / NGAP / RANAP only relay are drawn as one arrow UE ↔ core · click a message to show it on the map, ← → to step · grey boxes are steps inside a node${ND?' · addresses: source → destination, destination port':''}</p>`+
  `<div class="paneltools"><button data-pa="link">Copy link to this procedure</button><button data-pa="close">Close</button></div>`;}
 function renderProc(){const P=state.proc&&PM[state.proc];const keep=panel.dataset.pd===(P?P.id:'list')?panel.scrollTop:0;
  panel.innerHTML=P?pdViewHTML(P):pdListHTML();panel.dataset.pd=P?P.id:'list';panel.scrollTop=keep;}
@@ -4957,8 +4976,8 @@ function pdChipsHTML(t,id){const ps=pdUses(t,id);if(!ps.length)return '';
  return `<h3>End-to-end procedures</h3><div class="ifcs">${ps.map(P=>`<button class="ifc pdchip" data-proc="${P.id}">▶ ${esc(P.t)}</button>`).join('')}</div>`;}
 function pdBackHTML(){const R=state.pdReturn&&PM[state.pdReturn.id];return R?`<div class="pdnav"><button data-pa="return">← Back to “${esc(R.t)}”</button><span></span></div>`:'';}
 function pdText(P){const out=[`${P.t} (${P.s})`,P.d,''];const L=i=>pdLane(P,i);let n=0;
- P.m.forEach(r=>{if(mfIsMsg(r)){n++;const [tag,name]=mfSplit(r[2]);const ifl=pdIfLabel(P,r),ip=ND?pdIPText(P,r):'';
-  out.push(`${n}. ${L(r[0])} -> ${L(r[1])}: ${tag?'['+tag+'] ':''}${name}${ifl?' {'+ifl+'}':''}${r[3]?' – '+r[3]:''}${r[4]&&r[4].includes('?')?' (optional)':''}${ip?'  ['+ip+']':''}`);}
+ P.m.forEach(r=>{if(mfIsMsg(r)){n++;const [tag,name,nas]=pdNm(r);const ifl=pdIfLabel(P,r),ip=ND?pdIPText(P,r):'';
+  out.push(`${n}. ${L(r[0])} -> ${L(r[1])}: ${tag?'['+tag+'] ':''}${name}${nas?' (NAS: '+nas+')':''}${ifl?' {'+ifl+'}':''}${r[3]?' – '+r[3]:''}${r[4]&&r[4].includes('?')?' (optional)':''}${ip?'  ['+ip+']':''}`);}
   else if(r[0]==='=')out.push('---- '+r[1]+' ----');else out.push('   [note'+(r[0].length>1?' @ '+L(+r[0].slice(1)):'')+'] '+r[1]);});
  return out.join('\n');}
 
