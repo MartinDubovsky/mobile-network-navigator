@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.06.1** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.06.2** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
@@ -143,7 +143,7 @@ Every interface panel has a **Message flows** section with sequence diagrams of 
 | Wi-Fi | Wi-Fi calling attach via ePDG (`wifi-attach`), handover LTE → Wi-Fi (`lte-wifi-ho`) |
 
 - **On the map:** opening a procedure widens the panel, zooms the map to the area involved and dims everything else. Hovering a procedure in the list previews its nodes.
-- **Step through it:** click a message, use **◀ Prev / Next ▶** or the `←` / `→` keys, or **▷ Play**. The current message is highlighted on the map – its interface(s) and both ends, a label with the message name and a dot that travels along the path in the message’s direction (NAS between UE and MME runs over LTE-Uu and S1-MME, an SBI call over the two NF stubs and the bus).
+- **Step through it:** click a message, use **◀ Prev / Next ▶** or the `←` / `→` keys, or **▷ Play** (one step after the other; each step waits until the dot has reached its destination). The current message is highlighted on the map – its interface(s) and both ends, a label with the message name and a dot that travels along the path in the message’s direction (once per step while playing, repeated when you step by hand) (NAS between UE and MME runs over LTE-Uu and S1-MME, an SBI call over the two NF stubs and the bus).
 - **NAS messages:** when a NAS message rides inside an RRC, S1AP, NGAP or RANAP message that also does something else (RRC Connection Setup Complete, INITIAL UE MESSAGE, INITIAL CONTEXT SETUP REQUEST, RRC reconfiguration, E-RAB / PDU session resource set-up), the carrier is drawn on each hop and the NAS message is named on it, e.g. `INITIAL UE MESSAGE` with **NAS: Attach Request + PDN Connectivity Request**. NAS messages that RRC and S1AP / NGAP / RANAP only relay (UL / DL Information Transfer, UPLINK / DOWNLINK NAS TRANSPORT, Direct Transfer) are drawn as one arrow between UE and MME / AMF / SGSN / MSC. Layer tags: `EMM` / `ESM` (4G), `5GMM` (5G), `MM` / `CC` / `GMM` / `SM` (2G/3G).
 - **Interfaces:** every message shows the interface it uses (`S11`, `LTE-Uu › S1-MME`, `N11` …). The 5GC and EPC toggles keep working: service-based calls are drawn on the SBI bus or on the reference point, and in the CUPS view S11 / S5 / Gx / S1-U map to their SGW-C / PGW-C / SGW-U copies, with Sxa / Sxb shown as involved.
 - **IP addresses:** with [network data](#network-data-your-own-ip-addresses) loaded, a row of selectors above the lanes picks the instance of each node (e.g. MME01 or MME02, source and target eNB), and every single-hop message shows `source address → destination address · port` taken from those instances. Ranges (instance `*`) are used for RAN nodes; an SBI call uses the NF’s reference-point or SBI address. A `—` means your data has no address for that end; multi-hop messages (NAS, RRC through the DU) show none. The destination port is the protocol’s well-known port when it is in the list (e.g. 2123 out of `2123;2152`).
@@ -394,6 +394,9 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.06.2
+- **End-to-end procedures – Play:** the dot now travels once per step and stays at the destination; the next step starts only after it has arrived (at least 1.7 s per step, longer for long paths). Stepping by hand still repeats the animation.
 
 ### 2026.11.06.1
 - **End-to-end procedures – NAS messages made explicit:** a NAS message carried inside an RRC, S1AP, NGAP or RANAP message is now named on that message (e.g. RRC Connection Setup Complete and INITIAL UE MESSAGE with **NAS: Attach Request + PDN Connectivity Request**, INITIAL CONTEXT SETUP REQUEST and RRC Connection Reconfiguration with **NAS: Attach Accept + Activate Default EPS Bearer Context Request**). Before, these were only mentioned in the parameter text. NAS messages that RRC / S1AP / NGAP / RANAP only relay stay one arrow UE ↔ core; the rule is stated in each flow.
