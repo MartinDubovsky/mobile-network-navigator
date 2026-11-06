@@ -1,12 +1,12 @@
 # Mobile Network Navigator
 
-**Version 2026.11.05.9** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.06** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
-An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface and message-flow diagrams of the main procedures on every interface.
+An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
 It is meant for network engineers who need to get their bearings quickly while troubleshooting or discussing a topic with colleagues.
 
-- **File:** `index.html` (about 375 KB) – the whole application
+- **File:** `index.html` (about 500 KB) – the whole application
 - **Online:** https://martindubovsky.github.io/mobile-network-navigator/ (once GitHub Pages is enabled for this repository)
 - **Dependencies:** none – no external scripts, fonts or network access; works offline from disk
 - **Your own IP plan:** can be loaded from a local CSV/JSON file and is shown in the element and interface details – it never becomes part of this repository (see [Network data](#network-data-your-own-ip-addresses))
@@ -24,7 +24,7 @@ It is meant for network engineers who need to get their bearings quickly while t
 
 ## Views
 
-The top bar is two rows at 1920 px width: title + version, generation chips and view tabs on the first row; search, plane toggles, 5GC view, EPC view, protocol filter and theme on the second. On narrower screens it wraps.
+The top bar is two rows at 1920 px width: title + version, generation chips and view tabs on the first row; search, plane toggles, 5GC view, EPC view, protocol filter, **▶ Procedures**, network data and theme on the second. On narrower screens it wraps.
 
 | View | What it shows |
 |---|---|
@@ -65,6 +65,7 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 | **5GC view** | *Service-based*: NFs attached to the SBI bus (Namf, Nsmf …). *Reference points*: point-to-point N5, N7, N8, N10, N11, N12, N13, N15, N22, N23, N28, N33, N34, N35, N36, N37, N40. |
 | **EPC view** | *Classic*: SGW and PGW as single nodes. *CUPS*: R14 control/user-plane split – SGW-C, SGW-U, PGW-C, PGW-U with **Sxa** and **Sxb** (PFCP), and the attached interfaces split accordingly (S11 → SGW-C, S1-U/S12/S4-U → SGW-U, S5-C/S5-U, Gx and Gy/Gz → PGW-C, SGi → PGW-U). |
 | **Protocol** (dropdown) | Highlight all interfaces using GTP-U, GTPv1-C, GTPv2-C, PFCP, Diameter, MAP/SS7, SCTP, HTTP/2 SBI or ATM transport. |
+| **▶ Procedures** | Opens the [end-to-end procedures](#end-to-end-procedures) in the panel. While one is open, the map shows only the nodes and interfaces it uses. |
 | **Theme** | Dark/light; the choice is remembered in the browser. |
 
 ### Mouse, touch and keyboard
@@ -77,7 +78,8 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 | Drag | Pan |
 | `+` / `−` / `⤢` buttons | Zoom in / out / fit |
 | `/` | Focus search |
-| `Esc` | Clear search (if focused) or selection |
+| `Esc` | Clear search (if focused) or selection; leave the procedure view |
+| `←` / `→` | Previous / next message of the open end-to-end procedure |
 | `Tab`, then `Enter` / `Space` | Keyboard navigation and selection of diagram items |
 
 ### Line styles
@@ -127,6 +129,28 @@ Every interface panel has a **Message flows** section with sequence diagrams of 
 **Scope:** the flows show the messages and the IEs that matter when reading a trace; they are not complete message definitions. SBI procedures are shared between the SBI stubs and the matching reference points (e.g. `Nsmf_PDUSession_CreateSMContext` appears on Nsmf and on N11); CUPS and ng-eNB interface entries reuse the flows of the classic interface with their own end names. HTTP paths use the API versions of Release 17. Message names follow the specs (S1AP / NGAP in capitals, GTP and PFCP in title case, Diameter commands by their abbreviations, MAP by operation name as decoders show them).
 
 ---
+
+## End-to-end procedures
+
+**▶ Procedures** in the toolbar (or the link on the overview page) opens 17 multi-node call flows across the RAN and the core – the step-by-step view of what happens between UE, RAN, core and policy nodes, with the interface every message travels on.
+
+| Generation | Procedures (ID) |
+|---|---|
+| 4G LTE / EPC | LTE initial attach (`lte-attach`), service request (`lte-sr`), network-triggered service request / paging (`lte-paging`), S1 release (`lte-s1rel`), X2 handover (`lte-x2ho`), VoLTE dedicated bearer (`lte-volte-bearer`), UE-initiated detach (`lte-detach`), CS fallback MO call to UTRAN (`csfb-mo`) |
+| 5G NSA | EN-DC secondary node addition with E-RAB modification (`endc-add`) |
+| 5G SA | Initial registration (`nr-reg`), PDU session establishment (`nr-pdu`), service request (`nr-sr`), AN release (`nr-anrel`), Xn handover (`nr-xnho`) |
+| 3G | GPRS attach and PDP context activation (`umts-attach-pdp`) |
+| Wi-Fi | Wi-Fi calling attach via ePDG (`wifi-attach`), handover LTE → Wi-Fi (`lte-wifi-ho`) |
+
+- **On the map:** opening a procedure widens the panel, zooms the map to the area involved and dims everything else. Hovering a procedure in the list previews its nodes.
+- **Step through it:** click a message, use **◀ Prev / Next ▶** or the `←` / `→` keys, or **▷ Play**. The current message is highlighted on the map – its interface(s) and both ends, a label with the message name and a dot that travels along the path in the message’s direction (NAS between UE and MME runs over LTE-Uu and S1-MME, an SBI call over the two NF stubs and the bus).
+- **Interfaces:** every message shows the interface it uses (`S11`, `LTE-Uu › S1-MME`, `N11` …). The 5GC and EPC toggles keep working: service-based calls are drawn on the SBI bus or on the reference point, and in the CUPS view S11 / S5 / Gx / S1-U map to their SGW-C / PGW-C / SGW-U copies, with Sxa / Sxb shown as involved.
+- **IP addresses:** with [network data](#network-data-your-own-ip-addresses) loaded, a row of selectors above the lanes picks the instance of each node (e.g. MME01 or MME02, source and target eNB), and every single-hop message shows `source address → destination address · port` taken from those instances. Ranges (instance `*`) are used for RAN nodes; an SBI call uses the NF’s reference-point or SBI address. A `—` means your data has no address for that end; multi-hop messages (NAS, RRC through the DU) show none. The destination port is the protocol’s well-known port when it is in the list (e.g. 2123 out of `2123;2152`).
+- **Element and interface panels** list the procedures they take part in (**End-to-end procedures**), and selecting something on the map while a procedure is open offers **← Back** to it at the same step.
+- **⤢ Larger** opens the diagram in a wide window; **Copy as text** copies it with interfaces and, if loaded, addresses (`15. MME -> SGW: [GTPv2-C] Create Session Request {S11} … [192.0.2.21 -> 198.51.100.5 port 2123]`).
+- **Deep link:** `#proc=<id>`, optionally `&step=<n>` (message number), e.g. `index.html#proc=nr-pdu&step=12`; `#procedures` opens the list.
+
+The flows follow the clauses named under each title (TS 23.401, 23.502, 23.060, 23.272, 23.402, 37.340 and the protocol specs) for the common case – non-roaming, no relocation of SGW / AMF / UPF – and show the IEs that matter when reading a trace. Optional or conditional steps are dashed and marked `opt`.
 
 ## Network data (your own IP addresses)
 
@@ -247,6 +271,8 @@ The page address updates with the current selection, so a link can be sent to a 
 | `#el=<element-id>` | `index.html#el=amf` | Element details |
 | `#if=<interface-id>` | `index.html#if=s1mme` | Interface details |
 | `#if=<interface-id>&mf=<procedure>` | `index.html#if=s1mme&mf=s1-handover` | Interface details with that message flow open (procedure title in lower case, words joined by `-`) |
+| `#proc=<procedure-id>[&step=<n>]` | `index.html#proc=lte-attach&step=15` | End-to-end procedure, optionally at message *n* (IDs in [End-to-end procedures](#end-to-end-procedures)) |
+| `#procedures` | `index.html#procedures` | List of end-to-end procedures |
 | `#gen=<gen>[,<gen>…]` | `index.html#gen=nsa,4g` | Generation filter |
 | `#releases` | `index.html#releases` | Release history |
 
@@ -344,6 +370,7 @@ All content is plain JavaScript data near the top of the `<script>` block in the
 | `E2E` | End-to-end stack scenarios |
 | `RELEASES` | Release history shown in the app (same entries as the changelog below) |
 | `MF`, `SB` | Message flows per interface ID; `SB` holds the SBI procedures shared by stubs and reference points. Helpers build repeated patterns (`mfGTPU`, `mfDia`, `mfGx`, `mfS11` …) |
+| `PROC` | End-to-end procedures (see the format below) |
 | `ND_CANON`, `ND_EXTRA`, `ND_ELALIAS` | Network data: which interface ID addresses are stored under, extra keys a link shows, and element fallbacks (CUPS functions, gNB parts) |
 | `ND_TEMPLATE_CSV` | The template offered by **Download CSV template** (keep it in step with `netdata-template.csv`) |
 
@@ -355,6 +382,8 @@ Routing options: `ao` / `bo` (anchor offsets from element centre), `pts` (waypoi
 
 **Message flow format:** `MF[interfaceId] = [{t:'title', s:'spec', d:'optional note', p:['lane', …] (optional, default = the two ends), m:[rows]}]`. A row is `[from, to, 'TAG|MESSAGE', 'key IEs', '?']` (lane numbers from 0; the tag and `'?'` for optional are optional), `['*', 'note']` for a grey box across all lanes, `['*1', 'note']` for a box on lane 1, or `['=', 'text']` for a separator.
 
+**End-to-end procedure format:** `PROC = [{id, g:['4g', …], t:'title', s:'specs', d:'description', p:[{e:'element-id', l:'optional lane label'}, …], m:[rows]}]`. Rows are as in message flows plus a sixth field, the interface: `[from, to, 'TAG|MESSAGE', 'key IEs', '?' or '', 'iface']`, where `iface` is a link ID (`'s11'`), several joined with `+` for a multi-hop path (`'lteuu+s1mme'` for NAS, `'nruusa+f1c'` for NR RRC) in UE-to-core order, or `'sbi'` for a service-based call between two 5GC NFs. Use the classic EPC IDs; the CUPS view maps them itself. Two lanes may use the same element (source / target eNB).
+
 Layer colours in the stacks are assigned automatically from the layer name (NAS, RRC, radio L2, application protocol, tunnelling, transport, IP, SS7/ATM, L2/L1).
 
 To release a new version, change `VERSION` (and the `<meta name="version">` tag) in the HTML to the release date (`YYYY.MM.DD`, or `YYYY.MM.DD.N` for a further release on the same day), add the entry at the top of `RELEASES` in the HTML (shown in the app when the version number is clicked; `**bold**` and `` `code` `` are rendered) and add the same entry to the changelog below.
@@ -364,6 +393,12 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.06
+- **End-to-end procedures** (▶ Procedures in the toolbar): 17 multi-node call flows – LTE attach, service request, paging, S1 release, X2 handover, VoLTE dedicated bearer, detach, CS fallback, EN-DC secondary node addition, 5G registration, PDU session, service request, AN release, Xn handover, 3G attach + PDP context, Wi-Fi calling attach and LTE → Wi-Fi handover – with the interface of every message.
+- **Map integration:** the map zooms to the procedure and dims everything else; stepping through the messages (click, ← / →, Play) highlights each hop and animates it along its path. Works in the CUPS and reference-point views.
+- **IP addresses in the flows:** with network data loaded, pick the instance of each node above its lane and every message shows source → destination address and port.
+- Element and interface panels list the procedures they appear in; deep links `#proc=<id>&step=<n>`; copy as text and larger view.
 
 ### 2026.11.05.9
 - **Wi-Fi access via ePDG** (untrusted non-3GPP, VoWiFi): new **ePDG** and **3GPP AAA** elements with **SWu**, **SWm**, **SWx**, **S2b** and **S6b** (S2b-C / S2b-U and S6b to the PGW-C in the CUPS view), a **Wi-Fi** generation chip, message flows (IKEv2 + EAP-AKA tunnel set-up, S2b PDN connection, LTE ↔ Wi-Fi handover, Diameter procedures) and two end-to-end stacks.
