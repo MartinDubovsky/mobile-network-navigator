@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="version" content="2026.11.07.1">
+<meta name="version" content="2026.11.07.2">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mobile Network Navigator · 2G · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
@@ -323,7 +323,7 @@ table.ndt .ndlink{font-family:var(--mono);font-size:11.5px}
 .ndkv{margin:4px 0 6px}
 .node .ndb rect{fill:var(--giw);stroke:var(--bg);stroke-width:1.5}
 .node .ndb text{fill:#06210f;font-family:var(--mono);font-size:10px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
-body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fixed;inset:10px;border:3px dashed var(--giw);border-radius:14px;background:color-mix(in srgb,var(--bg) 82%,transparent);z-index:90;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;pointer-events:none}
+body.nddrop::after{content:'Drop a capture (pcap / pcapng) or CSV / JSON network data';position:fixed;inset:10px;border:3px dashed var(--giw);border-radius:14px;background:color-mix(in srgb,var(--bg) 82%,transparent);z-index:90;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;pointer-events:none}
 @media (max-width: 980px){
   header h1{white-space:normal}
   #search{width:170px}
@@ -333,6 +333,73 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
   .tabs{margin-left:0}
   #e2enav{width:180px}
 }
+/* trace analysis */
+#trbtn.on{border-color:var(--ink);background:var(--panel2);font-weight:600}
+#trbtn.has:not(.on)::after{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--g4g);margin-left:5px;vertical-align:1px}
+@media (min-width:981px){body.trwide #panel{width:min(58vw,980px);max-width:none}}
+.trtop{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.trtop h2{margin:0;flex:1}
+.trbtns{display:flex;gap:6px}
+.trbtns button,.trbusy button,.trnote button{border:1px solid var(--line);background:var(--panel2);border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;color:var(--ink)}
+.trbtns button:hover,.trbusy button:hover,.trnote button:hover{border-color:var(--ink)}
+.trdrop{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:2px dashed var(--line);border-radius:10px;padding:14px;margin:10px 0}
+.trdrop span{color:var(--muted);font-size:12.5px}
+.trprimary{border:1px solid var(--ink);background:var(--panel);color:var(--ink);border-radius:7px;padding:6px 14px;font-weight:600;cursor:pointer;font-size:13px}
+.trpriv{font-size:12px;color:var(--muted);border-left:3px solid var(--giw);padding:2px 0 2px 8px;margin:8px 0}
+.trul{padding-left:18px;margin:4px 0}.trul li{margin:3px 0;font-size:13px}
+.trlegend{font-size:12.5px;line-height:1.9}
+.trc{display:inline-block;border-radius:9px;padding:0 7px;font-size:11px;font-weight:600;white-space:nowrap;border:1px solid}
+.trc.c-sure{color:var(--giw);border-color:var(--giw)}
+.trc.c-likely{color:var(--g3g);border-color:var(--g3g)}
+.trc.c-manual{color:var(--g4g);border-color:var(--g4g)}
+.trc.c-none{color:var(--muted);border-color:var(--line)}
+.trmore{font-size:11px;color:var(--muted);border-bottom:1px dotted var(--muted);cursor:help}
+.trbusy{border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.trprog{width:100%;height:8px;border-radius:4px;background:var(--panel2);overflow:hidden;border:1px solid var(--line)}
+.trprog i{display:block;height:100%;background:var(--g4g);transition:width .2s}
+.trbusyn{font-size:12.5px;color:var(--muted)}
+.trerr{border:1px solid #ef4444;border-radius:8px;padding:8px 10px;margin:8px 0;font-size:13px}
+.trsum{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--panel2);font-size:12.5px;color:var(--muted)}
+.trfn{font-weight:600;color:var(--ink);font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trifs{margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 10px}.trifs span{font-family:var(--mono);font-size:11.5px}.trifs i{font-style:normal;color:var(--faint)}
+.trnote{border:1px solid var(--g3g);border-radius:8px;padding:6px 10px;margin:8px 0;font-size:12.5px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#panel h3 .trh{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+table.trt{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}
+table.trt th{color:var(--muted);font-weight:600;font-size:11px;text-align:left;padding:2px 5px;border-bottom:1px solid var(--line)}
+table.trt td{padding:4px 5px;border-bottom:1px solid var(--line);vertical-align:top}
+table.trt .n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+table.trt td.ip{font-family:var(--mono);white-space:nowrap;user-select:all;font-size:11.5px}
+table.trt tr[data-trr]{cursor:pointer}
+table.trt tr[data-trr]:hover td{background:var(--panel2)}
+table.trt tr[data-trr].on td{background:color-mix(in srgb,var(--g4g) 14%,transparent)}
+.trif{font-family:var(--mono);font-size:12.5px;font-weight:600;display:inline-flex;gap:6px;align-items:center;border:0;background:transparent;color:var(--ink);cursor:pointer;padding:0}
+.trif:hover{text-decoration:underline}
+.trif .sw{width:14px;height:0;border-top:2.5px solid var(--lc)}.trif .sw.cp{border-top-style:dashed}
+.trends{font-size:11px;color:var(--muted)}
+.trproto{font-size:11.5px}
+.trwhy{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.35}
+.trnm{font-size:11px;color:var(--muted);word-break:break-all}
+.trdec select{max-width:250px;font-size:12px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:2px 4px}
+.trdec td>div{margin-top:3px}
+.trdet{margin:12px 0;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.trdet summary{cursor:pointer;font-weight:600;font-size:13px}
+.trdp{font-size:12px;margin:8px 0;line-height:1.5}.trdp i{font-style:normal;color:var(--faint)}
+.trbad{color:#ef4444}
+.trlim{margin-top:12px}
+#panel h3.trh3 span{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.trbox{border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;display:flex;flex-direction:column;gap:4px}
+.trside code{font-size:11.5px}
+.trov .trb{cursor:pointer}
+.trov .trb rect{fill:var(--panel);stroke:var(--ink);stroke-width:1.3}
+.trov .trb text{font:600 10.5px var(--mono);fill:var(--ink);text-anchor:middle;dominant-baseline:middle;pointer-events:none}
+.trov .trb.c-sure rect{stroke:var(--giw)}
+.trov .trb.c-likely rect{stroke:var(--g3g);stroke-dasharray:3 2}
+.trov .trb.c-manual rect{stroke:var(--g4g)}
+.trov .trb.c-none rect{stroke:var(--muted);stroke-dasharray:2 2}
+.trov .trb.on rect{stroke-width:2.6}
+.trcta button{border-color:var(--g4g)}
+@media (max-width:1500px){#toolbar #search{width:146px}#toolbar #protosel{max-width:98px}}
+@media (max-width:1700px){#theme .tlbl{display:none}}
 /* end-to-end procedures */
 #pdbtn.on{border-color:var(--ink);background:var(--panel2);font-weight:600}
 @media (min-width:981px){body.procwide #panel{width:min(58vw,980px);max-width:none}}
@@ -397,8 +464,8 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
   <div class="grp"><span class="lbl">EPC</span><span class="seg">
     <button class="tg on" data-cups="0" title="SGW and PGW as single nodes">Classic</button><button class="tg" data-cups="1" title="R14 CUPS: SGW-C/U and PGW-C/U with Sxa / Sxb (PFCP)">CUPS</button></span></div>
   <div class="grp"><span class="lbl">Protocol</span><select id="protosel" aria-label="Highlight interfaces by protocol"></select></div>
-  <div class="grp"><button class="tg" id="pdbtn" aria-pressed="false" title="End-to-end procedures – step through attach, service request, handovers, PDU session… on the map">▶ Procedures</button></div>
-  <div class="grp" style="margin-left:auto"><span id="ndwrap"><span id="ndstat"></span><button class="tg" id="ndsite" hidden title="Filter the network data by site" aria-haspopup="true">Site: all ▾</button><div id="ndsitemenu" hidden></div><button class="tg" id="ndbtn" title="Load, edit and save your own IP plan – stays on this computer" aria-haspopup="true">◆ Network data</button><div id="ndmenu" hidden></div></span><button class="tg" id="theme" title="Toggle light/dark">◐ Theme</button></div>
+  <div class="grp"><button class="tg" id="pdbtn" aria-pressed="false" title="End-to-end procedures – step through attach, service request, handovers, PDU session… on the map">▶ Procedures</button><button class="tg" id="trbtn" aria-pressed="false" title="Trace analysis – open a pcap / pcapng capture and see its interfaces and elements on the map; read in this browser only, never uploaded">⇅ Trace</button></div>
+  <div class="grp" style="margin-left:auto"><span id="ndwrap"><span id="ndstat"></span><button class="tg" id="ndsite" hidden title="Filter the network data by site" aria-haspopup="true">Site: all ▾</button><div id="ndsitemenu" hidden></div><button class="tg" id="ndbtn" title="Load, edit and save your own IP plan – stays on this computer" aria-haspopup="true">◆ Network data</button><div id="ndmenu" hidden></div></span><button class="tg" id="theme" title="Toggle light/dark">◐<span class="tlbl"> Theme</span></button></div>
 </div>
 <main>
   <div id="views">
@@ -422,9 +489,9 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
 <script>
 'use strict';
 const PRISTINE_DOC=document.documentElement.cloneNode(true); /* clean copy of the tool, used by “Save tool + data as one HTML file” */
-const VERSION = '2026.11.07.1';
+const VERSION = '2026.11.07.2';
 /* release history – shown when the version number is clicked; keep in step with the README changelog */
-const RELEASES = [{"v": "2026.11.07.1", "items": ["**16 new end-to-end procedures** (39 in total): combined GPRS / IMSI attach over Gs; 3G PS service request and 3G CS mobile-originated call with Iu UP; HSPA RAB on HS-DSCH and E-DCH; LTE PDN connectivity (IMS APN), tracking area update with MME change and S1 handover; EN-DC secondary node release; 5G N2 handover, network-triggered service request, PDU session release and deregistration; Wi-Fi → LTE handover and Wi-Fi calling detach; CS fallback mobile-terminated call and SRVCC LTE → UTRAN.", "The procedure list is now grouped in generation order – 2G, 3G, HSPA, 4G, 5G NSA, 5G SA, Wi-Fi, Interworking – and ordered inside each group from registration to sessions, mobility and release. CS fallback moved to Interworking.", "User data rows that cross several interfaces are tagged **IP** instead of GTP-U."]},{"v": "2026.11.07", "items": ["**2G end-to-end procedures** (6 new, 23 in total): GSM location update, mobile-originated call, mobile-terminated call with HLR interrogation and paging, call release, inter-BSC handover, and GPRS attach with PDP context activation in A/Gb mode.", "The 2G flows show the BTS and BSC hops: RR on Um, RSL on Abis (CHANNEL REQUIRED, IMMEDIATE ASSIGN COMMAND, ESTABLISH INDICATION, ENCRYPTION COMMAND, PAGING COMMAND), BSSMAP and SCCP on A, H.248 to the CS-MGW, ISUP towards the other network, MAP on C / D and Gr, BSSGP on Gb.", "Carried messages are labelled by layer: **NAS: …** for MM / CC / GMM / EMM / 5GMM messages, **RR: …** for RR messages inside RSL or BSSMAP (e.g. the Handover Command in HANDOVER REQUEST ACKNOWLEDGE).", "Fixed: closing a procedure right after opening it (e.g. a quick change of the deep link) could leave the map zoomed in.", "The message label on the map stays inside the visible map area, also for hops along the map edge (e.g. Um).", "Fixed: the map zoom animation of a procedure could, in rare cases, jump far outside the map."]},{"v": "2026.11.06.2", "items": ["**End-to-end procedures – Play:** the dot now travels once per step and stays at the destination; the next step starts only after it has arrived (at least 1.7 s per step, longer for long paths). Stepping by hand still repeats the animation."]},{"v": "2026.11.06.1", "items": ["**End-to-end procedures – NAS messages made explicit:** a NAS message carried inside an RRC, S1AP, NGAP or RANAP message is now named on that message (e.g. RRC Connection Setup Complete and INITIAL UE MESSAGE with **NAS: Attach Request + PDN Connectivity Request**, INITIAL CONTEXT SETUP REQUEST and RRC Connection Reconfiguration with **NAS: Attach Accept + Activate Default EPS Bearer Context Request**). Before, these were only mentioned in the parameter text. NAS messages that RRC / S1AP / NGAP / RANAP only relay stay one arrow UE ↔ core; the rule is stated in each flow.", "NAS layer tags are now precise: **EMM / ESM** (4G), **5GMM** (5G), **MM / CC / GMM / SM** (3G) instead of a generic NAS tag. Attach Complete is named with its ESM message (Activate Default EPS Bearer Context Accept).", "Added the optional **Identity Request / Response** to LTE attach, 5G registration and 3G attach, and a note on the optional EIR check (S13) in LTE attach. In UTRAN the first NAS message (CM Service Request, GPRS Attach Request) is shown per hop: RRC Initial Direct Transfer, then RANAP INITIAL UE MESSAGE.", "RRC IE names corrected: LTE RRC Connection Reconfiguration carries NAS in **dedicatedInfoNASList**, NR RRCReconfiguration in **dedicatedNAS-MessageList** (also fixed in the LTE-Uu message flow)."]},{"v": "2026.11.06", "items": ["**End-to-end procedures** (▶ Procedures in the toolbar): 17 multi-node call flows – LTE attach, service request, paging, S1 release, X2 handover, VoLTE dedicated bearer, detach, CS fallback, EN-DC secondary node addition, 5G registration, PDU session, service request, AN release, Xn handover, 3G attach + PDP context, Wi-Fi calling attach and LTE → Wi-Fi handover – with the interface of every message.", "**Map integration:** the map zooms to the procedure and dims everything else; stepping through the messages (click, ← / →, Play) highlights each hop and animates it along its path. Works in the CUPS and reference-point views.", "**IP addresses in the flows:** with network data loaded, pick the instance of each node above its lane and every message shows source → destination address and port.", "Element and interface panels list the procedures they appear in; deep links `#proc=<id>&step=<n>`; copy as text and larger view."]},{"v": "2026.11.05.9", "items": ["**Wi-Fi access via ePDG** (untrusted non-3GPP, VoWiFi): new **ePDG** and **3GPP AAA** elements with **SWu**, **SWm**, **SWx**, **S2b** and **S6b** (S2b-C / S2b-U and S6b to the PGW-C in the CUPS view), a **Wi-Fi** generation chip, message flows (IKEv2 + EAP-AKA tunnel set-up, S2b PDN connection, LTE ↔ Wi-Fi handover, Diameter procedures) and two end-to-end stacks.", "Map: the 5G rows moved down to make room below the EPC; the canvas is now 1900 × 1400."]},{"v": "2026.11.05.8", "items": ["**Network data:** site `*` means the instance belongs to every site – it is shown whichever sites are selected and is not listed as a separate site in the site filter."]},{"v": "2026.11.05.7","items": ["**Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet."]},{"v": "2026.11.05.6","items": ["**Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.","Addresses written with a prefix length (`10.2.7.2/26`) are treated as one address, not as the whole subnet: search no longer matches other addresses of that subnet, and the duplicate check compares the address part. CIDR blocks with zero host bits stay ranges."]},{"v": "2026.11.05.5","items": ["**Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.","**Site filter** for network data: pick sites (or type part of a name) to limit panels, map badges, tooltips and search; optional export of only the filtered sites; the filter is kept with “Remember on this computer”.","Template: port lists and a second site; RAN ranges without a site."]},{"v": "2026.11.05.4","items": ["**Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.","Larger view, copy as text, keyboard navigation, search over procedure and message names, and deep links to a procedure (`&mf=`)."]},{"v": "2026.11.05.3","items": ["**Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.","Save as CSV, JSON, encrypted JSON (AES-256-GCM, PBKDF2-SHA256), or as one HTML file with the tool and the data (optionally encrypted). Optional “Remember on this computer”. Warning before leaving with unsaved changes.","Content-Security-Policy added: the page cannot load or send anything over the network.","Templates `netdata-template.csv` / `netdata-template.json` (documentation addresses only); `.gitignore` excludes exports with real data.","`/` no longer jumps to the search box while typing in another field."]},{"v": "2026.11.05.2","items": ["**E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.","Scenarios can now consist of several paths: **5G NSA** user plane (NR leg + LTE leg over X2-U) and control plane (LTE RRC/NAS, SCG configuration via X2-C, SRB3) and **HSPA Direct Tunnel** (user plane RNC ↔ GGSN + SGSN control path) – every stack now faces its real peer.","Fixed labels: GTP-U (QFI) on N3/N9 at both ends, 16 / 8 kbit/s TRAU sub-timeslots on Abis and Ater; BSC added to the GSM speech path; user IP labelled consistently."]},{"v": "2026.11.05","items": ["Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).","The CS and PS core (MSC Server/VLR, CS-MGW, HLR/AuC, EIR, SGSN, GGSN, charging) is shared with 3G and now tagged for both generations.","Integration with modern networks: CSFB and SRVCC to GERAN (SGs, Sv), LTE ↔ GERAN reselection / redirection / NACC, S4-SGSN with Gb (S3/S4), and 5G-SRVCC (R16, NG-RAN → UTRAN only, via N26 → MME_SRVCC → Sv); no direct 5GS ↔ GERAN mobility.","New end-to-end stacks: 2G GPRS/EDGE user plane, GSM CS control plane, GSM speech path.","Renamed to “Mobile Network Navigator”; shorter generation chip subtitles so the header still fits one row at 1920 px."]},{"v": "2026.11.04.3","items": ["Drew interfaces that were only described in text: **Cx / Sh** (IMS–HSS), **Ro / Rf** (IMS–OCS/OFCS), **Sy** (PCRF–OCS), **S9** (PCRF–roaming partner), **S6d** (S4-SGSN–HSS), **Gs** (SGSN–MSC/VLR), **Gc** (GGSN–HLR), **Nhss** (HSS–UDM interworking, R16), and reference points **N23** (PCF–NWDAF) and **N34** (NSSF–NWDAF).","Diameter in 5G networks made visible: N5 to the IMS is now “N5 / Rx” (PCF supports Rx per TS 23.503 Annex C), N6/SGi/Gi carry the DN-AAA (RADIUS/Diameter) option; *5G SA* + *Diameter* filter highlights Cx/Sh, Ro/Rf, N5/Rx and N6.","EPC zone label moved to the bottom-right corner."]},{"v": "2026.11.04.2","items": ["Added **ng-eNB** (E-UTRA connected to 5GC) in the NG-RAN area with LTE-Uu, N2 (NG-C) to AMF, N3 (NG-U) to UPF and Xn to the gNB; notes on Options 4/4a, 5 and 7/7a/7x.","5G SA chip now reads “5GC · Opt. 2 (4/5/7)”."]},{"v": "2026.11.04","items": ["First release: architecture map (3G, HSPA, 4G, 5G NSA, 5G SA, interworking), element/interface details with protocol stacks, end-to-end stack view, interface table, deep links, dark/light theme.","Added Gx between GGSN (PCEF) and PCRF (R7+).","Added EPC **CUPS view**: SGW-C/U, PGW-C/U, Sxa, Sxb, S5-C/U, S4-C/U.","Compact top bar (two rows at 1920 px), protocol filter as a dropdown, date-based version label."]}];
+const RELEASES = [{"v": "2026.11.07.2", "items": ["**Trace analysis** (**⇅ Trace** in the toolbar, or drop a file on the page): open a Wireshark capture – pcap or pcapng, also gzip-compressed and with several capture interfaces – and see which interfaces and elements it contains. The map highlights them with packet counts; the panel lists every interface with its evidence, the elements with their addresses and names, and the protocol details.", "Interfaces are identified from the traffic itself: GTP-U is told apart (S1-U, S5/S8-U, N3, N9, Gn, direct tunnel…) by the F-TEIDs signalled in GTPv2-C, GTPv1-C and PFCP of the same capture; PFCP by its 3GPP Interface Type IEs (N4, Sxa, Sxb); Diameter by application and AVPs (Gx with IP-CAN-Type for P-GW or GGSN, Gy / Ro and Gz / Rf by Service-Context-Id, S6a / S6d by the ULR flag, Rx, S13, SWm, SWx, S6b, Cx / Sh, Sy, S9); RADIUS by 3GPP-RAT-Type; plain IP on Gi / SGi / N6 by its addresses also seen inside GTP-U or as Framed-IP-Address in Gx / RADIUS; S1AP, NGAP, XnAP, F1AP, E1AP, SGsAP and NBAP by SCTP PPID or port.", "Every result says how sure it is – **certain**, **likely** or **undecided** – and why. Undecided and likely traffic is grouped by protocol, VLAN and capture interface, and one choice assigns a whole group. Your network data, when loaded, names the elements and settles ambiguous cases.", "Private by design: the capture is read in the browser as a stream (about 700 000 packets per second in our tests) and never uploaded, stored, put in the link or in “Save with data”. No subscriber identities are read. `.gitignore` now also excludes capture files."]}, {"v": "2026.11.07.1", "items": ["**16 new end-to-end procedures** (39 in total): combined GPRS / IMSI attach over Gs; 3G PS service request and 3G CS mobile-originated call with Iu UP; HSPA RAB on HS-DSCH and E-DCH; LTE PDN connectivity (IMS APN), tracking area update with MME change and S1 handover; EN-DC secondary node release; 5G N2 handover, network-triggered service request, PDU session release and deregistration; Wi-Fi → LTE handover and Wi-Fi calling detach; CS fallback mobile-terminated call and SRVCC LTE → UTRAN.", "The procedure list is now grouped in generation order – 2G, 3G, HSPA, 4G, 5G NSA, 5G SA, Wi-Fi, Interworking – and ordered inside each group from registration to sessions, mobility and release. CS fallback moved to Interworking.", "User data rows that cross several interfaces are tagged **IP** instead of GTP-U."]},{"v": "2026.11.07", "items": ["**2G end-to-end procedures** (6 new, 23 in total): GSM location update, mobile-originated call, mobile-terminated call with HLR interrogation and paging, call release, inter-BSC handover, and GPRS attach with PDP context activation in A/Gb mode.", "The 2G flows show the BTS and BSC hops: RR on Um, RSL on Abis (CHANNEL REQUIRED, IMMEDIATE ASSIGN COMMAND, ESTABLISH INDICATION, ENCRYPTION COMMAND, PAGING COMMAND), BSSMAP and SCCP on A, H.248 to the CS-MGW, ISUP towards the other network, MAP on C / D and Gr, BSSGP on Gb.", "Carried messages are labelled by layer: **NAS: …** for MM / CC / GMM / EMM / 5GMM messages, **RR: …** for RR messages inside RSL or BSSMAP (e.g. the Handover Command in HANDOVER REQUEST ACKNOWLEDGE).", "Fixed: closing a procedure right after opening it (e.g. a quick change of the deep link) could leave the map zoomed in.", "The message label on the map stays inside the visible map area, also for hops along the map edge (e.g. Um).", "Fixed: the map zoom animation of a procedure could, in rare cases, jump far outside the map."]},{"v": "2026.11.06.2", "items": ["**End-to-end procedures – Play:** the dot now travels once per step and stays at the destination; the next step starts only after it has arrived (at least 1.7 s per step, longer for long paths). Stepping by hand still repeats the animation."]},{"v": "2026.11.06.1", "items": ["**End-to-end procedures – NAS messages made explicit:** a NAS message carried inside an RRC, S1AP, NGAP or RANAP message is now named on that message (e.g. RRC Connection Setup Complete and INITIAL UE MESSAGE with **NAS: Attach Request + PDN Connectivity Request**, INITIAL CONTEXT SETUP REQUEST and RRC Connection Reconfiguration with **NAS: Attach Accept + Activate Default EPS Bearer Context Request**). Before, these were only mentioned in the parameter text. NAS messages that RRC / S1AP / NGAP / RANAP only relay stay one arrow UE ↔ core; the rule is stated in each flow.", "NAS layer tags are now precise: **EMM / ESM** (4G), **5GMM** (5G), **MM / CC / GMM / SM** (3G) instead of a generic NAS tag. Attach Complete is named with its ESM message (Activate Default EPS Bearer Context Accept).", "Added the optional **Identity Request / Response** to LTE attach, 5G registration and 3G attach, and a note on the optional EIR check (S13) in LTE attach. In UTRAN the first NAS message (CM Service Request, GPRS Attach Request) is shown per hop: RRC Initial Direct Transfer, then RANAP INITIAL UE MESSAGE.", "RRC IE names corrected: LTE RRC Connection Reconfiguration carries NAS in **dedicatedInfoNASList**, NR RRCReconfiguration in **dedicatedNAS-MessageList** (also fixed in the LTE-Uu message flow)."]},{"v": "2026.11.06", "items": ["**End-to-end procedures** (▶ Procedures in the toolbar): 17 multi-node call flows – LTE attach, service request, paging, S1 release, X2 handover, VoLTE dedicated bearer, detach, CS fallback, EN-DC secondary node addition, 5G registration, PDU session, service request, AN release, Xn handover, 3G attach + PDP context, Wi-Fi calling attach and LTE → Wi-Fi handover – with the interface of every message.", "**Map integration:** the map zooms to the procedure and dims everything else; stepping through the messages (click, ← / →, Play) highlights each hop and animates it along its path. Works in the CUPS and reference-point views.", "**IP addresses in the flows:** with network data loaded, pick the instance of each node above its lane and every message shows source → destination address and port.", "Element and interface panels list the procedures they appear in; deep links `#proc=<id>&step=<n>`; copy as text and larger view."]},{"v": "2026.11.05.9", "items": ["**Wi-Fi access via ePDG** (untrusted non-3GPP, VoWiFi): new **ePDG** and **3GPP AAA** elements with **SWu**, **SWm**, **SWx**, **S2b** and **S6b** (S2b-C / S2b-U and S6b to the PGW-C in the CUPS view), a **Wi-Fi** generation chip, message flows (IKEv2 + EAP-AKA tunnel set-up, S2b PDN connection, LTE ↔ Wi-Fi handover, Diameter procedures) and two end-to-end stacks.", "Map: the 5G rows moved down to make room below the EPC; the canvas is now 1900 × 1400."]},{"v": "2026.11.05.8", "items": ["**Network data:** site `*` means the instance belongs to every site – it is shown whichever sites are selected and is not listed as a separate site in the site filter."]},{"v": "2026.11.05.7","items": ["**Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet."]},{"v": "2026.11.05.6","items": ["**Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.","Addresses written with a prefix length (`10.2.7.2/26`) are treated as one address, not as the whole subnet: search no longer matches other addresses of that subnet, and the duplicate check compares the address part. CIDR blocks with zero host bits stay ranges."]},{"v": "2026.11.05.5","items": ["**Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.","**Site filter** for network data: pick sites (or type part of a name) to limit panels, map badges, tooltips and search; optional export of only the filtered sites; the filter is kept with “Remember on this computer”.","Template: port lists and a second site; RAN ranges without a site."]},{"v": "2026.11.05.4","items": ["**Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.","Larger view, copy as text, keyboard navigation, search over procedure and message names, and deep links to a procedure (`&mf=`)."]},{"v": "2026.11.05.3","items": ["**Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.","Save as CSV, JSON, encrypted JSON (AES-256-GCM, PBKDF2-SHA256), or as one HTML file with the tool and the data (optionally encrypted). Optional “Remember on this computer”. Warning before leaving with unsaved changes.","Content-Security-Policy added: the page cannot load or send anything over the network.","Templates `netdata-template.csv` / `netdata-template.json` (documentation addresses only); `.gitignore` excludes exports with real data.","`/` no longer jumps to the search box while typing in another field."]},{"v": "2026.11.05.2","items": ["**E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.","Scenarios can now consist of several paths: **5G NSA** user plane (NR leg + LTE leg over X2-U) and control plane (LTE RRC/NAS, SCG configuration via X2-C, SRB3) and **HSPA Direct Tunnel** (user plane RNC ↔ GGSN + SGSN control path) – every stack now faces its real peer.","Fixed labels: GTP-U (QFI) on N3/N9 at both ends, 16 / 8 kbit/s TRAU sub-timeslots on Abis and Ater; BSC added to the GSM speech path; user IP labelled consistently."]},{"v": "2026.11.05","items": ["Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).","The CS and PS core (MSC Server/VLR, CS-MGW, HLR/AuC, EIR, SGSN, GGSN, charging) is shared with 3G and now tagged for both generations.","Integration with modern networks: CSFB and SRVCC to GERAN (SGs, Sv), LTE ↔ GERAN reselection / redirection / NACC, S4-SGSN with Gb (S3/S4), and 5G-SRVCC (R16, NG-RAN → UTRAN only, via N26 → MME_SRVCC → Sv); no direct 5GS ↔ GERAN mobility.","New end-to-end stacks: 2G GPRS/EDGE user plane, GSM CS control plane, GSM speech path.","Renamed to “Mobile Network Navigator”; shorter generation chip subtitles so the header still fits one row at 1920 px."]},{"v": "2026.11.04.3","items": ["Drew interfaces that were only described in text: **Cx / Sh** (IMS–HSS), **Ro / Rf** (IMS–OCS/OFCS), **Sy** (PCRF–OCS), **S9** (PCRF–roaming partner), **S6d** (S4-SGSN–HSS), **Gs** (SGSN–MSC/VLR), **Gc** (GGSN–HLR), **Nhss** (HSS–UDM interworking, R16), and reference points **N23** (PCF–NWDAF) and **N34** (NSSF–NWDAF).","Diameter in 5G networks made visible: N5 to the IMS is now “N5 / Rx” (PCF supports Rx per TS 23.503 Annex C), N6/SGi/Gi carry the DN-AAA (RADIUS/Diameter) option; *5G SA* + *Diameter* filter highlights Cx/Sh, Ro/Rf, N5/Rx and N6.","EPC zone label moved to the bottom-right corner."]},{"v": "2026.11.04.2","items": ["Added **ng-eNB** (E-UTRA connected to 5GC) in the NG-RAN area with LTE-Uu, N2 (NG-C) to AMF, N3 (NG-U) to UPF and Xn to the gNB; notes on Options 4/4a, 5 and 7/7a/7x.","5G SA chip now reads “5GC · Opt. 2 (4/5/7)”."]},{"v": "2026.11.04","items": ["First release: architecture map (3G, HSPA, 4G, 5G NSA, 5G SA, interworking), element/interface details with protocol stacks, end-to-end stack view, interface table, deep links, dark/light theme.","Added Gx between GGSN (PCEF) and PCRF (R7+).","Added EPC **CUPS view**: SGW-C/U, PGW-C/U, Sxa, Sxb, S5-C/U, S4-C/U.","Compact top bar (two rows at 1920 px), protocol filter as a dropdown, date-based version label."]}];
 /* =====================================================================
    DATA
    ===================================================================== */
@@ -1912,6 +1979,10 @@ function compute(){
  const lv={};// id -> level
  const linkOn=new Set(),elOn=new Set(),ctx=new Set();
  if((state.proc||state.procHover)&&PD_ON)return pdCompute(lv);
+ if(state.trMode&&TR_ON&&TR)return trCompute(lv);
+ if(state.trMode&&TR_ON&&TR)return trCompute(lv);
+ if(state.trMode&&TR_ON&&TR)return trCompute(lv);
+ if(state.trMode&&TR_ON&&TR)return trCompute(lv);
  LINKS.forEach(L=>{if(!linkVisible(L))return;let ok=true;
   if(state.gens.size)ok=L.gens.some(g=>state.gens.has(g));
   if(ok&&state.proto)ok=(L.protos||[]).includes(state.proto);
@@ -1954,6 +2025,10 @@ function apply(){
  document.querySelectorAll('[data-plane]').forEach(b=>{b.classList.toggle('on',state.planes[b.dataset.plane]);b.classList.toggle('off',!state.planes[b.dataset.plane]);});
  document.querySelectorAll('[data-rp]').forEach(b=>b.classList.toggle('on',(b.dataset.rp==='1')===state.rp));
  if(PD_ON)pdOverlay();
+ if(TR_ON)trOverlay();
+ if(TR_ON)trOverlay();
+ if(TR_ON)trOverlay();
+ if(TR_ON)trOverlay();
  if(state.view==='table')renderTable();}
 
 /* =====================================================================
@@ -1970,25 +2045,29 @@ function specsHTML(s){return s&&s.length?`<div class="specs">${s.map(esc).join('
 function ifcBtn(L,ctxId){return `<button class="ifc" data-sel="if:${L.id}" style="--lc:${lnColor(L)}"><span class="sw ${L.plane==='cp'?'cp':L.plane==='sbi'?'sbi':''}"></span>${esc(L.n)} <i>${esc(ctxId?peerName(L,ctxId):endsText(L))}${L.rp?' · ref.pt':''}</i></button>`;}
 function renderPanel(){
  if(state.procMode&&PD_ON){renderProc();return;}delete panel.dataset.pd;
+ if(state.trMode&&TR_ON){trRender();return;}delete panel.dataset.tr;
+ if(state.trMode&&TR_ON){trRender();return;}delete panel.dataset.tr;
+ if(state.trMode&&TR_ON){trRender();return;}delete panel.dataset.tr;
+ if(state.trMode&&TR_ON){trRender();return;}delete panel.dataset.tr;
  const s=state.sel;
  if(!s){renderOverview();return;}
  const [t,id]=s;
  if(t==='el'){const E=EM[id];let ls=LINKS.filter(L=>(L.a===id||L.b===id)&&cupsOK(L));
   if(id==='gnb')ls=LINKS.filter(L=>['gnb','gnbdu','gnbcucp','gnbcuup'].some(c=>L.a===c||L.b===c));
   const sbiNF=ls.some(L=>L.bus);
-  panel.innerHTML=`${pdBackHTML()}<h2>${esc(E.n)}</h2><div class="full">${esc(E.full)}</div>${badgeHTML(E.gens)}
+  panel.innerHTML=`${pdBackHTML()}${TR_ON?trBackHTML():''}<h2>${esc(E.n)}</h2><div class="full">${esc(E.full)}</div>${badgeHTML(E.gens)}
   <p>${esc(E.sum)}</p>
   ${ndElementHTML(E)}
   ${E.fn?`<h3>Key functions</h3>${listHTML(E.fn)}`:''}
   ${notesHTML(E.notes)}
   ${E.kv?`<h3>Identifiers</h3>${kvHTML(E.kv)}`:''}
   ${ls.length?`<h3>Interfaces (${ls.length})</h3><div class="ifcs">${ls.map(L=>ifcBtn(L,id)).join('')}${sbiNF?ifcBtn(LM.sbi,null):''}</div>`:''}
-  ${pdChipsHTML('el',id)}
+  ${pdChipsHTML('el',id)}${TR_ON?trElHTML(E):''}
   ${E.tips?`<h3>Troubleshooting quick refs</h3>${tipsHTML(E.tips)}`:''}
   ${E.specs?`<h3>Key specifications</h3>${specsHTML(E.specs)}`:''}
   ${ndHint()}${toolsHTML()}`;}
  else{const L=LM[id];const ends=L.isbus?'':(L.a===L.b?`<button data-sel="el:${L.a}">${esc(EM[L.a].n)}</button><span>↔</span><span style="color:var(--muted)">neighbouring ${esc(EM[L.a].n)}</span>`:`<button data-sel="el:${L.a}">${esc(EM[L.a].n)}</button><span>↔</span>${L.b==='bus'?`<button data-sel="if:sbi">SBI bus</button>`:`<button data-sel="el:${L.b}">${esc(EM[L.b].n)}</button>`}`);
-  panel.innerHTML=`${pdBackHTML()}<h2>${esc(L.n)}<span class="k">${esc(PLANES[L.plane])}${L.logical?' · logical':''}${L.rp?' · reference point':''}</span></h2><div class="full">${esc(L.full)}</div>
+  panel.innerHTML=`${pdBackHTML()}${TR_ON?trBackHTML():''}<h2>${esc(L.n)}<span class="k">${esc(PLANES[L.plane])}${L.logical?' · logical':''}${L.rp?' · reference point':''}</span></h2><div class="full">${esc(L.full)}</div>
   ${ends?`<div class="ends">${ends}</div>`:''}${badgeHTML(L.gens)}
   <p>${esc(L.sum)}</p>
   <h3>Protocol stack</h3>${stacksHTML(L.st)}
@@ -1997,7 +2076,7 @@ function renderPanel(){
   ${L.kv?`<h3>Ports · IDs · parameters</h3>${kvHTML(L.kv)}`:''}
   ${L.pr?`<h3>Key procedures / messages</h3>${listHTML(L.pr)}`:''}
   ${mfSection(L)}
-  ${pdChipsHTML('if',id)}
+  ${pdChipsHTML('if',id)}${TR_ON?trIfHTML(L):''}
   ${L.isbus?`<h3>Attached NFs</h3><div class="ifcs">${LINKS.filter(x=>x.bus).map(x=>ifcBtn(x,null)).join('')}</div>`:''}
   ${L.tips?`<h3>Troubleshooting quick refs</h3>${tipsHTML(L.tips)}`:''}
   ${L.specs?`<h3>Key specifications</h3>${specsHTML(L.specs)}`:''}
@@ -2014,7 +2093,7 @@ function renderOverview(){
  panel.innerHTML=`<h2>Quick orientation</h2>
  <p style="color:var(--muted)">Click any element or interface on the map for its role, protocol stack, key procedures with message-flow diagrams, ports and spec references. Generation chips highlight what belongs to each system (click several to combine, double-click for one only); elements that only take part through another generation’s interface are shown half-dimmed. Coloured bars on a box show which generations use it.</p>
  <p style="color:var(--muted);font-size:12.5px">Mouse wheel / pinch to zoom · drag to pan · <b>/</b> focuses search · <b>Esc</b> clears · the URL updates with your selection, so you can send a colleague a link straight to an interface.</p>
- <div class="pdcta"><button data-pa="list">▶ End-to-end procedures</button><span>Step through 39 call flows from GSM location update and calls to LTE attach, handovers, VoLTE bearers, 5G registration and PDU sessions, HSPA, CSFB, SRVCC and Wi-Fi calling – the map shows every hop${ND?', with the IP addresses from your network data':''}.</span></div>
+ ${TR_ON?trCtaHTML():''}<div class="pdcta"><button data-pa="list">▶ End-to-end procedures</button><span>Step through 39 call flows from GSM location update and calls to LTE attach, handovers, VoLTE bearers, 5G registration and PDU sessions, HSPA, CSFB, SRVCC and Wi-Fi calling – the map shows every hop${ND?', with the IP addresses from your network data':''}.</span></div>
  ${ndOverviewHTML()}
  <h3>Generations</h3><div class="gcards">${GENORDER.map(k=>`<div class="gcard" data-gen="${k}" style="--c:${gcol(k)}"><b>${esc(GENS[k].n)} <small style="color:var(--muted);font-weight:400">${esc(GENS[k].s)}</small></b><span>${esc(GENINFO[k].sum)}</span></div>`).join('')}</div>
  <h3>Well-known ports &amp; SCTP PPIDs</h3>
@@ -2053,13 +2132,13 @@ function toast(m){const d=document.createElement('div');d.className='toast';d.te
 /* =====================================================================
    ACTIONS
    ===================================================================== */
-function select(t,id){if(t==='if'&&!LM[id])return;if(t==='el'&&!EM[id])return;if(state.procMode)pdExit(true);
+function select(t,id){if(t==='if'&&!LM[id])return;if(t==='el'&&!EM[id])return;if(state.procMode)pdExit(true);if(TR_ON&&state.trMode)trExit(true);if(TR_ON&&state.trMode)trExit(true);if(TR_ON&&state.trMode)trExit(true);if(TR_ON&&state.trMode)trExit(true);
  {const o=t==='el'?EM[id]:LM[id];if(o.cups&&!state.cups)state.cups=true;else if(state.cups&&(t==='el'?o.nocups:!cupsOK(o)))state.cups=false;}
  const L=t==='if'?LM[id]:null; if(L&&L.rp&&!state.rp){state.rp=true;} if(L&&L.bus&&state.rp){state.rp=false;}
  if(L){const pl=L.plane==='both'?null:L.plane;if(pl&&!state.planes[pl])state.planes[pl]=true;if(L.plane==='both'&&!state.planes.cp&&!state.planes.up)state.planes.cp=true;}
  state.sel=[t,id];updateHash();apply();renderPanel();if(state.view==='table')renderTable();}
-function clearSel(){state.sel=null;state.pdReturn=null;if(PD_ON)pdForget();updateHash();apply();renderPanel();}
-function toggleGen(g,exclusive){if(state.procMode)pdExit(false);state.pdReturn=null;if(g==='all'){state.gens.clear();state.lastGen=null;}
+function clearSel(){state.sel=null;state.pdReturn=null;state.trReturn=false;state.trReturn=false;state.trReturn=false;state.trReturn=false;if(PD_ON)pdForget();updateHash();apply();renderPanel();}
+function toggleGen(g,exclusive){if(state.procMode)pdExit(false);if(TR_ON&&state.trMode)trExit(false);if(TR_ON&&state.trMode)trExit(false);if(TR_ON&&state.trMode)trExit(false);if(TR_ON&&state.trMode)trExit(false);state.pdReturn=null;if(g==='all'){state.gens.clear();state.lastGen=null;}
  else if(exclusive){state.gens=new Set([g]);state.lastGen=g;}
  else{if(state.gens.has(g)){state.gens.delete(g);if(state.lastGen===g)state.lastGen=[...state.gens].pop()||null;}else{state.gens.add(g);state.lastGen=g;}}
  state.sel=null;updateHash();apply();renderPanel();}
@@ -2078,20 +2157,20 @@ function buildChips(){const c=$('#genchips');
  c.addEventListener('click',ev=>{const ch=ev.target.closest('.chip');if(!ch)return;toggleGen(ch.dataset.g,false);});
  c.addEventListener('dblclick',ev=>{const ch=ev.target.closest('.chip');if(!ch||ch.dataset.g==='all')return;toggleGen(ch.dataset.g,true);});
  const ps=$('#protosel');ps.innerHTML='<option value="">any</option>'+PROTOS.map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join('');
- ps.addEventListener('change',()=>{state.proto=ps.value||null;if(state.procMode&&state.proto){pdExit(false);renderPanel();updateHash();}apply();});}
+ ps.addEventListener('change',()=>{state.proto=ps.value||null;if(state.procMode&&state.proto){pdExit(false);renderPanel();updateHash();}if(TR_ON&&state.trMode&&state.proto){trExit(false);renderPanel();}if(TR_ON&&state.trMode&&state.proto){trExit(false);renderPanel();}if(TR_ON&&state.trMode&&state.proto){trExit(false);renderPanel();}if(TR_ON&&state.trMode&&state.proto){trExit(false);renderPanel();}apply();});}
 document.querySelectorAll('[data-plane]').forEach(b=>b.onclick=()=>{state.planes[b.dataset.plane]=!state.planes[b.dataset.plane];apply();});
 document.querySelectorAll('[data-cups]').forEach(b=>b.onclick=()=>{state.cups=b.dataset.cups==='1';if(state.sel){const [t,id]=state.sel;const o=t==='el'?EM[id]:LM[id];if(t==='el'?!elVisible(o):!cupsOK(o))state.sel=null;}updateHash();apply();renderPanel();});
 document.querySelectorAll('[data-rp]').forEach(b=>b.onclick=()=>{state.rp=b.dataset.rp==='1';if(state.sel&&state.sel[0]==='if'){const L=LM[state.sel[1]];if((L.rp&&!state.rp)||((L.bus||L.isbus)&&state.rp))state.sel=null;}apply();renderPanel();});
-let qT;$('#search').addEventListener('input',ev=>{clearTimeout(qT);qT=setTimeout(()=>{state.q=ev.target.value.trim().toLowerCase();if(state.procMode&&state.q){pdExit(false);renderPanel();updateHash();}apply();},120);});
+let qT;$('#search').addEventListener('input',ev=>{clearTimeout(qT);qT=setTimeout(()=>{state.q=ev.target.value.trim().toLowerCase();if(state.procMode&&state.q){pdExit(false);renderPanel();updateHash();}if(TR_ON&&state.trMode&&state.q){trExit(false);renderPanel();}if(TR_ON&&state.trMode&&state.q){trExit(false);renderPanel();}if(TR_ON&&state.trMode&&state.q){trExit(false);renderPanel();}if(TR_ON&&state.trMode&&state.q){trExit(false);renderPanel();}apply();},120);});
 $('#theme').onclick=()=>{document.body.classList.toggle('light');try{localStorage.setItem('mna-theme',document.body.classList.contains('light')?'light':'dark');}catch(e){}};
 try{if(localStorage.getItem('mna-theme')==='light')document.body.classList.add('light');}catch(e){}
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if(ndModalOpen()){const m=$('#modal');if(m._esc)m._esc();else ndCloseModal();return;}if(!$('#ndmenu').hidden){$('#ndmenu').hidden=true;return;}if(!$('#ndsitemenu').hidden){$('#ndsitemenu').hidden=true;return;}
-  if(document.activeElement===$('#search')&&state.q){$('#search').value='';state.q='';apply();return;}if(state.procMode){pdClose();return;}clearSel();}
+  if(document.activeElement===$('#search')&&state.q){$('#search').value='';state.q='';apply();return;}if(state.procMode){pdClose();return;}if(TR_ON&&state.trMode){trLeave();return;}clearSel();}
  if(ndModalOpen())return;
  if(ev.key==='/'&&!(ev.target.closest&&ev.target.closest('input,textarea,select'))){ev.preventDefault();$('#search').focus();}});
 
 /* views */
-function setView(v){if(v!=='arch'&&state.procMode)pdExit(false);state.view=v;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+function setView(v){if(v!=='arch'&&state.procMode)pdExit(false);if(v!=='arch'&&TR_ON&&state.trMode)trExit(false);if(v!=='arch'&&TR_ON&&state.trMode)trExit(false);if(v!=='arch'&&TR_ON&&state.trMode)trExit(false);if(v!=='arch'&&TR_ON&&state.trMode)trExit(false);state.view=v;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
  ['arch','e2e','table'].forEach(k=>$('#view-'+k).hidden=k!==v);$('#toolbar').style.opacity=v==='e2e'?.45:1;
  if(v==='table')renderTable();if(v==='e2e')renderE2E();renderPanel();}
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>setView(b.dataset.view));
@@ -4205,7 +4284,7 @@ function ndWarnHTML(w){return w&&w.length?`<ul class="ndwarn">${w.slice(0,300).m
 function ndShowWarnings(){ndModal('Data check'+(ND?' – '+ND.network:''),ndWarnHTML(NDwarn),[{label:'Close',primary:true}]);}
 
 /* ---------- apply / load ---------- */
-function ndRefresh(){ndFilterClean();ndIndex();ndBadges();ndPersist();ndStatus();apply();renderPanel();}
+function ndRefresh(){if(TR_ON&&TR)trResolve();ndFilterClean();ndIndex();ndBadges();ndPersist();ndStatus();apply();renderPanel();}
 function ndSet(d,src,warn,dirty){ND=d;NDsrc=src||NDsrc;NDwarn=warn||[];NDdirty=!!dirty;ndRefresh();}
 function ndTouch(){NDdirty=true;NDwarn=ndValidate(ND);ndRefresh();}
 async function ndUnlock(j,label,note){if(!ndCryptoOK()){await ndAsk('Cannot decrypt','<p>This browser does not offer Web Crypto here. Open the file in a current Chrome, Edge, Firefox or Safari.</p>',[{label:'Close',primary:true}]);return null;}
@@ -4319,7 +4398,7 @@ const ndHasFiles=ev=>[...(ev.dataTransfer&&ev.dataTransfer.types||[])].includes(
 document.addEventListener('dragenter',ev=>{if(ndHasFiles(ev)){ndDragN++;document.body.classList.add('nddrop');}});
 document.addEventListener('dragleave',ev=>{if(ndHasFiles(ev)&&--ndDragN<=0){ndDragN=0;document.body.classList.remove('nddrop');}});
 document.addEventListener('dragover',ev=>{if(ndHasFiles(ev))ev.preventDefault();});
-document.addEventListener('drop',ev=>{ndDragN=0;document.body.classList.remove('nddrop');const f=ev.dataTransfer&&ev.dataTransfer.files&&ev.dataTransfer.files[0];if(!f)return;ev.preventDefault();f.text().then(t=>ndLoadText(t,f.name));});
+document.addEventListener('drop',ev=>{ndDragN=0;document.body.classList.remove('nddrop');const f=ev.dataTransfer&&ev.dataTransfer.files&&ev.dataTransfer.files[0];if(!f)return;ev.preventDefault();(TR_ON?trIsCapture(f):Promise.resolve(false)).then(c=>{if(c)trOpenFile(f);else f.text().then(t=>ndLoadText(t,f.name));});});
 window.addEventListener('beforeunload',ev=>{if(ND&&NDdirty&&!ndRemember()){ev.preventDefault();ev.returnValue='';}});
 
 /* ---------- editor ---------- */
@@ -5595,7 +5674,7 @@ function pdText(P){const out=[`${P.t} (${P.s})`,P.d,''];const L=i=>pdLane(P,i);l
 /* ---------- actions ---------- */
 function pdSyncBtn(){const b=$('#pdbtn');if(b){b.classList.toggle('on',state.procMode);b.setAttribute('aria-pressed',state.procMode);}document.body.classList.toggle('procwide',state.procMode);}
 function pdStop(){pdPlaying=false;clearTimeout(pdPlayTimer);pdPlayTimer=0;}
-function pdEnter(){if(!state.procMode&&!pdSavedVB)pdSavedVB={...vb};state.procMode=true;state.sel=null;state.pdReturn=null;pdSyncBtn();if(state.view!=='arch')setView('arch');}
+function pdEnter(){if(TR_ON&&state.trMode)trExit(false);if(TR_ON&&state.trMode)trExit(false);if(TR_ON&&state.trMode)trExit(false);if(TR_ON&&state.trMode)trExit(false);if(!state.procMode&&!pdSavedVB)pdSavedVB={...vb};state.procMode=true;state.sel=null;state.pdReturn=null;pdSyncBtn();if(state.view!=='arch')setView('arch');}
 function pdForget(){pdSavedVB=null;}
 function pdOpenList(){pdStop();pdEnter();state.proc=null;state.procHover=null;state.procStep=-1;renderProc();apply();updateHash();if(pdSavedVB)pdTween(pdSavedVB);}
 function pdOpen(id,k){const P=PM[id];if(!P)return;pdStop();pdEnter();state.proc=id;state.procHover=null;state.procStep=k!=null&&P.m[k]&&mfIsMsg(P.m[k])?k:-1;
@@ -5639,6 +5718,792 @@ panel.addEventListener('mouseout',ev=>{const c=ev.target.closest&&ev.target.clos
 panel.addEventListener('focusin',ev=>{const c=ev.target.closest&&ev.target.closest('.pdcard');if(c&&state.procMode)pdHov(c.dataset.proc);});
 $('#pdbtn').addEventListener('click',()=>{if(state.procMode)pdClose();else pdOpenList();});
 PD_ON=true;
+
+/* =====================================================================
+   TRACE ANALYSIS – read a pcap / pcapng capture in this browser and find
+   the interfaces and network elements in it. The capture is never
+   uploaded or stored: the result lives in memory only (not in
+   localStorage, not in the URL, not in "Save with data").
+   ===================================================================== */
+var TR_ON=false;
+let TR=null,trJob=null,trErr=null,trSavedVB=null,trShowAllEnds=false;
+state.trMode=false;state.trSel=null;state.trHover=null;state.trReturn=false;
+
+/* ---------- reference tables (verified against the 3GPP / IANA tables named) ---------- */
+const TR_LT={0:'BSD loopback',1:'Ethernet',12:'Raw IP',14:'Raw IP',101:'Raw IP',108:'OpenBSD loopback',113:'Linux cooked (SLL)',228:'Raw IPv4',229:'Raw IPv6',276:'Linux cooked v2 (SLL2)'};
+const TR_ET={0x0806:'ARP',0x8035:'RARP',0x88cc:'LLDP',0x8809:'LACP / slow protocols',0x88e5:'MACsec',0x8902:'Ethernet OAM (802.1ag / Y.1731)',0x88f7:'PTP',0x8863:'PPPoE discovery',0x893a:'IEEE 1905',0x9000:'Ethernet loopback'};
+/* traffic classes: n = name, p = plane, c = candidate interfaces (canonical link ids) */
+const TR_CLS={
+ gtpu:{n:'GTP-U',p:'up',c:['s1u','n3','s5','gn','dt','iups','s12','s4','s2b','n9','x2lte','x2endc','xn','f1u']},
+ gtpc1:{n:'GTPv1-C',p:'cp',c:['gn']},
+ gtpc2:{n:'GTPv2-C',p:'cp',c:['s11','s5','s4','s10','s3','s2b','sv','n26']},
+ pfcp:{n:'PFCP',p:'cp',c:['n4','sxa','sxb']},
+ dia:{n:'Diameter',p:'cp',c:[]},
+ diatls:{n:'Diameter over TLS / DTLS',p:'cp',c:['gx','gx3g','gy4g','gy3g','rorf','rx','s6a','s6d','s13','swm','swx','s6b','cxsh','sy','s9']},
+ radius:{n:'RADIUS',p:'cp',c:['sgi','gi','n6']},
+ ike:{n:'IKEv2',p:'cp',c:['swu']},
+ esp:{n:'IPsec ESP',p:'up',c:['swu']},
+ gtpp:{n:"GTP' (CDR transfer)",p:'cp',c:['gy3g','gy4g']},
+ s1ap:{n:'S1AP',p:'cp',c:['s1mme']},
+ ngap:{n:'NGAP',p:'cp',c:['n2']},
+ x2ap:{n:'X2AP',p:'cp',c:['x2lte','x2endc']},
+ xnap:{n:'XnAP',p:'cp',c:['xn']},
+ f1ap:{n:'F1AP',p:'cp',c:['f1c']},
+ e1ap:{n:'E1AP',p:'cp',c:['e1']},
+ sgsap:{n:'SGsAP',p:'cp',c:['sgs']},
+ nbap:{n:'NBAP',p:'cp',c:['iub']},
+ rua:{n:'RUA (Iuh)',p:'cp',c:[]},
+ hnbap:{n:'HNBAP (Iuh)',p:'cp',c:[]},
+ m3ua:{n:'M3UA (SIGTRAN)',p:'cp',c:[]},
+ sctp:{n:'SCTP (other)',p:'cp',c:[]},
+ plain:{n:'Plain IP',p:'up',c:['sgi','gi','n6']}};
+/* SCTP payload protocol identifiers (IANA) and well-known SCTP ports */
+const TR_PPID={18:'s1ap',19:'rua',20:'hnbap',25:'nbap',27:'x2ap',3:'m3ua',46:'dia',47:'diatls',60:'ngap',61:'xnap',62:'f1ap',64:'e1ap'};
+const TR_SCTPPORT={36412:'s1ap',38412:'ngap',36422:'x2ap',38422:'xnap',38472:'f1ap',38462:'e1ap',29118:'sgsap',3868:'dia',2905:'m3ua',29169:'rua',29168:'hnbap'};
+/* the side listening on the well-known port: S1AP → MME, NGAP → AMF, F1AP → gNB-CU, SGsAP → MSC/VLR */
+const TR_SCTPSRV={s1ap:'mme',ngap:'amf',f1ap:'gnbcucp',sgsap:'mscs'};
+/* GTPv2-C F-TEID interface types (TS 29.274 §8.22): [links, element, plane] */
+const TR_FTEID={0:['s1u','enb','u'],1:['s1u','sgw','u'],2:['s12','rnc','u'],3:['s12','sgw','u'],4:['s5','sgw','u'],5:['s5','pgw','u'],6:['s5','sgw','c'],7:['s5','pgw','c'],
+ 10:['s11','mme','c'],11:['s11|s4','sgw','c'],12:['s10|n26','mme','c'],13:['s3','mme','c'],14:['s3','sgsn','c'],15:['s4','sgsn','u'],16:['s4','sgw','u'],17:['s4','sgsn','c'],
+ 30:['s2b','epdg','c'],31:['s2b','epdg','u'],32:['s2b','pgw','c'],33:['s2b','pgw','u'],38:['s11','mme','u'],39:['s11','sgw','u'],40:['n26','amf','c']};
+const TR_FTEID_N={0:'S1-U eNodeB GTP-U',1:'S1-U SGW GTP-U',2:'S12 RNC GTP-U',3:'S12 SGW GTP-U',4:'S5/S8 SGW GTP-U',5:'S5/S8 PGW GTP-U',6:'S5/S8 SGW GTP-C',7:'S5/S8 PGW GTP-C',8:'S5/S8 SGW PMIPv6',9:'S5/S8 PGW PMIPv6',
+ 10:'S11 MME GTP-C',11:'S11/S4 SGW GTP-C',12:'S10/N26 MME GTP-C',13:'S3 MME GTP-C',14:'S3 SGSN GTP-C',15:'S4 SGSN GTP-U',16:'S4 SGW GTP-U',17:'S4 SGSN GTP-C',18:'S16 SGSN GTP-C',
+ 19:'eNodeB GTP-U for DL data forwarding',20:'eNodeB GTP-U for UL data forwarding',21:'RNC GTP-U for data forwarding',22:'SGSN GTP-U for data forwarding',23:'SGW/UPF GTP-U for DL data forwarding',
+ 24:'Sm MBMS GW GTP-C',25:'Sn MBMS GW GTP-C',26:'Sm MME GTP-C',27:'Sn SGSN GTP-C',28:'SGW GTP-U for UL data forwarding',29:'Sn SGSN GTP-U',30:'S2b ePDG GTP-C',31:'S2b-U ePDG GTP-U',32:'S2b PGW GTP-C',33:'S2b-U PGW GTP-U',
+ 34:'S2a TWAN GTP-U',35:'S2a TWAN GTP-C',36:'S2a PGW GTP-C',37:'S2a PGW GTP-U',38:'S11 MME GTP-U',39:'S11 SGW GTP-U',40:'N26 AMF GTP-C',41:'N19mb UPF GTP-U'};
+/* PFCP 3GPP Interface Type (TS 29.244 §8.2.118): [name, links, element owning the local F-TEID, element behind the outer header creation] */
+const TR_PF3={0:['S1-U','s1u','sgw','enb'],1:['S5/S8-U','s5',null,null],2:['S4-U','s4','sgw','sgsn'],3:['S11-U','s11','sgw','mme'],4:['S12','s12','sgw','rnc'],5:['Gn/Gp-U','gn|dt','ggsn',null],
+ 6:['S2a-U'],7:['S2b-U','s2b','pgw','epdg'],8:['eNodeB GTP-U interface for DL data forwarding'],9:['eNodeB GTP-U interface for UL data forwarding'],10:['SGW/UPF GTP-U interface for DL data forwarding'],
+ 11:['N3 3GPP Access','n3','upf','gnb'],12:['N3 Trusted Non-3GPP Access'],13:['N3 Untrusted Non-3GPP Access'],14:['N3 for data forwarding'],15:['N9','n9','upf','upf'],16:['SGi'],17:['N6'],18:['N19'],
+ 19:['S8-U','s5',null,null],20:['Gp-U','gn','ggsn',null],21:['N9 for roaming','n9','upf','upf'],22:['Iu-U'],23:['N9 for data forwarding'],24:['Sxa-U'],25:['Sxb-U'],26:['Sxc-U'],27:['N4-U'],
+ 28:['SGW/UPF GTP-U interface for UL data forwarding'],29:['N6mb/Nmb9'],30:['N3mb'],31:['N19mb']};
+const TR_PF_N=[11,12,13,14,15,17,18,21,23,27,29,30,31],TR_PF_A=[0,2,3,4,24],TR_PF_B=[5,6,7,16,20,25];
+const TR_PFSRC=['Access','Core','SGi-LAN/N6-LAN','CP-function','5G VN internal'],TR_PFDST=['Access','Core','SGi-LAN/N6-LAN','CP-function','LI function','5G VN internal'];
+/* GTPv1-C TV information elements and their value lengths (TS 29.060 §7.7) */
+const TR_V1TV={1:1,2:8,3:6,4:4,5:4,8:1,9:28,11:1,12:3,13:1,14:1,15:1,16:4,17:4,18:5,19:1,20:1,21:1,22:9,23:1,24:1,25:2,26:2,27:2,28:2,29:1,127:4};
+const TR_V1MSG={1:'Echo Request',2:'Echo Response',3:'Version Not Supported',16:'Create PDP Context Request',17:'Create PDP Context Response',18:'Update PDP Context Request',19:'Update PDP Context Response',20:'Delete PDP Context Request',21:'Delete PDP Context Response',
+ 22:'Initiate PDP Context Activation Request',23:'Initiate PDP Context Activation Response',26:'Error Indication',27:'PDU Notification Request',28:'PDU Notification Response',31:'Supported Extension Headers Notification',
+ 50:'SGSN Context Request',51:'SGSN Context Response',52:'SGSN Context Acknowledge',53:'Forward Relocation Request',54:'Forward Relocation Response',55:'Forward Relocation Complete',56:'Relocation Cancel Request',57:'Relocation Cancel Response',58:'Forward SRNS Context',59:'Forward Relocation Complete Acknowledge',60:'Forward SRNS Context Acknowledge'};
+const TR_V2MSG={1:'Echo Request',2:'Echo Response',3:'Version Not Supported',25:'SRVCC PS to CS Request',26:'SRVCC PS to CS Response',27:'SRVCC PS to CS Complete Notification',28:'SRVCC PS to CS Complete Acknowledge',29:'SRVCC PS to CS Cancel Notification',30:'SRVCC PS to CS Cancel Acknowledge',31:'SRVCC CS to PS Request',
+ 32:'Create Session Request',33:'Create Session Response',34:'Modify Bearer Request',35:'Modify Bearer Response',36:'Delete Session Request',37:'Delete Session Response',38:'Change Notification Request',39:'Change Notification Response',
+ 64:'Modify Bearer Command',65:'Modify Bearer Failure Indication',66:'Delete Bearer Command',67:'Delete Bearer Failure Indication',68:'Bearer Resource Command',69:'Bearer Resource Failure Indication',70:'Downlink Data Notification Failure Indication',
+ 95:'Create Bearer Request',96:'Create Bearer Response',97:'Update Bearer Request',98:'Update Bearer Response',99:'Delete Bearer Request',100:'Delete Bearer Response',
+ 128:'Identification Request',129:'Identification Response',130:'Context Request',131:'Context Response',132:'Context Acknowledge',133:'Forward Relocation Request',134:'Forward Relocation Response',135:'Forward Relocation Complete Notification',136:'Forward Relocation Complete Acknowledge',
+ 162:'Suspend Notification',163:'Suspend Acknowledge',164:'Resume Notification',165:'Resume Acknowledge',166:'Create Indirect Data Forwarding Tunnel Request',167:'Create Indirect Data Forwarding Tunnel Response',168:'Delete Indirect Data Forwarding Tunnel Request',169:'Delete Indirect Data Forwarding Tunnel Response',
+ 170:'Release Access Bearers Request',171:'Release Access Bearers Response',176:'Downlink Data Notification',177:'Downlink Data Notification Acknowledge',211:'Modify Access Bearers Request',212:'Modify Access Bearers Response'};
+const TR_GTPUMSG={1:'Echo Request',2:'Echo Response',26:'Error Indication',31:'Supported Extension Headers Notification',254:'End Marker'};
+const TR_PFMSG={1:'Heartbeat Request',2:'Heartbeat Response',3:'PFD Management Request',4:'PFD Management Response',5:'Association Setup Request',6:'Association Setup Response',7:'Association Update Request',8:'Association Update Response',9:'Association Release Request',10:'Association Release Response',
+ 11:'Version Not Supported',12:'Node Report Request',13:'Node Report Response',14:'Session Set Deletion Request',15:'Session Set Deletion Response',50:'Session Establishment Request',51:'Session Establishment Response',52:'Session Modification Request',53:'Session Modification Response',
+ 54:'Session Deletion Request',55:'Session Deletion Response',56:'Session Report Request',57:'Session Report Response'};
+const TR_RADC={1:'Access-Request',2:'Access-Accept',3:'Access-Reject',4:'Accounting-Request',5:'Accounting-Response',11:'Access-Challenge',40:'Disconnect-Request',41:'Disconnect-ACK',42:'Disconnect-NAK',43:'CoA-Request',44:'CoA-ACK',45:'CoA-NAK'};
+const TR_RADAST={1:'Start',2:'Stop',3:'Interim-Update',7:'Accounting-On',8:'Accounting-Off'};
+const TR_RADPORT={1812:1,1813:1,1645:1,1646:1,3799:1};
+/* 3GPP-RAT-Type in RADIUS (TS 29.061) and the data-network side it implies */
+const TR_RAT3={1:'UTRAN',2:'GERAN',3:'WLAN',4:'GAN',5:'HSPA Evolution',6:'E-UTRAN',7:'Virtual',8:'E-UTRAN NB-IoT',9:'LTE-M',10:'NR',101:'IEEE 802.16e',102:'3GPP2 eHRPD',103:'3GPP2 HRPD',104:'3GPP2 1xRTT',105:'3GPP2 UMB'};
+const TR_RAT3UP={1:'gi',2:'gi',4:'gi',5:'gi',3:'sgi',6:'sgi',8:'sgi',9:'sgi',102:'sgi',10:'n6'};
+const TR_RATD={0:'WLAN',1:'Virtual',1000:'UTRAN',1001:'GERAN',1002:'GAN',1003:'HSPA Evolution',1004:'E-UTRAN',1005:'E-UTRAN NB-IoT',1006:'NR',1007:'LTE-M'};
+const TR_IPCAN={0:'3GPP-GPRS',1:'DOCSIS',2:'xDSL',3:'WiMAX',4:'3GPP2',5:'3GPP-EPS',6:'Non-3GPP-EPS',7:'FBA',8:'3GPP-5GS',9:'Non-3GPP-5GS'};
+const TR_IKEX={34:'IKE_SA_INIT',35:'IKE_AUTH',36:'CREATE_CHILD_SA',37:'INFORMATIONAL'};
+/* Diameter applications: [name, link, element that sends the client requests] */
+const TR_DIA={0:['Diameter base (CER / DWR / DPR)'],1:['NASREQ'],3:['Accounting (Gz / Rf)'],4:['Credit-Control (Gy / Ro)'],5:['Diameter EAP'],
+ 16777216:['Cx','cxsh','ims'],16777217:['Sh','cxsh','ims'],16777236:['Rx','rx','ims'],16777238:['Gx','gx','pgw'],16777250:['STa'],16777251:['S6a / S6d','s6a','mme'],16777252:['S13','s13','mme'],16777255:['SLg'],
+ 16777264:['SWm','swm','epdg'],16777265:['SWx','swx','aaa'],16777266:['Gxx'],16777267:['S9','s9','pcrf'],16777272:['S6b','s6b','pgw'],16777291:['SLh'],16777302:['Sy','sy','pcrf'],16777303:['Sd'],16777310:['S6m'],16777312:['S6c'],16777313:['SGd / Gdd'],16777345:['S6t'],16777346:['T6a / T6b']};
+const TR_DIA_CL={3:[271],4:[272],16777216:[300,301,302,303],16777217:[306,307,308],16777236:[265,275],16777238:[272],16777251:[316,318,321,323],16777252:[324],16777264:[268,265,275],16777265:[301,303],16777267:[272],16777272:[265,268,275],16777302:[8388635,275]};
+const TR_DIA_CMD={257:['CER','CEA'],258:['RAR','RAA'],265:['AAR','AAA'],268:['DER','DEA'],271:['ACR','ACA'],272:['CCR','CCA'],274:['ASR','ASA'],275:['STR','STA'],280:['DWR','DWA'],282:['DPR','DPA'],
+ 300:['UAR','UAA'],301:['SAR','SAA'],302:['LIR','LIA'],303:['MAR','MAA'],304:['RTR','RTA'],305:['PPR','PPA'],306:['UDR','UDA'],307:['PUR (Sh)','PUA (Sh)'],308:['SNR','SNA'],309:['PNR','PNA'],
+ 316:['ULR','ULA'],317:['CLR','CLA'],318:['AIR','AIA'],319:['IDR','IDA'],320:['DSR','DSA'],321:['PUR','PUA'],322:['RSR','RSA'],323:['NOR','NOA'],324:['ECR','ECA'],8388635:['SLR','SLA'],8388636:['SNR (Sy)','SNA (Sy)']};
+/* Service-Context-Id (TS 32.299): the charging domain */
+const TR_SCX={'32251':['PS charging','ps'],'32260':['IMS charging','ims'],'32275':['MMTel charging','ims'],'32270':['MMS charging',null],'32274':['SMS charging',null]};
+/* the element that sends the client requests on each interface (orientation of the two ends) */
+const TR_CLIENT={gx:'pgw',gx3g:'ggsn',gy4g:'pgw',gy3g:'ggsn',rorf:'ims',rx:'ims',s6a:'mme',s6d:'sgsn',s13:'mme',swm:'epdg',swx:'aaa',s6b:'pgw',cxsh:'ims',sy:'pcrf',sgi:'pgw',gi:'ggsn',swu:'ue',n4:'smf',sxa:'sgwc',sxb:'pgwc'};
+/* GTP-U interface → the data-network side its UE addresses appear on */
+const TR_UPDN={s1u:'sgi',s5:'sgi',s4:'sgi',s12:'sgi',s2b:'sgi',s11:'sgi',n3:'n6',n9:'n6',gn:'gi',dt:'gi',iups:'gi'};
+const TR_INFRA_IP={2:'IGMP',89:'OSPF',103:'PIM',112:'VRRP',88:'EIGRP',115:'L2TPv3'};
+const TR_INFRA_UDP={3784:'BFD',3785:'BFD',4784:'BFD (multihop)',646:'LDP',520:'RIP',521:'RIPng',1985:'HSRP',2029:'HSRPv2',6633:'OpenFlow',4789:'VXLAN'};
+const TR_INFRA_TCP={179:'BGP',646:'LDP',639:'MSDP'};
+const TR_IPP={1:'ICMP',6:'TCP',17:'UDP',58:'ICMPv6',47:'GRE',4:'IP-in-IP',41:'IPv6-in-IP',132:'SCTP',51:'AH'};
+const TR_UE_MAX=400000,TR_PLAIN_MAX=200000,TR_PLAIN_TOTAL=1500000,TR_DIA_CAP=16384;
+
+/* ---------- small helpers ---------- */
+const trU32=(d,o)=>((d[o]<<24)|(d[o+1]<<16)|(d[o+2]<<8)|d[o+3])>>>0;
+const trV4=trU32;
+const trV4s=n=>(n>>>24)+'.'+((n>>>16)&255)+'.'+((n>>>8)&255)+'.'+(n&255);
+function trV6s(d,o){const g=[];for(let i=0;i<8;i++)g.push((d[o+2*i]<<8)|d[o+2*i+1]);
+ let bs=-1,bl=0;for(let i=0;i<8;){if(g[i]===0){let j=i;while(j<8&&g[j]===0)j++;if(j-i>bl&&j-i>=2){bs=i;bl=j-i;}i=j;}else i++;}
+ const h=a=>a.map(x=>x.toString(16)).join(':');return bs<0?h(g):h(g.slice(0,bs))+'::'+h(g.slice(bs+bl));}
+function trV6p(d,o){let s='p:';for(let i=0;i<8;i++)s+=(d[o+i]<16?'0':'')+d[o+i].toString(16);return s;}   /* the /64 prefix – the UE's IPv6 prefix */
+const trIPs=x=>typeof x==='number'?trV4s(x):x;
+function trStr(d,o,e){let s='';const n=Math.min(e,o+160);for(let i=o;i<n;i++){const c=d[i];s+=c>=32&&c<127?String.fromCharCode(c):'·';}return s;}
+function trDns(d,o,e){/* FQDN in DNS label format (TS 29.244 Node ID), or plain text */let s='',p=o,ok=true;
+ while(p<e){const l=d[p];if(!l)break;if(p+1+l>e||l>63){ok=false;break;}s+=(s?'.':'')+trStr(d,p+1,p+1+l);p+=1+l;}return ok&&s?s:trStr(d,o,e);}
+const trNum=n=>Math.round(n).toLocaleString('en-US');
+const trK=n=>n>=1e9?(n/1e9).toFixed(n>=1e10?0:1)+'G':n>=1e6?(n/1e6).toFixed(n>=1e7?0:1)+'M':n>=1e4?(n/1e3).toFixed(n>=1e5?0:1)+'k':String(n);
+const trB=b=>b>=1e9?(b/1e9).toFixed(2)+' GB':b>=1e6?(b/1e6).toFixed(1)+' MB':b>=1e3?(b/1e3).toFixed(1)+' kB':b+' B';
+function trDur(s){if(!(s>=0))return '';if(s<1)return (s*1000).toFixed(0)+' ms';if(s<120)return s.toFixed(1)+' s';if(s<7200)return Math.floor(s/60)+' min '+Math.round(s%60)+' s';return Math.floor(s/3600)+' h '+Math.round((s%3600)/60)+' min';}
+const trTally=(o,k,n)=>{o[k]=(o[k]||0)+(n||1);};
+
+/* ---------- the collector ---------- */
+function trNew(){return {fmt:'',pk:0,by:0,t0:Infinity,t1:-Infinity,ifs:[],lts:new Set(),flows:new Map(),plain:new Map(),plainN:0,ue:new Map(),ueFull:false,roles:new Map(),names:new Map(),
+ pfPend:new Map(),tcp:new Map(),sctpA:new Map(),sctpL:new Map(),frag:new Map(),fragPend:new Map(),nonip:new Map(),infra:new Map(),unsup:new Map(),bad:0,trunc:0,fragOrph:0};}
+function trFlow(R,cls,app,s,t,vl,fi){const lo=s<t?s:t,hi=s<t?t:s;const k=cls+(app!=null?':'+app:'')+'|'+lo+'|'+hi+'|'+vl;let f=R.flows.get(k);
+ if(!f){f={k,cls,app,a:lo,b:hi,vlan:vl,ifi:fi,ifo:null,pk:0,by:0,d:[0,0],m:{},x:{}};R.flows.set(k,f);}
+ else if(f.ifi!==fi)(f.ifo||(f.ifo=new Set([f.ifi]))).add(fi);
+ return f;}
+function trAdd(f,s,ol){f.pk++;f.by+=ol;f.d[s===f.a?0:1]++;}
+function trCount(R,cls,s,t,vl,fi,ol){const f=trFlow(R,cls,null,s,t,vl,fi);trAdd(f,s,ol);return f;}
+function trBucket(M,name,ol){let e=M.get(name);if(!e)M.set(name,e={pk:0,by:0});e.pk++;e.by+=ol;return e;}
+function trRole(R,ip,links,el,pl,via){if(!ip)return;let m=R.roles.get(ip);if(!m)R.roles.set(ip,m=new Map());const k=links+'|'+(el||'')+'|'+pl;let r=m.get(k);
+ if(!r)m.set(k,r={links:links?links.split('|'):[],el:el||null,pl,via:new Set(),n:0});r.n++;if(r.via.size<4)r.via.add(via);}
+function trName(R,ip,nm,kind){if(!nm||!ip)return;let m=R.names.get(ip);if(!m)R.names.set(ip,m=new Map());if(!m.has(nm)&&m.size<8)m.set(nm,kind);}
+function trUE(R,k,f,h,src){let u=R.ue.get(k);if(!u){if(R.ue.size>=TR_UE_MAX){R.ueFull=true;return;}R.ue.set(k,u={f:null,h:null,s:0});}if(f&&!u.f)u.f=f;if(h&&!u.h)u.h=h;u.s|=src;}
+
+/* ---------- link layer ---------- */
+function trPkt(R,d,lt,fi,ts,ol){
+ R.pk++;R.by+=ol;const I=R.ifs[fi];if(I){I.pk++;I.by+=ol;}if(ts!=null&&ts===ts){if(ts<R.t0)R.t0=ts;if(ts>R.t1)R.t1=ts;}
+ const n=d.length;let o=0,et=-1;const vl=[];
+ switch(lt){
+  case 1:if(n<14){R.trunc++;return;}et=(d[12]<<8)|d[13];o=14;break;
+  case 113:if(n<16){R.trunc++;return;}et=(d[14]<<8)|d[15];o=16;break;
+  case 276:if(n<20){R.trunc++;return;}et=(d[0]<<8)|d[1];o=20;break;
+  case 12:case 14:case 101:case 228:case 229:et=-2;break;
+  case 0:case 108:{if(n<4){R.trunc++;return;}const fam=lt===108?trU32(d,0):(d[0]|(d[1]<<8)|(d[2]<<16)|(d[3]<<24))>>>0;const f2=fam>0xffff?((fam>>>24)|((fam>>>8)&0xff00)):fam;
+   et=f2===2?0x0800:(f2===24||f2===28||f2===30)?0x86dd:-1;o=4;if(et<0){trBucket(R.nonip,'Loopback family '+f2,ol);return;}break;}
+  default:trBucket(R.unsup,'Link type '+lt,ol);return;}
+ for(let k=0;k<8&&et>=0;k++){
+  if(et===0x8100||et===0x88a8||et===0x9100||et===0x9200){if(o+4>n){R.trunc++;return;}vl.push(((d[o]&15)<<8)|d[o+1]);et=(d[o+2]<<8)|d[o+3];o+=4;continue;}
+  if(et===0x8847||et===0x8848){let s=0;while(o+4<=n){s=d[o+2]&1;o+=4;if(s)break;}if(!s||o>=n){R.trunc++;return;}const v=d[o]>>4;et=v===4?0x0800:v===6?0x86dd:-1;if(et<0){trBucket(R.nonip,'MPLS (non-IP payload)',ol);return;}continue;}
+  if(et===0x8864){if(o+8>n){R.trunc++;return;}const pp=(d[o+6]<<8)|d[o+7];o+=8;et=pp===0x21?0x0800:pp===0x57?0x86dd:-1;if(et<0){trBucket(R.nonip,'PPPoE (non-IP)',ol);return;}continue;}
+  break;}
+ if(et===-2){if(o>=n){R.trunc++;return;}const v=d[o]>>4;et=v===4?0x0800:v===6?0x86dd:-1;}
+ if(et!==0x0800&&et!==0x86dd){trBucket(R.nonip,et<0?'Not IP':et<0x0600?'IEEE 802.3 / LLC (e.g. STP)':(TR_ET[et]||'EtherType 0x'+et.toString(16).padStart(4,'0')),ol);return;}
+ trIP(R,d,o,et===0x86dd,vl.join('.'),fi,ol);}
+
+/* ---------- IP ---------- */
+function trIP(R,d,o,v6,vl,fi,ol){
+ const n=d.length;let p,s,t,l4,end,frag=null,so=-1,to=-1;
+ if(!v6){if(o+20>n){R.trunc++;return;}const ihl=(d[o]&15)*4;if((d[o]>>4)!==4||ihl<20){R.bad++;return;}const tot=(d[o+2]<<8)|d[o+3];end=tot?Math.min(n,o+tot):n;
+  p=d[o+9];s=trV4(d,o+12);t=trV4(d,o+16);const ff=(d[o+6]<<8)|d[o+7];if(ff&0x3fff)frag={id:(d[o+4]<<8)|d[o+5],first:!(ff&0x1fff)};l4=o+ihl;}
+ else{if(o+40>n){R.trunc++;return;}p=d[o+6];so=o+8;to=o+24;s=trV6s(d,so);t=trV6s(d,to);const pl=(d[o+4]<<8)|d[o+5];end=pl?Math.min(n,o+40+pl):n;l4=o+40;
+  for(let k=0;k<8;k++){
+   if(p===0||p===43||p===60){if(l4+2>end){R.trunc++;return;}const nh=d[l4];l4+=(d[l4+1]+1)*8;p=nh;continue;}
+   if(p===44){if(l4+8>end){R.trunc++;return;}const nh=d[l4],off=((d[l4+2]<<8)|d[l4+3]);frag={id:trU32(d,l4+4),first:!(off&0xfff8)};if(!(off&0xfff9))frag=null;l4+=8;p=nh;continue;}
+   if(p===51){if(l4+2>end){R.trunc++;return;}const nh=d[l4];l4+=(d[l4+1]+2)*4;p=nh;continue;}
+   break;}}
+ if(frag){const fk=s+'>'+t+'#'+frag.id+'#'+p;
+  if(!frag.first){const r=R.frag.get(fk);if(r){r.pk++;r.by+=ol;}else{const q=R.fragPend.get(fk);if(q){q.pk++;q.by+=ol;}else{if(R.fragPend.size>20000){R.fragPend.forEach(q=>{R.fragOrph+=q.pk;});R.fragPend.clear();}R.fragPend.set(fk,{pk:1,by:ol});}}return;}
+  const r=trL4(R,d,l4,end,p,s,t,vl,fi,ol,so,to);if(r){if(R.frag.size>50000)R.frag.clear();R.frag.set(fk,r);const q=R.fragPend.get(fk);if(q){r.pk+=q.pk;r.by+=q.by;R.fragPend.delete(fk);}}return;}
+ trL4(R,d,l4,end,p,s,t,vl,fi,ol,so,to);}
+
+function trPlain(R,d,s,t,vl,fi,ol,so,to,pn){const k=vl+'|'+fi;let g=R.plain.get(k);if(!g){g={k,vlan:vl,ifi:fi,pk:0,by:0,ip:new Map(),ov:0,pr:{}};R.plain.set(k,g);}
+ g.pk++;g.by+=ol;trTally(g.pr,pn);const a=so>=0?trV6p(d,so):s,b=to>=0?trV6p(d,to):t;
+ for(const x of [a,b]){const v=g.ip.get(x);if(v!==undefined)g.ip.set(x,v+1);else if(g.ip.size<TR_PLAIN_MAX&&R.plainN<TR_PLAIN_TOTAL){g.ip.set(x,1);R.plainN++;}else g.ov++;}
+ return g;}
+
+/* ---------- transport and application classification ---------- */
+function trL4(R,d,o,end,p,s,t,vl,fi,ol,so,to){
+ if(p===17){if(o+8>end){R.trunc++;return null;}const sp=(d[o]<<8)|d[o+1],dp=(d[o+2]<<8)|d[o+3],ul=(d[o+4]<<8)|d[o+5];const q=o+8,e=ul>=8?Math.min(end,o+ul):end;
+  if(sp===2152||dp===2152){if(q+8<=e&&(d[q]>>5)===1&&(d[q]&0x10))return trGTPU(R,d,q,e,s,t,vl,fi,ol);}
+  else if(sp===2123||dp===2123){if(q+8<=e){const v=d[q]>>5;if(v===1&&(d[q]&0x10))return trGTPC1(R,d,q,e,s,t,vl,fi,ol);if(v===2)return trGTPC2(R,d,q,e,s,t,vl,fi,ol);}}
+  else if(sp===8805||dp===8805){if(q+8<=e&&(d[q]>>5)===1)return trPFCP(R,d,q,e,s,t,vl,fi,ol);}
+  else if(TR_RADPORT[sp]||TR_RADPORT[dp]){if(q+20<=e)return trRADIUS(R,d,q,e,s,t,vl,fi,ol);}
+  else if(sp===500||dp===500||sp===4500||dp===4500)return trIKE(R,d,q,e,s,t,vl,fi,ol,sp===4500||dp===4500);
+  else if(sp===3386||dp===3386)return trCount(R,'gtpp',s,t,vl,fi,ol);
+  else if(TR_INFRA_UDP[sp]||TR_INFRA_UDP[dp])return trBucket(R.infra,TR_INFRA_UDP[sp]||TR_INFRA_UDP[dp],ol);
+  return trPlain(R,d,s,t,vl,fi,ol,so,to,'UDP');}
+ if(p===6){if(o+20>end){R.trunc++;return null;}const sp=(d[o]<<8)|d[o+1],dp=(d[o+2]<<8)|d[o+3];
+  if(sp===3868||dp===3868)return trDiaTCP(R,d,o,end,s,t,sp,dp,vl,fi,ol);
+  if(sp===5868||dp===5868)return trCount(R,'diatls',s,t,vl,fi,ol);
+  if(sp===3386||dp===3386)return trCount(R,'gtpp',s,t,vl,fi,ol);
+  if(TR_INFRA_TCP[sp]||TR_INFRA_TCP[dp])return trBucket(R.infra,TR_INFRA_TCP[sp]||TR_INFRA_TCP[dp],ol);
+  return trPlain(R,d,s,t,vl,fi,ol,so,to,'TCP');}
+ if(p===132)return trSCTP(R,d,o,end,s,t,vl,fi,ol);
+ if(p===50)return trCount(R,'esp',s,t,vl,fi,ol);
+ if(TR_INFRA_IP[p])return trBucket(R.infra,TR_INFRA_IP[p],ol);
+ return trPlain(R,d,s,t,vl,fi,ol,so,to,TR_IPP[p]||'IP protocol '+p);}
+
+/* GTP-U (TS 29.281) */
+function trGTPU(R,d,q,e,s,t,vl,fi,ol){
+ const fl=d[q],ty=d[q+1];const f=trFlow(R,'gtpu',null,s,t,vl,fi);trAdd(f,s,ol);const x=f.x;
+ if(ty!==255){trTally(f.m,TR_GTPUMSG[ty]||'Message type '+ty);return f;}
+ x.g=(x.g||0)+1;let o=q+8;
+ if(fl&7){if(o+4>e)return f;let nx=d[o+3],g=0;o+=4;
+  while(nx&&g++<8){if(o+1>e)return f;const L=d[o]*4;if(!L||o+L>e)return f;if(nx===0x85)x.h85=(x.h85||0)+1;else if(nx===0x84)x.h84=(x.h84||0)+1;nx=d[o+L-1];o+=L;}}
+ if((x.g<=512||(x.g&63)===0)&&o<e){const v=d[o]>>4;   /* learn the UE addresses carried inside (sampled) */
+  if(v===4&&o+20<=e){trUE(R,trV4(d,o+12),f,null,1);trUE(R,trV4(d,o+16),f,null,1);}
+  else if(v===6&&o+40<=e){trUE(R,trV6p(d,o+8),f,null,1);trUE(R,trV6p(d,o+24),f,null,1);}}
+ return f;}
+
+/* GTPv1-C (TS 29.060) – addresses in Create / Update PDP Context */
+function trGTPC1(R,d,q,e,s,t,vl,fi,ol){
+ const f=trFlow(R,'gtpc1',null,s,t,vl,fi);trAdd(f,s,ol);const fl=d[q],ty=d[q+1],len=(d[q+2]<<8)|d[q+3];const end=Math.min(e,q+8+len);
+ trTally(f.m,TR_V1MSG[ty]||'Message type '+ty);let o=q+8;
+ if(fl&7){if(o+4>end)return f;let nx=d[o+3],g=0;o+=4;while(nx&&g++<8){if(o+1>end)return f;const L=d[o]*4;if(!L||o+L>end)return f;nx=d[o+L-1];o+=L;}}
+ const gsn=[];let dti=false,cause=-1;
+ while(o<end){const it=d[o];
+  if(it<128){const L=TR_V1TV[it];if(L==null||o+1+L>end)break;if(it===1)cause=d[o+1];o+=1+L;}
+  else{if(o+3>end)break;const L=(d[o+1]<<8)|d[o+2],v=o+3;if(v+L>end)break;
+   if(it===133){if(L===4)gsn.push(trV4s(trV4(d,v)));else if(L===16)gsn.push(trV6s(d,v));}
+   else if(it===182&&L>=1)dti=!!(d[v]&1);
+   o=v+L;}}
+ if(cause>=192)f.x.rej=(f.x.rej||0)+1;
+ if(ty>=50&&ty<=60)f.x.inter=(f.x.inter||0)+1;
+ const sip=trIPs(s),tip=trIPs(t);
+ if(ty===16){trRole(R,sip,'gn','sgsn','c','sends GTPv1-C Create PDP Context Request');trRole(R,tip,'gn','ggsn','c','receives GTPv1-C Create PDP Context Request');
+  /* GSN Address IEs in order: control plane, user traffic, then the optional alternative (IPv6) pair */
+  [0,2].forEach(i=>{if(gsn[i])trRole(R,gsn[i],'gn','sgsn','c','GTPv1-C SGSN Address for signalling');if(gsn[i+1])trRole(R,gsn[i+1],'gn|iups','sgsn','u','GTPv1-C SGSN Address for user traffic');});}
+ else if(ty===17&&cause>=128&&cause<192)[0,2].forEach(i=>{if(gsn[i])trRole(R,gsn[i],'gn','ggsn','c','GTPv1-C GGSN Address for Control Plane');if(gsn[i+1])trRole(R,gsn[i+1],'gn|dt','ggsn','u','GTPv1-C GGSN Address for user traffic');});
+ else if(ty===18&&dti)[1,3].forEach(i=>{if(gsn[i])trRole(R,gsn[i],'dt','rnc','u','GTPv1-C Update PDP Context Request with the Direct Tunnel flag: RNC user-plane address');});
+ return f;}
+
+/* GTPv2-C (TS 29.274) – F-TEID interface types */
+function trGTPC2(R,d,q,e,s,t,vl,fi,ol){
+ const f=trFlow(R,'gtpc2',null,s,t,vl,fi);trAdd(f,s,ol);const sip=trIPs(s);let o=q,g=0;
+ while(o+8<=e&&g++<4){const fl=d[o];if((fl>>5)!==2)break;const ty=d[o+1],len=(d[o+2]<<8)|d[o+3],end=Math.min(e,o+4+len);
+  trTally(f.m,TR_V2MSG[ty]||'Message type '+ty);if(ty>=25&&ty<=31)f.x.srvcc=1;if(ty>=128&&ty<=141)f.x.mob=1;
+  trV2IEs(R,f,d,o+((fl&8)?12:8),end,0,sip);if(!(fl&0x10))break;o+=4+len;}
+ return f;}
+function trV2IEs(R,f,d,o,end,dep,sip){
+ while(o+4<=end){const it=d[o],L=(d[o+1]<<8)|d[o+2],ins=d[o+3]&15,v=o+4;if(v+L>end)return;
+  if(it===87&&L>=5){const fl=d[v],ty=fl&63;let p=v+5;const ips=[];
+   if((fl&0x80)&&p+4<=v+L){ips.push(trV4s(trV4(d,p)));p+=4;}if((fl&0x40)&&p+16<=v+L)ips.push(trV6s(d,p));
+   trTally(f.x.ft||(f.x.ft={}),ty);const r=TR_FTEID[ty],nm=TR_FTEID_N[ty]||'interface type '+ty;
+   if(r){ips.forEach(ip=>trRole(R,ip,r[0],r[1],r[2],'GTPv2-C F-TEID “'+nm+'”'));
+    if(dep===0&&ins===0&&r[2]==='c'&&!ips.includes(sip))trRole(R,sip,r[0],r[1],'c','sends GTPv2-C with sender F-TEID “'+nm+'”');}}
+  else if(it===2&&L>=1&&dep===0){const c=d[v];if(c>=64&&c<=239)f.x.rej=(f.x.rej||0)+1;}
+  else if((it===93||it===109)&&dep<3)trV2IEs(R,f,d,v,v+L,dep+1,sip);
+  o=v+L;}}
+
+/* PFCP (TS 29.244) – 3GPP Interface Type, F-TEID, Outer Header Creation, Node ID */
+function trPFCP(R,d,q,e,s,t,vl,fi,ol){
+ const f=trFlow(R,'pfcp',null,s,t,vl,fi);trAdd(f,s,ol);const sip=trIPs(s),tip=trIPs(t);let o=q,g=0;
+ while(o+8<=e&&g++<4){const fl=d[o];if((fl>>5)!==1)break;const ty=d[o+1],len=(d[o+2]<<8)|d[o+3],end=Math.min(e,o+4+len),S=fl&1,hl=S?16:8;if(o+hl>end)break;
+  const so=o+(S?12:4),seq=(d[so]<<16)|(d[so+1]<<8)|d[so+2];
+  trTally(f.m,TR_PFMSG[ty]||'Message type '+ty);
+  const c={pdr:{},te:{},cause:-1,node:null,types:new Set(),qfi:false,cr:[]};
+  trPfIEs(R,d,o+hl,end,c,null,sip);
+  if(c.cause>=64)f.x.rej=(f.x.rej||0)+1;
+  if(c.types.size){const T=f.x.ty||(f.x.ty={});c.types.forEach(x=>trTally(T,x));}
+  if(c.qfi)f.x.qfi=1;
+  if(c.node)trName(R,sip,c.node,'PFCP Node ID');
+  if(ty===50||ty===52||ty===54||ty===56)trTally(f.x.req||(f.x.req={}),ty===56?tip:sip);   /* sessions are controlled by the CP function; Session Report goes UP → CP */
+  if((ty===50||ty===52)&&(Object.keys(c.pdr).length||Object.keys(c.te).length)){if(R.pfPend.size>5000)R.pfPend.clear();R.pfPend.set(sip+'>'+tip+'#'+seq,c);}
+  if((ty===51||ty===53)&&c.cr.length){const k=tip+'>'+sip+'#'+seq,P=R.pfPend.get(k);if(P){R.pfPend.delete(k);
+   c.cr.forEach(G=>{const ty3=G.it===8?P.pdr[G.id]:P.te[G.te];if(ty3==null)return;trPfRole(R,ty3,G.lft,'l',' (Created PDR)');
+    const T=f.x.ty||(f.x.ty={});trTally(T,ty3,0);});}}
+  if(!(fl&4))break;o+=4+len;}
+ return f;}
+function trPfIEs(R,d,o,end,c,G,sip){
+ while(o+4<=end){const it=(d[o]<<8)|d[o+1],L=(d[o+2]<<8)|d[o+3],v=o+4,ve=v+L;if(ve>end)return;
+  if(!(it&0x8000))switch(it){
+   case 1:case 3:case 8:case 9:case 10:case 127:case 128:case 129:{const g={it,id:null,te:null,src:null,styp:null,lft:[],dst:null,dtyp:null,ohc:[]};trPfIEs(R,d,v,ve,c,g,sip);trPfGroup(R,c,g);break;}
+   case 2:case 4:case 11:trPfIEs(R,d,v,ve,c,G,sip);break;
+   case 56:if(G&&L>=2)G.id=(d[v]<<8)|d[v+1];break;
+   case 131:if(G&&L>=1)G.te=d[v];break;
+   case 20:if(G&&L>=1)G.src=d[v]&15;break;
+   case 42:if(G&&L>=1)G.dst=d[v]&15;break;
+   case 160:if(L>=1){const ty=d[v]&63;c.types.add(ty);if(G){if(G.it===3||G.it===10)G.dtyp=ty;else G.styp=ty;}}break;
+   case 21:if(G&&L>=1){const fl=d[v];if(!(fl&4)){let p=v+5;if((fl&1)&&p+4<=ve){G.lft.push(trV4s(trV4(d,p)));p+=4;}if((fl&2)&&p+16<=ve)G.lft.push(trV6s(d,p));}}break;
+   case 84:if(G&&L>=2){const a=d[v];let p=v+2;if(a&3){p+=4;if(a&0x15){if((a&1)&&p+4<=ve)G.ohc.push(trV4s(trV4(d,p)));p+=4;}if(a&0x2a){if((a&2)&&p+16<=ve)G.ohc.push(trV6s(d,p));}}}break;
+   case 60:if(!G&&L>=2){const nt=d[v]&15;c.node=nt===0&&L>=5?trV4s(trV4(d,v+1)):nt===1&&L>=17?trV6s(d,v+1):nt===2?trDns(d,v+1,ve):null;}break;
+   case 19:if(!G&&L>=1)c.cause=d[v];break;
+   case 124:c.qfi=true;break;}
+  o=ve;}}
+function trPfRole(R,ty,ips,side,how){const r=TR_PF3[ty];if(!r||!ips.length)return;const nm='PFCP '+(side==='l'?'local F-TEID':'outer header creation')+' with 3GPP Interface Type “'+r[0]+'”'+(how||'');
+ if(r[1])ips.forEach(ip=>trRole(R,ip,r[1],side==='l'?r[2]:r[3],'u',nm));}
+function trPfGroup(R,c,g){
+ if(g.it===1||g.it===9||g.it===127||g.it===129){
+  if(g.styp!=null){if(g.lft.length)trPfRole(R,g.styp,g.lft,'l');else if(g.it===1&&g.id!=null)c.pdr[g.id]=g.styp;else if(g.it===127&&g.te!=null)c.te[g.te]=g.styp;}
+  else if(g.lft.length&&g.src!=null)g.lft.forEach(ip=>trRole(R,ip,'',null,'u','PFCP: user-plane function address ('+(TR_PFSRC[g.src]||'?')+' side)'));}
+ else if(g.it===3||g.it===10){
+  if(g.dtyp!=null&&g.ohc.length)trPfRole(R,g.dtyp,g.ohc,'r');
+  else if(g.ohc.length&&g.dst!=null)g.ohc.forEach(ip=>trRole(R,ip,'',null,'u','PFCP: GTP-U peer of the user-plane function ('+(TR_PFDST[g.dst]||'?')+' side)'));}
+ else if(g.it===8||g.it===128){if(g.lft.length)c.cr.push(g);}}
+
+/* RADIUS (RFC 2865 / 2866, 3GPP VSAs of TS 29.061). No subscriber identities are read. */
+function trRADIUS(R,d,q,e,s,t,vl,fi,ol){
+ const f=trFlow(R,'radius',null,s,t,vl,fi);trAdd(f,s,ol);const code=d[q],len=(d[q+2]<<8)|d[q+3],end=Math.min(e,q+(len>=20?len:e-q));
+ let o=q+20,fip=null,rat=-1,nas=null,ast=-1;
+ while(o+2<=end){const ty=d[o],L=d[o+1];if(L<2||o+L>end)break;const v=o+2;
+  if(ty===8&&L===6)fip=trV4(d,v);else if(ty===32)nas=trStr(d,v,o+L);else if(ty===40&&L===6)ast=trU32(d,v);
+  else if(ty===26&&L>=8&&trU32(d,v)===10415){let p=v+4;while(p+2<=o+L){const st=d[p],sl=d[p+1];if(sl<2||p+sl>o+L)break;if(st===21&&sl>=3)rat=d[p+sl-1];p+=sl;}}
+  o+=L;}
+ trTally(f.m,(TR_RADC[code]||'Code '+code)+(code===4&&TR_RADAST[ast]?' ('+TR_RADAST[ast]+')':''));
+ const sip=trIPs(s),tip=trIPs(t);
+ if(code===1||code===4){trTally(f.x.cl||(f.x.cl={}),sip);if(nas)trName(R,sip,nas,'RADIUS NAS-Identifier');if(rat>=0)trTally(f.x.rat||(f.x.rat={}),rat);if(fip!=null)trUE(R,fip,null,TR_RAT3UP[rat]||null,4);}
+ else if(code===40||code===43)trTally(f.x.cl||(f.x.cl={}),tip);
+ if(code===3||code===42||code===45)f.x.rej=(f.x.rej||0)+1;
+ return f;}
+
+/* IKEv2 / ESP (RFC 7296, RFC 3948) */
+function trIKE(R,d,q,e,s,t,vl,fi,ol,natt){
+ let o=q;if(natt){if(e-q===1&&d[q]===0xff){const f=trCount(R,'ike',s,t,vl,fi,ol);trTally(f.m,'NAT-T keepalive');return f;}if(q+4<=e&&trU32(d,q)===0)o=q+4;else return trCount(R,'esp',s,t,vl,fi,ol);}
+ const f=trCount(R,'ike',s,t,vl,fi,ol);
+ if(o+28<=e&&d[o+17]===0x20){const ex=d[o+18],fl=d[o+19];trTally(f.m,(TR_IKEX[ex]||'Exchange '+ex)+((fl&0x20)?' response':' request'));if(ex===34&&!(fl&0x20)&&(fl&8))trTally(f.x.cl||(f.x.cl={}),trIPs(s));}
+ return f;}
+
+/* SCTP (RFC 9260) – PPID / port, Diameter carried in DATA chunks */
+function trSCTP(R,d,o,end,s,t,vl,fi,ol){
+ if(o+12>end){R.trunc++;return null;}const sp=(d[o]<<8)|d[o+1],dp=(d[o+2]<<8)|d[o+3];
+ const ak=(s<t?s+':'+sp+'|'+t+':'+dp:t+':'+dp+'|'+s+':'+sp)+'|'+vl;let cls=R.sctpA.get(ak)||null;const dia=[];let p=o+12,g=0;
+ while(p+4<=end&&g++<64){const ty=d[p],cf=d[p+1],L=(d[p+2]<<8)|d[p+3];if(L<4)break;
+  if(ty===0&&L>=16){const c=TR_PPID[trU32(d,p+12)]||null;if(c&&!cls)cls=c;if((c==='dia'||(!c&&(sp===3868||dp===3868)))&&(cf&2))dia.push([p+16,Math.min(end,p+L)]);}
+  p+=(L+3)&~3;}
+ if(!cls)cls=TR_SCTPPORT[sp]||TR_SCTPPORT[dp]||null;
+ if(cls){if(R.sctpA.size<20000)R.sctpA.set(ak,cls);}else cls='sctp';
+ if(cls==='dia'){let f0=null;
+  dia.forEach(([a,b])=>{if(b-a>=20&&d[a]===1){const f=trFlow(R,'dia',trU32(d,a+8),s,t,vl,fi);trDiaMsg(R,f,d.subarray(a,b),s);if(!f0)f0=f;}});
+  const f=f0||R.sctpL.get(ak)||trFlow(R,'dia',0,s,t,vl,fi);if(f0)R.sctpL.set(ak,f0);trAdd(f,s,ol);return f;}
+ const f=trFlow(R,cls,null,s,t,vl,fi);trAdd(f,s,ol);
+ const srv=TR_SCTPPORT[dp]===cls?t:TR_SCTPPORT[sp]===cls?s:null;if(srv!=null)trTally(f.x.srv||(f.x.srv={}),trIPs(srv));
+ return f;}
+
+/* Diameter over TCP (RFC 6733): messages are re-assembled per direction; the first 16 kB of each are decoded */
+function trDiaTCP(R,d,o,end,s,t,sp,dp,vl,fi,ol){
+ const seq=trU32(d,o+4),q=o+(d[o+12]>>4)*4,fl=d[o+13],pl=Math.max(0,end-q);
+ const ck=s+':'+sp+'>'+t+':'+dp;let c=R.tcp.get(ck);if(!c){if(R.tcp.size>20000)R.tcp.clear();c={nx:-1,need:0,h:new Uint8Array(20),hl:0,m:null,ml:0,cur:null,last:null};R.tcp.set(ck,c);}
+ let pf=c.need>0?c.cur:null;
+ if(pl>0){let a=q;
+  if(c.nx>=0){const df=(seq-c.nx)|0;if(df<0){a=-df>=pl?end:q-df;}else if(df>0){c.need=0;c.hl=0;c.m=null;c.cur=null;pf=null;}}
+  if(a<end)pf=trDiaFeed(R,c,d,a,end,s,t,vl,fi)||pf;
+  const nx=(seq+pl)>>>0;if(c.nx<0||((nx-c.nx)|0)>0)c.nx=nx;}
+ else if(fl&2)c.nx=(seq+1)>>>0;
+ const rc=R.tcp.get(t+':'+dp+'>'+s+':'+sp);
+ const f=pf||c.last||(rc&&rc.last)||trFlow(R,'dia',0,s,t,vl,fi);trAdd(f,s,ol);return f;}
+function trDiaFeed(R,c,d,o,end,s,t,vl,fi){let first=null;
+ while(o<end){
+  if(c.need===0){const k=Math.min(20-c.hl,end-o);c.h.set(d.subarray(o,o+k),c.hl);c.hl+=k;o+=k;if(c.hl<20)break;
+   const h=c.h,len=(h[1]<<16)|(h[2]<<8)|h[3];c.hl=0;
+   if(h[0]!==1||len<20||(len&3)){c.cur=null;return first;}   /* not at a message boundary: wait for the next segment */
+   const f=trFlow(R,'dia',trU32(h,8),s,t,vl,fi);c.cur=f;if(!first)first=f;
+   c.m=new Uint8Array(Math.min(len,TR_DIA_CAP));c.m.set(h);c.ml=20;c.need=len-20;
+   if(!c.need){trDiaMsg(R,f,c.m,s);c.last=f;c.m=null;}}
+  else{const k=Math.min(c.need,end-o);if(c.ml<c.m.length){const k2=Math.min(k,c.m.length-c.ml);c.m.set(d.subarray(o,o+k2),c.ml);c.ml+=k2;}
+   c.need-=k;o+=k;if(!c.need){trDiaMsg(R,c.cur,c.m.subarray(0,c.ml),s);c.last=c.cur;c.m=null;}}}
+ return first;}
+function trAvps(m,o,end,cb){let g=0;while(o+8<=end&&g++<500){const c=trU32(m,o),fl=m[o+4],L=(m[o+5]<<16)|(m[o+6]<<8)|m[o+7],h=(fl&0x80)?12:8;if(L<h||o+L>end)return;cb(c,(fl&0x80)?trU32(m,o+8):0,o+h,o+L);o+=(L+3)&~3;}}
+function trDiaMsg(R,f,m,s){if(!f||m.length<20)return;
+ const req=!!(m[4]&0x80),cmd=(m[5]<<16)|(m[6]<<8)|m[7],app=f.app,x=f.x,sip=trIPs(s);
+ let ccrt=0,rc=0,ipcan=-1,rat=-1,scx=null,fip=null,oh=null,ulrf=-1,rr=false;const apps=[];
+ trAvps(m,20,m.length,(c,vn,v,ve)=>{switch(c){
+  case 264:oh=trStr(m,v,ve);break;
+  case 268:if(ve-v>=4)rc=trU32(m,v);break;
+  case 297:trAvps(m,v,ve,(c2,vn2,v2,ve2)=>{if(c2===298&&ve2-v2>=4)rc=trU32(m,v2);});break;
+  case 416:if(ve-v>=4)ccrt=trU32(m,v);break;
+  case 1027:if(vn===10415&&ve-v>=4)ipcan=trU32(m,v);break;
+  case 1032:if(vn===10415&&ve-v>=4)rat=trU32(m,v);break;
+  case 461:scx=trStr(m,v,ve);break;
+  case 8:if(ve-v===4)fip=trV4(m,v);break;
+  case 258:case 259:if(ve-v>=4)apps.push(trU32(m,v));break;
+  case 260:trAvps(m,v,ve,(c2,vn2,v2,ve2)=>{if((c2===258||c2===259)&&ve2-v2>=4)apps.push(trU32(m,v2));});break;
+  case 282:rr=true;break;
+  case 1405:if(vn===10415&&ve-v>=4)ulrf=trU32(m,v);break;}});
+ const nm=TR_DIA_CMD[cmd];let name=nm?nm[req?0:1]:'Command '+cmd+(req?' request':' answer');if(cmd===272&&req&&ccrt>=1&&ccrt<=4)name+=['','-I','-U','-T','-E'][ccrt];
+ trTally(f.m,name);
+ if(!req&&rc>=3000)x.err=(x.err||0)+1;
+ if(oh){trName(R,sip,oh,'Diameter Origin-Host');trTally(x.oh||(x.oh={}),sip+'|'+oh);}
+ if(req&&(TR_DIA_CL[app]||[]).includes(cmd))trTally(x.cl||(x.cl={}),sip);
+ if(ipcan>=0)trTally(x.ipcan||(x.ipcan={}),ipcan);
+ if(rat>=0)trTally(x.rat||(x.rat={}),rat);
+ if(scx){const mm=/(\d{5})@3gpp\.org$/i.exec(scx);trTally(x.scx||(x.scx={}),mm?mm[1]:scx.slice(0,48));}
+ if(cmd===316&&req&&ulrf>=0)trTally(x,(ulrf&2)?'s6aF':'s6dF');
+ if(cmd===257)apps.forEach(a=>{(x.adv||(x.adv={}))[a]=1;});
+ if(rr&&req)trTally(x.rr||(x.rr={}),sip);
+ if(fip!=null&&cmd===272&&req&&app===16777238)trUE(R,fip,null,ipcan===0?'gi':(ipcan===5||ipcan===6)?'sgi':null,2);}
+
+/* ---------- capture containers: pcap and pcapng (draft-ietf-opsawg-pcap / -pcapng) ---------- */
+function trParser(R){
+ let buf=new Uint8Array(0),bo=0,mode=0,le=true,rh=16,frac=1e-6,lt=1,base=0;let sec=[];
+ const r32=o=>le?(buf[o]|(buf[o+1]<<8)|(buf[o+2]<<16)|(buf[o+3]<<24))>>>0:((buf[o]<<24)|(buf[o+1]<<16)|(buf[o+2]<<8)|buf[o+3])>>>0;
+ const r16=o=>le?buf[o]|(buf[o+1]<<8):(buf[o]<<8)|buf[o+1];
+ const bad=msg=>{throw new Error(msg);};
+ function push(c){if(bo>=buf.length){buf=c;bo=0;}else{const r=buf.length-bo,nb=new Uint8Array(r+c.length);nb.set(buf.subarray(bo));nb.set(c,r);buf=nb;bo=0;}}
+ function step(){
+  for(;;){const n=buf.length-bo;
+   if(mode===0){if(n<4)return;const m=((buf[bo]<<24)|(buf[bo+1]<<16)|(buf[bo+2]<<8)|buf[bo+3])>>>0;
+    if(m===0x0a0d0d0a){mode=2;R.fmt='pcapng';continue;}
+    const P={0xa1b2c3d4:[false,1e-6,16],0xd4c3b2a1:[true,1e-6,16],0xa1b23c4d:[false,1e-9,16],0x4d3cb2a1:[true,1e-9,16],0xa1b2cd34:[false,1e-6,24],0x34cdb2a1:[true,1e-6,24]}[m];
+    if(!P)bad(m>>>16===0x1f8b?'This looks like a gzip file that could not be decompressed.':(m===0x28b52ffd?'Zstandard-compressed captures are not supported – save the capture uncompressed or as .gz.':'This is not a pcap or pcapng file. In Wireshark use File → Save As… and choose pcapng.'));
+    if(n<24)return;[le,frac,rh]=P;R.fmt=frac===1e-9?'pcap (ns)':'pcap';lt=r32(bo+20)&0xffff;R.lts.add(lt);R.ifs.push({name:'',lt,pk:0,by:0});base=0;bo+=24;mode=1;continue;}
+   if(mode===1){if(n<rh)return;const inc=r32(bo+8),orig=r32(bo+12);if(inc>0x1000000)bad('Record length '+inc+' looks corrupt – the file may be damaged or truncated.');
+    if(n<rh+inc)return;const ts=r32(bo)+r32(bo+4)*frac;trPkt(R,buf.subarray(bo+rh,bo+rh+inc),lt,0,ts,orig||inc);bo+=rh+inc;continue;}
+   /* pcapng */
+   if(n<12)return;const ty0=((buf[bo]<<24)|(buf[bo+1]<<16)|(buf[bo+2]<<8)|buf[bo+3])>>>0;
+   if(ty0===0x0a0d0d0a){const bm=((buf[bo+8]<<24)|(buf[bo+9]<<16)|(buf[bo+10]<<8)|buf[bo+11])>>>0;if(bm===0x4d3c2b1a)le=true;else if(bm===0x1a2b3c4d)le=false;else bad('pcapng section header is damaged.');}
+   const L=r32(bo+4);if(L<12||(L&3)||L>0x8000000)bad('pcapng block length '+L+' looks corrupt – the file may be damaged.');if(n<L)return;const ty=r32(bo);
+   if(ty===0x0a0d0d0a)sec=[];
+   else if(ty===1){const lt1=r16(bo+8),snap=r32(bo+12);let res=1e-6,name='',desc='';let p=bo+16;const E=bo+L-4;
+    while(p+4<=E){const oc=r16(p),ol=r16(p+2),v=p+4;if(!oc||v+ol>E)break;
+     if(oc===2)name=new TextDecoder().decode(buf.subarray(v,v+ol));else if(oc===3)desc=new TextDecoder().decode(buf.subarray(v,v+ol));else if(oc===9&&ol>=1){const r=buf[v];res=r&0x80?Math.pow(2,-(r&0x7f)):Math.pow(10,-r);}
+     p=v+((ol+3)&~3);}
+    R.lts.add(lt1);R.ifs.push({name:name||desc,lt:lt1,pk:0,by:0});sec.push({lt:lt1,res,gi:R.ifs.length-1,snap});}
+   else if(ty===6||ty===2){const id=ty===6?r32(bo+8):r16(bo+8),I=sec[id],cap=r32(bo+20),orig=r32(bo+24);
+    if(I&&28+cap<=L-4)trPkt(R,buf.subarray(bo+28,bo+28+cap),I.lt,I.gi,(r32(bo+12)*4294967296+r32(bo+16))*I.res,orig||cap);else R.bad++;}
+   else if(ty===3){const I=sec[0],orig=r32(bo+8);if(I){const cap=Math.min(orig,L-16,I.snap||Infinity);trPkt(R,buf.subarray(bo+12,bo+12+cap),I.lt,I.gi,null,orig);}else R.bad++;}
+   bo+=L;}}
+ return {feed(c){push(c);step();},rest(){return buf.length-bo;}};}
+
+/* read the file as a stream (gzip via DecompressionStream) without loading it whole */
+async function trRead(file,job){
+ const head=new Uint8Array(await file.slice(0,4).arrayBuffer());const gz=head[0]===0x1f&&head[1]===0x8b;
+ const R=trNew();R.gz=gz;const P=trParser(R);job.R=R;
+ if(!file.stream){P.feed(new Uint8Array(await file.arrayBuffer()));job.read=file.size;return R;}
+ let src=file.stream();
+ if(gz){if(typeof DecompressionStream==='undefined')throw new Error('This browser cannot decompress .gz files – decompress the capture first.');
+  src=src.pipeThrough(new TransformStream({transform(c,ctl){job.read+=c.byteLength;ctl.enqueue(c);}})).pipeThrough(new DecompressionStream('gzip'));}
+ const rd=src.getReader();let last=performance.now();
+ try{for(;;){if(job.cancel){await rd.cancel();return null;}const {done,value}=await rd.read();if(done)break;if(!gz)job.read+=value.byteLength;
+   P.feed(value);if(performance.now()-last>80){trProgress();await new Promise(r=>setTimeout(r,0));last=performance.now();}}}
+ catch(e){if(job.cancel)return null;if(R.pk&&/gzip|decompress|incorrect header|unexpected end/i.test(String(e&&e.message||e))){R.cut=true;return R;}throw e;}
+ if(P.rest()>0)R.cut=true;
+ return R;}
+
+/* ---------- from the collector to an analysed trace ---------- */
+function trFinish(R,file){
+ /* Diameter base-protocol messages (CER / DWR / DPR, application 0) belong to the application flow of the same address pair */
+ const best=new Map();
+ R.flows.forEach(f=>{if(f.cls==='dia'&&f.app!==0){const k=f.a+'|'+f.b+'|'+f.vlan,c=best.get(k);if(!c||c.pk<f.pk)best.set(k,f);}});
+ R.flows.forEach((f,k)=>{if(f.cls!=='dia'||f.app!==0)return;const t=best.get(f.a+'|'+f.b+'|'+f.vlan);if(!t)return;
+  t.pk+=f.pk;t.by+=f.by;t.d[0]+=f.d[0];t.d[1]+=f.d[1];for(const m in f.m)trTally(t.m,m,f.m[m]);
+  if(f.x.adv)t.x.adv=Object.assign(t.x.adv||{},f.x.adv);if(f.x.oh)for(const q in f.x.oh)trTally(t.x.oh||(t.x.oh={}),q,f.x.oh[q]);
+  const add=i=>{if(i!==t.ifi)(t.ifo||(t.ifo=new Set([t.ifi]))).add(i);};add(f.ifi);if(f.ifo)f.ifo.forEach(add);
+  R.flows.delete(k);});
+ R.fragPend.forEach(q=>{R.fragOrph+=q.pk;});
+ const flows=[...R.flows.values()];flows.forEach(f=>{f.A=trIPs(f.a);f.B=trIPs(f.b);});
+ return {file:{name:file.name,size:file.size,fmt:R.fmt||'?',gz:!!R.gz,cut:!!R.cut,pk:R.pk,by:R.by,t0:R.t0,t1:R.t1,lts:[...R.lts],ifs:R.ifs},
+  flows,plain:[...R.plain.values()],roles:R.roles,names:R.names,ue:R.ue,ueFull:R.ueFull,nonip:R.nonip,infra:R.infra,unsup:R.unsup,bad:R.bad,trunc:R.trunc,fragOrph:R.fragOrph,
+  manual:{},rows:[],groups:[],ends:new Map(),other:[]};}
+
+/* ---------- labels ---------- */
+const trShortN=c=>LM[c]?LM[c].n:c;
+/* names of several interfaces; two with the same name (Gx on the P-GW and on the GGSN) get their ends */
+function trLinkNames(ls){const a=[...ls],n=a.map(trShortN);return a.map((c,i)=>n.filter(x=>x===n[i]).length>1?trLbl(c):n[i]).join(', ');}
+function trLbl(c){const L=LM[c];if(!L)return c;const a=EM[L.a],b=EM[L.b];return L.n+(a&&b?' ('+a.n+' – '+b.n+')':'');}
+function trClsN(f){return f.cls==='dia'?'Diameter '+(TR_DIA[f.app]?TR_DIA[f.app][0]:'application '+f.app):(TR_CLS[f.cls]||{n:f.cls}).n;}
+const trIfName=i=>{const I=TR&&TR.file.ifs[i];return I&&TR.file.ifs.length>1?(I.name||'interface '+(i+1)):'';};
+const TR_CONF={sure:['✔','certain','The protocol or explicit signalling identifies the interface'],likely:['◐','likely','Inferred – please check'],manual:['✎','assigned','Assigned by you'],none:['?','undecided','Choose from the candidates']};
+function trBadge(c){const k=c||'none',m=TR_CONF[k]||TR_CONF.none;return `<span class="trc c-${k}" title="${esc(m[2])}">${m[0]} ${m[1]}</span>`;}
+function trCands(f){let c;
+ if(f.cls==='dia'){const a=TR_DIA[f.app];c=f.app===16777238?['gx','gx3g']:(f.app===4||f.app===3)?['gy4g','gy3g','rorf']:f.app===16777251?['s6a','s6d']:f.app===0?TR_CLS.diatls.c:a&&a[1]?[a[1]]:[];}
+ else c=(TR_CLS[f.cls]||{c:[]}).c;
+ return c.filter(k=>LM[k]);}
+const trGK=f=>f.cls+(f.cls==='dia'?':'+f.app:'')+'|'+f.vlan+'|'+f.ifi;
+const trTop=o=>{let k=null,v=-1;for(const q in o)if(o[q]>v){v=o[q];k=q;}return k;};
+
+/* ---------- network data lookups (all instances, regardless of the site filter) ---------- */
+function trV6norm(a){const g=ndV6groups(a);if(!g)return a.toLowerCase();const d=new Uint8Array(16);g.forEach((x,i)=>{d[2*i]=x>>8;d[2*i+1]=x&255;});return trV6s(d,0);}
+function trInNet(ip,net){const [n,p]=String(net).split('/');const P=+p;if(!(P>=0))return false;
+ if(ip.includes(':')!==n.includes(':'))return false;
+ if(!ip.includes(':'))return ND_V4.test(ip)&&ndV4in(ip,net);
+ const a=ndV6groups(ip),b=ndV6groups(n);if(!a||!b)return false;
+ for(let i=0;i<8;i++){const bits=Math.max(0,Math.min(16,P-16*i));if(!bits)break;const m=(0xffff<<(16-bits))&0xffff;if((a[i]&m)!==(b[i]&m))return false;}return true;}
+function trNdIdx(){if(!ND)return null;const ex=new Map(),nets=[],ifn=[];
+ ND.instances.forEach(I=>I.addresses.forEach(A=>{const k=ndAddrKind(A.ip),key=A.interface?(ND_CANON[A.interface]||A.interface):'';const e={I,A,key};
+  if(k==='v4'||k==='v4host'||k==='v6'||k==='v6host'){const ip=k.startsWith('v6')?trV6norm(ndAddrOnly(A.ip)):ndAddrOnly(A.ip);if(!ex.has(ip))ex.set(ip,[]);ex.get(ip).push(e);}
+  else if(k==='v4net'||k==='v6net')nets.push({...e,net:A.ip});}));
+ Object.entries(ND.interfaces||{}).forEach(([k,v])=>{ifn.push({key:ND_CANON[k]||k,net:v.subnet&&/\//.test(v.subnet)?v.subnet:null,vlan:String(v.vlan||'').trim()});});
+ return {ex,nets,ifn,cache:new Map()};}
+function trNdHits(nd,ip){if(!nd)return [];let h=nd.cache.get(ip);if(h)return h;h=(nd.ex.get(ip)||[]).slice();nd.nets.forEach(e=>{if(trInNet(ip,e.net))h.push(e);});nd.cache.set(ip,h);return h;}
+function trNdKeys(nd,ip){const s=new Set();if(!nd)return s;trNdHits(nd,ip).forEach(e=>{if(e.key)s.add(e.key);});nd.ifn.forEach(e=>{if(e.net&&trInNet(ip,e.net))s.add(e.key);});return s;}
+function trNdVlan(nd,vl){if(!nd||!vl)return [];const parts=String(vl).split('.');return [...new Set(nd.ifn.filter(e=>e.vlan&&parts.includes(e.vlan)).map(e=>e.key))];}
+
+/* ---------- roles learned from signalling ---------- */
+function trRolesOf(ip,pl){const m=TR.roles.get(ip);return m?[...m.values()].filter(r=>r.pl===pl&&r.links.length):[];}
+const trElOk=(x,el)=>!el||x===el||(ND_ELALIAS[x]||[]).includes(el);
+function trSig(f,pl,C){
+ const RA=trRolesOf(f.A,pl),RB=trRolesOf(f.B,pl),LA=new Set(),LB=new Set();
+ RA.forEach(r=>r.links.forEach(l=>LA.add(l)));RB.forEach(r=>r.links.forEach(l=>LB.add(l)));
+ const els=(R,l)=>new Set(R.filter(r=>r.links.includes(l)&&r.el).map(r=>r.el));
+ const via=(R,l)=>[...new Set(R.filter(r=>r.links.includes(l)).flatMap(r=>[...r.via]))];
+ const ok=l=>{const L=LM[l];if(!L)return false;const a=els(RA,l),b=els(RB,l),e=(S,x)=>!S.size||[...S].some(el=>trElOk(x,el));return (e(a,L.a)&&e(b,L.b))||(e(a,L.b)&&e(b,L.a));};
+ const both=[...LA].filter(l=>LB.has(l)&&C.includes(l)&&ok(l));
+ if(both.length===1)return {links:both,conf:'sure',why:'Both ends signalled – '+[...new Set([...via(RA,both[0]),...via(RB,both[0])])].slice(0,2).join('; ')};
+ if(both.length>1)return {links:[],conf:null,why:'Signalling allows '+both.map(trShortN).join(' or '),cands:both};
+ const one=LA.size&&!LB.size?[RA,LA]:LB.size&&!LA.size?[RB,LB]:null;
+ if(one){const u=[...one[1]].filter(l=>C.includes(l));if(u.length===1)return {links:u,conf:'likely',why:'One end signalled – '+via(one[0],u[0]).slice(0,2).join('; ')};
+  if(u.length>1)return {links:[],conf:null,why:'One end signalled for '+u.map(trShortN).join(' / '),cands:u};}
+ return null;}
+let trPcef=null;
+function trPcefIdx(){trPcef=new Map();
+ TR.flows.forEach(f=>{if(f.cls!=='dia'||f.app!==16777238||!f.x.ipcan)return;const cl=trTop(f.x.cl||{});if(!cl)return;const g=f.x.ipcan[0]||0,e=(f.x.ipcan[5]||0)+(f.x.ipcan[6]||0);
+  const keys=[cl];for(const q in f.x.oh||{}){const [ip,oh]=q.split('|');if(ip===cl)keys.push('oh:'+oh);}
+  keys.forEach(k=>{const v=trPcef.get(k)||{g:0,e:0};v.g+=g;v.e+=e;trPcef.set(k,v);});});}
+function trPcefKind(ip){if(!ip||!trPcef)return null;const v={g:0,e:0};const add=k=>{const q=trPcef.get(k);if(q){v.g+=q.g;v.e+=q.e;}};add(ip);(TR.names.get(ip)||new Map()).forEach((kind,nm)=>add('oh:'+nm));
+ return v.g&&v.e?'both':v.g?'gprs':v.e?'eps':null;}
+
+/* ---------- the evidence for one flow ---------- */
+function trDiaEvid(f,C){const x=f.x,a=TR_DIA[f.app],an=a?a[0]:'application '+f.app;
+ if(f.app===16777238){const I=x.ipcan||{},g=I[0]||0,e=(I[5]||0)+(I[6]||0);
+  if(g&&!e)return {links:['gx3g'],conf:'sure',why:'Gx with IP-CAN-Type 3GPP-GPRS ⇒ GGSN (Gn/Gp access)'};
+  if(e&&!g)return {links:['gx'],conf:'sure',why:'Gx with IP-CAN-Type '+(I[6]&&!I[5]?'Non-3GPP-EPS':'3GPP-EPS')+' ⇒ P-GW'};
+  if(g&&e)return {links:['gx','gx3g'],conf:'sure',why:'Gx with IP-CAN-Types 3GPP-EPS and 3GPP-GPRS ⇒ combined GGSN / P-GW'};
+  return {links:['gx'],conf:'likely',why:'Gx application (16777238) without an IP-CAN-Type in the capture, so GGSN and P-GW cannot be told apart – P-GW assumed',cands:['gx','gx3g']};}
+ if(f.app===4||f.app===3){const S=x.scx||{},ps=S['32251']||0,ims=(S['32260']||0)+(S['32275']||0),ref=f.app===4?'Gy':'Gz';
+  if(ims&&ims>=ps)return {links:['rorf'],conf:'sure',why:'Service-Context-Id …'+(S['32275']>=(S['32260']||0)?'32275':'32260')+'@3gpp.org (IMS charging) ⇒ '+(f.app===4?'Ro':'Rf')};
+  if(ps){const k=trPcefKind(trTop(x.cl||{}));
+   if(k==='gprs')return {links:['gy3g'],conf:'likely',why:'PS charging (…32251@3gpp.org) from a node that uses Gx with 3GPP-GPRS ⇒ GGSN',cands:['gy4g','gy3g']};
+   if(k==='both')return {links:['gy4g','gy3g'],conf:'likely',why:'PS charging (…32251@3gpp.org) from a combined GGSN / P-GW'};
+   return {links:['gy4g'],conf:'likely',why:'PS charging (…32251@3gpp.org) ⇒ '+ref+(k==='eps'?' on the P-GW (the same node uses Gx with 3GPP-EPS)':'; GGSN and P-GW use the same application – P-GW assumed'),cands:['gy4g','gy3g']};}
+  const o=trTop(S);return {links:[],conf:null,why:an+(o?' with Service-Context-Id '+(TR_SCX[o]?TR_SCX[o][0]+' (…'+o+'@3gpp.org)':o):' without a Service-Context-Id'),cands:C};}
+ if(f.app===16777251){const A=x.s6aF||0,D=x.s6dF||0;
+  if(A&&!D)return {links:['s6a'],conf:'sure',why:'Update Location with the S6a/S6d-Indicator set ⇒ MME (S6a)'};
+  if(D&&!A)return {links:['s6d'],conf:'sure',why:'Update Location with the S6a/S6d-Indicator cleared ⇒ SGSN (S6d)'};
+  if(A&&D)return {links:['s6a','s6d'],conf:'sure',why:'Update Locations from both the MME and the SGSN function (combined node)'};
+  return {links:['s6a'],conf:'likely',why:'S6a/S6d application (16777251) without an Update Location in the capture – MME assumed',cands:['s6a','s6d']};}
+ if(f.app===0){const adv=Object.keys(x.adv||{}).map(Number),ls=[...new Set(adv.map(p=>TR_DIA[p]&&TR_DIA[p][1]).filter(l=>l&&LM[l]))],an2=adv.map(p=>TR_DIA[p]?TR_DIA[p][0]:p).join(', ');
+  if(ls.length===1)return {links:ls,conf:'likely',why:'Only Diameter base messages; the peers advertise '+an2+' in CER / CEA'};
+  return {links:[],conf:null,why:'Only Diameter base messages (CER / DWR / DPR)'+(adv.length?' – advertised: '+an2:''),cands:ls.length?ls:C};}
+ if(a&&a[1]&&LM[a[1]])return {links:[a[1]],conf:'sure',why:'Diameter '+a[0]+' application ('+f.app+')'};
+ return {links:[],conf:'off',why:'Diameter '+an+' – not drawn on the map'};}
+function trEvid(f,C){const x=f.x;
+ switch(f.cls){
+  case 'gtpu':{const s=trSig(f,'u',C);if(s&&s.links.length)return s;
+   if(x.h85)return {links:['n3'],conf:'likely',why:'PDU Session Container in GTP-U ⇒ 5GC user plane (N3, or N9 between UPFs) – N3 assumed',cands:['n3','n9'].filter(k=>C.includes(k))};
+   if(x.h84)return {links:[],conf:null,why:'NR RAN Container in GTP-U ⇒ X2-U, Xn-U or F1-U',cands:['x2endc','xn','f1u'].filter(k=>C.includes(k))};
+   return s||{links:[],conf:null,why:'No GTPv2-C, GTPv1-C or PFCP in the capture signals these addresses',cands:C};}
+  case 'gtpc1':{const core=['Create PDP Context Request','Update PDP Context Request','Delete PDP Context Request'].some(m=>f.m[m]);
+   return x.inter&&!core?{links:['gn'],conf:'likely',why:'GTPv1-C between SGSNs (SGSN Context / Forward Relocation) – Gn, drawn on the map as SGSN–GGSN'}:{links:['gn'],conf:'sure',why:'GTPv1-C control plane is used only on Gn / Gp'};}
+  case 'gtpc2':{const s=trSig(f,'c',C);if(s&&s.links.length)return s;
+   if(x.srvcc)return {links:['sv'],conf:'likely',why:'SRVCC PS to CS messages are used only on Sv'};
+   if(x.mob)return {links:[],conf:null,why:'Context / Forward Relocation messages: S10, S3 or N26',cands:['s10','s3','n26'].filter(k=>C.includes(k))};
+   return s||{links:[],conf:null,why:'No F-TEID interface types seen for these addresses',cands:C};}
+  case 'pfcp':{const T=Object.keys(x.ty||{}).map(Number),has=a=>a.filter(v=>T.includes(v)),nm=a=>a.map(v=>TR_PF3[v][0]).join(', ');const n=has(TR_PF_N),a=has(TR_PF_A),b=has(TR_PF_B);
+   if(n.length)return {links:['n4'],conf:'sure',why:'3GPP Interface Type '+nm(n)+(a.length||b.length?' (and the EPS types '+nm(a.concat(b))+' – combined SMF+PGW-C / UPF+PGW-U)':'')+' ⇒ N4'};
+   if(a.length&&b.length)return {links:['sxa','sxb'],conf:'sure',why:'3GPP Interface Types '+nm(a)+' and '+nm(b)+' on one association ⇒ combined SGW-U / PGW-U (Sxa + Sxb)'};
+   if(a.length)return {links:['sxa'],conf:'sure',why:'3GPP Interface Type '+nm(a)+' ⇒ SGW user plane (Sxa)'};
+   if(b.length)return {links:['sxb'],conf:'sure',why:'3GPP Interface Type '+nm(b)+' ⇒ PGW user plane (Sxb)'};
+   if(x.qfi)return {links:['n4'],conf:'likely',why:'QoS Flow Identifier (QFI) present ⇒ 5GC (N4)'};
+   return {links:[],conf:null,why:'No 3GPP Interface Type IEs in these PFCP messages',cands:C};}
+  case 'dia':return trDiaEvid(f,C);
+  case 'radius':{const t={};for(const k in x.rat||{}){const u=TR_RAT3UP[k];if(u)trTally(t,u,x.rat[k]);}const l=trTop(t);
+   if(l){const rn=Object.keys(x.rat).map(k=>TR_RAT3[k]||k).join(', ');return {links:[l],conf:'likely',why:'3GPP-RAT-Type '+rn+' ⇒ '+(l==='gi'?'GGSN on Gi (a P-GW serving an S4-SGSN would use SGi)':l==='sgi'?'P-GW on SGi':'SMF / UPF on N6'),cands:C};}
+   const k=trPcefKind(trTop(x.cl||{}));if(k==='gprs'||k==='eps')return {links:[k==='gprs'?'gi':'sgi'],conf:'likely',why:'The RADIUS client also uses Gx with '+(k==='gprs'?'3GPP-GPRS ⇒ GGSN on Gi':'3GPP-EPS ⇒ P-GW on SGi'),cands:C};
+   return {links:[],conf:null,why:'No 3GPP-RAT-Type in the RADIUS messages',cands:C};}
+  case 'diatls':return {links:[],conf:null,why:'Encrypted (TLS / DTLS) – the Diameter application cannot be read',cands:C};
+  case 'ike':case 'esp':return {links:['swu'],conf:'likely',why:'IKEv2 / IPsec – SWu (UE–ePDG) is the only IPsec interface on the map; IPsec on RAN backhaul looks the same',cands:C};
+  case 's1ap':case 'ngap':case 'xnap':case 'f1ap':case 'e1ap':case 'sgsap':case 'nbap':return C.length?{links:[C[0]],conf:'sure',why:TR_CLS[f.cls].n+' is carried only on '+trShortN(C[0])}:null;
+  case 'x2ap':return {links:[],conf:null,why:'X2AP: LTE X2 or EN-DC X2',cands:C};
+  case 'gtpp':return {links:[],conf:null,why:"GTP' carries CDRs from the GGSN (Ga) or the P-GW (Gz)",cands:C};
+  case 'rua':case 'hnbap':case 'm3ua':case 'sctp':return {links:[],conf:'off',why:TR_CLS[f.cls].n+' – not drawn on the map'};}
+ return null;}
+function trResFlow(f,nd){
+ const C=trCands(f),gk=trGK(f);let r=trEvid(f,C);
+ if(r&&r.conf==='off'){r.gk=gk;r.cands=[];return r;}
+ if(nd&&(!r||r.conf!=='sure')){const ka=trNdKeys(nd,f.A),kb=trNdKeys(nd,f.B);
+  const both=[...ka].filter(k=>kb.has(k)&&C.includes(k)),one=[...new Set([...ka,...kb])].filter(k=>C.includes(k));
+  if(both.length===1)r={links:both,conf:'sure',why:'Both addresses are on '+trShortN(both[0])+' in your network data'};
+  else if(one.length===1)r={links:one,conf:'likely',why:(r&&r.links.includes(one[0])?r.why+'; ':'')+'one address is on '+trShortN(one[0])+' in your network data',cands:C};
+  if(!r||!r.links.length){const vk=trNdVlan(nd,f.vlan).filter(k=>C.includes(k));if(vk.length===1)r={links:vk,conf:'likely',why:'VLAN '+f.vlan+' is set for '+trShortN(vk[0])+' in your network data',cands:C};}}
+ const mv=TR.manual[gk];
+ if(mv!=null&&(!r||r.conf!=='sure'))r=mv==='none'?{links:[],conf:'manual',why:'Marked by you as not a mobile-network interface',none:true}:{links:[mv],conf:'manual',why:'Assigned by you'};
+ r=r||{links:[],conf:null,why:''};r.gk=gk;if(!r.cands)r.cands=C;return r;}
+function trResPlain(g,nd){
+ const gk='plain|'+g.vlan+'|'+g.ifi,C=TR_CLS.plain.c.filter(k=>LM[k]);let tot=0,ue=0,nUE=0,src=0;const t={};
+ g.ip.forEach((n,ip)=>{tot+=n;const u=TR.ue.get(ip);if(!u)return;const l=u.h||(u.f&&u.f.res&&u.f.res.links.length?TR_UPDN[u.f.res.links[0]]:null);if(!l)return;ue+=n;nUE++;src|=u.s;trTally(t,l,n);});
+ g.nUE=nUE;g.nIP=g.ip.size;let r=null;const l=trTop(t);
+ if(l&&C.includes(l)){const via=[src&1?'inside GTP-U':'',src&2?'in Gx (Framed-IP-Address)':'',src&4?'in RADIUS (Framed-IP-Address)':''].filter(Boolean).join(', ');
+  const second=Object.keys(t).filter(k=>k!==l&&t[k]>0.1*t[l]);
+  r={links:[l],conf:'likely',why:trNum(nUE)+' address'+(nUE>1?'es':'')+' of this traffic were also seen '+via+' ⇒ '+trShortN(l)+(second.length?' (part looks like '+second.map(trShortN).join(', ')+')':''),cands:C};}
+ if(!r&&nd){const vk=trNdVlan(nd,g.vlan).filter(k=>C.includes(k));if(vk.length===1)r={links:vk,conf:'likely',why:'VLAN '+g.vlan+' is set for '+trShortN(vk[0])+' in your network data',cands:C};}
+ const mv=TR.manual[gk];if(mv!=null)r=mv==='none'?{links:[],conf:'manual',why:'Marked by you as not a mobile-network interface',none:true}:{links:[mv],conf:'manual',why:'Assigned by you'};
+ r=r||{links:[],conf:null,why:'No mobile-core protocol; the addresses were not seen in GTP-U, Gx or RADIUS'};r.gk=gk;if(!r.cands)r.cands=C;return r;}
+
+/* which element each address is, for a flow on a given interface */
+function trEnds(f,link,nd){const L=LM[link],out={};out[f.A]=null;out[f.B]=null;if(!L)return out;
+ if(L.a===L.b){out[f.A]=out[f.B]={el:L.a,src:'interface'};return out;}
+ const pl=(TR_CLS[f.cls]||{}).p==='up'?'u':'c',ends=[L.a,L.b],pick=el=>ends.find(x=>trElOk(x,el))||null,other=e=>e===L.a?L.b:e===L.b?L.a:null;
+ [f.A,f.B].forEach(ip=>{const h=trNdHits(nd,ip).map(e=>pick(e.I.element)).find(Boolean);if(h){out[ip]={el:h,src:'network data'};return;}
+  const r=trRolesOf(ip,pl).filter(r=>r.links.includes(link)&&r.el).map(r=>pick(r.el)).find(Boolean);if(r)out[ip]={el:r,src:'signalling'};});
+ const side=(ip,el,src)=>{if(ip!==f.A&&ip!==f.B)return;const e=pick(el);if(!e)return;const o=ip===f.A?f.B:f.A;if(!out[ip])out[ip]={el:e,src};if(!out[o])out[o]={el:other(e),src};};
+ const ce=TR_CLIENT[link];if(ce){const cl=f.cls==='pfcp'?trTop(f.x.req||{}):trTop(f.x.cl||{});if(cl)side(cl,ce,f.cls==='pfcp'?'sends the session requests':'sends the requests');}
+ const se=TR_SCTPSRV[f.cls];if(se&&f.x.srv)side(trTop(f.x.srv),se,'listens on the well-known port');
+ if(out[f.A]&&!out[f.B])out[f.B]={el:other(out[f.A].el),src:'other end'};if(out[f.B]&&!out[f.A])out[f.A]={el:other(out[f.B].el),src:'other end'};
+ return out;}
+
+function trResolve(){if(!TR)return;const nd=trNdIdx();trPcefIdx();
+ TR.flows.forEach(f=>{f.res=trResFlow(f,nd);});
+ TR.plain.forEach(g=>{g.res=trResPlain(g,nd);});
+ const rows=new Map(),groups=new Map(),ends=new Map(),other=new Map();
+ const row=c=>{let r=rows.get(c);if(!r)rows.set(c,r={canon:c,pk:0,by:0,n:0,cls:{},pl:new Set(),conf:{},why:{},ends:new Map(),shared:false,plain:null});return r;};
+ const end=ip=>{let e=ends.get(ip);if(!e)ends.set(ip,e={ip,pk:0,by:0,links:new Set(),cls:new Set(),els:{},src:{},pl:{},vl:new Set()});return e;};
+ const grp=(r,lbl,o)=>{let G=groups.get(r.gk);if(!G)groups.set(r.gk,G={gk:r.gk,lbl,vlan:o.vlan,ifi:o.ifi,pk:0,by:0,n:0,cands:new Set(),cur:{},why:{},plain:!!o.ip});
+  G.pk+=o.pk;G.by+=o.by;G.n++;(r.cands||[]).forEach(c=>G.cands.add(c));r.links.forEach(c=>G.cands.add(c));trTally(G.cur,r.none?'none':r.links[0]||'',o.pk);if(r.why)trTally(G.why,r.why,o.pk);};
+ TR.flows.forEach(f=>{const r=f.res,lbl=trClsN(f),pl=(TR_CLS[f.cls]||{}).p||'cp';
+  if(r.conf==='off'){let o=other.get(lbl);if(!o)other.set(lbl,o={lbl,pk:0,by:0,n:0,why:r.why});o.pk+=f.pk;o.by+=f.by;o.n++;return;}
+  [f.A,f.B].forEach(ip=>{const e=end(ip);e.pk+=f.pk;e.by+=f.by;e.cls.add(lbl);trTally(e.pl,pl,f.pk);if(f.vlan)e.vl.add(f.vlan);r.links.forEach(l=>e.links.add(l));});
+  r.links.forEach(l=>{const R=row(l);R.pk+=f.pk;R.by+=f.by;R.n++;trTally(R.cls,lbl,f.pk);R.pl.add(pl);trTally(R.conf,r.conf,f.pk);if(r.why)trTally(R.why,r.why,f.pk);if(r.links.length>1)R.shared=true;
+   const E=trEnds(f,l,nd);[f.A,f.B].forEach(ip=>{const v=E[ip];if(!R.ends.has(ip)||(v&&!R.ends.get(ip)))R.ends.set(ip,v?v.el:null);if(v&&v.el){const e=end(ip);trTally(e.els,v.el,f.pk);e.src[v.el]=e.src[v.el]||v.src;}});});
+  if(r.conf!=='sure')grp(r,lbl,f);});
+ TR.plain.forEach(g=>{const r=g.res;r.links.forEach(l=>{const R=row(l);R.pk+=g.pk;R.by+=g.by;R.n++;trTally(R.cls,'Plain IP',g.pk);R.pl.add('up');trTally(R.conf,r.conf,g.pk);if(r.why)trTally(R.why,r.why,g.pk);
+   R.plain=R.plain||{ue:0,ip:0};R.plain.ue+=g.nUE;R.plain.ip+=g.nIP;});
+  grp(r,'Plain IP',g);});
+ TR.rows=[...rows.values()].sort((a,b)=>b.pk-a.pk);
+ TR.groups=[...groups.values()].sort((a,b)=>b.pk-a.pk);
+ TR.ends=ends;TR.other=[...other.values()].sort((a,b)=>b.pk-a.pk);
+ TR.nd=nd;
+ if(state.trSel&&!rows.has(state.trSel))state.trSel=null;}
+
+/* ---------- what is drawn ---------- */
+function trVar(c,pl){const ok=L=>L&&!L.isbus&&cupsOK(L);const pm=L=>L.plane==='both'||L.plane===pl;
+ const L0=LM[c];if(ok(L0)&&pm(L0))return c;const v=LINKS.find(L=>ND_CANON[L.id]===c&&ok(L)&&pm(L));if(v)return v.id;
+ if(ok(L0))return c;const w=LINKS.find(L=>ND_CANON[L.id]===c&&ok(L));return w?w.id:null;}
+function trShown(r){const s=new Set();r.pl.forEach(pl=>{const id=trVar(r.canon,pl);if(id)s.add(id);});return [...s];}
+function trElVar(el,pl){const E=EM[el];if(E&&elVisible(E))return el;const v=Object.keys(ND_ELALIAS).filter(k=>ND_ELALIAS[k].includes(el)&&EM[k]&&elVisible(EM[k]));
+ if(!v.length)return el;return v.find(k=>pl==='up'?/u$/.test(k):/c$/.test(k))||v[0];}
+function trCompute(lv){const on=new Set(),els=new Set(),hot=new Set(),hotEl=new Set(),sel=state.trHover||state.trSel;
+ if(TR)TR.rows.forEach(r=>trShown(r).forEach(id=>{on.add(id);const L=LM[id];[L.a,L.b].forEach(x=>{if(x&&x!=='bus')els.add(x);});if(sel===r.canon){hot.add(id);[L.a,L.b].forEach(x=>{if(x&&x!=='bus')hotEl.add(x);});}}));
+ const cont=S=>{if(['gnbdu','gnbcucp','gnbcuup'].some(c=>S.has(c)))S.add('gnb');};cont(els);cont(hotEl);
+ ELS.forEach(E=>{lv['el:'+E.id]=hotEl.has(E.id)?3:els.has(E.id)?(sel?1:2):0;});
+ LINKS.forEach(L=>{lv['if:'+L.id]=hot.has(L.id)?3:on.has(L.id)?(sel?1:2):0;});
+ return {lv,linkOn:on,elOn:els,hasF:true};}
+const gT=mk('g',{class:'trov'},svg);
+function trOverlay(){gT.innerHTML='';if(!TR||!state.trMode||state.view!=='arch')return;const sel=state.trHover||state.trSel;
+ TR.rows.forEach(r=>{const conf=trTop(r.conf)||'none';trShown(r).forEach(id=>{const o=LINK[id];if(!o||o.g.classList.contains('hidden'))return;const p=o.g.querySelector('path.v');if(!p)return;
+  const len=p.getTotalLength(),t=(LM[id].lp||.5)>.5?.3:.7,q=p.getPointAtLength(len*t),txt=trK(r.pk),w=txt.length*6.4+14;
+  const g=mk('g',{class:'trb c-'+conf+(sel===r.canon?' on':''),'data-tr':r.canon,transform:`translate(${q.x.toFixed(1)},${q.y.toFixed(1)})`},gT);
+  mk('rect',{x:-w/2,y:-8.5,width:w,height:17,rx:8.5},g);const tx=mk('text',{x:0,y:.5},g);tx.textContent=txt;
+  mk('title',{},g).textContent=`${trLbl(r.canon)}: ${trNum(r.pk)} packets · ${trB(r.by)} · ${TR_CONF[conf]?TR_CONF[conf][1]:''}`;});});}
+gT.addEventListener('click',ev=>{const b=ev.target.closest('[data-tr]');if(!b)return;ev.stopPropagation();state.trSel=b.dataset.tr;apply();trRender();
+ const tr=panel.querySelector(`tr[data-trr="${b.dataset.tr}"]`);if(tr)tr.scrollIntoView({block:'nearest'});});
+function trBox(ids){let x1=1e9,y1=1e9,x2=-1e9,y2=-1e9;
+ ids.forEach(id=>{const L=LM[id];if(!L)return;(L.pts||[]).forEach(([x,y])=>{x1=Math.min(x1,x);y1=Math.min(y1,y);x2=Math.max(x2,x);y2=Math.max(y2,y);});
+  [L.a,L.b].forEach(e=>{const E=EM[e];if(!E||E.kind==='bar'||!elVisible(E))return;x1=Math.min(x1,E.x);y1=Math.min(y1,E.y);x2=Math.max(x2,E.x+E.w);y2=Math.max(y2,E.y+E.h);});});
+ return x1>x2?null:{x1,y1,x2,y2};}
+function trFitTo(ids,mw,mh){const b=trBox(ids);if(!b)return;const pad=56;let w=b.x2-b.x1+2*pad,h=b.y2-b.y1+2*pad;const cx=(b.x1+b.x2)/2,cy=(b.y1+b.y2)/2;w=Math.max(w,mw);h=Math.max(h,mh);pdTween({x:cx-w/2,y:cy-h/2,w,h});}
+function trFit(){if(!TR||state.view!=='arch')return;const ids=new Set();TR.rows.forEach(r=>trShown(r).forEach(id=>ids.add(id)));if(ids.size)trFitTo([...ids],640,480);}
+
+/* ---------- modes ---------- */
+function trSync(){const b=$('#trbtn');if(b){b.classList.toggle('on',state.trMode);b.setAttribute('aria-pressed',state.trMode);b.classList.toggle('has',!!TR);}document.body.classList.toggle('trwide',state.trMode);}
+function trEnter(){if(state.procMode)pdClose();if(!state.trMode&&!trSavedVB)trSavedVB={...vb};state.trMode=true;state.sel=null;state.trReturn=false;state.pdReturn=null;if(state.view!=='arch')setView('arch');trSync();}
+function trExit(keep){if(!state.trMode)return;state.trMode=false;state.trHover=null;state.trReturn=!!(keep&&TR);trSync();}
+function trOpenPanel(){trEnter();apply();renderPanel();updateHash();}
+function trLeave(){trExit(false);apply();renderPanel();}
+function trClose(){if(trJob)trJob.cancel=true;trJob=null;TR=null;trErr=null;state.trSel=null;state.trHover=null;state.trReturn=false;const v=trSavedVB;trSavedVB=null;if(v&&state.view==='arch')pdTween(v);trExit(false);trSync();apply();renderPanel();}
+function trPick(){const i=document.createElement('input');i.type='file';i.accept='.pcap,.pcapng,.cap,.ntar,.gz';i.style.display='none';document.body.appendChild(i);
+ i.addEventListener('change',()=>{const f=i.files&&i.files[0];i.remove();if(f)trOpenFile(f);});i.click();}
+async function trIsCapture(f){if(/\.(pcap|pcapng|cap|ntar)(\.gz)?$/i.test(f.name)||/\.gz$/i.test(f.name))return true;
+ try{const h=new Uint8Array(await f.slice(0,4).arrayBuffer()),m=((h[0]<<24)|(h[1]<<16)|(h[2]<<8)|h[3])>>>0;return [0x0a0d0d0a,0xa1b2c3d4,0xd4c3b2a1,0xa1b23c4d,0x4d3cb2a1,0xa1b2cd34,0x34cdb2a1].includes(m)||(h[0]===0x1f&&h[1]===0x8b);}catch(e){return false;}}
+async function trOpenFile(f){if(!f)return;if(trJob)trJob.cancel=true;trErr=null;TR=null;state.trSel=null;state.trHover=null;trShowAllEnds=false;
+ const job=trJob={cancel:false,name:f.name,size:f.size,read:0,R:null};trEnter();apply();renderPanel();updateHash();
+ try{const R=await trRead(f,job);if(job.cancel||trJob!==job)return;TR=trFinish(R,f);trJob=null;trResolve();if(state.trMode)trFit();}
+ catch(e){if(trJob!==job)return;trJob=null;TR=null;trErr=String(e&&e.message||e);}
+ trSync();if(state.trMode){apply();renderPanel();}}
+function trProgress(){const j=trJob;if(!j||!state.trMode)return;const i=panel.querySelector('.trprog i');if(!i)return;const pc=j.size?Math.min(100,j.read/j.size*100):0;
+ i.style.width=pc.toFixed(1)+'%';panel.querySelector('.trpc').textContent=pc.toFixed(0)+' %';panel.querySelector('.trpk').textContent=trNum(j.R?j.R.pk:0);}
+
+/* ---------- panel ---------- */
+function trRender(){const keep=panel.dataset.tr?panel.scrollTop:0;panel.innerHTML=trViewHTML();panel.dataset.tr='1';panel.scrollTop=keep;}
+function trViewHTML(){
+ const head=`<div class="trtop"><h2>Trace analysis</h2><div class="trbtns">${TR||trJob||trErr?'<button data-ta="open">Open another…</button>':''}${TR?'<button data-ta="close" title="Discard the analysed capture">Close trace</button>':''}<button data-ta="leave" title="Back to the overview (the trace stays loaded)">✕</button></div></div>`;
+ if(trJob){const j=trJob,pc=j.size?Math.min(100,j.read/j.size*100):0;
+  return head+`<div class="trbusy"><div>Reading <b>${esc(j.name)}</b> in this browser…</div><div class="trprog"><i style="width:${pc.toFixed(1)}%"></i></div><div class="trbusyn"><span class="trpc">${pc.toFixed(0)} %</span> · <span class="trpk">${trNum(j.R?j.R.pk:0)}</span> packets</div><button data-ta="cancel">Cancel</button></div>`;}
+ if(!TR)return head+(trErr?`<div class="trerr"><b>Could not read the capture.</b> ${esc(trErr)}</div>`:'')+trIntroHTML();
+ return head+trResultHTML();}
+function trIntroHTML(){return `<p>Open a Wireshark capture to see which interfaces and network elements it contains – the map highlights them with packet counts.</p>
+ <div class="trdrop"><button class="trprimary" data-ta="open">Open capture…</button><span>or drop a .pcap, .pcapng or .gz file anywhere on the page</span></div>
+ <p class="trpriv"><b>Private by design:</b> the file is read in this browser only. Nothing is uploaded, stored, put in the link or included in “Save with data”; closing the trace or the page discards it.</p>
+ <h3>What it recognises</h3><ul class="trul">
+ <li><b>GTP-U</b> – S1-U, S5/S8-U, N3, N9, Gn, direct tunnel… told apart by the F-TEIDs that GTPv2-C, GTPv1-C and PFCP signal in the same capture</li>
+ <li><b>GTPv2-C</b> – S11, S5/S8, S4, S10, S3, S2b, N26 from the F-TEID interface types · <b>GTPv1-C</b> – Gn / Gp</li>
+ <li><b>PFCP</b> – N4, or Sxa / Sxb in a CUPS EPC, from the 3GPP Interface Type IEs</li>
+ <li><b>Diameter</b> over TCP or SCTP by application – Gx, Gy / Ro, Gz / Rf, Rx, S6a / S6d, S13, SWm, SWx, S6b, Cx / Sh, Sy, S9</li>
+ <li><b>RADIUS</b> on Gi / SGi / N6 · <b>IKEv2 / ESP</b> (SWu) · <b>SCTP</b>: S1AP, NGAP, X2AP, XnAP, F1AP, E1AP, SGsAP, NBAP</li>
+ <li><b>Plain IP</b> (Gi / SGi / N6) – recognised when its addresses also appear inside GTP-U or as Framed-IP-Address in Gx or RADIUS</li></ul>
+ <h3>How sure is each result?</h3><div class="trlegend">${trBadge('sure')} the protocol or explicit signalling identifies the interface<br>${trBadge('likely')} inferred – please check<br>${trBadge('manual')} assigned by you<br>${trBadge(null)} choose from the candidates</div>
+ <p class="ndmuted">Formats: pcap and pcapng (also with several capture interfaces), optionally gzip-compressed. Link types: Ethernet with VLAN / QinQ / MPLS, Linux cooked (SLL / SLL2), raw IP. Your <button class="ndlink" data-nd="menu">◆ Network data</button> names the elements and settles ambiguous cases.</p>`;}
+function trWhy(o){const k=trTop(o);const n=Object.keys(o).length;return k?esc(k)+(n>1?` <span class="trmore" title="${esc(Object.keys(o).filter(x=>x!==k).join('\n'))}">+${n-1}</span>`:''):'';}
+function trResultHTML(){const F=TR.file,dur=F.t1>F.t0?trDur(F.t1-F.t0):'',out=[];
+ out.push(`<div class="trsum"><div class="trfn" title="${esc(F.name)}">${esc(F.name)}</div><div>${trB(F.size)} · ${esc(F.fmt)}${F.gz?' · gzip':''} · ${trNum(F.pk)} packets · ${trB(F.by)}${dur?' · '+dur:''} · ${esc(F.lts.map(l=>TR_LT[l]||'link type '+l).join(', '))}</div>
+  ${F.ifs.length>1?`<div class="trifs">Capture interfaces: ${F.ifs.map((I,i)=>`<span>${esc(I.name||'interface '+(i+1))} <i>${trNum(I.pk)}</i></span>`).join('')}</div>`:''}</div>`);
+ if(F.cut)out.push(`<div class="trnote">The file ends in the middle of a record – it may be truncated. The part that could be read is analysed.</div>`);
+ out.push(`<p class="trpriv">Read in this browser only – not uploaded, not stored, not in links or saved files.</p>`);
+ const hid=TR.rows.filter(r=>!trShown(r).length),cups=hid.filter(r=>LM[r.canon]&&LM[r.canon].cups&&!state.cups),plane=TR.rows.filter(r=>trShown(r).some(id=>!linkVisible(LM[id])));
+ if(cups.length)out.push(`<div class="trnote">${cups.map(r=>esc(trShortN(r.canon))).join(' and ')} exist only in the CUPS view of the EPC. <button data-ta="cups">Switch EPC to CUPS</button></div>`);
+ if(plane.length)out.push(`<div class="trnote">${plane.map(r=>esc(trShortN(r.canon))).join(', ')} hidden by the plane filter in the toolbar.</div>`);
+ if(!ND)out.push(`<p class="ndmuted">Load your <button class="ndlink" data-nd="menu">◆ Network data</button> to name the elements and settle ambiguous cases.</p>`);
+ /* interfaces */
+ out.push(`<h3>Interfaces in this trace <span class="trh">${TR.rows.length}</span></h3>`);
+ if(TR.rows.length){out.push(`<table class="trt"><thead><tr><th>Interface</th><th>Protocols</th><th class="n">Packets</th><th class="n">Bytes</th><th>Evidence</th></tr></thead><tbody>`);
+  TR.rows.forEach(r=>{const sh=trShown(r),id=sh[0]||r.canon,L=LM[id]||LM[r.canon],a=EM[L.a],b=EM[L.b],conf=trTop(r.conf),mix=Object.keys(r.conf).length>1;
+   out.push(`<tr data-trr="${r.canon}" class="${state.trSel===r.canon?'on':''}"><td><button class="trif" data-sel="if:${id}" style="--lc:${lnColor(L)}"><span class="sw ${L.plane==='cp'?'cp':''}"></span>${esc(L.n)}</button><div class="trends">${esc(a?a.n:'')} – ${esc(b?b.n:'')}</div></td>
+    <td class="trproto">${Object.keys(r.cls).sort((x,y)=>r.cls[y]-r.cls[x]).map(esc).join('<br>')}${r.plain?`<div class="trends" title="Addresses also seen inside GTP-U or as Framed-IP-Address in Gx / RADIUS">${trNum(r.plain.ue)} matched · ${trNum(Math.max(0,r.plain.ip-r.plain.ue))} other addresses</div>`:''}</td>
+    <td class="n">${trNum(r.pk)}</td><td class="n">${trB(r.by)}</td><td>${trBadge(conf)}${mix?` <span class="trmore" title="${esc(Object.entries(r.conf).map(([k,v])=>(TR_CONF[k||'none']||TR_CONF.none)[1]+': '+trNum(v)+' packets').join('\n'))}">mixed</span>`:''}${r.shared?' <span class="trmore" title="The same traffic is counted on both interfaces of a combined node">shared</span>':''}<div class="trwhy">${trWhy(r.why)}</div></td></tr>`);});
+  out.push('</tbody></table>');}
+ else out.push('<p class="ndmuted">No mobile-network interface could be identified yet – see the decisions below.</p>');
+ /* decisions */
+ if(TR.groups.length){out.push(`<h3>Check and decide <span class="trh">${TR.groups.length}</span></h3><p class="ndmuted">Traffic not identified with certainty, grouped by protocol, VLAN and capture interface. A choice applies to the whole group and is forgotten when the trace is closed.</p><table class="trt trdec"><thead><tr><th>Traffic</th><th class="n">Packets</th><th>Interface</th></tr></thead><tbody>`);
+  TR.groups.forEach(G=>{const man=TR.manual[G.gk],cur=man!=null?man:trTop(G.cur)||'',auto=man==null&&cur?trTop(G.cur):null,ifn=trIfName(G.ifi);
+   const cand=[...G.cands].filter(c=>LM[c]);if(cur&&cur!=='none'&&!cand.includes(cur))cand.unshift(cur);
+   const pl=G.plain||/GTP-U|ESP/.test(G.lbl)?'up':'cp',all=[...new Set(LINKS.filter(L=>!L.isbus&&!L.bus&&!L.rp&&(L.plane===pl||L.plane==='both')&&!cand.includes(ND_CANON[L.id]||L.id)).map(L=>ND_CANON[L.id]||L.id))].filter(c=>LM[c]&&!cand.includes(c)).sort((x,y)=>trShortN(x).localeCompare(trShortN(y)));
+   const opt=c=>`<option value="${c}"${cur===c?' selected':''}>${esc(trLbl(c))}</option>`;
+   out.push(`<tr><td><b>${esc(G.lbl)}</b><div class="trends">${G.vlan?'VLAN '+esc(G.vlan):'no VLAN'}${ifn?' · '+esc(ifn):''} · ${G.plain?trNum(TR.plain.find(g=>g.res.gk===G.gk).nIP)+' addresses':G.n+' address pair'+(G.n>1?'s':'')}</div>${trTop(G.why)?`<div class="trwhy">${esc(trTop(G.why))}</div>`:''}</td><td class="n">${trNum(G.pk)}</td>
+    <td><select data-tg="${esc(G.gk)}" aria-label="Interface for ${esc(G.lbl)}"><option value="">${auto?'— automatic —':'— undecided —'}</option>${cand.map(opt).join('')}${all.length?`<optgroup label="Other interfaces">${all.map(opt).join('')}</optgroup>`:''}<option value="none"${cur==='none'?' selected':''}>Not a mobile-network interface</option></select>
+    <div>${trBadge(man!=null?'manual':auto?'likely':null)}</div></td></tr>`);});
+  out.push('</tbody></table>');}
+ /* elements and addresses */
+ const ends=[...TR.ends.values()].sort((a,b)=>b.pk-a.pk);
+ if(ends.length){const lim=trShowAllEnds?ends.length:Math.min(ends.length,60);
+  out.push(`<h3>Elements and addresses <span class="trh">${ends.length}</span></h3><table class="trt trends-t"><thead><tr><th>Element</th><th>Address</th><th>Name</th><th>Interfaces</th><th class="n">Packets</th></tr></thead><tbody>`);
+  ends.slice(0,lim).forEach(e=>{const el=trTop(e.els),pl=trTop(e.pl)||'cp',hits=trNdHits(TR.nd,e.ip),nm=[];
+   hits.forEach(h=>nm.push(`<span title="Network data${h.I.site?' · site '+esc(ndSiteName(h.I.site)):''}">◆ ${esc(ndInstName(h.I))}</span>`));
+   (TR.names.get(e.ip)||new Map()).forEach((k,n)=>nm.push(`<span title="${esc(k)}">${esc(n)}</span>`));
+   const cand=!el&&e.links.size?[...new Set([...e.links].flatMap(l=>[LM[l].a,LM[l].b]))].filter(x=>EM[x]).map(x=>EM[x].n).join(' or '):'';
+   const ev=el?trElVar(el,pl):null;
+   out.push(`<tr><td>${ev&&EM[ev]?`<button class="ndlink" data-sel="el:${ev}" title="${esc(e.src[el]||'')}">${esc(EM[ev].n)}</button>`:`<span class="ndmuted">${cand?esc(cand):'?'}</span>`}</td><td class="ip">${esc(e.ip)}</td><td class="trnm">${nm.join('<br>')}</td>
+    <td>${esc(trLinkNames(e.links))||`<span class="ndmuted">${esc([...e.cls].join(', '))}</span>`}</td><td class="n">${trNum(e.pk)}</td></tr>`);});
+  out.push('</tbody></table>');if(ends.length>60)out.push(`<p><button class="ndlink" data-ta="all">${trShowAllEnds?'Show the first 60':'Show all '+trNum(ends.length)}</button></p>`);}
+ if(TR.ue.size)out.push(`<p class="ndmuted">${trNum(TR.ue.size)}${TR.ueFull?'+':''} user-plane addresses were seen inside GTP-U or as Framed-IP-Address in Gx / RADIUS. They are kept in memory only to recognise plain-IP traffic and are not listed.</p>`);
+ /* not mapped */
+ const nm=[];TR.other.forEach(o=>nm.push([o.lbl,o.pk,o.by,o.why]));
+ TR.nonip.forEach((v,k)=>nm.push([k,v.pk,v.by,'Not IP']));TR.infra.forEach((v,k)=>nm.push([k,v.pk,v.by,'Network infrastructure protocol']));TR.unsup.forEach((v,k)=>nm.push([k,v.pk,v.by,'Link type not supported']));
+ if(TR.trunc)nm.push(['Truncated packets',TR.trunc,0,'Shorter than their headers (snap length?)']);if(TR.bad)nm.push(['Malformed packets',TR.bad,0,'']);if(TR.fragOrph)nm.push(['IP fragments without their first fragment',TR.fragOrph,0,'']);
+ if(nm.length){out.push(`<h3>Not mapped</h3><table class="trt"><thead><tr><th>Traffic</th><th class="n">Packets</th><th class="n">Bytes</th></tr></thead><tbody>`);
+  nm.sort((a,b)=>b[1]-a[1]).forEach(([l,p,b,w])=>out.push(`<tr><td>${esc(l)}${w?`<div class="trends">${esc(w)}</div>`:''}</td><td class="n">${trNum(p)}</td><td class="n">${b?trB(b):''}</td></tr>`));out.push('</tbody></table>');}
+ out.push(trDetailsHTML());
+ out.push(`<p class="ndmuted trlim">Not decoded: Diameter over TLS (port 5868) or DTLS, HTTP/2 SBI, SIP, IPsec payloads, zstd / lz4-compressed pcapng. The first 16 kB of each Diameter message are decoded; user-plane payload is counted, never kept. No subscriber identities (IMSI, MSISDN, user names) are read.</p>`);
+ return out.join('');}
+function trDetailsHTML(){const by=new Map();TR.flows.forEach(f=>{const k=trClsN(f);let e=by.get(k);if(!e)by.set(k,e={k,pk:0,by:0,n:0,m:{},rej:0,err:0,g:0,h85:0,h84:0,ipcan:{},rat:{},rat3:{},scx:{},ft:{},ty:{}});
+  e.pk+=f.pk;e.by+=f.by;e.n++;for(const m in f.m)trTally(e.m,m,f.m[m]);const x=f.x;e.rej+=x.rej||0;e.err+=x.err||0;e.g+=x.g||0;e.h85+=x.h85||0;e.h84+=x.h84||0;
+  for(const q in x.ipcan||{})trTally(e.ipcan,TR_IPCAN[q]||q,x.ipcan[q]);for(const q in x.ft||{})trTally(e.ft,TR_FTEID_N[q]||q,x.ft[q]);for(const q in x.ty||{})trTally(e.ty,TR_PF3[q]?TR_PF3[q][0]:q,x.ty[q]);
+  for(const q in x.scx||{})trTally(e.scx,TR_SCX[q]?TR_SCX[q][0]:q,x.scx[q]);
+  for(const q in x.rat||{})trTally(f.cls==='radius'?e.rat3:e.rat,(f.cls==='radius'?TR_RAT3[q]:TR_RATD[q])||q,x.rat[q]);});
+ TR.plain.forEach(g=>{let e=by.get('Plain IP');if(!e)by.set('Plain IP',e={k:'Plain IP',pk:0,by:0,n:0,m:{},rej:0,err:0,g:0,h85:0,h84:0,ipcan:{},rat:{},rat3:{},scx:{},ft:{},ty:{}});e.pk+=g.pk;e.by+=g.by;e.n++;for(const q in g.pr)trTally(e.m,q,g.pr[q]);});
+ if(!by.size)return '';
+ const list=(o,lim)=>Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,lim||12).map(([k,v])=>`${esc(k)} <i>${trNum(v)}</i>`).join(' · ');
+ return `<details class="trdet"><summary>Protocol details</summary>${[...by.values()].sort((a,b)=>b.pk-a.pk).map(e=>`<div class="trdp"><b>${esc(e.k)}</b> <span class="ndmuted">${trNum(e.pk)} packets · ${trB(e.by)} · ${e.n} ${e.k==='Plain IP'?'group':'flow'}${e.n>1?'s':''}</span>
+  ${Object.keys(e.m).length?`<div>${list(e.m)}</div>`:''}${e.g?`<div>G-PDU <i>${trNum(e.g)}</i>${e.h85?` · PDU Session Container <i>${trNum(e.h85)}</i>`:''}${e.h84?` · NR RAN Container <i>${trNum(e.h84)}</i>`:''}</div>`:''}
+  ${e.rej?`<div class="trbad">Rejected responses: ${trNum(e.rej)}</div>`:''}${e.err?`<div class="trbad">Answers with Result-Code ≥ 3000: ${trNum(e.err)}</div>`:''}
+  ${Object.keys(e.ft).length?`<div>F-TEID types: ${list(e.ft,20)}</div>`:''}${Object.keys(e.ty).length?`<div>3GPP Interface Types: ${list(e.ty,20)}</div>`:''}
+  ${Object.keys(e.ipcan).length?`<div>IP-CAN-Type: ${list(e.ipcan)}</div>`:''}${Object.keys(e.rat).length?`<div>RAT-Type: ${list(e.rat)}</div>`:''}${Object.keys(e.rat3).length?`<div>3GPP-RAT-Type: ${list(e.rat3)}</div>`:''}${Object.keys(e.scx).length?`<div>Service-Context-Id: ${list(e.scx)}</div>`:''}</div>`).join('')}</details>`;}
+
+/* sections in the element and interface panels */
+function trBackHTML(){return state.trReturn&&TR?`<div class="pdnav"><button data-ta="back">← Back to trace analysis</button><span></span></div>`:'';}
+function trIfHTML(L){if(!TR)return '';const c=ndCanon(L),r=TR.rows.find(x=>x.canon===c);if(!r)return '';const conf=trTop(r.conf),C=LM[c];
+ const side={};r.ends.forEach((el,ip)=>{const k=el||'?';(side[k]||(side[k]=[])).push(ip);});
+ return `<h3 class="trh3">In the trace <span>${esc(TR.file.name)}</span></h3><div class="trbox"><div>${trNum(r.pk)} packets · ${trB(r.by)} · ${trBadge(conf)}</div><div class="trwhy">${trWhy(r.why)}</div>
+  ${Object.entries(side).map(([el,ips])=>`<div class="trside"><b>${esc(el==='?'?(C?EM[C.a].n+' or '+EM[C.b].n:'?'):(EM[el]?EM[el].n:el))}</b> ${ips.slice(0,12).map(ip=>`<code>${esc(ip)}</code>`).join(' ')}${ips.length>12?` <i>+${ips.length-12}</i>`:''}</div>`).join('')}
+  ${r.plain?`<div class="ndmuted">Plain IP: ${trNum(r.plain.ip)} addresses, ${trNum(r.plain.ue)} of them also seen inside GTP-U or in Gx / RADIUS</div>`:''}</div>`;}
+function trElHTML(E){if(!TR)return '';const m=el=>el===E.id||(ND_ELALIAS[E.id]||[]).includes(el)||(ND_ELALIAS[el]||[]).includes(E.id);
+ const list=[...TR.ends.values()].filter(e=>{const el=trTop(e.els);return el&&m(el);}).sort((a,b)=>b.pk-a.pk);if(!list.length)return '';
+ return `<h3 class="trh3">In the trace <span>${esc(TR.file.name)}</span></h3><div class="trbox"><table class="trt"><tbody>${list.slice(0,20).map(e=>`<tr><td class="ip">${esc(e.ip)}</td><td>${esc(trLinkNames(e.links))}</td><td class="trnm">${[...(TR.names.get(e.ip)||new Map()).keys()].map(esc).join('<br>')}</td><td class="n">${trNum(e.pk)}</td></tr>`).join('')}</tbody></table>${list.length>20?`<div class="ndmuted">+${list.length-20} more in the trace panel</div>`:''}</div>`;}
+function trCtaHTML(){return TR?`<div class="pdcta trcta"><button data-ta="back">⇅ Trace analysis</button><span>${esc(TR.file.name)} – ${TR.rows.length} interface${TR.rows.length===1?'':'s'} found</span></div>`
+ :`<div class="pdcta trcta"><button data-ta="open">⇅ Trace analysis</button><span>Open a pcap / pcapng capture and see its interfaces and elements on the map – read in this browser, never uploaded</span></div>`;}
+
+/* ---------- events ---------- */
+panel.addEventListener('click',ev=>{const b=ev.target.closest('[data-ta]');
+ if(b){ev.stopPropagation();const a=b.dataset.ta;
+  if(a==='open')trPick();else if(a==='close')trClose();else if(a==='leave')trLeave();
+  else if(a==='cancel'){if(trJob)trJob.cancel=true;trJob=null;renderPanel();}
+  else if(a==='back'){state.sel=null;if(TR&&!trSavedVB)trSavedVB={...vb};trOpenPanel();}
+  else if(a==='cups'){const c=document.querySelector('[data-cups="1"]');if(c)c.click();}
+  else if(a==='all'){trShowAllEnds=!trShowAllEnds;trRender();}
+  return;}
+ if(!state.trMode)return;const tr=ev.target.closest('tr[data-trr]');
+ if(tr&&!ev.target.closest('button,select,a,code')){const c=tr.dataset.trr;state.trSel=state.trSel===c?null:c;apply();trRender();const R=TR&&TR.rows.find(r=>r.canon===c);if(state.trSel&&R)trFitTo(trShown(R),560,420);}});
+panel.addEventListener('change',ev=>{const s=ev.target.closest('select[data-tg]');if(!s||!TR)return;const gk=s.dataset.tg;if(s.value==='')delete TR.manual[gk];else TR.manual[gk]=s.value;trResolve();apply();trRender();});
+panel.addEventListener('mouseover',ev=>{if(!state.trMode||!TR)return;const tr=ev.target.closest('tr[data-trr]'),c=tr?tr.dataset.trr:null;if(c!==state.trHover){state.trHover=c;apply();}});
+panel.addEventListener('mouseleave',()=>{if(state.trHover){state.trHover=null;apply();}});
+$('#trbtn').addEventListener('click',()=>{if(state.trMode)trLeave();else trOpenPanel();});
+TR_ON=true;
 
 function sizeMain(){document.documentElement.style.setProperty('--hdr',($('#hdr').offsetHeight+$('#toolbar').offsetHeight)+'px');}
 window.addEventListener('resize',sizeMain);

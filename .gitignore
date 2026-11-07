@@ -8,3 +8,11 @@ Thumbs.db
 *.netdata.*
 *-with-data.html
 private/
+
+# Packet captures contain real addresses and subscriber traffic – never commit
+*.pcap
+*.pcapng
+*.cap
+*.ntar
+*.pcap.gz
+*.pcapng.gz

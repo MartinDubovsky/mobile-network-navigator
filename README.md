@@ -1,14 +1,15 @@
 # Mobile Network Navigator
 
-**Version 2026.11.07.1** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.07.2** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
 It is meant for network engineers who need to get their bearings quickly while troubleshooting or discussing a topic with colleagues.
 
-- **File:** `index.html` (about 500 KB) – the whole application
+- **File:** `index.html` (about 650 KB) – the whole application
 - **Online:** https://martindubovsky.github.io/mobile-network-navigator/ (once GitHub Pages is enabled for this repository)
 - **Dependencies:** none – no external scripts, fonts or network access; works offline from disk
+- **Your captures:** a pcap / pcapng opens in the tool and shows its interfaces and elements on the map – read in the browser, never uploaded (see [Trace analysis](#trace-analysis))
 - **Your own IP plan:** can be loaded from a local CSV/JSON file and is shown in the element and interface details – it never becomes part of this repository (see [Network data](#network-data-your-own-ip-addresses))
 - **Browsers:** current Chrome, Edge, Firefox or Safari (uses CSS `color-mix()`: Chrome/Edge 111+, Firefox 113+, Safari 16.2+)
 
@@ -24,7 +25,7 @@ It is meant for network engineers who need to get their bearings quickly while t
 
 ## Views
 
-The top bar is two rows at 1920 px width: title + version, generation chips and view tabs on the first row; search, plane toggles, 5GC view, EPC view, protocol filter, **▶ Procedures**, network data and theme on the second. On narrower screens it wraps.
+The top bar is two rows at 1920 px width: title + version, generation chips and view tabs on the first row; search, plane toggles, 5GC view, EPC view, protocol filter, **▶ Procedures**, **⇅ Trace**, network data and theme on the second. On narrower screens it wraps.
 
 | View | What it shows |
 |---|---|
@@ -155,6 +156,42 @@ Every interface panel has a **Message flows** section with sequence diagrams of 
 - **Deep link:** `#proc=<id>`, optionally `&step=<n>` (message number), e.g. `index.html#proc=nr-pdu&step=12`; `#procedures` opens the list.
 
 The flows follow the clauses named under each title (TS 23.401, 23.502, 23.060, 23.018, 23.012, 23.009, 23.205, 23.216, 23.272, 23.402, 25.931, 37.340 and the protocol specs) for the common case – non-roaming, no relocation of SGW / AMF / UPF – and show the IEs that matter when reading a trace. Optional or conditional steps are dashed and marked `opt`.
+
+## Trace analysis
+
+**⇅ Trace** in the toolbar (or the link on the overview page, or dropping a file anywhere on the page) opens a Wireshark capture and shows which interfaces and network elements it contains: the map highlights the interfaces with their packet counts and dims everything else, and the panel lists the results.
+
+**Private by design.** The file is read in this browser only, as a stream – it is never uploaded, stored (not in `localStorage` either), put in the link or included in “Save with data”. **Close trace**, or closing the page, discards it. No subscriber identities (IMSI, MSISDN, user names, Subscription-Id) are read; UE addresses are kept in memory only to recognise plain-IP traffic and are shown as counts. `.gitignore` excludes capture files (`*.pcap`, `*.pcapng`, `*.cap`, `*.ntar`, also gzipped).
+
+**Formats:** pcap (µs and ns, either byte order) and pcapng with several capture interfaces (their names are shown, and decisions can be made per capture interface – useful for probes that split traffic over several ports), optionally gzip-compressed (gzip needs Safari 16.4+ or any current Chrome, Edge or Firefox). Link types Ethernet (with 802.1Q / QinQ VLANs, MPLS, PPPoE), Linux cooked SLL / SLL2, raw IP and loopback; IPv4 and IPv6 with extension headers and fragments. Large files are read as a stream: about 700 000 packets per second in our tests, with memory bounded because user-plane traffic is counted, not kept.
+
+**How each interface is identified** – from the traffic itself, in this order:
+
+| Traffic | Evidence | Result |
+|---|---|---|
+| GTP-U (UDP 2152) | Both addresses signalled in the same capture: F-TEID interface type in GTPv2-C (TS 29.274 §8.22, e.g. *S1-U eNodeB*, *S5/S8 PGW GTP-U*), GSN addresses in GTPv1-C Create PDP Context (with the Direct Tunnel flag for the RNC), local F-TEID / Outer Header Creation with the 3GPP Interface Type in PFCP (TS 29.244 §8.2.118) | S1-U, S5/S8, S4, S12, S11-U, S2b, Gn, direct tunnel, N3, N9 – **certain**; one end signalled – **likely** |
+| | PDU Session Container extension header | N3 (or N9) – **likely** |
+| GTPv1-C (UDP 2123) | the protocol | Gn / Gp – **certain** |
+| GTPv2-C (UDP 2123) | F-TEID interface types of both ends | S11, S5/S8, S4, S3, S10, N26, S2b – **certain**; SRVCC messages → Sv |
+| PFCP (UDP 8805) | 3GPP Interface Types in the session rules: N3 / N6 / N9… → N4; S1-U, S11-U, S12, S4-U → Sxa; SGi, Gn/Gp-U, S2b-U → Sxb; both → combined SGW-U / PGW-U | **certain**; QFI only → N4 **likely** |
+| Diameter (TCP / SCTP 3868) | Application-Id; Gx: IP-CAN-Type 3GPP-EPS / Non-3GPP-EPS → P-GW, 3GPP-GPRS → GGSN; Credit-Control / Accounting: Service-Context-Id 32260 / 32275 → Ro / Rf, 32251 → Gy / Gz (P-GW or GGSN from the same node’s Gx); S6a / S6d: the S6a/S6d-Indicator of the ULR; Rx, S13, SWm, SWx, S6b, Cx / Sh, Sy, S9 by application | **certain**, or **likely** where the deciding AVP is not in the capture |
+| RADIUS (1812 / 1813 / 3799) | 3GPP-RAT-Type (TS 29.061): E-UTRAN → SGi, NR → N6, UTRAN / GERAN → Gi | **likely** |
+| Plain IP | its addresses also appear inside GTP-U, or as Framed-IP-Address in Gx CCR or RADIUS | SGi, Gi or N6 – **likely** |
+| SCTP | PPID or port: S1AP, NGAP, XnAP, F1AP, E1AP, SGsAP, NBAP (X2AP: LTE or EN-DC X2) | **certain** |
+| IKEv2 / ESP | the protocol | SWu – **likely** (RAN backhaul IPsec looks the same) |
+
+Messages are re-assembled per TCP direction (retransmissions are not counted twice); the first 16 kB of each Diameter message are decoded. Element roles come from the same evidence (the F-TEID owner, the sender of Session Establishment or CCR requests, the side on the well-known SCTP port), and names from Diameter Origin-Host, PFCP Node ID and RADIUS NAS-Identifier.
+
+**The panel:**
+- **Interfaces in this trace** – packets, bytes, protocols and the evidence (**✔ certain**, **◐ likely**, **✎ assigned**). Hovering a row highlights it on the map; clicking zooms to it; the interface name opens its details, where **In the trace** shows the addresses on each side (with **← Back to trace analysis**).
+- **Check and decide** – traffic that is not certain, grouped by protocol, VLAN and capture interface, with the reason and a selector of candidate interfaces (or *Not a mobile-network interface*). A choice assigns the whole group and is forgotten with the trace.
+- **Elements and addresses** – every address with its element, names (from [network data](#network-data-your-own-ip-addresses) and from the protocols) and interfaces; element panels list their addresses from the trace.
+- **Not mapped** – Diameter applications not drawn on the map, non-IP frames (ARP, LLDP…), routing protocols (OSPF, BFD, BGP…), truncated or malformed packets; **Protocol details** – message counts, rejected responses and error answers, F-TEID and 3GPP interface types, IP-CAN-Type, RAT-Type, Service-Context-Id.
+- Sxa / Sxb exist only in the CUPS view of the EPC; the panel offers to switch.
+
+**Network data** makes the results more precise: an address listed on an interface in your IP plan decides traffic that the protocols leave open (both ends listed – certain, one end or the interface’s VLAN – likely), and instance names are shown next to the addresses.
+
+**Not decoded:** Diameter over TLS (port 5868) or DTLS, HTTP/2 SBI, SIP, IPsec payloads, zstd / lz4-compressed pcapng. These are listed but not identified.
 
 ## Network data (your own IP addresses)
 
@@ -397,6 +434,12 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.07.2
+- **Trace analysis** (**⇅ Trace** in the toolbar, or drop a file on the page): open a Wireshark capture – pcap or pcapng, also gzip-compressed and with several capture interfaces – and see which interfaces and elements it contains. The map highlights them with packet counts; the panel lists every interface with its evidence, the elements with their addresses and names, and the protocol details.
+- Interfaces are identified from the traffic itself: GTP-U is told apart (S1-U, S5/S8-U, N3, N9, Gn, direct tunnel…) by the F-TEIDs signalled in GTPv2-C, GTPv1-C and PFCP of the same capture; PFCP by its 3GPP Interface Type IEs (N4, Sxa, Sxb); Diameter by application and AVPs (Gx with IP-CAN-Type for P-GW or GGSN, Gy / Ro and Gz / Rf by Service-Context-Id, S6a / S6d by the ULR flag, Rx, S13, SWm, SWx, S6b, Cx / Sh, Sy, S9); RADIUS by 3GPP-RAT-Type; plain IP on Gi / SGi / N6 by its addresses also seen inside GTP-U or as Framed-IP-Address in Gx / RADIUS; S1AP, NGAP, XnAP, F1AP, E1AP, SGsAP and NBAP by SCTP PPID or port.
+- Every result says how sure it is – **certain**, **likely** or **undecided** – and why. Undecided and likely traffic is grouped by protocol, VLAN and capture interface, and one choice assigns a whole group. Your network data, when loaded, names the elements and settles ambiguous cases.
+- Private by design: the capture is read in the browser as a stream (about 700 000 packets per second in our tests) and never uploaded, stored, put in the link or in “Save with data”. No subscriber identities are read. `.gitignore` now also excludes capture files.
 
 ### 2026.11.07.1
 - **16 new end-to-end procedures** (39 in total): combined GPRS / IMSI attach over Gs; 3G PS service request and 3G CS mobile-originated call with Iu UP; HSPA RAB on HS-DSCH and E-DCH; LTE PDN connectivity (IMS APN), tracking area update with MME change and S1 handover; EN-DC secondary node release; 5G N2 handover, network-triggered service request, PDU session release and deregistration; Wi-Fi → LTE handover and Wi-Fi calling detach; CS fallback mobile-terminated call and SRVCC LTE → UTRAN.
