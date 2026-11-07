@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.07** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.07.1** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
@@ -132,16 +132,18 @@ Every interface panel has a **Message flows** section with sequence diagrams of 
 
 ## End-to-end procedures
 
-**▶ Procedures** in the toolbar (or the link on the overview page) opens 23 multi-node call flows across the RAN and the core – the step-by-step view of what happens between UE, RAN, core and policy nodes, with the interface every message travels on.
+**▶ Procedures** in the toolbar (or the link on the overview page) opens 39 multi-node call flows across the RAN and the core, grouped by generation – the step-by-step view of what happens between UE, RAN, core and policy nodes, with the interface every message travels on.
 
 | Generation | Procedures (ID) |
 |---|---|
-| 4G LTE / EPC | LTE initial attach (`lte-attach`), service request (`lte-sr`), network-triggered service request / paging (`lte-paging`), S1 release (`lte-s1rel`), X2 handover (`lte-x2ho`), VoLTE dedicated bearer (`lte-volte-bearer`), UE-initiated detach (`lte-detach`), CS fallback MO call to UTRAN (`csfb-mo`) |
-| 5G NSA | EN-DC secondary node addition with E-RAB modification (`endc-add`) |
-| 5G SA | Initial registration (`nr-reg`), PDU session establishment (`nr-pdu`), service request (`nr-sr`), AN release (`nr-anrel`), Xn handover (`nr-xnho`) |
-| 3G | GPRS attach and PDP context activation (`umts-attach-pdp`) |
-| 2G | GSM location update (`gsm-lu`), mobile-originated call (`gsm-mo-call`), mobile-terminated call with paging (`gsm-mt-call`), call release (`gsm-release`), inter-BSC handover (`gsm-ho`), GPRS attach and PDP context activation in A/Gb mode (`gprs-attach-pdp`) |
-| Wi-Fi | Wi-Fi calling attach via ePDG (`wifi-attach`), handover LTE → Wi-Fi (`lte-wifi-ho`) |
+| 2G | GSM location update (`gsm-lu`), mobile-originated call (`gsm-mo-call`), mobile-terminated call with paging (`gsm-mt-call`), call release (`gsm-release`), inter-BSC handover (`gsm-ho`), GPRS attach and PDP context activation in A/Gb mode (`gprs-attach-pdp`), combined GPRS / IMSI attach over Gs (`gprs-combined-attach`) |
+| 3G | GPRS attach and PDP context activation (`umts-attach-pdp`), PS service request with RAB re-establishment (`umts-ps-sr`), CS mobile-originated call with MSC Server, CS-MGW and Iu UP (`umts-mo-call`) |
+| HSPA | Packet data RAB on HS-DSCH and E-DCH (`hspa-rab`) |
+| 4G LTE / EPC | Initial attach (`lte-attach`), PDN connectivity e.g. IMS APN (`lte-pdn`), VoLTE dedicated bearer (`lte-volte-bearer`), service request (`lte-sr`), paging (`lte-paging`), S1 release (`lte-s1rel`), tracking area update with MME change (`lte-tau-mme`), X2 handover (`lte-x2ho`), S1 handover (`lte-s1ho`), detach (`lte-detach`) |
+| 5G NSA | EN-DC secondary node addition (`endc-add`) and release (`endc-rel`) |
+| 5G SA | Initial registration (`nr-reg`), PDU session establishment (`nr-pdu`), service request (`nr-sr`), network-triggered service request (`nr-paging`), AN release (`nr-anrel`), Xn handover (`nr-xnho`), N2 handover (`nr-n2ho`), PDU session release (`nr-pdu-rel`), deregistration (`nr-dereg`) |
+| Wi-Fi | Wi-Fi calling attach via ePDG (`wifi-attach`), handover LTE → Wi-Fi (`lte-wifi-ho`), handover Wi-Fi → LTE (`wifi-lte-ho`), Wi-Fi calling detach (`wifi-detach`) |
+| Interworking | CS fallback mobile-originated (`csfb-mo`) and mobile-terminated call (`csfb-mt`), SRVCC LTE → UTRAN (`srvcc`) |
 
 - **On the map:** opening a procedure widens the panel, zooms the map to the area involved and dims everything else. Hovering a procedure in the list previews its nodes.
 - **Step through it:** click a message, use **◀ Prev / Next ▶** or the `←` / `→` keys, or **▷ Play** (one step after the other; each step waits until the dot has reached its destination). The current message is highlighted on the map – its interface(s) and both ends, a label with the message name and a dot that travels along the path in the message’s direction (once per step while playing, repeated when you step by hand) (NAS between UE and MME runs over LTE-Uu and S1-MME, an SBI call over the two NF stubs and the bus).
@@ -152,7 +154,7 @@ Every interface panel has a **Message flows** section with sequence diagrams of 
 - **⤢ Larger** opens the diagram in a wide window; **Copy as text** copies it with interfaces and, if loaded, addresses (`15. MME -> SGW: [GTPv2-C] Create Session Request {S11} … [192.0.2.21 -> 198.51.100.5 port 2123]`).
 - **Deep link:** `#proc=<id>`, optionally `&step=<n>` (message number), e.g. `index.html#proc=nr-pdu&step=12`; `#procedures` opens the list.
 
-The flows follow the clauses named under each title (TS 23.401, 23.502, 23.060, 23.018, 23.012, 23.009, 23.272, 23.402, 37.340 and the protocol specs) for the common case – non-roaming, no relocation of SGW / AMF / UPF – and show the IEs that matter when reading a trace. Optional or conditional steps are dashed and marked `opt`.
+The flows follow the clauses named under each title (TS 23.401, 23.502, 23.060, 23.018, 23.012, 23.009, 23.205, 23.216, 23.272, 23.402, 25.931, 37.340 and the protocol specs) for the common case – non-roaming, no relocation of SGW / AMF / UPF – and show the IEs that matter when reading a trace. Optional or conditional steps are dashed and marked `opt`.
 
 ## Network data (your own IP addresses)
 
@@ -395,6 +397,11 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.07.1
+- **16 new end-to-end procedures** (39 in total): combined GPRS / IMSI attach over Gs; 3G PS service request and 3G CS mobile-originated call with Iu UP; HSPA RAB on HS-DSCH and E-DCH; LTE PDN connectivity (IMS APN), tracking area update with MME change and S1 handover; EN-DC secondary node release; 5G N2 handover, network-triggered service request, PDU session release and deregistration; Wi-Fi → LTE handover and Wi-Fi calling detach; CS fallback mobile-terminated call and SRVCC LTE → UTRAN.
+- The procedure list is now grouped in generation order – 2G, 3G, HSPA, 4G, 5G NSA, 5G SA, Wi-Fi, Interworking – and ordered inside each group from registration to sessions, mobility and release. CS fallback moved to Interworking.
+- User data rows that cross several interfaces are tagged **IP** instead of GTP-U.
 
 ### 2026.11.07
 - **2G end-to-end procedures** (6 new, 23 in total): GSM location update, mobile-originated call, mobile-terminated call with HLR interrogation and paging, call release, inter-BSC handover, and GPRS attach with PDP context activation in A/Gb mode.
