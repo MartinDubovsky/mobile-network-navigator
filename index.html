@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="version" content="2026.11.06.2">
+<meta name="version" content="2026.11.07">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mobile Network Navigator · 2G · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
@@ -422,9 +422,9 @@ body.nddrop::after{content:'Drop CSV / JSON network data to load it';position:fi
 <script>
 'use strict';
 const PRISTINE_DOC=document.documentElement.cloneNode(true); /* clean copy of the tool, used by “Save tool + data as one HTML file” */
-const VERSION = '2026.11.06.2';
+const VERSION = '2026.11.07';
 /* release history – shown when the version number is clicked; keep in step with the README changelog */
-const RELEASES = [{"v": "2026.11.06.2", "items": ["**End-to-end procedures – Play:** the dot now travels once per step and stays at the destination; the next step starts only after it has arrived (at least 1.7 s per step, longer for long paths). Stepping by hand still repeats the animation."]},{"v": "2026.11.06.1", "items": ["**End-to-end procedures – NAS messages made explicit:** a NAS message carried inside an RRC, S1AP, NGAP or RANAP message is now named on that message (e.g. RRC Connection Setup Complete and INITIAL UE MESSAGE with **NAS: Attach Request + PDN Connectivity Request**, INITIAL CONTEXT SETUP REQUEST and RRC Connection Reconfiguration with **NAS: Attach Accept + Activate Default EPS Bearer Context Request**). Before, these were only mentioned in the parameter text. NAS messages that RRC / S1AP / NGAP / RANAP only relay stay one arrow UE ↔ core; the rule is stated in each flow.", "NAS layer tags are now precise: **EMM / ESM** (4G), **5GMM** (5G), **MM / CC / GMM / SM** (3G) instead of a generic NAS tag. Attach Complete is named with its ESM message (Activate Default EPS Bearer Context Accept).", "Added the optional **Identity Request / Response** to LTE attach, 5G registration and 3G attach, and a note on the optional EIR check (S13) in LTE attach. In UTRAN the first NAS message (CM Service Request, GPRS Attach Request) is shown per hop: RRC Initial Direct Transfer, then RANAP INITIAL UE MESSAGE.", "RRC IE names corrected: LTE RRC Connection Reconfiguration carries NAS in **dedicatedInfoNASList**, NR RRCReconfiguration in **dedicatedNAS-MessageList** (also fixed in the LTE-Uu message flow)."]},{"v": "2026.11.06", "items": ["**End-to-end procedures** (▶ Procedures in the toolbar): 17 multi-node call flows – LTE attach, service request, paging, S1 release, X2 handover, VoLTE dedicated bearer, detach, CS fallback, EN-DC secondary node addition, 5G registration, PDU session, service request, AN release, Xn handover, 3G attach + PDP context, Wi-Fi calling attach and LTE → Wi-Fi handover – with the interface of every message.", "**Map integration:** the map zooms to the procedure and dims everything else; stepping through the messages (click, ← / →, Play) highlights each hop and animates it along its path. Works in the CUPS and reference-point views.", "**IP addresses in the flows:** with network data loaded, pick the instance of each node above its lane and every message shows source → destination address and port.", "Element and interface panels list the procedures they appear in; deep links `#proc=<id>&step=<n>`; copy as text and larger view."]},{"v": "2026.11.05.9", "items": ["**Wi-Fi access via ePDG** (untrusted non-3GPP, VoWiFi): new **ePDG** and **3GPP AAA** elements with **SWu**, **SWm**, **SWx**, **S2b** and **S6b** (S2b-C / S2b-U and S6b to the PGW-C in the CUPS view), a **Wi-Fi** generation chip, message flows (IKEv2 + EAP-AKA tunnel set-up, S2b PDN connection, LTE ↔ Wi-Fi handover, Diameter procedures) and two end-to-end stacks.", "Map: the 5G rows moved down to make room below the EPC; the canvas is now 1900 × 1400."]},{"v": "2026.11.05.8", "items": ["**Network data:** site `*` means the instance belongs to every site – it is shown whichever sites are selected and is not listed as a separate site in the site filter."]},{"v": "2026.11.05.7","items": ["**Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet."]},{"v": "2026.11.05.6","items": ["**Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.","Addresses written with a prefix length (`10.2.7.2/26`) are treated as one address, not as the whole subnet: search no longer matches other addresses of that subnet, and the duplicate check compares the address part. CIDR blocks with zero host bits stay ranges."]},{"v": "2026.11.05.5","items": ["**Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.","**Site filter** for network data: pick sites (or type part of a name) to limit panels, map badges, tooltips and search; optional export of only the filtered sites; the filter is kept with “Remember on this computer”.","Template: port lists and a second site; RAN ranges without a site."]},{"v": "2026.11.05.4","items": ["**Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.","Larger view, copy as text, keyboard navigation, search over procedure and message names, and deep links to a procedure (`&mf=`)."]},{"v": "2026.11.05.3","items": ["**Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.","Save as CSV, JSON, encrypted JSON (AES-256-GCM, PBKDF2-SHA256), or as one HTML file with the tool and the data (optionally encrypted). Optional “Remember on this computer”. Warning before leaving with unsaved changes.","Content-Security-Policy added: the page cannot load or send anything over the network.","Templates `netdata-template.csv` / `netdata-template.json` (documentation addresses only); `.gitignore` excludes exports with real data.","`/` no longer jumps to the search box while typing in another field."]},{"v": "2026.11.05.2","items": ["**E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.","Scenarios can now consist of several paths: **5G NSA** user plane (NR leg + LTE leg over X2-U) and control plane (LTE RRC/NAS, SCG configuration via X2-C, SRB3) and **HSPA Direct Tunnel** (user plane RNC ↔ GGSN + SGSN control path) – every stack now faces its real peer.","Fixed labels: GTP-U (QFI) on N3/N9 at both ends, 16 / 8 kbit/s TRAU sub-timeslots on Abis and Ater; BSC added to the GSM speech path; user IP labelled consistently."]},{"v": "2026.11.05","items": ["Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).","The CS and PS core (MSC Server/VLR, CS-MGW, HLR/AuC, EIR, SGSN, GGSN, charging) is shared with 3G and now tagged for both generations.","Integration with modern networks: CSFB and SRVCC to GERAN (SGs, Sv), LTE ↔ GERAN reselection / redirection / NACC, S4-SGSN with Gb (S3/S4), and 5G-SRVCC (R16, NG-RAN → UTRAN only, via N26 → MME_SRVCC → Sv); no direct 5GS ↔ GERAN mobility.","New end-to-end stacks: 2G GPRS/EDGE user plane, GSM CS control plane, GSM speech path.","Renamed to “Mobile Network Navigator”; shorter generation chip subtitles so the header still fits one row at 1920 px."]},{"v": "2026.11.04.3","items": ["Drew interfaces that were only described in text: **Cx / Sh** (IMS–HSS), **Ro / Rf** (IMS–OCS/OFCS), **Sy** (PCRF–OCS), **S9** (PCRF–roaming partner), **S6d** (S4-SGSN–HSS), **Gs** (SGSN–MSC/VLR), **Gc** (GGSN–HLR), **Nhss** (HSS–UDM interworking, R16), and reference points **N23** (PCF–NWDAF) and **N34** (NSSF–NWDAF).","Diameter in 5G networks made visible: N5 to the IMS is now “N5 / Rx” (PCF supports Rx per TS 23.503 Annex C), N6/SGi/Gi carry the DN-AAA (RADIUS/Diameter) option; *5G SA* + *Diameter* filter highlights Cx/Sh, Ro/Rf, N5/Rx and N6.","EPC zone label moved to the bottom-right corner."]},{"v": "2026.11.04.2","items": ["Added **ng-eNB** (E-UTRA connected to 5GC) in the NG-RAN area with LTE-Uu, N2 (NG-C) to AMF, N3 (NG-U) to UPF and Xn to the gNB; notes on Options 4/4a, 5 and 7/7a/7x.","5G SA chip now reads “5GC · Opt. 2 (4/5/7)”."]},{"v": "2026.11.04","items": ["First release: architecture map (3G, HSPA, 4G, 5G NSA, 5G SA, interworking), element/interface details with protocol stacks, end-to-end stack view, interface table, deep links, dark/light theme.","Added Gx between GGSN (PCEF) and PCRF (R7+).","Added EPC **CUPS view**: SGW-C/U, PGW-C/U, Sxa, Sxb, S5-C/U, S4-C/U.","Compact top bar (two rows at 1920 px), protocol filter as a dropdown, date-based version label."]}];
+const RELEASES = [{"v": "2026.11.07", "items": ["**2G end-to-end procedures** (6 new, 23 in total): GSM location update, mobile-originated call, mobile-terminated call with HLR interrogation and paging, call release, inter-BSC handover, and GPRS attach with PDP context activation in A/Gb mode.", "The 2G flows show the BTS and BSC hops: RR on Um, RSL on Abis (CHANNEL REQUIRED, IMMEDIATE ASSIGN COMMAND, ESTABLISH INDICATION, ENCRYPTION COMMAND, PAGING COMMAND), BSSMAP and SCCP on A, H.248 to the CS-MGW, ISUP towards the other network, MAP on C / D and Gr, BSSGP on Gb.", "Carried messages are labelled by layer: **NAS: …** for MM / CC / GMM / EMM / 5GMM messages, **RR: …** for RR messages inside RSL or BSSMAP (e.g. the Handover Command in HANDOVER REQUEST ACKNOWLEDGE).", "Fixed: closing a procedure right after opening it (e.g. a quick change of the deep link) could leave the map zoomed in.", "The message label on the map stays inside the visible map area, also for hops along the map edge (e.g. Um).", "Fixed: the map zoom animation of a procedure could, in rare cases, jump far outside the map."]},{"v": "2026.11.06.2", "items": ["**End-to-end procedures – Play:** the dot now travels once per step and stays at the destination; the next step starts only after it has arrived (at least 1.7 s per step, longer for long paths). Stepping by hand still repeats the animation."]},{"v": "2026.11.06.1", "items": ["**End-to-end procedures – NAS messages made explicit:** a NAS message carried inside an RRC, S1AP, NGAP or RANAP message is now named on that message (e.g. RRC Connection Setup Complete and INITIAL UE MESSAGE with **NAS: Attach Request + PDN Connectivity Request**, INITIAL CONTEXT SETUP REQUEST and RRC Connection Reconfiguration with **NAS: Attach Accept + Activate Default EPS Bearer Context Request**). Before, these were only mentioned in the parameter text. NAS messages that RRC / S1AP / NGAP / RANAP only relay stay one arrow UE ↔ core; the rule is stated in each flow.", "NAS layer tags are now precise: **EMM / ESM** (4G), **5GMM** (5G), **MM / CC / GMM / SM** (3G) instead of a generic NAS tag. Attach Complete is named with its ESM message (Activate Default EPS Bearer Context Accept).", "Added the optional **Identity Request / Response** to LTE attach, 5G registration and 3G attach, and a note on the optional EIR check (S13) in LTE attach. In UTRAN the first NAS message (CM Service Request, GPRS Attach Request) is shown per hop: RRC Initial Direct Transfer, then RANAP INITIAL UE MESSAGE.", "RRC IE names corrected: LTE RRC Connection Reconfiguration carries NAS in **dedicatedInfoNASList**, NR RRCReconfiguration in **dedicatedNAS-MessageList** (also fixed in the LTE-Uu message flow)."]},{"v": "2026.11.06", "items": ["**End-to-end procedures** (▶ Procedures in the toolbar): 17 multi-node call flows – LTE attach, service request, paging, S1 release, X2 handover, VoLTE dedicated bearer, detach, CS fallback, EN-DC secondary node addition, 5G registration, PDU session, service request, AN release, Xn handover, 3G attach + PDP context, Wi-Fi calling attach and LTE → Wi-Fi handover – with the interface of every message.", "**Map integration:** the map zooms to the procedure and dims everything else; stepping through the messages (click, ← / →, Play) highlights each hop and animates it along its path. Works in the CUPS and reference-point views.", "**IP addresses in the flows:** with network data loaded, pick the instance of each node above its lane and every message shows source → destination address and port.", "Element and interface panels list the procedures they appear in; deep links `#proc=<id>&step=<n>`; copy as text and larger view."]},{"v": "2026.11.05.9", "items": ["**Wi-Fi access via ePDG** (untrusted non-3GPP, VoWiFi): new **ePDG** and **3GPP AAA** elements with **SWu**, **SWm**, **SWx**, **S2b** and **S6b** (S2b-C / S2b-U and S6b to the PGW-C in the CUPS view), a **Wi-Fi** generation chip, message flows (IKEv2 + EAP-AKA tunnel set-up, S2b PDN connection, LTE ↔ Wi-Fi handover, Diameter procedures) and two end-to-end stacks.", "Map: the 5G rows moved down to make room below the EPC; the canvas is now 1900 × 1400."]},{"v": "2026.11.05.8", "items": ["**Network data:** site `*` means the instance belongs to every site – it is shown whichever sites are selected and is not listed as a separate site in the site filter."]},{"v": "2026.11.05.7","items": ["**Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet."]},{"v": "2026.11.05.6","items": ["**Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.","Addresses written with a prefix length (`10.2.7.2/26`) are treated as one address, not as the whole subnet: search no longer matches other addresses of that subnet, and the duplicate check compares the address part. CIDR blocks with zero host bits stay ranges."]},{"v": "2026.11.05.5","items": ["**Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.","**Site filter** for network data: pick sites (or type part of a name) to limit panels, map badges, tooltips and search; optional export of only the filtered sites; the filter is kept with “Remember on this computer”.","Template: port lists and a second site; RAN ranges without a site."]},{"v": "2026.11.05.4","items": ["**Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.","Larger view, copy as text, keyboard navigation, search over procedure and message names, and deep links to a procedure (`&mf=`)."]},{"v": "2026.11.05.3","items": ["**Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.","Save as CSV, JSON, encrypted JSON (AES-256-GCM, PBKDF2-SHA256), or as one HTML file with the tool and the data (optionally encrypted). Optional “Remember on this computer”. Warning before leaving with unsaved changes.","Content-Security-Policy added: the page cannot load or send anything over the network.","Templates `netdata-template.csv` / `netdata-template.json` (documentation addresses only); `.gitignore` excludes exports with real data.","`/` no longer jumps to the search box while typing in another field."]},{"v": "2026.11.05.2","items": ["**E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.","Scenarios can now consist of several paths: **5G NSA** user plane (NR leg + LTE leg over X2-U) and control plane (LTE RRC/NAS, SCG configuration via X2-C, SRB3) and **HSPA Direct Tunnel** (user plane RNC ↔ GGSN + SGSN control path) – every stack now faces its real peer.","Fixed labels: GTP-U (QFI) on N3/N9 at both ends, 16 / 8 kbit/s TRAU sub-timeslots on Abis and Ater; BSC added to the GSM speech path; user IP labelled consistently."]},{"v": "2026.11.05","items": ["Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).","The CS and PS core (MSC Server/VLR, CS-MGW, HLR/AuC, EIR, SGSN, GGSN, charging) is shared with 3G and now tagged for both generations.","Integration with modern networks: CSFB and SRVCC to GERAN (SGs, Sv), LTE ↔ GERAN reselection / redirection / NACC, S4-SGSN with Gb (S3/S4), and 5G-SRVCC (R16, NG-RAN → UTRAN only, via N26 → MME_SRVCC → Sv); no direct 5GS ↔ GERAN mobility.","New end-to-end stacks: 2G GPRS/EDGE user plane, GSM CS control plane, GSM speech path.","Renamed to “Mobile Network Navigator”; shorter generation chip subtitles so the header still fits one row at 1920 px."]},{"v": "2026.11.04.3","items": ["Drew interfaces that were only described in text: **Cx / Sh** (IMS–HSS), **Ro / Rf** (IMS–OCS/OFCS), **Sy** (PCRF–OCS), **S9** (PCRF–roaming partner), **S6d** (S4-SGSN–HSS), **Gs** (SGSN–MSC/VLR), **Gc** (GGSN–HLR), **Nhss** (HSS–UDM interworking, R16), and reference points **N23** (PCF–NWDAF) and **N34** (NSSF–NWDAF).","Diameter in 5G networks made visible: N5 to the IMS is now “N5 / Rx” (PCF supports Rx per TS 23.503 Annex C), N6/SGi/Gi carry the DN-AAA (RADIUS/Diameter) option; *5G SA* + *Diameter* filter highlights Cx/Sh, Ro/Rf, N5/Rx and N6.","EPC zone label moved to the bottom-right corner."]},{"v": "2026.11.04.2","items": ["Added **ng-eNB** (E-UTRA connected to 5GC) in the NG-RAN area with LTE-Uu, N2 (NG-C) to AMF, N3 (NG-U) to UPF and Xn to the gNB; notes on Options 4/4a, 5 and 7/7a/7x.","5G SA chip now reads “5GC · Opt. 2 (4/5/7)”."]},{"v": "2026.11.04","items": ["First release: architecture map (3G, HSPA, 4G, 5G NSA, 5G SA, interworking), element/interface details with protocol stacks, end-to-end stack view, interface table, deep links, dark/light theme.","Added Gx between GGSN (PCEF) and PCRF (R7+).","Added EPC **CUPS view**: SGW-C/U, PGW-C/U, Sxa, Sxb, S5-C/U, S4-C/U.","Compact top bar (two rows at 1920 px), protocol filter as a dropdown, date-based version label."]}];
 /* =====================================================================
    DATA
    ===================================================================== */
@@ -2014,7 +2014,7 @@ function renderOverview(){
  panel.innerHTML=`<h2>Quick orientation</h2>
  <p style="color:var(--muted)">Click any element or interface on the map for its role, protocol stack, key procedures with message-flow diagrams, ports and spec references. Generation chips highlight what belongs to each system (click several to combine, double-click for one only); elements that only take part through another generation’s interface are shown half-dimmed. Coloured bars on a box show which generations use it.</p>
  <p style="color:var(--muted);font-size:12.5px">Mouse wheel / pinch to zoom · drag to pan · <b>/</b> focuses search · <b>Esc</b> clears · the URL updates with your selection, so you can send a colleague a link straight to an interface.</p>
- <div class="pdcta"><button data-pa="list">▶ End-to-end procedures</button><span>Step through attach, service request, handovers, VoLTE bearer, CSFB, EN-DC, 5G registration and PDU session, 3G and Wi-Fi calling – the map shows every hop${ND?', with the IP addresses from your network data':''}.</span></div>
+ <div class="pdcta"><button data-pa="list">▶ End-to-end procedures</button><span>Step through attach, service request, handovers, VoLTE bearer, CSFB, EN-DC, 5G registration and PDU session, GSM location update and calls, 2G/3G packet attach and Wi-Fi calling – the map shows every hop${ND?', with the IP addresses from your network data':''}.</span></div>
  ${ndOverviewHTML()}
  <h3>Generations</h3><div class="gcards">${GENORDER.map(k=>`<div class="gcard" data-gen="${k}" style="--c:${gcol(k)}"><b>${esc(GENS[k].n)} <small style="color:var(--muted);font-weight:400">${esc(GENS[k].s)}</small></b><span>${esc(GENINFO[k].sum)}</span></div>`).join('')}</div>
  <h3>Well-known ports &amp; SCTP PPIDs</h3>
@@ -4385,7 +4385,7 @@ try{const seen=localStorage.getItem('mnn-seen-version');if(!seen)localStorage.se
    two 5GC NFs (drawn on the SBI bus or on the reference point, following the
    5GC toggle). Notes: ['*', text], ['*N', note at lane N], ['=', separator].
    ===================================================================== */
-const PD_NAS4='lteuu+s1mme',PD_RRC5='nruusa+f1c',PD_RRC3='uu3g+iub',PD_PS3='uu3g+iub+iups',PD_CS3='uu3g+iub+iucscp',PD_UP5='nruusa+f1u+n3';
+const PD_RR2='um+abis',PD_CS2='um+abis+acp',PD_PS2='um+abis+gb',PD_NAS4='lteuu+s1mme',PD_RRC5='nruusa+f1c',PD_RRC3='uu3g+iub',PD_PS3='uu3g+iub+iups',PD_CS3='uu3g+iub+iucscp',PD_UP5='nruusa+f1u+n3';
 const PROC=[
 /* ------------------------------------------------------------------ 4G */
 {id:'lte-attach',g:['4g'],t:'LTE initial attach',s:'TS 23.401 §5.3.2.1 · TS 24.301 · TS 36.413 · TS 36.331 · TS 29.274 · TS 29.272 · TS 29.212',
@@ -4768,6 +4768,206 @@ const PROC=[
   [4,2,'GTPv1-C|Update PDP Context Response','','?','gn'],
   [2,0,'SM|Activate PDP Context Accept','PDP address, negotiated QoS','',PD_PS3],
   ['*','User plane: UE → RNC → SGSN → GGSN with GTP-U on Iu-PS and Gn, or RNC → GGSN directly with Direct Tunnel']]},
+/* --------------------------------------------------------------- 2G */
+{id:'gsm-lu',g:['2g'],t:'GSM location update',s:'TS 23.012 · TS 24.008 §4.4 · TS 44.018 · TS 48.058 · TS 48.008 · TS 29.002',
+ d:'An MS registers in a new location area (or attaches its IMSI): SDCCH set-up through BTS and BSC, the SCCP connection to the MSC/VLR, authentication with triplets from the HLR, ciphering, the location update in the HLR and a new TMSI.',
+ p:[{e:'ue',l:'MS'},{e:'bts'},{e:'bsc'},{e:'mscs',l:'MSC / VLR'},{e:'hlr',l:'HLR / AuC'}],
+ m:[['=','Signalling channel (SDCCH)'],
+  [0,1,'RR|Channel Request','access burst on the RACH: establishment cause (location updating) and random reference','','um'],
+  [1,2,'RSL|CHANNEL REQUIRED','request reference (random access info and frame number), access delay','','abis'],
+  [2,1,'RSL|CHANNEL ACTIVATION','SDCCH, activation type immediate assignment, channel mode signalling, timing advance','','abis'],
+  [1,2,'RSL|CHANNEL ACTIVATION ACKNOWLEDGE','','','abis'],
+  [2,1,'RSL|IMMEDIATE ASSIGN COMMAND|RR: Immediate Assignment','full Immediate Assignment message for the AGCH','','abis'],
+  [1,0,'RR|Immediate Assignment','on the AGCH: SDCCH description, request reference, timing advance','','um'],
+  [0,1,'LAPDm|SABM|Location Updating Request','SAPI 0 on the SDCCH; the first layer-3 message (location updating type, ciphering key sequence number, old LAI, classmark 1, TMSI or IMSI) rides in the SABM for contention resolution','','um'],
+  [1,0,'LAPDm|UA','echoes the information field – the MS compares it (contention resolution)','','um'],
+  [1,2,'RSL|ESTABLISH INDICATION|Location Updating Request','link established on SAPI 0, layer-3 information','','abis'],
+  [2,3,'BSSMAP|COMPLETE LAYER 3 INFORMATION|Location Updating Request','cell identifier (CGI), layer-3 information; sent in an SCCP Connection Request – this creates the SCCP connection for the MS','','acp'],
+  [3,2,'SCCP|Connection Confirm','','','acp'],
+  ['*','From here MM messages are relayed in DTAP over the SCCP connection and in RSL DATA REQUEST / INDICATION, and drawn as one arrow MS ↔ MSC'],
+  ['=','Authentication and ciphering'],
+  [3,0,'MM|Identity Request','identity type IMSI – only if the TMSI is unknown and the previous VLR cannot provide the IMSI','?',PD_CS2],
+  [0,3,'MM|Identity Response','IMSI','?',PD_CS2],
+  [3,4,'MAP|SendAuthenticationInfo','IMSI – if the VLR holds no unused triplets','?','cd'],
+  [4,3,'MAP|SendAuthenticationInfo ack','authentication triplets: RAND, SRES, Kc','?','cd'],
+  [3,0,'MM|Authentication Request','RAND, ciphering key sequence number','',PD_CS2],
+  [0,3,'MM|Authentication Response','SRES – the VLR compares it with the expected SRES','',PD_CS2],
+  [3,2,'BSSMAP|CIPHER MODE COMMAND','encryption information (permitted A5 algorithms, Kc), cipher response mode (IMEISV request)','','acp'],
+  [2,1,'RSL|ENCRYPTION COMMAND|RR: Ciphering Mode Command','chosen A5 algorithm and Kc for the BTS, which starts deciphering','','abis'],
+  [1,0,'RR|Ciphering Mode Command','cipher mode setting (start ciphering, algorithm), cipher response','','um'],
+  [0,2,'RR|Ciphering Mode Complete','first ciphered message; IMEISV if requested','',PD_RR2],
+  [2,3,'BSSMAP|CIPHER MODE COMPLETE','chosen encryption algorithm, layer-3 message contents if requested','','acp'],
+  ['*3','Optional: IMEI check with the EIR on F (MAP CheckIMEI)'],
+  ['=','Location update in the HLR'],
+  [3,4,'MAP|UpdateLocation','IMSI, MSC number, VLR number','','cd'],
+  ['*4','The HLR cancels the previous VLR (MAP CancelLocation), if any'],
+  [4,3,'MAP|InsertSubscriberData','MSISDN, category, basic and supplementary services, call barring, ODB','','cd'],
+  [3,4,'MAP|InsertSubscriberData ack','','','cd'],
+  [4,3,'MAP|UpdateLocation ack','HLR number','','cd'],
+  [3,0,'MM|Location Updating Accept','LAI, new TMSI (mobile identity), follow-on proceed if requested','',PD_CS2],
+  [0,3,'MM|TMSI Reallocation Complete','acknowledges the new TMSI','',PD_CS2],
+  ['=','Release'],
+  [3,2,'BSSMAP|CLEAR COMMAND','cause: normal event','','acp'],
+  [2,0,'RR|Channel Release','RR cause normal event','',PD_RR2],
+  ['*1','LAPDm DISC / UA; the BSC deactivates the SDCCH (RSL DEACTIVATE SACCH, RF CHANNEL RELEASE)'],
+  [2,3,'BSSMAP|CLEAR COMPLETE','','','acp'],
+  [3,2,'SCCP|Released','','','acp'],
+  [2,3,'SCCP|Release Complete','','','acp']]},
+{id:'gsm-mo-call',g:['2g'],t:'GSM mobile-originated call',s:'TS 23.018 · TS 24.008 §5.2.1 · TS 48.008 §3.1.1 · TS 48.058 · TS 29.232 · ITU-T Q.763',
+ d:'An MS sets up a speech call: SDCCH and SCCP connection, authentication and ciphering, CC Setup, a CS-MGW context through the MSC Server, traffic channel assignment, and the call towards the other network with ISUP (or BICC / SIP-I).',
+ p:[{e:'ue',l:'MS'},{e:'bts'},{e:'bsc'},{e:'mscs',l:'MSC Server / VLR'},{e:'mgw'},{e:'peercs',l:'Called network'}],
+ m:[['=','Signalling channel (SDCCH)'],
+  [0,1,'RR|Channel Request','establishment cause originating call','','um'],
+  [1,2,'RSL|CHANNEL REQUIRED','request reference, access delay','','abis'],
+  ['*2','BSC activates an SDCCH (RSL CHANNEL ACTIVATION / ACKNOWLEDGE)'],
+  [2,1,'RSL|IMMEDIATE ASSIGN COMMAND|RR: Immediate Assignment','','','abis'],
+  [1,0,'RR|Immediate Assignment','on the AGCH: SDCCH description, timing advance','','um'],
+  [0,1,'LAPDm|SABM|CM Service Request','CM service type mobile-originating call, ciphering key sequence number, classmark 2, TMSI','','um'],
+  [1,0,'LAPDm|UA','contention resolution','','um'],
+  [1,2,'RSL|ESTABLISH INDICATION|CM Service Request','','','abis'],
+  [2,3,'BSSMAP|COMPLETE LAYER 3 INFORMATION|CM Service Request','cell identifier, layer-3 information; in an SCCP Connection Request','','acp'],
+  [3,2,'SCCP|Connection Confirm','','','acp'],
+  ['=','Authentication and ciphering'],
+  [3,0,'MM|Authentication Request','RAND, ciphering key sequence number – the network may skip it and reuse the stored Kc','?',PD_CS2],
+  [0,3,'MM|Authentication Response','SRES','?',PD_CS2],
+  [3,2,'BSSMAP|CIPHER MODE COMMAND','permitted A5 algorithms, Kc','','acp'],
+  [2,1,'RSL|ENCRYPTION COMMAND|RR: Ciphering Mode Command','','','abis'],
+  [1,0,'RR|Ciphering Mode Command','start ciphering – once ciphering has started the MS considers the MM connection established, no CM Service Accept is needed','','um'],
+  [0,2,'RR|Ciphering Mode Complete','first ciphered message','',PD_RR2],
+  [2,3,'BSSMAP|CIPHER MODE COMPLETE','chosen encryption algorithm','','acp'],
+  ['=','Call set-up'],
+  [0,3,'CC|Setup','called party BCD number, bearer capability (speech versions supported)','',PD_CS2],
+  [3,0,'CC|Call Proceeding','','',PD_CS2],
+  ['*3','VLR checks the subscription (barring, ODB); the MSC analyses the number and selects a route'],
+  [3,4,'H.248|ADD.req','new context with the A-side termination: a TDM circuit (CIC) or, with A over IP, an RTP endpoint','','mc'],
+  [4,3,'H.248|ADD.reply','context and termination IDs; with A over IP the MGW RTP address and port','','mc'],
+  [3,2,'BSSMAP|ASSIGNMENT REQUEST','channel type (speech, full or half rate, codec list), circuit identity code or the AoIP transport layer address of the MGW','','acp'],
+  [2,1,'RSL|CHANNEL ACTIVATION','TCH in speech mode with the chosen speech version','','abis'],
+  [1,2,'RSL|CHANNEL ACTIVATION ACKNOWLEDGE','','','abis'],
+  [2,0,'RR|Assignment Command','sent on the SDCCH: TCH channel description, power command, channel mode (speech version)','',PD_RR2],
+  [0,2,'RR|Assignment Complete','sent on the new TCH (FACCH) once the signalling link is established there','',PD_RR2],
+  [2,3,'BSSMAP|ASSIGNMENT COMPLETE','chosen channel, chosen speech version / codec; with A over IP the BSC transport layer address','','acp'],
+  ['*2','BSC releases the SDCCH (RSL RF CHANNEL RELEASE)'],
+  ['*4','A second termination towards the called network (Nb or TDM) is added in the same context'],
+  [3,5,'ISUP|IAM','called and calling party number, nature of connection – BICC IAM or SIP-I INVITE on Nc in an MSC Server network','','nc'],
+  [5,3,'ISUP|ACM','address complete: the called party is being alerted','','nc'],
+  [3,0,'CC|Alerting','ring-back tone heard in-band from the network or generated by the MS','',PD_CS2],
+  [5,3,'ISUP|ANM','called party answers','','nc'],
+  ['*3','MSC Server through-connects the MGW context (H.248 MOD) and starts charging'],
+  [3,0,'CC|Connect','','',PD_CS2],
+  [0,3,'CC|Connect Acknowledge','call active: speech MS ↔ BTS ↔ BSC ↔ CS-MGW ↔ called network','',PD_CS2]]},
+{id:'gsm-mt-call',g:['2g'],t:'GSM mobile-terminated call (paging)',s:'TS 23.018 · TS 29.002 · TS 24.008 §5.2.2 · TS 44.018 §3.3.2 · TS 48.008 · TS 48.058',
+ d:'A call arrives for an MS in idle mode: the HLR is interrogated for a roaming number, the MSC pages the MS in its location area, and the call is set up on a traffic channel.',
+ p:[{e:'ue',l:'MS'},{e:'bts'},{e:'bsc'},{e:'mscs',l:'MSC / VLR'},{e:'hlr',l:'HLR'},{e:'peercs',l:'Calling network'}],
+ m:[['*','Here the MSC/VLR also acts as gateway MSC. With a separate GMSC, the GMSC interrogates the HLR over C and routes the call to the roaming number (MSRN)'],
+  [5,3,'ISUP|IAM','called party number = MSISDN of the MS','','nc'],
+  [3,4,'MAP|SendRoutingInfo','MSISDN, GMSC address, interrogation type basic call','','cd'],
+  [4,3,'MAP|ProvideRoamingNumber','IMSI, MSC number, bearer capability','','cd'],
+  [3,4,'MAP|ProvideRoamingNumber ack','roaming number (MSRN) allocated by the VLR','','cd'],
+  [4,3,'MAP|SendRoutingInfo ack','IMSI, MSRN','','cd'],
+  ['*3','The call is routed to the MSRN (here the same MSC); the VLR returns the location area and TMSI for paging'],
+  ['=','Paging'],
+  [3,2,'BSSMAP|PAGING','IMSI, TMSI, cell identifier list (the location area), channel needed – connectionless (SCCP UDT)','','acp'],
+  [2,1,'RSL|PAGING COMMAND','paging group, MS identity (TMSI), channel needed','','abis'],
+  [1,0,'RR|Paging Request Type 1','on the PCH of the MS’s paging group: mobile identity (TMSI or IMSI), channel needed','','um'],
+  [0,1,'RR|Channel Request','establishment cause answer to paging','','um'],
+  [1,2,'RSL|CHANNEL REQUIRED','request reference, access delay','','abis'],
+  ['*2','BSC activates an SDCCH (RSL CHANNEL ACTIVATION / ACKNOWLEDGE)'],
+  [2,1,'RSL|IMMEDIATE ASSIGN COMMAND|RR: Immediate Assignment','','','abis'],
+  [1,0,'RR|Immediate Assignment','on the AGCH: SDCCH description, timing advance','','um'],
+  [0,1,'LAPDm|SABM|RR: Paging Response','ciphering key sequence number, classmark 2, mobile identity','','um'],
+  [1,0,'LAPDm|UA','contention resolution','','um'],
+  [1,2,'RSL|ESTABLISH INDICATION|RR: Paging Response','','','abis'],
+  [2,3,'BSSMAP|COMPLETE LAYER 3 INFORMATION|RR: Paging Response','cell identifier, layer-3 information; in an SCCP Connection Request','','acp'],
+  [3,2,'SCCP|Connection Confirm','','','acp'],
+  ['=','Authentication and ciphering'],
+  [3,0,'MM|Authentication Request','RAND, ciphering key sequence number','?',PD_CS2],
+  [0,3,'MM|Authentication Response','SRES','?',PD_CS2],
+  [3,2,'BSSMAP|CIPHER MODE COMMAND','permitted A5 algorithms, Kc','','acp'],
+  [2,1,'RSL|ENCRYPTION COMMAND|RR: Ciphering Mode Command','','','abis'],
+  [1,0,'RR|Ciphering Mode Command','start ciphering','','um'],
+  [0,2,'RR|Ciphering Mode Complete','','',PD_RR2],
+  [2,3,'BSSMAP|CIPHER MODE COMPLETE','','','acp'],
+  ['=','Call set-up'],
+  [3,0,'CC|Setup','signal (alerting pattern), calling party BCD number, bearer capability','',PD_CS2],
+  [0,3,'CC|Call Confirmed','bearer capability','',PD_CS2],
+  ['*3','The MSC Server seizes a CS-MGW context for the A side and the incoming call (H.248 over Mc)'],
+  [3,2,'BSSMAP|ASSIGNMENT REQUEST','channel type (speech), circuit identity code or AoIP transport layer address','','acp'],
+  [2,0,'RR|Assignment Command','TCH channel description, channel mode','',PD_RR2],
+  [0,2,'RR|Assignment Complete','on the new TCH','',PD_RR2],
+  [2,3,'BSSMAP|ASSIGNMENT COMPLETE','chosen channel, chosen speech version','','acp'],
+  [0,3,'CC|Alerting','the MS rings','',PD_CS2],
+  [3,5,'ISUP|ACM','address complete','','nc'],
+  [0,3,'CC|Connect','the user answers','',PD_CS2],
+  [3,5,'ISUP|ANM','','','nc'],
+  [3,0,'CC|Connect Acknowledge','call active','',PD_CS2]]},
+{id:'gsm-release',g:['2g'],t:'GSM call release (MS-initiated)',s:'TS 24.008 §5.4 · TS 44.018 · TS 48.008 · TS 48.058 · ITU-T Q.764',
+ d:'The mobile user hangs up: CC clearing with the MSC and towards the other network, then the BSSMAP clear and release of the traffic channel.',
+ p:[{e:'ue',l:'MS'},{e:'bts'},{e:'bsc'},{e:'mscs',l:'MSC Server / VLR'},{e:'peercs',l:'Other network'}],
+ m:[[0,3,'CC|Disconnect','cause normal call clearing (16)','',PD_CS2],
+  [3,4,'ISUP|REL','cause normal call clearing','','nc'],
+  [3,0,'CC|Release','','',PD_CS2],
+  [0,3,'CC|Release Complete','','',PD_CS2],
+  [4,3,'ISUP|RLC','','','nc'],
+  ['*3','The MSC Server removes the MGW terminations (H.248 SUB over Mc) and closes the charging record'],
+  [3,2,'BSSMAP|CLEAR COMMAND','cause call control','','acp'],
+  [2,0,'RR|Channel Release','RR cause normal event','',PD_RR2],
+  ['*1','LAPDm DISC / UA; the BSC deactivates the TCH (RSL DEACTIVATE SACCH, RF CHANNEL RELEASE)'],
+  [2,3,'BSSMAP|CLEAR COMPLETE','','','acp'],
+  [3,2,'SCCP|Released','','','acp'],
+  [2,3,'SCCP|Release Complete','','','acp']]},
+{id:'gsm-ho',g:['2g'],t:'GSM inter-BSC handover',s:'TS 23.009 · TS 48.008 · TS 44.018 §3.4.4 · TS 45.010 · TS 48.058',
+ d:'Handover of a call between cells of two BSCs under the same MSC: the source BSS asks for the handover, the MSC prepares the target BSS and the RR Handover Command travels back to the MS; the MS accesses the new channel and the old one is cleared.',
+ p:[{e:'ue',l:'MS'},{e:'bsc',l:'Source BSS'},{e:'bsc',l:'Target BSS'},{e:'mscs',l:'MSC'}],
+ m:[[0,1,'RR|Measurement Report','on the SACCH: serving and neighbour cell levels and quality; the BTS adds its uplink measurements (RSL MEASUREMENT RESULT)','',PD_RR2],
+  ['*1','Handover decision: the best cell belongs to another BSS'],
+  [1,3,'BSSMAP|HANDOVER REQUIRED','cause (e.g. uplink quality, better cell), preferred list of target cells','','acp'],
+  [3,2,'BSSMAP|HANDOVER REQUEST','channel type, encryption information (Kc), classmark, serving and target cell identifiers, circuit identity code or AoIP transport address; in an SCCP Connection Request – a new connection for the target','','acp'],
+  ['*2','Target BSC activates a TCH in the target BTS with a handover reference (RSL CHANNEL ACTIVATION)'],
+  [2,3,'BSSMAP|HANDOVER REQUEST ACKNOWLEDGE|RR: Handover Command','layer-3 information: the Handover Command built by the target BSS (in SCCP Connection Confirm)','','acp'],
+  [3,1,'BSSMAP|HANDOVER COMMAND|RR: Handover Command','the layer-3 information from the target BSS, passed on unchanged','','acp'],
+  [1,0,'RR|Handover Command','on the FACCH: target cell (BCCH, BSIC), channel description, handover reference, synchronisation indication','',PD_RR2],
+  [0,2,'RR|Handover Access','access bursts with the handover reference on the new channel (non-synchronised handover)','',PD_RR2],
+  [2,3,'BSSMAP|HANDOVER DETECT','lets the MSC switch the speech path early','?','acp'],
+  [2,0,'RR|Physical Information','timing advance for the MS (non-synchronised handover)','',PD_RR2],
+  [0,2,'RR|Handover Complete','after the signalling link is established on the new channel','',PD_RR2],
+  [2,3,'BSSMAP|HANDOVER COMPLETE','RR cause','','acp'],
+  ['*3','MSC switches the speech path to the target BSS (MGW termination via Mc)'],
+  [3,1,'BSSMAP|CLEAR COMMAND','cause handover successful','','acp'],
+  ['*1','Source BSC releases the old channel'],
+  [1,3,'BSSMAP|CLEAR COMPLETE','','','acp']]},
+{id:'gprs-attach-pdp',g:['2g'],t:'GPRS attach and PDP context activation (2G)',s:'TS 23.060 §6.5.3 · §9.2.2.1 · TS 24.008 · TS 44.060 · TS 44.064 · TS 48.018 · TS 29.002 · TS 29.060',
+ d:'Packet-switched registration in GERAN (A/Gb mode) and activation of a PDP context: GMM and SM run between MS and SGSN in LLC frames over the PDCH and Gb, LLC ciphering starts after authentication, and the SGSN sets up the GTPv1 tunnel to the GGSN.',
+ p:[{e:'ue',l:'MS'},{e:'bsc',l:'BSS (BTS + BSC / PCU)'},{e:'sgsn'},{e:'hlr',l:'HLR / AuC'},{e:'ggsn'}],
+ m:[['=','Uplink TBF and attach'],
+  [0,1,'RR|Channel Request','on the RACH: establishment cause one-phase packet access (or EGPRS Packet Channel Request)','',PD_RR2],
+  [1,0,'RR|Immediate Assignment','packet uplink assignment: PDCH, TFI, USF, timing advance','',PD_RR2],
+  [0,1,'RLC/MAC|Uplink RLC data blocks|Attach Request','LLC frame (SAPI 1, GMM) with the Attach Request: attach type GPRS attach, P-TMSI or IMSI, old RAI, MS network capability, DRX parameters, MS radio access capability','',PD_RR2],
+  [1,2,'BSSGP|UL-UNITDATA|Attach Request','TLLI, QoS profile, cell identifier (RAI + CI), LLC-PDU','','gb'],
+  ['*','Further LLC frames travel in RLC/MAC blocks and BSSGP UL-UNITDATA / DL-UNITDATA, so GMM and SM messages are drawn as one arrow MS ↔ SGSN'],
+  [2,0,'GMM|Identity Request','identity type IMSI – only if the P-TMSI is unknown and the old SGSN cannot provide the IMSI','?',PD_PS2],
+  [0,2,'GMM|Identity Response','IMSI','?',PD_PS2],
+  [2,3,'MAP|SendAuthenticationInfo','IMSI – if the SGSN has no unused vectors','?','gr'],
+  [3,2,'MAP|SendAuthenticationInfo ack','triplets (RAND, SRES, Kc), or quintets for a UMTS subscriber','?','gr'],
+  [2,0,'GMM|Authentication and Ciphering Request','RAND, ciphering algorithm (GEA), GPRS CKSN, IMEISV request','',PD_PS2],
+  [0,2,'GMM|Authentication and Ciphering Response','SRES, IMEISV if requested','',PD_PS2],
+  ['*2','From now on LLC frames are ciphered between MS and SGSN (GEA) – in Gb mode the BSS does not cipher'],
+  [2,3,'MAP|UpdateGprsLocation','IMSI, SGSN number and SGSN address','','gr'],
+  ['*3','The HLR cancels the old SGSN (MAP CancelLocation), if any'],
+  [3,2,'MAP|InsertSubscriberData','MSISDN, GPRS subscription data (PDP contexts: APN, QoS profile)','','gr'],
+  [2,3,'MAP|InsertSubscriberData ack','','','gr'],
+  [3,2,'MAP|UpdateGprsLocation ack','','','gr'],
+  [2,0,'GMM|Attach Accept','attach result, P-TMSI, RAI, periodic RA update timer, READY timer','',PD_PS2],
+  [0,2,'GMM|Attach Complete','acknowledges the new P-TMSI; the MS uses the TLLI derived from it','',PD_PS2],
+  ['=','PDP context activation'],
+  [0,2,'SM|Activate PDP Context Request','NSAPI, LLC SAPI, requested QoS, PDP type, APN, protocol configuration options','',PD_PS2],
+  ['*2','SGSN resolves the APN to a GGSN address (DNS)'],
+  [2,4,'GTPv1-C|Create PDP Context Request','IMSI, MSISDN, APN, QoS profile, NSAPI, SGSN addresses and TEIDs for signalling and user traffic','','gn'],
+  [4,2,'GTPv1-C|Create PDP Context Response','GGSN addresses and TEIDs, end user address (PDP address), negotiated QoS, charging ID','','gn'],
+  [2,1,'BSSGP|CREATE-BSS-PFC','only if the BSS supports packet flow contexts: aggregate BSS QoS profile for the PFC','?','gb'],
+  [1,2,'BSSGP|CREATE-BSS-PFC-ACK','','?','gb'],
+  [2,0,'SM|Activate PDP Context Accept','PDP address, negotiated QoS, negotiated LLC SAPI, radio priority','',PD_PS2],
+  ['*','User data: MS → BSS (RLC/MAC, BSSGP) → SGSN (LLC, SNDCP) → GGSN (GTP-U on Gn)']]},
 /* ----------------------------------------------------------- Wi-Fi */
 {id:'wifi-attach',g:['wifi'],t:'Wi-Fi calling attach (untrusted, ePDG)',s:'TS 23.402 §7.2.1 / §7.2.4 · TS 33.402 §8.2.2 · TS 24.302 · TS 29.273 · TS 29.274',
  d:'Initial attach over untrusted Wi-Fi with GTP-based S2b: the UE builds an IKEv2 / IPsec tunnel to the ePDG authenticated with EAP-AKA through the 3GPP AAA server, and the ePDG creates the PDN connection (typically the IMS APN) in the PGW.',
@@ -4838,7 +5038,9 @@ const PD_UPTAG=/^(GTP-U|PDCP)$/;
 const PD_WK={'GTPv2-C':['2123'],'GTPv1-C':['2123'],'GTP-U':['2152'],'PFCP':['8805'],'Diameter':['3868','5868'],'S1AP':['36412'],'NGAP':['38412'],'X2AP':['36422'],'XnAP':['38422'],'SGsAP':['29118'],'IKEv2':['500','4500']};
 /* 'TAG|MESSAGE|NAS carried inside' → [tag, message, nas] */
 const pdNm=r=>{const [t,x]=mfSplit(r[2]);const i=x.indexOf('|');return i<0?[t,x,'']:[t,x.slice(0,i),x.slice(i+1)];};
-const pdShort=r=>{const [,n,c]=pdNm(r);return c?n+' ('+c.split(' + ')[0]+')':n;};
+/* label of the carried message: 'RR: …' stays as written, a bare name is a NAS message */
+const pdCarLbl=c=>/^[A-Za-z0-9/-]+: /.test(c)?c:'NAS: '+c;
+const pdShort=r=>{const [,n,c]=pdNm(r);return c?n+' ('+c.replace(/^[A-Za-z0-9/-]+: /,'').split(' + ')[0]+')':n;};
 const pdLane=(P,i)=>P.p[i].l||(EM[P.p[i].e]?EM[P.p[i].e].n:P.p[i].e);
 const pdMsgs=P=>P.m.map((r,k)=>mfIsMsg(r)?k:-1).filter(k=>k>=0);
 const pdNum=(P,k)=>pdMsgs(P).indexOf(k)+1;
@@ -4875,13 +5077,13 @@ function pdCompute(lv){const P=PM[state.proc||state.procHover];const I=pdInvolve
  LINKS.forEach(L=>{lv['if:'+L.id]=F&&F.links.has(L.id)?3:I.links.has(L.id)?2:0;});
  return {lv,linkOn:I.links,elOn:I.els,hasF:true};}
 const pdReduced=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-function pdTween(to){const from={...vb};cancelAnimationFrame(pdTween.id);if(pdReduced()){vb={...to};setVB();return;}const t0=performance.now(),D=380;
- const step=now=>{const t=Math.min(1,(now-t0)/D),e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;['x','y','w','h'].forEach(k=>{vb[k]=from[k]+(to[k]-from[k])*e;});setVB();if(t<1)pdTween.id=requestAnimationFrame(step);};pdTween.id=requestAnimationFrame(step);}
+function pdTween(to,done){const from={...vb};cancelAnimationFrame(pdTween.id);if(pdReduced()){vb={...to};setVB();if(done)done();return;}const t0=performance.now(),D=380;
+ const step=now=>{const t=Math.max(0,Math.min(1,(now-t0)/D)),e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;['x','y','w','h'].forEach(k=>{vb[k]=from[k]+(to[k]-from[k])*e;});setVB();if(t<1)pdTween.id=requestAnimationFrame(step);else if(done)done();};pdTween.id=requestAnimationFrame(step);}
 function pdFit(P){const I=pdInvolved(P);let x1=1e9,y1=1e9,x2=-1e9,y2=-1e9;
  I.els.forEach(id=>{const E=EM[id];if(!E||E.kind==='bar'||!elVisible(E))return;x1=Math.min(x1,E.x);y1=Math.min(y1,E.y);x2=Math.max(x2,E.x+E.w);y2=Math.max(y2,E.y+E.h);});
  I.links.forEach(id=>{const L=LM[id];if(L&&L.pts)L.pts.forEach(([x,y])=>{x1=Math.min(x1,x);y1=Math.min(y1,y);x2=Math.max(x2,x);y2=Math.max(y2,y);});if(id==='sbi'){y1=Math.min(y1,BUS.y-20);y2=Math.max(y2,BUS.y+20);}});
  if(x1>x2)return;const pad=48;let w=x2-x1+2*pad,h=y2-y1+2*pad;const cx=(x1+x2)/2,cy=(y1+y2)/2;w=Math.max(w,560);h=Math.max(h,420);
- pdTween({x:cx-w/2,y:cy-h/2,w,h});}
+ pdTween({x:cx-w/2,y:cy-h/2,w,h},()=>{if(state.proc===P.id)pdOverlay();});}
 const gP=mk('g',{class:'pdov','aria-hidden':'true'},svg);
 /* hops of one message in travel order, each with its direction (fwd = drawn from L.a to L.b) */
 function pdOrder(P,r){const f=P.p[r[0]].e,t=P.p[r[1]].e;let hs=pdHops(P,r);const T=(id,e)=>{const L=LM[id];if(!L||L.isbus)return false;const g=PD_GROUP(e);return g.includes(L.a)||g.includes(L.b);};
@@ -4900,15 +5102,22 @@ function pdSegs(P,r){const segs=[];
  segs.forEach((s,i)=>{if(!s.bus)return;const a=segs[i-1],b=segs[i+1];const pa=a&&!a.bus?a.f(1):[BUS.x1,BUS.y],pb=b&&!b.bus?b.f(0):[BUS.x2,BUS.y];
   s.len=Math.hypot(pb[0]-pa[0],pb[1]-pa[1]);s.f=t=>[pa[0]+(pb[0]-pa[0])*t,pa[1]+(pb[1]-pa[1])*t];});
  return segs.filter(s=>s.f);}
+function pdVisible(){const r=svg.getBoundingClientRect(),M=svg.getScreenCTM();if(!M||!r.width)return null;const I=M.inverse();
+ const a=new DOMPoint(r.left,r.top).matrixTransform(I),b=new DOMPoint(r.right,r.bottom).matrixTransform(I);return {x1:a.x,y1:a.y,x2:b.x,y2:b.y};}
 function pdAt(segs,d){for(const s of segs){if(d<=s.len||s===segs[segs.length-1])return s.f(s.len?Math.min(1,Math.max(0,d/s.len)):1);d-=s.len;}return [0,0];}
 function pdOverlay(){cancelAnimationFrame(pdAnimId);gP.innerHTML='';if(!state.proc||state.view!=='arch')return;const P=PM[state.proc],k=state.procStep,r=P&&P.m[k];if(!r||!mfIsMsg(r))return;
  const segs=pdSegs(P,r);if(!segs.length)return;const tot=segs.reduce((s,x)=>s+x.len,0);const lg0=segs.reduce((a,x)=>x.len>a.len?x:a,segs[0]);const m=lg0.f(.5);
  const lg=mk('g',{class:'pdlbl'},gP);const rc=mk('rect',{rx:5},lg);const t=mk('text',{x:m[0],y:m[1]-16},lg);t.textContent=pdNum(P,k)+'. '+pdShort(r);
- const bb=t.getBBox();rc.setAttribute('x',bb.x-6);rc.setAttribute('y',bb.y-3);rc.setAttribute('width',bb.width+12);rc.setAttribute('height',bb.height+6);
+ let bb=t.getBBox();
+ /* keep the label inside the visible part of the map */
+ const V=pdVisible();if(V){let dx=0,dy=0;const L=bb.x-6,R=bb.x+bb.width+6,T=bb.y-3,B=bb.y+bb.height+3;
+  if(L<V.x1+4)dx=V.x1+4-L;else if(R>V.x2-4)dx=V.x2-4-R;if(T<V.y1+4)dy=V.y1+4-T;else if(B>V.y2-4)dy=V.y2-4-B;
+  if(dx||dy){t.setAttribute('x',m[0]+dx);t.setAttribute('y',m[1]-16+dy);bb=t.getBBox();}}
+ rc.setAttribute('x',bb.x-6);rc.setAttribute('y',bb.y-3);rc.setAttribute('width',bb.width+12);rc.setAttribute('height',bb.height+6);
  const end=pdAt(segs,tot),dot=mk('circle',{class:'pddot',r:7,cx:end[0],cy:end[1]},gP);if(pdReduced())return;
  /* the dot travels once per step while playing (the next step waits for it); when stepping by hand it repeats after a pause */
  const dur=Math.min(2400,Math.max(650,tot*1.1)),hold=900,t0=performance.now(),once=pdPlaying;pdDur=dur;
- const step=now=>{const el=now-t0;if(once&&el>=dur){dot.setAttribute('cx',end[0]);dot.setAttribute('cy',end[1]);dot.style.opacity=1;return;}
+ const step=now=>{const el=Math.max(0,now-t0);if(once&&el>=dur){dot.setAttribute('cx',end[0]);dot.setAttribute('cy',end[1]);dot.style.opacity=1;return;}
   const ph=once?el:el%(dur+hold),e=Math.min(1,ph/dur);const q=pdAt(segs,tot*(e<.5?2*e*e:1-Math.pow(-2*e+2,2)/2));dot.setAttribute('cx',q[0]);dot.setAttribute('cy',q[1]);dot.style.opacity=ph<dur?1:Math.max(0,1-(ph-dur)/hold);pdAnimId=requestAnimationFrame(step);};
  pdAnimId=requestAnimationFrame(step);}
 
@@ -4950,7 +5159,7 @@ function pdDiagram(P){const n=P.p.length,X=i=>mfX(n,i),hw=Math.min(30,96/n);cons
  P.m.forEach((r,k)=>{
   if(mfIsMsg(r)){num++;const [fr,to,,det,fl]=r;const [tag,name,nas]=pdNm(r);const x1=X(fr),x2=X(to),lo=Math.min(x1,x2),hi=Math.max(x1,x2),mid=(lo+hi)/2;
    const w=Math.min(100,Math.max(hi-lo,n<=2?88:64)),left=Math.min(Math.max(mid-w/2,0),100-w),opt=fl&&fl.includes('?'),ifl=pdIfLabel(P,r),ip=ND?pdIPs(P,r):'',bx=`margin-left:${left}%;width:${w}%`;
-   h+=`<div class="mfm pdm${opt?' opt':''}${k===state.procStep?' focus':''}" data-ps="${k}" role="button" tabindex="-1" aria-label="${num}. ${esc(name)}${nas?' – NAS: '+esc(nas):''}"><div class="mft" style="${bx}"><span class="pdno">${num}</span>${tag?`<span class="mftag">${esc(tag)}</span>`:''}<span class="bg"><b>${esc(name)}</b></span>${nas?` <span class="pdnas" title="NAS message carried inside this message">NAS: ${esc(nas)}</span>`:''}${opt?' <span class="mfo" title="optional / conditional">opt</span>':''}${ifl?` <span class="pdif">${esc(ifl)}</span>`:''}</div>`+
+   h+=`<div class="mfm pdm${opt?' opt':''}${k===state.procStep?' focus':''}" data-ps="${k}" role="button" tabindex="-1" aria-label="${num}. ${esc(name)}${nas?' – '+esc(pdCarLbl(nas)):''}"><div class="mft" style="${bx}"><span class="pdno">${num}</span>${tag?`<span class="mftag">${esc(tag)}</span>`:''}<span class="bg"><b>${esc(name)}</b></span>${nas?` <span class="pdnas" title="Message carried inside this message">${esc(pdCarLbl(nas))}</span>`:''}${opt?' <span class="mfo" title="optional / conditional">opt</span>':''}${ifl?` <span class="pdif">${esc(ifl)}</span>`:''}</div>`+
     `<div class="mfa ${x2>=x1?'r':'l'}" style="margin-left:${lo}%;width:${hi-lo}%"></div>`+(det?`<div class="mfx" style="${bx}"><span class="bg">${esc(det)}</span></div>`:'')+(ip?`<div class="pdip" style="${bx}"><span class="bg">${ip}</span></div>`:'')+`</div>`;}
   else if(r[0]==='=')h+=`<div class="mfsep"><span>${esc(r[1])}</span></div>`;
   else{const li=r[0].length>1?+r[0].slice(1):null;
@@ -4961,7 +5170,7 @@ function pdBoxHTML(P,big){return pdCtlHTML(P)+pdDiagram(P,big);}
 function pdQHit(P){const tk=state.procQ.toLowerCase().split(/\s+/).filter(Boolean);if(!tk.length)return true;
  const txt=(P.t+' '+P.s+' '+P.d+' '+P.p.map((x,i)=>pdLane(P,i)).join(' ')+' '+P.m.filter(mfIsMsg).map(r=>pdNm(r).join(' ')+' '+pdIfLabel(P,r)).join(' ')).toLowerCase();return tk.every(t=>txt.includes(t));}
 function pdListBody(){const seen=new Set();let h='';
- [...new Set(['4g','nsa','sa','3g','wifi',...GENORDER])].forEach(g=>{const ps=PROC.filter(P=>P.g[0]===g&&pdQHit(P));if(!ps.length)return;
+ [...new Set(['4g','nsa','sa','3g','2g','wifi',...GENORDER])].forEach(g=>{const ps=PROC.filter(P=>P.g[0]===g&&pdQHit(P));if(!ps.length)return;
   h+=`<h3 style="color:${gcol(g)}">${esc(GENS[g].n)}</h3><div class="pdlist">${ps.map(P=>{seen.add(P.id);return `<button class="pdcard" data-proc="${P.id}" style="--c:${gcol(g)}"><b>${esc(P.t)}</b><span>${esc(P.d)}</span><small>${pdMsgs(P).length} messages · ${esc(P.p.map((x,i)=>pdLane(P,i)).join(' · '))}</small></button>`;}).join('')}</div>`;});
  return h||`<p class="ndmuted">No procedure matches “${esc(state.procQ)}”.</p>`;}
 function pdListHTML(){return `<div class="pdnav"><span></span><button data-pa="close" title="Leave the procedure view (Esc)">✕ Close</button></div><h2>End-to-end procedures</h2>
@@ -4971,7 +5180,7 @@ function pdViewHTML(P){const ret=`<div class="pdnav"><button data-pa="list">← 
  return ret+`<h2>${esc(P.t)}</h2><div class="full">${esc(P.s)}</div>${badgeHTML(P.g)}<p>${esc(P.d)}</p>`+
  (ND?'':`<p class="pdhint">Load your network data (◆ Network data) to see the IP addresses and ports of every hop.</p>`)+
  `<div class="pdbox" data-p="${P.id}">${pdBoxHTML(P,false)}</div>`+
- `<p class="mflegend"><span class="lg-s"></span> message <span class="lg-o"></span> optional / conditional · <span class="pdnas">NAS: …</span> NAS message carried inside; NAS messages that RRC / S1AP / NGAP / RANAP only relay are drawn as one arrow UE ↔ core · click a message to show it on the map, ← → to step · grey boxes are steps inside a node${ND?' · addresses: source → destination, destination port':''}</p>`+
+ `<p class="mflegend"><span class="lg-s"></span> message <span class="lg-o"></span> optional / conditional · <span class="pdnas">NAS: …</span> message carried inside; messages that the RAN only relays are drawn as one arrow UE ↔ core · click a message to show it on the map, ← → to step · grey boxes are steps inside a node${ND?' · addresses: source → destination, destination port':''}</p>`+
  `<div class="paneltools"><button data-pa="link">Copy link to this procedure</button><button data-pa="close">Close</button></div>`;}
 function renderProc(){const P=state.proc&&PM[state.proc];const keep=panel.dataset.pd===(P?P.id:'list')?panel.scrollTop:0;
  panel.innerHTML=P?pdViewHTML(P):pdListHTML();panel.dataset.pd=P?P.id:'list';panel.scrollTop=keep;}
@@ -4980,7 +5189,7 @@ function pdChipsHTML(t,id){const ps=pdUses(t,id);if(!ps.length)return '';
 function pdBackHTML(){const R=state.pdReturn&&PM[state.pdReturn.id];return R?`<div class="pdnav"><button data-pa="return">← Back to “${esc(R.t)}”</button><span></span></div>`:'';}
 function pdText(P){const out=[`${P.t} (${P.s})`,P.d,''];const L=i=>pdLane(P,i);let n=0;
  P.m.forEach(r=>{if(mfIsMsg(r)){n++;const [tag,name,nas]=pdNm(r);const ifl=pdIfLabel(P,r),ip=ND?pdIPText(P,r):'';
-  out.push(`${n}. ${L(r[0])} -> ${L(r[1])}: ${tag?'['+tag+'] ':''}${name}${nas?' (NAS: '+nas+')':''}${ifl?' {'+ifl+'}':''}${r[3]?' – '+r[3]:''}${r[4]&&r[4].includes('?')?' (optional)':''}${ip?'  ['+ip+']':''}`);}
+  out.push(`${n}. ${L(r[0])} -> ${L(r[1])}: ${tag?'['+tag+'] ':''}${name}${nas?' ('+pdCarLbl(nas)+')':''}${ifl?' {'+ifl+'}':''}${r[3]?' – '+r[3]:''}${r[4]&&r[4].includes('?')?' (optional)':''}${ip?'  ['+ip+']':''}`);}
   else if(r[0]==='=')out.push('---- '+r[1]+' ----');else out.push('   [note'+(r[0].length>1?' @ '+L(+r[0].slice(1)):'')+'] '+r[1]);});
  return out.join('\n');}
 
@@ -4991,7 +5200,7 @@ function pdEnter(){if(!state.procMode&&!pdSavedVB)pdSavedVB={...vb};state.procMo
 function pdForget(){pdSavedVB=null;}
 function pdOpenList(){pdStop();pdEnter();state.proc=null;state.procHover=null;state.procStep=-1;renderProc();apply();updateHash();if(pdSavedVB)pdTween(pdSavedVB);}
 function pdOpen(id,k){const P=PM[id];if(!P)return;pdStop();pdEnter();state.proc=id;state.procHover=null;state.procStep=k!=null&&P.m[k]&&mfIsMsg(P.m[k])?k:-1;
- state.planes.cp=state.planes.up=state.planes.sbi=true;renderProc();panel.scrollTop=0;apply();updateHash();requestAnimationFrame(()=>{pdFit(P);if(state.procStep>=0)pdScroll();});}
+ state.planes.cp=state.planes.up=state.planes.sbi=true;renderProc();panel.scrollTop=0;apply();updateHash();requestAnimationFrame(()=>{if(state.proc!==id)return;pdFit(P);if(state.procStep>=0)pdScroll();});}
 /* leave the procedure view; keep=true leaves the map where it is (the user clicked something on it) */
 function pdExit(keep){if(!state.procMode)return;pdStop();state.procHover=null;if(state.proc&&keep)state.pdReturn={id:state.proc,k:state.procStep};state.procMode=false;state.proc=null;state.procStep=-1;delete panel.dataset.pd;pdSyncBtn();
  if(!keep&&pdSavedVB)pdTween(pdSavedVB);pdSavedVB=keep?pdSavedVB:null;pdOverlay();}
