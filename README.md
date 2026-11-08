@@ -1,12 +1,12 @@
 # Mobile Network Navigator
 
-**Version 2026.11.08.1** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.08.2** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
 It is meant for network engineers who need to get their bearings quickly while troubleshooting or discussing a topic with colleagues.
 
-- **File:** `index.html` (about 650 KB) – the whole application
+- **File:** `index.html` (about 750 KB) – the whole application
 - **Online:** https://martindubovsky.github.io/mobile-network-navigator/ (once GitHub Pages is enabled for this repository)
 - **Dependencies:** none – no external scripts, fonts or network access; works offline from disk
 - **Your captures:** a pcap / pcapng opens in the tool and shows its interfaces and elements on the map – read in the browser, never uploaded (see [Trace analysis](#trace-analysis))
@@ -20,12 +20,13 @@ It is meant for network engineers who need to get their bearings quickly while t
 1. Open `index.html` in a browser – double-clicking it from disk is enough, no web server needed – or use the GitHub Pages URL above.
 2. Click any box (network element) or line/label (interface) to open its details in the right-hand panel.
 3. Use the generation chips at the top to highlight what belongs to 3G, HSPA, 4G, 5G NSA, 5G SA or interworking.
+4. Press `?` or **? Help** in the toolbar for the in-app help – including a detailed explanation of how the trace analysis categorises the traffic.
 
 ---
 
 ## Views
 
-The top bar is two rows at 1920 px width: title + version, generation chips and view tabs on the first row; search, plane toggles, 5GC view, EPC view, protocol filter, **▶ Procedures**, **⇅ Trace**, network data and theme on the second. On narrower screens it wraps.
+The top bar is two rows at 1920 px width: title + version, generation chips and view tabs on the first row; search, plane toggles, 5GC view, EPC view, protocol filter, **▶ Procedures**, **⇅ Trace**, **? Help**, network data and theme on the second. On narrower screens it wraps.
 
 | View | What it shows |
 |---|---|
@@ -67,6 +68,7 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 | **EPC view** | *Classic*: SGW and PGW as single nodes. *CUPS*: R14 control/user-plane split – SGW-C, SGW-U, PGW-C, PGW-U with **Sxa** and **Sxb** (PFCP), and the attached interfaces split accordingly (S11 → SGW-C, S1-U/S12/S4-U → SGW-U, S5-C/S5-U, Gx and Gy/Gz → PGW-C, SGi → PGW-U). |
 | **Protocol** (dropdown) | Highlight all interfaces using GTP-U, GTPv1-C, GTPv2-C, PFCP, Diameter, MAP/SS7, SCTP, HTTP/2 SBI or ATM transport. |
 | **▶ Procedures** | Opens the [end-to-end procedures](#end-to-end-procedures) in the panel. While one is open, the map shows only the nodes and interfaces it uses. |
+| **? Help** | Opens the [in-app help](#help): searchable, with a table of contents and links to each section. |
 | **Theme** | Dark/light; the choice is remembered in the browser. |
 
 ### Mouse, touch and keyboard
@@ -81,6 +83,7 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 | `/` | Focus search |
 | `Esc` | Clear search (if focused) or selection; leave the procedure view |
 | `←` / `→` | Previous / next message of the open end-to-end procedure |
+| `?` | Open / close the help (in the help, `/` searches it and `Esc` closes it) |
 | `Tab`, then `Enter` / `Space` | Keyboard navigation and selection of diagram items |
 
 ### Line styles
@@ -159,6 +162,8 @@ The flows follow the clauses named under each title (TS 23.401, 23.502, 23.060, 
 
 ## Trace analysis
 
+> The in-app help (**? Help** → *Trace analysis*, or `#help=tr-overview`) explains every step and rule below in detail, with tables generated from the analysis itself.
+
 **⇅ Trace** in the toolbar (or the link on the overview page, or dropping a file anywhere on the page) opens a Wireshark capture and shows which interfaces and network elements it contains: the map highlights the interfaces with their packet counts and dims everything else, and the panel lists the results.
 
 **Private by design.** The file is read in this browser only, as a stream – it is never uploaded, stored (not in `localStorage` either), put in the link or included in “Save with data”. **Close trace**, or closing the page, discards it. No subscriber identities (IMSI, MSISDN, user names, Subscription-Id) are read; UE addresses are kept in memory only to recognise plain-IP traffic and are shown as counts. `.gitignore` excludes capture files (`*.pcap`, `*.pcapng`, `*.cap`, `*.ntar`, also gzipped).
@@ -169,7 +174,7 @@ The flows follow the clauses named under each title (TS 23.401, 23.502, 23.060, 
 
 | Traffic | Evidence | Result |
 |---|---|---|
-| GTP-U (UDP 2152) | Both addresses signalled in the same capture: F-TEID interface type in GTPv2-C (TS 29.274 §8.22, e.g. *S1-U eNodeB*, *S5/S8 PGW GTP-U*), GSN addresses in GTPv1-C Create PDP Context (with the Direct Tunnel flag for the RNC), local F-TEID / Outer Header Creation with the 3GPP Interface Type in PFCP (TS 29.244 §8.2.118) | S1-U, S5/S8, S4, S12, S11-U, S2b, Gn, direct tunnel, N3, N9 – **certain**; one end signalled – **likely** |
+| GTP-U (UDP 2152) | Both addresses signalled in the same capture (S11-U too): F-TEID interface type in GTPv2-C (TS 29.274 §8.22, e.g. *S1-U eNodeB*, *S5/S8 PGW GTP-U*), GSN addresses in GTPv1-C Create PDP Context (with the Direct Tunnel flag for the RNC), local F-TEID / Outer Header Creation with the 3GPP Interface Type in PFCP (TS 29.244 §8.2.118) | S1-U, S5/S8, S4, S12, S11-U, S2b, Gn, direct tunnel, N3, N9 – **certain**; one end signalled – **likely** |
 | | PDU Session Container extension header | N3 (or N9) – **likely** |
 | GTPv1-C (UDP 2123) | the protocol | Gn / Gp – **certain** |
 | GTPv2-C (UDP 2123) | F-TEID interface types of both ends | S11, S5/S8, S4, S3, S10, N26, S2b – **certain**; SRVCC messages → Sv |
@@ -194,6 +199,12 @@ Messages are re-assembled per TCP direction (retransmissions are not counted twi
 **Network data** makes the results more precise: an address listed on an interface in your IP plan decides traffic that the protocols leave open (both ends listed – certain, one end or the interface’s VLAN – likely; one listed address never overrides protocol evidence, because one address often serves several interfaces), and instance names are shown next to the addresses.
 
 **Not decoded:** Diameter over TLS (port 5868) or DTLS, HTTP/2 SBI, SIP, IPsec payloads, zstd / lz4-compressed pcapng. These are listed but not identified.
+
+## Help
+
+**? Help** in the toolbar, the `?` key, the link on the overview page, or a `#help` link opens the in-app help over the map: a table of contents on the left, the text on the right, and a search box (`/`) that keeps only the sections containing all the words you type and marks them. The address bar shows the section you are reading (`#help=<section>`), so a link to it can be shared; `Esc` closes the help and returns to where you were.
+
+It covers the views, filters, details panel, message flows, end-to-end procedures, network data, keyboard and deep links, and – in detail – the [trace analysis](#trace-analysis): reading the capture, classifying packets, what is decoded, flows and groups, the rules per protocol, network data, elements, direction, the results panel, suggestions for network data, and the limits. The tables in that chapter (ports, PPIDs, F-TEID and PFCP interface types, Diameter applications, RAT types, the client and UE side of each interface) are generated from the analysis tables, so the help always describes what the code does.
 
 ## Network data (your own IP addresses)
 
@@ -318,8 +329,11 @@ The page address updates with the current selection, so a link can be sent to a 
 | `#procedures` | `index.html#procedures` | List of end-to-end procedures |
 | `#gen=<gen>[,<gen>…]` | `index.html#gen=nsa,4g` | Generation filter |
 | `#releases` | `index.html#releases` | Release history |
+| `#help[=<section>]` | `index.html#help=tr-gtpu` | The help, optionally at a section (IDs below) |
 
 Generation IDs: `2g`, `3g`, `hspa`, `4g`, `nsa`, `sa`, `wifi` (Wi-Fi access via ePDG), `iw` (interworking).
+
+Help sections: `start`, `views`, `filters`, `panel`, `procs`; trace analysis `tr-overview`, `tr-read`, `tr-classify`, `tr-decode`, `tr-flows`, `tr-evidence`, `tr-gtpu`, `tr-gtpc`, `tr-pfcp`, `tr-dia`, `tr-radius`, `tr-plain`, `tr-sctp`, `tr-nd`, `tr-ends`, `tr-dir`, `tr-results`, `tr-sug`, `tr-limits`; network data `nd`, `nd-format`, `nd-privacy`; `keys`, `links`, `about`.
 
 The **Copy link to this item** button in the panel copies the current address to the clipboard. Some browsers block the clipboard for `file://` pages; in that case copy the address bar instead.
 
@@ -436,6 +450,12 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.08.2
+- **Help** – **? Help** in the toolbar, the `?` key or a `#help` link opens a searchable help: the map and its views, filters and search, the details panel and message flows, end-to-end procedures, network data, keyboard and deep links.
+- The help explains the **trace analysis** step by step: how a capture is read (formats, VLAN / MPLS / PPPoE, IPv6 extension headers, fragments), how every packet is classified by port, SCTP PPID or IP protocol, what is decoded, how flows and groups are formed, the rules per protocol that decide the interface (GTP-U, GTPv2-C, GTPv1-C, PFCP, Diameter, RADIUS, plain IP, SCTP, IKEv2 / ESP, GTP′), how your network data and your choices are used, how elements and the uplink / downlink direction are found, and the limits. Its tables – ports, PPIDs, F-TEID and PFCP interface types, Diameter applications, RAT types – are generated from the analysis itself, so they always match what it does.
+- Links to the matching help sections from the overview and the trace panel; `#help=<section>` opens a section directly (e.g. `#help=tr-gtpu`), and the address bar shows the section you are reading.
+- Trace analysis: GTP-U on **S11-U** (Control Plane CIoT EPS optimisation – F-TEID types 38 / 39 in GTPv2-C, 3GPP Interface Type S11-U in PFCP) is now identified as S11, with its direction; before, these tunnels were left undecided although the signalling identified them.
 
 ### 2026.11.08.1
 - Trace analysis – **direction per capture interface**: uplink and downlink of the user plane are worked out (eNodeB → S-GW on S1-U, gNB → UPF on N3, UE → server on SGi / Gi / N6…) and shown per capture interface (DPDK port, pcapng interface or file) as ↑ uplink, ↓ downlink or both, with the share per interface and the sending element of the signalling. Two ports that carry the opposite directions of the same links are pointed out; interface rows show their ↑ / ↓ share.
