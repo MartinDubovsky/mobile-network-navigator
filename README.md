@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.07.2** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.08** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
@@ -434,6 +434,10 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.08
+- Trace analysis: plain IP on SGi, Gi and N6 is now recognised only by addresses that sit behind one data-network side (the UE addresses). Internet servers, which appear inside GTP-U on S1-U, N3 and Gn alike, no longer make N6 or Gi traffic look partly like SGi.
+- Trace analysis: the packet-count badges on the map are drawn once per update (they were redrawn several times).
 
 ### 2026.11.07.2
 - **Trace analysis** (**⇅ Trace** in the toolbar, or drop a file on the page): open a Wireshark capture – pcap or pcapng, also gzip-compressed and with several capture interfaces – and see which interfaces and elements it contains. The map highlights them with packet counts; the panel lists every interface with its evidence, the elements with their addresses and names, and the protocol details.
