@@ -4,6 +4,8 @@
 # site = site name ("*" = the entry belongs to every site);
 # interface = interface ID or name, or oam / sbi / other. Rows with an empty element describe the interface itself (subnet, VLAN).
 # port = one port, a list (2123;2152 - separated by ; , / or spaces) or a range (30000-30100).
+# Non-standard protocol ports of your network (used by the trace analysis), one line each - for example:
+#   "# ports: diameter tcp 3870;3900-3910 - Gx peers" or "# ports: radius 31812-31813" (transport optional).
 element,instance,site,interface,ip,port,vlan,note
 mme,MME01,Site-A,s1mme,192.0.2.11,36412,101,SCTP multihoming - primary path
 mme,MME01,Site-A,s1mme,192.0.2.12,36412,101,SCTP multihoming - secondary path

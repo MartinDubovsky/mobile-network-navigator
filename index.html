@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="version" content="2026.11.08.2">
+<meta name="version" content="2026.11.08.3">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mobile Network Navigator · 2G · 3G · HSPA · 4G · 5G NSA · 5G SA</title>
@@ -300,6 +300,10 @@ table.ndedit .nd-ip{font-family:var(--mono);font-size:12px}
 .nderr{color:#ef4444;font-size:12.5px;min-height:1.2em;margin-top:6px}
 .ndlink{border:0;background:transparent;color:var(--g4g);cursor:pointer;padding:0;font-size:inherit;text-decoration:underline;text-underline-offset:2px}
 .ndwarn{margin:0;padding-left:18px;line-height:1.5}
+table.ndpt td:nth-child(1){width:27%}table.ndpt td:nth-child(2){width:15%}table.ndpt td:nth-child(3){width:21%}table.ndpt td:nth-child(4){width:auto}table.ndpt td:nth-child(5){width:30px}
+table.ndpt .ndp-ports{font-family:var(--mono);font-size:12px}table.ndpt input.bad{border-color:#e5484d;outline:1px solid #e5484d}
+#modal .ndpw .ndwarn{font-size:12px;color:var(--muted);margin-top:6px}.ndpstd{margin-top:10px;font-size:12px}.ndpstd summary{cursor:pointer;color:var(--muted)}.ndpstd td:first-child{white-space:nowrap;padding-right:12px}.ndpstd td{font-size:12px;padding:2px 4px}
+.ndpov{font-size:12px}
 .ndmuted{color:var(--muted);font-size:12.5px}
 .ndhint{margin-top:14px}
 #panel h3.ndh{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;color:var(--giw)}
@@ -346,6 +350,7 @@ body.nddrop::after{content:'Drop captures (pcap / pcapng) or CSV / JSON network 
 .trdrop span{color:var(--muted);font-size:12.5px}
 .trprimary{border:1px solid var(--ink);background:var(--panel);color:var(--ink);border-radius:7px;padding:6px 14px;font-weight:600;cursor:pointer;font-size:13px}
 .trpriv{font-size:12px;color:var(--muted);border-left:3px solid var(--giw);padding:2px 0 2px 8px;margin:8px 0}
+.trpm{font-size:12px;border-left:3px solid var(--g4g);padding:2px 0 2px 8px;margin:8px 0}
 .trul{padding-left:18px;margin:4px 0}.trul li{margin:3px 0;font-size:13px}
 .trlegend{font-size:12.5px;line-height:1.9}
 .trc{display:inline-block;border-radius:9px;padding:0 7px;font-size:11px;font-weight:600;white-space:nowrap;border:1px solid}
@@ -571,9 +576,9 @@ body.hpopen{overflow:hidden}
 <script>
 'use strict';
 const PRISTINE_DOC=document.documentElement.cloneNode(true); /* clean copy of the tool, used by “Save tool + data as one HTML file” */
-const VERSION = '2026.11.08.2';
+const VERSION = '2026.11.08.3';
 /* release history – shown when the version number is clicked; keep in step with the README changelog */
-const RELEASES = [{"v": "2026.11.08.2", "items": ["**Help** – **? Help** in the toolbar, the `?` key or a `#help` link opens a searchable help: the map and its views, filters and search, the details panel and message flows, end-to-end procedures, network data, keyboard and deep links.", "The help explains the **trace analysis** step by step: how a capture is read (formats, VLAN / MPLS / PPPoE, IPv6 extension headers, fragments), how every packet is classified by port, SCTP PPID or IP protocol, what is decoded, how flows and groups are formed, the rules per protocol that decide the interface (GTP-U, GTPv2-C, GTPv1-C, PFCP, Diameter, RADIUS, plain IP, SCTP, IKEv2 / ESP, GTP′), how your network data and your choices are used, how elements and the uplink / downlink direction are found, and the limits. Its tables – ports, PPIDs, F-TEID and PFCP interface types, Diameter applications, RAT types – are generated from the analysis itself, so they always match what it does.", "Links to the matching help sections from the overview and the trace panel; `#help=<section>` opens a section directly (e.g. `#help=tr-gtpu`), and the address bar shows the section you are reading.", "Trace analysis: GTP-U on **S11-U** (Control Plane CIoT EPS optimisation – F-TEID types 38 / 39 in GTPv2-C, 3GPP Interface Type S11-U in PFCP) is now identified as S11, with its direction; before, these tunnels were left undecided although the signalling identified them."]}, {"v": "2026.11.08.1", "items": ["Trace analysis – **direction per capture interface**: uplink and downlink of the user plane are worked out (eNodeB → S-GW on S1-U, gNB → UPF on N3, UE → server on SGi / Gi / N6…) and shown per capture interface (DPDK port, pcapng interface or file) as ↑ uplink, ↓ downlink or both, with the share per interface and the sending element of the signalling. Two ports that carry the opposite directions of the same links are pointed out; interface rows show their ↑ / ↓ share.", "UE addresses are now told from server addresses by the direction they travel inside GTP-U (the inner source of uplink packets is the UE), so plain IP on SGi, Gi and N6 is matched and its direction counted precisely.", "Trace analysis – **several files at once**: open or drop the files of several probe ports together; they are analysed as one capture with one capture interface per file. A file that cannot be read is reported and skipped; a PFCP response read before its request (directions in separate files) is still paired.", "Trace analysis – **Add to network data…**: the addresses identified in a trace are offered as instances for your network data – element, name (from Diameter Origin-Host, PFCP Node ID or RADIUS NAS-Identifier), interface, address, well-known port and VLAN, with the evidence as a note. Certain ones are pre-selected, likely ones are yours to decide; addresses already in your network data are marked. Nothing is saved until you export.", "Trace analysis: on RAN interfaces without signalling, the address with many peers is taken as the core side (S-GW, UPF, MME…) and its peers as RAN nodes (likely). An address listed in your network data no longer overrides protocol evidence for another interface of the same address (an OCS on Gy and Ro)."]}, {"v": "2026.11.08", "items": ["Trace analysis: plain IP on SGi, Gi and N6 is now recognised only by addresses that sit behind one data-network side (the UE addresses). Internet servers, which appear inside GTP-U on S1-U, N3 and Gn alike, no longer make N6 or Gi traffic look partly like SGi.", "Trace analysis: the packet-count badges on the map are drawn once per update (they were redrawn several times)."]}, {"v": "2026.11.07.2", "items": ["**Trace analysis** (**⇅ Trace** in the toolbar, or drop a file on the page): open a Wireshark capture – pcap or pcapng, also gzip-compressed and with several capture interfaces – and see which interfaces and elements it contains. The map highlights them with packet counts; the panel lists every interface with its evidence, the elements with their addresses and names, and the protocol details.", "Interfaces are identified from the traffic itself: GTP-U is told apart (S1-U, S5/S8-U, N3, N9, Gn, direct tunnel…) by the F-TEIDs signalled in GTPv2-C, GTPv1-C and PFCP of the same capture; PFCP by its 3GPP Interface Type IEs (N4, Sxa, Sxb); Diameter by application and AVPs (Gx with IP-CAN-Type for P-GW or GGSN, Gy / Ro and Gz / Rf by Service-Context-Id, S6a / S6d by the ULR flag, Rx, S13, SWm, SWx, S6b, Cx / Sh, Sy, S9); RADIUS by 3GPP-RAT-Type; plain IP on Gi / SGi / N6 by its addresses also seen inside GTP-U or as Framed-IP-Address in Gx / RADIUS; S1AP, NGAP, XnAP, F1AP, E1AP, SGsAP and NBAP by SCTP PPID or port.", "Every result says how sure it is – **certain**, **likely** or **undecided** – and why. Undecided and likely traffic is grouped by protocol, VLAN and capture interface, and one choice assigns a whole group. Your network data, when loaded, names the elements and settles ambiguous cases.", "Private by design: the capture is read in the browser as a stream (about 700 000 packets per second in our tests) and never uploaded, stored, put in the link or in “Save with data”. No subscriber identities are read. `.gitignore` now also excludes capture files."]}, {"v": "2026.11.07.1", "items": ["**16 new end-to-end procedures** (39 in total): combined GPRS / IMSI attach over Gs; 3G PS service request and 3G CS mobile-originated call with Iu UP; HSPA RAB on HS-DSCH and E-DCH; LTE PDN connectivity (IMS APN), tracking area update with MME change and S1 handover; EN-DC secondary node release; 5G N2 handover, network-triggered service request, PDU session release and deregistration; Wi-Fi → LTE handover and Wi-Fi calling detach; CS fallback mobile-terminated call and SRVCC LTE → UTRAN.", "The procedure list is now grouped in generation order – 2G, 3G, HSPA, 4G, 5G NSA, 5G SA, Wi-Fi, Interworking – and ordered inside each group from registration to sessions, mobility and release. CS fallback moved to Interworking.", "User data rows that cross several interfaces are tagged **IP** instead of GTP-U."]},{"v": "2026.11.07", "items": ["**2G end-to-end procedures** (6 new, 23 in total): GSM location update, mobile-originated call, mobile-terminated call with HLR interrogation and paging, call release, inter-BSC handover, and GPRS attach with PDP context activation in A/Gb mode.", "The 2G flows show the BTS and BSC hops: RR on Um, RSL on Abis (CHANNEL REQUIRED, IMMEDIATE ASSIGN COMMAND, ESTABLISH INDICATION, ENCRYPTION COMMAND, PAGING COMMAND), BSSMAP and SCCP on A, H.248 to the CS-MGW, ISUP towards the other network, MAP on C / D and Gr, BSSGP on Gb.", "Carried messages are labelled by layer: **NAS: …** for MM / CC / GMM / EMM / 5GMM messages, **RR: …** for RR messages inside RSL or BSSMAP (e.g. the Handover Command in HANDOVER REQUEST ACKNOWLEDGE).", "Fixed: closing a procedure right after opening it (e.g. a quick change of the deep link) could leave the map zoomed in.", "The message label on the map stays inside the visible map area, also for hops along the map edge (e.g. Um).", "Fixed: the map zoom animation of a procedure could, in rare cases, jump far outside the map."]},{"v": "2026.11.06.2", "items": ["**End-to-end procedures – Play:** the dot now travels once per step and stays at the destination; the next step starts only after it has arrived (at least 1.7 s per step, longer for long paths). Stepping by hand still repeats the animation."]},{"v": "2026.11.06.1", "items": ["**End-to-end procedures – NAS messages made explicit:** a NAS message carried inside an RRC, S1AP, NGAP or RANAP message is now named on that message (e.g. RRC Connection Setup Complete and INITIAL UE MESSAGE with **NAS: Attach Request + PDN Connectivity Request**, INITIAL CONTEXT SETUP REQUEST and RRC Connection Reconfiguration with **NAS: Attach Accept + Activate Default EPS Bearer Context Request**). Before, these were only mentioned in the parameter text. NAS messages that RRC / S1AP / NGAP / RANAP only relay stay one arrow UE ↔ core; the rule is stated in each flow.", "NAS layer tags are now precise: **EMM / ESM** (4G), **5GMM** (5G), **MM / CC / GMM / SM** (3G) instead of a generic NAS tag. Attach Complete is named with its ESM message (Activate Default EPS Bearer Context Accept).", "Added the optional **Identity Request / Response** to LTE attach, 5G registration and 3G attach, and a note on the optional EIR check (S13) in LTE attach. In UTRAN the first NAS message (CM Service Request, GPRS Attach Request) is shown per hop: RRC Initial Direct Transfer, then RANAP INITIAL UE MESSAGE.", "RRC IE names corrected: LTE RRC Connection Reconfiguration carries NAS in **dedicatedInfoNASList**, NR RRCReconfiguration in **dedicatedNAS-MessageList** (also fixed in the LTE-Uu message flow)."]},{"v": "2026.11.06", "items": ["**End-to-end procedures** (▶ Procedures in the toolbar): 17 multi-node call flows – LTE attach, service request, paging, S1 release, X2 handover, VoLTE dedicated bearer, detach, CS fallback, EN-DC secondary node addition, 5G registration, PDU session, service request, AN release, Xn handover, 3G attach + PDP context, Wi-Fi calling attach and LTE → Wi-Fi handover – with the interface of every message.", "**Map integration:** the map zooms to the procedure and dims everything else; stepping through the messages (click, ← / →, Play) highlights each hop and animates it along its path. Works in the CUPS and reference-point views.", "**IP addresses in the flows:** with network data loaded, pick the instance of each node above its lane and every message shows source → destination address and port.", "Element and interface panels list the procedures they appear in; deep links `#proc=<id>&step=<n>`; copy as text and larger view."]},{"v": "2026.11.05.9", "items": ["**Wi-Fi access via ePDG** (untrusted non-3GPP, VoWiFi): new **ePDG** and **3GPP AAA** elements with **SWu**, **SWm**, **SWx**, **S2b** and **S6b** (S2b-C / S2b-U and S6b to the PGW-C in the CUPS view), a **Wi-Fi** generation chip, message flows (IKEv2 + EAP-AKA tunnel set-up, S2b PDN connection, LTE ↔ Wi-Fi handover, Diameter procedures) and two end-to-end stacks.", "Map: the 5G rows moved down to make room below the EPC; the canvas is now 1900 × 1400."]},{"v": "2026.11.05.8", "items": ["**Network data:** site `*` means the instance belongs to every site – it is shown whichever sites are selected and is not listed as a separate site in the site filter."]},{"v": "2026.11.05.7","items": ["**Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet."]},{"v": "2026.11.05.6","items": ["**Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.","Addresses written with a prefix length (`10.2.7.2/26`) are treated as one address, not as the whole subnet: search no longer matches other addresses of that subnet, and the duplicate check compares the address part. CIDR blocks with zero host bits stay ranges."]},{"v": "2026.11.05.5","items": ["**Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.","**Site filter** for network data: pick sites (or type part of a name) to limit panels, map badges, tooltips and search; optional export of only the filtered sites; the filter is kept with “Remember on this computer”.","Template: port lists and a second site; RAN ranges without a site."]},{"v": "2026.11.05.4","items": ["**Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.","Larger view, copy as text, keyboard navigation, search over procedure and message names, and deep links to a procedure (`&mf=`)."]},{"v": "2026.11.05.3","items": ["**Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.","Save as CSV, JSON, encrypted JSON (AES-256-GCM, PBKDF2-SHA256), or as one HTML file with the tool and the data (optionally encrypted). Optional “Remember on this computer”. Warning before leaving with unsaved changes.","Content-Security-Policy added: the page cannot load or send anything over the network.","Templates `netdata-template.csv` / `netdata-template.json` (documentation addresses only); `.gitignore` excludes exports with real data.","`/` no longer jumps to the search box while typing in another field."]},{"v": "2026.11.05.2","items": ["**E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.","Scenarios can now consist of several paths: **5G NSA** user plane (NR leg + LTE leg over X2-U) and control plane (LTE RRC/NAS, SCG configuration via X2-C, SRB3) and **HSPA Direct Tunnel** (user plane RNC ↔ GGSN + SGSN control path) – every stack now faces its real peer.","Fixed labels: GTP-U (QFI) on N3/N9 at both ends, 16 / 8 kbit/s TRAU sub-timeslots on Abis and Ater; BSC added to the GSM speech path; user IP labelled consistently."]},{"v": "2026.11.05","items": ["Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).","The CS and PS core (MSC Server/VLR, CS-MGW, HLR/AuC, EIR, SGSN, GGSN, charging) is shared with 3G and now tagged for both generations.","Integration with modern networks: CSFB and SRVCC to GERAN (SGs, Sv), LTE ↔ GERAN reselection / redirection / NACC, S4-SGSN with Gb (S3/S4), and 5G-SRVCC (R16, NG-RAN → UTRAN only, via N26 → MME_SRVCC → Sv); no direct 5GS ↔ GERAN mobility.","New end-to-end stacks: 2G GPRS/EDGE user plane, GSM CS control plane, GSM speech path.","Renamed to “Mobile Network Navigator”; shorter generation chip subtitles so the header still fits one row at 1920 px."]},{"v": "2026.11.04.3","items": ["Drew interfaces that were only described in text: **Cx / Sh** (IMS–HSS), **Ro / Rf** (IMS–OCS/OFCS), **Sy** (PCRF–OCS), **S9** (PCRF–roaming partner), **S6d** (S4-SGSN–HSS), **Gs** (SGSN–MSC/VLR), **Gc** (GGSN–HLR), **Nhss** (HSS–UDM interworking, R16), and reference points **N23** (PCF–NWDAF) and **N34** (NSSF–NWDAF).","Diameter in 5G networks made visible: N5 to the IMS is now “N5 / Rx” (PCF supports Rx per TS 23.503 Annex C), N6/SGi/Gi carry the DN-AAA (RADIUS/Diameter) option; *5G SA* + *Diameter* filter highlights Cx/Sh, Ro/Rf, N5/Rx and N6.","EPC zone label moved to the bottom-right corner."]},{"v": "2026.11.04.2","items": ["Added **ng-eNB** (E-UTRA connected to 5GC) in the NG-RAN area with LTE-Uu, N2 (NG-C) to AMF, N3 (NG-U) to UPF and Xn to the gNB; notes on Options 4/4a, 5 and 7/7a/7x.","5G SA chip now reads “5GC · Opt. 2 (4/5/7)”."]},{"v": "2026.11.04","items": ["First release: architecture map (3G, HSPA, 4G, 5G NSA, 5G SA, interworking), element/interface details with protocol stacks, end-to-end stack view, interface table, deep links, dark/light theme.","Added Gx between GGSN (PCEF) and PCRF (R7+).","Added EPC **CUPS view**: SGW-C/U, PGW-C/U, Sxa, Sxb, S5-C/U, S4-C/U.","Compact top bar (two rows at 1920 px), protocol filter as a dropdown, date-based version label."]}];
+const RELEASES = [{"v": "2026.11.08.3", "items": ["Network data – **Protocol ports**: non-standard ports your network uses for a protocol – Diameter on TCP 3870, RADIUS on UDP 31812–31813, SGsAP on SCTP 29200 – as single ports, lists or ranges, for Diameter (TCP, SCTP), Diameter over TLS / DTLS, RADIUS, GTP-C, GTP-U, PFCP, GTP′ and the SCTP protocols (S1AP, NGAP, X2AP, XnAP, F1AP, E1AP, SGsAP, NBAP, M3UA, RUA, HNBAP). Edit them under **◆ Network data → Protocol ports…**; the dialog also lists the standard ports.", "The protocol ports are **saved with your network data** – CSV (`# ports: diameter tcp 3870;3900-3910 – note` lines), JSON (`ports`), encrypted JSON and the saved HTML file – so captures of the network are read correctly wherever the data is loaded.", "Trace analysis: protocols on your ports are recognised like on their standard ports – also the listening side of SCTP. Standard ports keep their meaning (on UDP your port also gets a packet whose standard-port header check fails); on SCTP the PPID still comes first. When the ports change – edited, or with other network data loaded – an open trace is **read again** with them, keeping your choices in Check and decide; the result lists the ports that were used.", "**Add to network data…** now suggests the ports each address was actually seen using – standard or yours (Diameter 3870 on the PCRF, RADIUS 1812 and 1813 on the AAA, 3799 on a NAS receiving CoA) – instead of the standard ones.", "The data check warns about protocol-port rules that cannot be used, that cover a standard port of another protocol, that give one port to two protocols, or whose range is wider than 1000 ports. The help has a new section **Protocol ports** (`#help=nd-ports`)."]}, {"v": "2026.11.08.2", "items": ["**Help** – **? Help** in the toolbar, the `?` key or a `#help` link opens a searchable help: the map and its views, filters and search, the details panel and message flows, end-to-end procedures, network data, keyboard and deep links.", "The help explains the **trace analysis** step by step: how a capture is read (formats, VLAN / MPLS / PPPoE, IPv6 extension headers, fragments), how every packet is classified by port, SCTP PPID or IP protocol, what is decoded, how flows and groups are formed, the rules per protocol that decide the interface (GTP-U, GTPv2-C, GTPv1-C, PFCP, Diameter, RADIUS, plain IP, SCTP, IKEv2 / ESP, GTP′), how your network data and your choices are used, how elements and the uplink / downlink direction are found, and the limits. Its tables – ports, PPIDs, F-TEID and PFCP interface types, Diameter applications, RAT types – are generated from the analysis itself, so they always match what it does.", "Links to the matching help sections from the overview and the trace panel; `#help=<section>` opens a section directly (e.g. `#help=tr-gtpu`), and the address bar shows the section you are reading.", "Trace analysis: GTP-U on **S11-U** (Control Plane CIoT EPS optimisation – F-TEID types 38 / 39 in GTPv2-C, 3GPP Interface Type S11-U in PFCP) is now identified as S11, with its direction; before, these tunnels were left undecided although the signalling identified them."]}, {"v": "2026.11.08.1", "items": ["Trace analysis – **direction per capture interface**: uplink and downlink of the user plane are worked out (eNodeB → S-GW on S1-U, gNB → UPF on N3, UE → server on SGi / Gi / N6…) and shown per capture interface (DPDK port, pcapng interface or file) as ↑ uplink, ↓ downlink or both, with the share per interface and the sending element of the signalling. Two ports that carry the opposite directions of the same links are pointed out; interface rows show their ↑ / ↓ share.", "UE addresses are now told from server addresses by the direction they travel inside GTP-U (the inner source of uplink packets is the UE), so plain IP on SGi, Gi and N6 is matched and its direction counted precisely.", "Trace analysis – **several files at once**: open or drop the files of several probe ports together; they are analysed as one capture with one capture interface per file. A file that cannot be read is reported and skipped; a PFCP response read before its request (directions in separate files) is still paired.", "Trace analysis – **Add to network data…**: the addresses identified in a trace are offered as instances for your network data – element, name (from Diameter Origin-Host, PFCP Node ID or RADIUS NAS-Identifier), interface, address, well-known port and VLAN, with the evidence as a note. Certain ones are pre-selected, likely ones are yours to decide; addresses already in your network data are marked. Nothing is saved until you export.", "Trace analysis: on RAN interfaces without signalling, the address with many peers is taken as the core side (S-GW, UPF, MME…) and its peers as RAN nodes (likely). An address listed in your network data no longer overrides protocol evidence for another interface of the same address (an OCS on Gy and Ro)."]}, {"v": "2026.11.08", "items": ["Trace analysis: plain IP on SGi, Gi and N6 is now recognised only by addresses that sit behind one data-network side (the UE addresses). Internet servers, which appear inside GTP-U on S1-U, N3 and Gn alike, no longer make N6 or Gi traffic look partly like SGi.", "Trace analysis: the packet-count badges on the map are drawn once per update (they were redrawn several times)."]}, {"v": "2026.11.07.2", "items": ["**Trace analysis** (**⇅ Trace** in the toolbar, or drop a file on the page): open a Wireshark capture – pcap or pcapng, also gzip-compressed and with several capture interfaces – and see which interfaces and elements it contains. The map highlights them with packet counts; the panel lists every interface with its evidence, the elements with their addresses and names, and the protocol details.", "Interfaces are identified from the traffic itself: GTP-U is told apart (S1-U, S5/S8-U, N3, N9, Gn, direct tunnel…) by the F-TEIDs signalled in GTPv2-C, GTPv1-C and PFCP of the same capture; PFCP by its 3GPP Interface Type IEs (N4, Sxa, Sxb); Diameter by application and AVPs (Gx with IP-CAN-Type for P-GW or GGSN, Gy / Ro and Gz / Rf by Service-Context-Id, S6a / S6d by the ULR flag, Rx, S13, SWm, SWx, S6b, Cx / Sh, Sy, S9); RADIUS by 3GPP-RAT-Type; plain IP on Gi / SGi / N6 by its addresses also seen inside GTP-U or as Framed-IP-Address in Gx / RADIUS; S1AP, NGAP, XnAP, F1AP, E1AP, SGsAP and NBAP by SCTP PPID or port.", "Every result says how sure it is – **certain**, **likely** or **undecided** – and why. Undecided and likely traffic is grouped by protocol, VLAN and capture interface, and one choice assigns a whole group. Your network data, when loaded, names the elements and settles ambiguous cases.", "Private by design: the capture is read in the browser as a stream (about 700 000 packets per second in our tests) and never uploaded, stored, put in the link or in “Save with data”. No subscriber identities are read. `.gitignore` now also excludes capture files."]}, {"v": "2026.11.07.1", "items": ["**16 new end-to-end procedures** (39 in total): combined GPRS / IMSI attach over Gs; 3G PS service request and 3G CS mobile-originated call with Iu UP; HSPA RAB on HS-DSCH and E-DCH; LTE PDN connectivity (IMS APN), tracking area update with MME change and S1 handover; EN-DC secondary node release; 5G N2 handover, network-triggered service request, PDU session release and deregistration; Wi-Fi → LTE handover and Wi-Fi calling detach; CS fallback mobile-terminated call and SRVCC LTE → UTRAN.", "The procedure list is now grouped in generation order – 2G, 3G, HSPA, 4G, 5G NSA, 5G SA, Wi-Fi, Interworking – and ordered inside each group from registration to sessions, mobility and release. CS fallback moved to Interworking.", "User data rows that cross several interfaces are tagged **IP** instead of GTP-U."]},{"v": "2026.11.07", "items": ["**2G end-to-end procedures** (6 new, 23 in total): GSM location update, mobile-originated call, mobile-terminated call with HLR interrogation and paging, call release, inter-BSC handover, and GPRS attach with PDP context activation in A/Gb mode.", "The 2G flows show the BTS and BSC hops: RR on Um, RSL on Abis (CHANNEL REQUIRED, IMMEDIATE ASSIGN COMMAND, ESTABLISH INDICATION, ENCRYPTION COMMAND, PAGING COMMAND), BSSMAP and SCCP on A, H.248 to the CS-MGW, ISUP towards the other network, MAP on C / D and Gr, BSSGP on Gb.", "Carried messages are labelled by layer: **NAS: …** for MM / CC / GMM / EMM / 5GMM messages, **RR: …** for RR messages inside RSL or BSSMAP (e.g. the Handover Command in HANDOVER REQUEST ACKNOWLEDGE).", "Fixed: closing a procedure right after opening it (e.g. a quick change of the deep link) could leave the map zoomed in.", "The message label on the map stays inside the visible map area, also for hops along the map edge (e.g. Um).", "Fixed: the map zoom animation of a procedure could, in rare cases, jump far outside the map."]},{"v": "2026.11.06.2", "items": ["**End-to-end procedures – Play:** the dot now travels once per step and stays at the destination; the next step starts only after it has arrived (at least 1.7 s per step, longer for long paths). Stepping by hand still repeats the animation."]},{"v": "2026.11.06.1", "items": ["**End-to-end procedures – NAS messages made explicit:** a NAS message carried inside an RRC, S1AP, NGAP or RANAP message is now named on that message (e.g. RRC Connection Setup Complete and INITIAL UE MESSAGE with **NAS: Attach Request + PDN Connectivity Request**, INITIAL CONTEXT SETUP REQUEST and RRC Connection Reconfiguration with **NAS: Attach Accept + Activate Default EPS Bearer Context Request**). Before, these were only mentioned in the parameter text. NAS messages that RRC / S1AP / NGAP / RANAP only relay stay one arrow UE ↔ core; the rule is stated in each flow.", "NAS layer tags are now precise: **EMM / ESM** (4G), **5GMM** (5G), **MM / CC / GMM / SM** (3G) instead of a generic NAS tag. Attach Complete is named with its ESM message (Activate Default EPS Bearer Context Accept).", "Added the optional **Identity Request / Response** to LTE attach, 5G registration and 3G attach, and a note on the optional EIR check (S13) in LTE attach. In UTRAN the first NAS message (CM Service Request, GPRS Attach Request) is shown per hop: RRC Initial Direct Transfer, then RANAP INITIAL UE MESSAGE.", "RRC IE names corrected: LTE RRC Connection Reconfiguration carries NAS in **dedicatedInfoNASList**, NR RRCReconfiguration in **dedicatedNAS-MessageList** (also fixed in the LTE-Uu message flow)."]},{"v": "2026.11.06", "items": ["**End-to-end procedures** (▶ Procedures in the toolbar): 17 multi-node call flows – LTE attach, service request, paging, S1 release, X2 handover, VoLTE dedicated bearer, detach, CS fallback, EN-DC secondary node addition, 5G registration, PDU session, service request, AN release, Xn handover, 3G attach + PDP context, Wi-Fi calling attach and LTE → Wi-Fi handover – with the interface of every message.", "**Map integration:** the map zooms to the procedure and dims everything else; stepping through the messages (click, ← / →, Play) highlights each hop and animates it along its path. Works in the CUPS and reference-point views.", "**IP addresses in the flows:** with network data loaded, pick the instance of each node above its lane and every message shows source → destination address and port.", "Element and interface panels list the procedures they appear in; deep links `#proc=<id>&step=<n>`; copy as text and larger view."]},{"v": "2026.11.05.9", "items": ["**Wi-Fi access via ePDG** (untrusted non-3GPP, VoWiFi): new **ePDG** and **3GPP AAA** elements with **SWu**, **SWm**, **SWx**, **S2b** and **S6b** (S2b-C / S2b-U and S6b to the PGW-C in the CUPS view), a **Wi-Fi** generation chip, message flows (IKEv2 + EAP-AKA tunnel set-up, S2b PDN connection, LTE ↔ Wi-Fi handover, Diameter procedures) and two end-to-end stacks.", "Map: the 5G rows moved down to make room below the EPC; the canvas is now 1900 × 1400."]},{"v": "2026.11.05.8", "items": ["**Network data:** site `*` means the instance belongs to every site – it is shown whichever sites are selected and is not listed as a separate site in the site filter."]},{"v": "2026.11.05.7","items": ["**Release history** in the app: click the version number next to the title. A small dot on it marks a version you have not seen yet."]},{"v": "2026.11.05.6","items": ["**Network data:** reference points (N11, N8, N12 …) in the address tables are now links (they open the Ref. points view). An NF’s reference-point addresses also show on its SBI stub and the SBI bus, and a reference point without its own entry shows the NF’s `sbi` address.","Addresses written with a prefix length (`10.2.7.2/26`) are treated as one address, not as the whole subnet: search no longer matches other addresses of that subnet, and the duplicate check compares the address part. CIDR blocks with zero host bits stay ranges."]},{"v": "2026.11.05.5","items": ["**Network data:** ports can be a list or a range (`8080;443`, `2123, 2152`, `30000-30100`) – one row per address instead of one per port. JSON also accepts an array of ports.","**Site filter** for network data: pick sites (or type part of a name) to limit panels, map badges, tooltips and search; optional export of only the filtered sites; the filter is kept with “Remember on this computer”.","Template: port lists and a second site; RAN ranges without a site."]},{"v": "2026.11.05.4","items": ["**Message flows:** sequence diagrams for the main procedures on every interface (412 procedures, about 1 500 messages): radio (Um, Uu, LTE-Uu, NR-Uu), RAN (Abis, Iub, Iur, F1, E1, X2, Xn), RAN–core (A, Gb, Iu, S1, N2), GTP / PFCP (Gn, S11, S5/S8, S3, S4, S10, N26, Sxa/Sxb, N4, all GTP-U interfaces), Diameter (S6a/d, S13, Gx, Rx, Gy/Gz, Sy, S9, Cx/Sh, Ro/Rf), MAP / BSSAP+ / SGsAP / Sv, H.248, BICC / SIP-I, N1 NAS, SBI services and N32.","Larger view, copy as text, keyboard navigation, search over procedure and message names, and deep links to a procedure (`&mf=`)."]},{"v": "2026.11.05.3","items": ["**Network data:** load your own IP plan (CSV, JSON or encrypted JSON, also by drag and drop), edit it in the tool, and see it in the element panel (instances, addresses per interface), the interface panel (both ends, subnet, VLAN), on the map (instance badges) and in search (exact IPv4 match and IPv4-in-subnet). Data is checked on load and on each edit.","Save as CSV, JSON, encrypted JSON (AES-256-GCM, PBKDF2-SHA256), or as one HTML file with the tool and the data (optionally encrypted). Optional “Remember on this computer”. Warning before leaving with unsaved changes.","Content-Security-Policy added: the page cannot load or send anything over the network.","Templates `netdata-template.csv` / `netdata-template.json` (documentation addresses only); `.gitignore` excludes exports with real data.","`/` no longer jumps to the search box while typing in another field."]},{"v": "2026.11.05.2","items": ["**E2E stacks:** peer highlighting – hover or tap a layer to see its peer(s); hop-by-hop layers (transport, tunnels, L1/L2) match across the adjacent interface, relayed layers (NAS, RRC, PDCP, LLC, TRAU frames …) match their end peer.","Scenarios can now consist of several paths: **5G NSA** user plane (NR leg + LTE leg over X2-U) and control plane (LTE RRC/NAS, SCG configuration via X2-C, SRB3) and **HSPA Direct Tunnel** (user plane RNC ↔ GGSN + SGSN control path) – every stack now faces its real peer.","Fixed labels: GTP-U (QFI) on N3/N9 at both ends, 16 / 8 kbit/s TRAU sub-timeslots on Abis and Ater; BSC added to the GSM speech path; user IP labelled consistently."]},{"v": "2026.11.05","items": ["Added **2G (GSM / GPRS / EDGE)**: new generation chip and GERAN zone with **BTS** and **BSC + PCU** (TRAU described), interfaces **Um**, **Abis**, **A** (control plane to the MSC Server), **A UP** (user plane to the CS-MGW, TDM or A over IP) and **Gb** (BSSGP/NS to the SGSN).","The CS and PS core (MSC Server/VLR, CS-MGW, HLR/AuC, EIR, SGSN, GGSN, charging) is shared with 3G and now tagged for both generations.","Integration with modern networks: CSFB and SRVCC to GERAN (SGs, Sv), LTE ↔ GERAN reselection / redirection / NACC, S4-SGSN with Gb (S3/S4), and 5G-SRVCC (R16, NG-RAN → UTRAN only, via N26 → MME_SRVCC → Sv); no direct 5GS ↔ GERAN mobility.","New end-to-end stacks: 2G GPRS/EDGE user plane, GSM CS control plane, GSM speech path.","Renamed to “Mobile Network Navigator”; shorter generation chip subtitles so the header still fits one row at 1920 px."]},{"v": "2026.11.04.3","items": ["Drew interfaces that were only described in text: **Cx / Sh** (IMS–HSS), **Ro / Rf** (IMS–OCS/OFCS), **Sy** (PCRF–OCS), **S9** (PCRF–roaming partner), **S6d** (S4-SGSN–HSS), **Gs** (SGSN–MSC/VLR), **Gc** (GGSN–HLR), **Nhss** (HSS–UDM interworking, R16), and reference points **N23** (PCF–NWDAF) and **N34** (NSSF–NWDAF).","Diameter in 5G networks made visible: N5 to the IMS is now “N5 / Rx” (PCF supports Rx per TS 23.503 Annex C), N6/SGi/Gi carry the DN-AAA (RADIUS/Diameter) option; *5G SA* + *Diameter* filter highlights Cx/Sh, Ro/Rf, N5/Rx and N6.","EPC zone label moved to the bottom-right corner."]},{"v": "2026.11.04.2","items": ["Added **ng-eNB** (E-UTRA connected to 5GC) in the NG-RAN area with LTE-Uu, N2 (NG-C) to AMF, N3 (NG-U) to UPF and Xn to the gNB; notes on Options 4/4a, 5 and 7/7a/7x.","5G SA chip now reads “5GC · Opt. 2 (4/5/7)”."]},{"v": "2026.11.04","items": ["First release: architecture map (3G, HSPA, 4G, 5G NSA, 5G SA, interworking), element/interface details with protocol stacks, end-to-end stack view, interface table, deep links, dark/light theme.","Added Gx between GGSN (PCEF) and PCRF (R7+).","Added EPC **CUPS view**: SGW-C/U, PGW-C/U, Sxa, Sxb, S5-C/U, S4-C/U.","Compact top bar (two rows at 1920 px), protocol filter as a dropdown, date-based version label."]}];
 /* =====================================================================
    DATA
    ===================================================================== */
@@ -4084,6 +4089,8 @@ const ND_TEMPLATE_CSV=`# network: Example network
 # site = site name ("*" = the entry belongs to every site);
 # interface = interface ID or name, or oam / sbi / other. Rows with an empty element describe the interface itself (subnet, VLAN).
 # port = one port, a list (2123;2152 - separated by ; , / or spaces) or a range (30000-30100).
+# Non-standard protocol ports of your network (used by the trace analysis), one line each - for example:
+#   "# ports: diameter tcp 3870;3900-3910 - Gx peers" or "# ports: radius 31812-31813" (transport optional).
 element,instance,site,interface,ip,port,vlan,note
 mme,MME01,Site-A,s1mme,192.0.2.11,36412,101,SCTP multihoming - primary path
 mme,MME01,Site-A,s1mme,192.0.2.12,36412,101,SCTP multihoming - secondary path
@@ -4178,8 +4185,107 @@ const ndPortNorm=v=>{const r=ndPortParse(v);return r.ok?r.list.join(';'):(Array.
 const ndPortShow=v=>{const r=ndPortParse(v);return r.ok?r.list.join(', '):String(v);};
 const ND_PORTMSG='use one port, a list such as 8080;443 or a range such as 30000-30100';
 
+/* ---------- protocol ports: non-standard ports of this network for a protocol, saved with the network data and used by the trace analysis ---------- */
+const ND_PROTO={
+ diameter:{n:'Diameter',tr:['tcp','sctp'],c:'dia',g:'Core signalling'},
+ 'diameter-tls':{n:'Diameter over TLS / DTLS',tr:['tcp','sctp'],c:'diatls',g:'Core signalling'},
+ radius:{n:'RADIUS',tr:['udp'],c:'radius',g:'Core signalling'},
+ gtpc:{n:'GTP-C (GTPv1-C and GTPv2-C)',tr:['udp'],c:'gtpc',g:'Core signalling'},
+ pfcp:{n:'PFCP',tr:['udp'],c:'pfcp',g:'Core signalling'},
+ gtpp:{n:'GTP′ (charging)',tr:['udp','tcp'],c:'gtpp',g:'Core signalling'},
+ gtpu:{n:'GTP-U',tr:['udp'],c:'gtpu',g:'User plane'},
+ s1ap:{n:'S1AP',tr:['sctp'],c:'s1ap',g:'SCTP'},ngap:{n:'NGAP',tr:['sctp'],c:'ngap',g:'SCTP'},x2ap:{n:'X2AP',tr:['sctp'],c:'x2ap',g:'SCTP'},xnap:{n:'XnAP',tr:['sctp'],c:'xnap',g:'SCTP'},
+ f1ap:{n:'F1AP',tr:['sctp'],c:'f1ap',g:'SCTP'},e1ap:{n:'E1AP',tr:['sctp'],c:'e1ap',g:'SCTP'},sgsap:{n:'SGsAP',tr:['sctp'],c:'sgsap',g:'SCTP'},nbap:{n:'NBAP',tr:['sctp'],c:'nbap',g:'SCTP'},
+ m3ua:{n:'M3UA (SIGTRAN)',tr:['sctp'],c:'m3ua',g:'SCTP'},rua:{n:'RUA (Iuh)',tr:['sctp'],c:'rua',g:'SCTP'},hnbap:{n:'HNBAP (Iuh)',tr:['sctp'],c:'hnbap',g:'SCTP'}};
+const ND_TRN={udp:'UDP',tcp:'TCP',sctp:'SCTP'};
+const ndPNorm=v=>String(v==null?'':v).toLowerCase().replace(/[′'’]/g,'p').replace(/[^a-z0-9]/g,'');
+const ND_PROTO_AL=(()=>{const m={};Object.entries(ND_PROTO).forEach(([k,v])=>{m[ndPNorm(k)]=k;m[ndPNorm(v.n)]=k;});
+ [['dia','diameter'],['diametertls','diameter-tls'],['diameterdtls','diameter-tls'],['diameterovertls','diameter-tls'],['diameteroverdtls','diameter-tls'],['tls','diameter-tls'],['dtls','diameter-tls'],
+  ['gtpc','gtpc'],['gtpv1c','gtpc'],['gtpv2c','gtpc'],['gtpc1','gtpc'],['gtpc2','gtpc'],['gtpcv1','gtpc'],['gtpcv2','gtpc'],['gtpv1','gtpc'],['gtpv2','gtpc'],
+  ['gtpp','gtpp'],['gtpprime','gtpp'],['gtpu','gtpu'],['gtpv1u','gtpu'],['sgs','sgsap'],['radius','radius'],['pfcp','pfcp']].forEach(([a,k])=>{m[a]=k;});
+ return m;})();
+function ndProtoId(v){return ND_PROTO_AL[ndPNorm(v)]||null;}
+/* transport: '' = every transport the protocol runs over; null = not valid for it */
+function ndTrNorm(v,id){const t=String(v==null?'':v).trim().toLowerCase(),P=ND_PROTO[id];if(!t||/^(any|all|both|\*)$/.test(t))return '';
+ const set=[...new Set(t.split(/[\s\/+,;&]+|\band\b|\bor\b/).filter(Boolean))];if(set.some(x=>!ND_TRN[x]))return null;
+ if(P&&set.length===P.tr.length&&P.tr.length>1&&set.every(x=>P.tr.includes(x)))return '';return set.length===1?set[0]:null;}
+const ndPick=(...a)=>{const x=a.find(v=>v!=null&&String(v).trim()!=='');return x==null?'':x;};
+function ndPortRuleClean(o){o=o||{};const raw=String(ndPick(o.protocol,o.proto,o.name)).trim(),id=ndProtoId(raw),tv=ndPick(o.transport,o.tr),tr=ndTrNorm(tv,id);
+ return {proto:id||raw,tr:tr==null?String(tv).trim().toLowerCase():tr,ports:ndPortNorm(ndPick(o.ports,o.port)),note:String(o.note||'').trim()};}
+function ndPortRanges(v){const r=ndPortParse(v);return r.ok?r.list.map(x=>{const [a,b]=x.split('-').map(Number);return [a,b==null||isNaN(b)?a:b];}):[];}
+/* the rules that can be used, with their transports and port ranges */
+function ndPortRules(d){d=d===undefined?ND:d;return (d&&d.ports||[]).filter(r=>{const P=ND_PROTO[r.proto];return P&&(r.tr===''||P.tr.includes(r.tr))&&ndPortRanges(r.ports).length&&ndPortOK(r.ports);})
+ .map(r=>{const P=ND_PROTO[r.proto];return {proto:r.proto,n:P.n,c:P.c,tr:r.tr,trs:r.tr?[r.tr]:P.tr,ranges:ndPortRanges(r.ports),ports:r.ports,note:r.note};});}
+const ndPortsSig=rules=>JSON.stringify(rules.map(r=>[r.c,r.trs,r.ranges]));
+const ndRangeTxt=rg=>rg.map(([a,b])=>a===b?String(a):a+'–'+b).join(', ');
+function ndPortsText(rules){return rules.map(r=>`${r.n.replace(/ \(.*\)$/,'')} ${r.trs.map(x=>ND_TRN[x]).join(' / ')} ${ndRangeTxt(r.ranges)}`).join(' · ');}
+/* standard ports – taken from the trace analysis’ own tables */
+const ND_STDN={gtpu:'GTP-U',gtpc:'GTP-C',pfcp:'PFCP',radius:'RADIUS',ike:'IKEv2 / NAT-T',gtpp:'GTP′',dia:'Diameter',diatls:'Diameter over TLS'};
+function ndStdOwner(tr,p){if(tr==='udp'){const c=TR_PC[trUdpStd(p)];if(c)return {c,n:ND_STDN[c]};if(TR_INFRA_UDP[p])return {c:'infra',n:TR_INFRA_UDP[p]};}
+ else if(tr==='tcp'){const c=TR_PC[trTcpStd(p)];if(c)return {c,n:ND_STDN[c]};if(TR_INFRA_TCP[p])return {c:'infra',n:TR_INFRA_TCP[p]};}
+ else if(tr==='sctp'&&TR_SCTPPORT[p]){const c=TR_SCTPPORT[p];const k=Object.keys(ND_PROTO).find(x=>ND_PROTO[x].c===c);return {c,n:k?ND_PROTO[k].n:c};}return null;}
+let ndStdCache=null;
+function ndPortsStd(id){const P=ND_PROTO[id];if(!P)return '';if(!ndStdCache){ndStdCache={};for(let p=1;p<65536;p++){const u=TR_PC[trUdpStd(p)],t=TR_PC[trTcpStd(p)];
+  if(u)((ndStdCache[u]||(ndStdCache[u]={}))).udp=(ndStdCache[u].udp||[]).concat(p);if(t)((ndStdCache[t]||(ndStdCache[t]={}))).tcp=(ndStdCache[t].tcp||[]).concat(p);}}
+ const out=[];P.tr.forEach(tr=>{if(tr==='sctp'){const po=Object.keys(TR_SCTPPORT).filter(k=>TR_SCTPPORT[k]===P.c),pp=Object.keys(TR_PPID).filter(k=>TR_PPID[k]===P.c);
+   out.push('SCTP '+(po.length?po.join(', '):'no standard port')+(pp.length?' · PPID '+pp.join(', '):' · no PPID'));}
+  else{const L=(ndStdCache[P.c]||{})[tr]||[];if(L.length)out.push(ND_TRN[tr]+' '+L.join(', '));}});
+ return out.join(' · ');}
+function ndPortsCheck(d){const w=[],seen={udp:new Map(),tcp:new Map(),sctp:new Map()};
+ (d.ports||[]).forEach(r=>{const P=ND_PROTO[r.proto],where='Protocol ports – '+(P?P.n:'“'+r.proto+'”')+(r.tr?' '+(ND_TRN[r.tr]||r.tr.toUpperCase()):'')+(r.ports?' '+ndPortShow(r.ports):'');
+  if(!P){w.push(`${where}: unknown protocol – not used. Known: ${Object.keys(ND_PROTO).join(', ')}.`);return;}
+  if(r.tr&&!P.tr.includes(r.tr)){w.push(`${where}: ${P.n} runs over ${P.tr.map(x=>ND_TRN[x]).join(' or ')} – not used.`);return;}
+  if(!r.ports||!ndPortOK(r.ports)||!ndPortRanges(r.ports).length){w.push(`${where}: no valid port – ${ND_PORTMSG}; not used.`);return;}
+  const rg=ndPortRanges(r.ports),n=rg.reduce((a,[x,y])=>a+y-x+1,0);
+  if(n>1000)w.push(`${where}: ${n} ports – any packet whose port falls in this range, a client’s ephemeral port too, is taken as ${P.n}; keep ranges narrow.`);
+  (r.tr?[r.tr]:P.tr).forEach(tr=>{const std=[],inf=[],dup=new Map();
+   rg.forEach(([x,y])=>{for(let p=x;p<=y;p++){const o=ndStdOwner(tr,p);if(o&&o.c==='infra')inf.push(p+' ('+o.n+')');else if(o&&o.c!==P.c)std.push(p+' ('+o.n+')');const q=seen[tr].get(p);if(q==null)seen[tr].set(p,r.proto);else if(q!==r.proto&&!dup.has(q))dup.set(q,p);}});
+   if(std.length)w.push(`${where}: ${ND_TRN[tr]} ${std.slice(0,3).join(', ')}${std.length>3?` and ${std.length-3} more`:''} ${std.length>1?'are standard ports':'is the standard port'} of another protocol – the standard protocol keeps ${std.length>1?'them':'it'}.`);
+   if(inf.length)w.push(`${where}: ${ND_TRN[tr]} ${inf.slice(0,3).join(', ')}${inf.length>3?` and ${inf.length-3} more`:''} ${inf.length>1?'are ports':'is the port'} of a network infrastructure protocol – your rule takes ${inf.length>1?'them':'it'} over.`);
+   dup.forEach((p,q)=>w.push(`${where}: ${ND_TRN[tr]} ${p} is also given to ${ND_PROTO[q]?ND_PROTO[q].n:q} – the rule listed first is used.`));});});
+ return w;}
+function ndPortsEq(a,b){const k=L=>JSON.stringify((L||[]).map(r=>[r.proto,r.tr,r.ports,r.note]));return k(a)===k(b);}
+/* CSV: one comment line per rule – “# ports: diameter tcp 3870;3900-3910 – Gx peers” (transport optional: all the protocol runs over) */
+function ndPortsLine(r){return `# ports: ${r.proto}${r.tr?' '+r.tr:''} ${r.ports}${r.note?' – '+r.note.replace(/[\r\n]+/g,' '):''}`;}
+function ndPortsParseLine(t){const tk=String(t).trim().split(/\s+/).filter(Boolean);if(!tk.length)return null;const proto=tk.shift();let tr='';
+ if(tk.length&&/^(udp|tcp|sctp|any|all|both|\*)([\/+,&](udp|tcp|sctp))*$/i.test(tk[0]))tr=tk.shift();
+ const ps=[];while(tk.length&&/^[\d;,\-]+$/.test(tk[0])&&/\d/.test(tk[0]))ps.push(tk.shift());
+ if(tk.length&&/^(–|—|-|#|:)$/.test(tk[0]))tk.shift();
+ return ndPortRuleClean({protocol:proto,transport:tr,ports:ps.join(';'),note:tk.join(' ')});}
+/* the editor */
+function ndPortsTrOpts(id,tr){const P=ND_PROTO[id];if(!P)return `<option value="${esc(tr)}" selected>${esc(tr?tr.toUpperCase():'—')}</option>`;
+ return (P.tr.length>1?`<option value=""${tr===''?' selected':''}>${P.tr.map(x=>ND_TRN[x]).join(' / ')}</option>`:'')+P.tr.map(x=>`<option value="${x}"${tr===x||P.tr.length===1?' selected':''}>${ND_TRN[x]}</option>`).join('');}
+function ndPortsRow(r){const groups=[...new Set(Object.values(ND_PROTO).map(P=>P.g))];
+ const sel=(ND_PROTO[r.proto]?'':`<option value="${esc(r.proto)}" selected>“${esc(r.proto)}” – unknown</option>`)+groups.map(g=>`<optgroup label="${esc(g)}">${Object.entries(ND_PROTO).filter(([,P])=>P.g===g).map(([k,P])=>`<option value="${k}"${k===r.proto?' selected':''}>${esc(P.n)}</option>`).join('')}</optgroup>`).join('');
+ return `<tr><td><select class="ndp-p" aria-label="Protocol">${sel}</select></td><td><select class="ndp-t" aria-label="Transport">${ndPortsTrOpts(r.proto,r.tr)}</select></td>
+ <td><input class="ndp-ports" value="${esc(r.ports)}" placeholder="3870;3900-3910" spellcheck="false" aria-label="Ports" title="One port, a list (3870;3871) or ranges (3900-3910)"></td><td><input class="ndp-note" value="${esc(r.note)}" aria-label="Note"></td>
+ <td><button class="nd-del" title="Remove this rule" aria-label="Remove">✕</button></td></tr>`;}
+function ndPortsDialog(){const cur=(ND&&ND.ports||[]).map(r=>({...r}));if(!cur.length)cur.push({proto:'diameter',tr:'',ports:'',note:''});
+ const rows=m=>[...m.querySelectorAll('.ndpt tbody tr')].map(tr=>({proto:tr.querySelector('.ndp-p').value,tr:tr.querySelector('.ndp-t').value,ports:tr.querySelector('.ndp-ports').value.trim(),note:tr.querySelector('.ndp-note').value.trim()})).filter(r=>r.ports||r.note);
+ const std=Object.keys(ND_PROTO).map(k=>`<tr><td>${esc(ND_PROTO[k].n)}</td><td>${esc(ndPortsStd(k))}</td></tr>`).join('');
+ ndModal('Protocol ports'+(ND?' – '+ND.network:''),
+ `<p class="ndmuted">Ports your network uses for a protocol <b>besides its standard ports</b> – Diameter on TCP 3870, RADIUS on UDP 31812–31813, SGsAP on SCTP 29200. The trace analysis then recognises the protocol on them; standard ports keep their meaning. The ports are saved with your network data (CSV, JSON, encrypted, saved HTML), so captures of this network are read correctly wherever the data is loaded.${TR||trJob?' <b>The open trace is read again with the new ports.</b>':''}</p>
+ <table class="ndedit ndpt"><thead><tr><th>Protocol</th><th>Transport</th><th>Ports</th><th>Note</th><th></th></tr></thead><tbody>${cur.map(ndPortsRow).join('')}</tbody></table>
+ <button id="ndp-add" class="ndlink">+ Add port rule</button><div class="nderr" id="nderr"></div><div class="ndpw"></div>
+ <details class="ndpstd"><summary>Standard ports – always recognised</summary><table class="ndt"><tbody>${std}</tbody></table></details>`,
+ [{label:'Cancel'},{label:'Save',primary:true,onClick:m=>{const er=m.querySelector('#nderr'),L=rows(m);
+   m.querySelectorAll('.ndp-ports').forEach(i=>i.classList.toggle('bad',!!i.value.trim()&&!ndPortOK(i.value)||(!i.value.trim()&&!!i.closest('tr').querySelector('.ndp-note').value.trim())));
+   const bad=L.filter(r=>!r.ports||!ndPortOK(r.ports));
+   if(bad.length){er.textContent=`Check the ports of ${bad.map(r=>ND_PROTO[r.proto]?ND_PROTO[r.proto].n:r.proto).join(', ')} – ${ND_PORTMSG}.`;return false;}
+   const N=L.map(r=>({...r,ports:ndPortNorm(r.ports)}));
+   if(ND&&ndPortsEq(ND.ports,N))return;
+   if(!ND){const d={...ndEmpty('Unnamed network'),ports:N};ndSet(d,{kind:'new',enc:false},ndValidate(d),true);toast('New network data started with your protocol ports – export it to keep them');}
+   else{ND.ports=N;ndTouch();toast(N.length?`Protocol ports saved: ${N.length} rule${N.length===1?'':'s'} – export your network data to keep them`:'Protocol ports removed');}}}],
+ m=>{const upd=()=>{const w=ndPortsCheck({ports:rows(m).map(r=>({...r,ports:ndPortNorm(r.ports)}))}).filter(x=>!/no valid port/.test(x));m.querySelector('.ndpw').innerHTML=w.length?ndWarnHTML(w):'';};
+  m.querySelector('#ndp-add').onclick=()=>{const tb=m.querySelector('.ndpt tbody');tb.insertAdjacentHTML('beforeend',ndPortsRow({proto:'diameter',tr:'',ports:'',note:''}));tb.lastElementChild.querySelector('.ndp-p').focus();};
+  m.querySelector('.ndpt').addEventListener('click',ev=>{const b=ev.target.closest('.nd-del');if(b){b.closest('tr').remove();upd();}});
+  m.querySelector('.ndpt').addEventListener('change',ev=>{const s=ev.target.closest('.ndp-p');if(s){const t=s.closest('tr').querySelector('.ndp-t');t.innerHTML=ndPortsTrOpts(s.value,'');}upd();});
+  m.querySelector('.ndpt').addEventListener('input',ev=>{if(ev.target.classList.contains('ndp-ports'))ev.target.classList.remove('bad');upd();});
+  upd();});}
+/* end protocol ports */
+
 /* ---------- normalisation, validation, merge ---------- */
-function ndEmpty(name){return {network:name||'Unnamed network',instances:[],interfaces:{}};}
+function ndEmpty(name){return {network:name||'Unnamed network',instances:[],interfaces:{},ports:[]};}
 function ndClean(raw){const w=[];const d=ndEmpty(String(raw.network||raw.name||'').trim());
  if(raw.format&&raw.format!==ND_FORMAT)w.push(`Unexpected format “${raw.format}” – read as network data anyway.`);
  (Array.isArray(raw.instances)?raw.instances:[]).forEach((I,ix)=>{const el=ndResolveEl(I.element);
@@ -4189,6 +4295,7 @@ function ndClean(raw){const w=[];const d=ndEmpty(String(raw.network||raw.name||'
   d.instances.push(inst);});
  const ifs=raw.interfaces&&typeof raw.interfaces==='object'?raw.interfaces:{};
  Object.keys(ifs).forEach(k=>{const v=ifs[k]||{};d.interfaces[ndResolveIf(k,null)]={subnet:String(v.subnet||v.ip||'').trim(),vlan:v.vlan==null?'':String(v.vlan).trim(),note:String(v.note||'').trim()};});
+ d.ports=(Array.isArray(raw.ports)?raw.ports:[]).map(ndPortRuleClean).filter(r=>r.proto||r.ports);
  return {d,w:w.concat(ndValidate(d))};}
 function ndValidate(d){const w=[],seen={};
  d.instances.forEach(I=>{const E=EM[I.element];const ok=ndElKeys(I.element);
@@ -4201,9 +4308,10 @@ function ndValidate(d){const w=[],seen={};
    if(['v4','v6','v4host','v6host'].includes(k)){const key=ndAddrOnly(A.ip);(seen[key]=seen[key]||new Set()).add(E.n+' '+I.name);}});});
  Object.entries(d.interfaces).forEach(([k,v])=>{if(!ND_VALID_IF.has(k))w.push(`Interface info: unknown interface “${k}” (kept).`);if(v.subnet&&ndAddrKind(v.subnet)==='bad')w.push(`Interface info ${ndIfLabel(k)}: “${v.subnet}” is not a valid subnet.`);});
  Object.entries(seen).forEach(([ip,s])=>{if(s.size>1)w.push(`Address ${ip} is used by several instances: ${[...s].join(', ')}.`);});
- return w;}
+ return w.concat(ndPortsCheck(d));}
 function ndCopy(I){return {...I,id:NDuid(),addresses:I.addresses.map(A=>({...A}))};}
-function ndMerge(base,add){const out={network:base.network,instances:base.instances.map(ndCopy),interfaces:{...base.interfaces}};
+function ndMerge(base,add){const out={network:base.network,instances:base.instances.map(ndCopy),interfaces:{...base.interfaces},ports:(base.ports||[]).map(r=>({...r}))};
+ (add.ports||[]).forEach(r=>{if(!out.ports.some(x=>x.proto===r.proto&&x.tr===r.tr&&x.ports===r.ports))out.ports.push({...r});});
  if(!out.network||out.network==='Unnamed network')out.network=add.network;
  add.instances.forEach(I=>{const t=out.instances.find(x=>x.element===I.element&&x.name.toLowerCase()===I.name.toLowerCase());
   if(!t){out.instances.push(ndCopy(I));return;}
@@ -4223,9 +4331,10 @@ function ndParseCSV(text){text=text.replace(/^﻿/,'');
   else if(c==='"'&&f==='')q=true;else if(c===dl){row.push(f);f='';}
   else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f='';}else f+=c;}
  if(f!==''||row.length){row.push(f);rows.push(row);}
- let hdr=null,network=null;const raw={network:null,instances:[],interfaces:{}},w=[],map={};
+ let hdr=null,network=null;const raw={network:null,instances:[],interfaces:{},ports:[]},w=[],map={};
  rows.forEach((r,ri)=>{const line=ri+1;const c0=String(r[0]||'').trim();
-  if(c0.startsWith('#')){const m=r.join(dl).match(/^\s*#\s*network\s*:\s*(.+?)\s*$/i);if(m&&!network)network=m[1].replace(/[,;\t]+$/,'').trim();return;}
+  if(c0.startsWith('#')){const m=r.join(dl).match(/^\s*#\s*network\s*:\s*(.+?)\s*$/i);if(m&&!network)network=m[1].replace(/[,;\t]+$/,'').trim();
+   const mp=r.join(dl).match(/^\s*#\s*ports?\s*:\s*(.*?)\s*$/i);if(mp){const x=ndPortsParseLine(mp[1].replace(/[,;\t]+$/,''));if(x)raw.ports.push(x);else w.push(`Line ${line}: “# ports:” without a protocol – skipped.`);}return;}
   if(r.every(x=>!String(x).trim()))return;
   if(!hdr){const h={};r.forEach((x,i)=>{const n=ndNorm(x);Object.entries(ND_COLS).forEach(([k,al])=>{if(h[k]==null&&al.includes(n))h[k]=i;});});
    if(h.element==null||h.ip==null){w.push('No header row found – the first row must name the columns (at least element and ip).');hdr={bad:1};return;}hdr=h;return;}
@@ -4242,13 +4351,14 @@ function ndParseCSV(text){text=text.replace(/^﻿/,'');
  if(!hdr)w.push('The file is empty.');
  raw.network=network;const res=ndClean(raw);return {d:res.d,w:w.concat(res.w)};}
 function ndCSVcell(v){v=String(v==null?'':v);return /[",;\t\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
-function ndToCSV(d){const L=[`# network: ${d.network}`,'element,instance,site,interface,ip,port,vlan,note'];
+function ndToCSV(d){const L=[`# network: ${d.network}`,...(d.ports||[]).map(ndPortsLine),'element,instance,site,interface,ip,port,vlan,note'];
  d.instances.forEach(I=>{if(!I.addresses.length||I.note)L.push([I.element,I.name,I.site,'','','','',I.note].map(ndCSVcell).join(','));
   I.addresses.forEach(A=>L.push([I.element,I.name,I.site,A.interface,A.ip,A.port,A.vlan,A.note].map(ndCSVcell).join(',')));});
  Object.entries(d.interfaces).forEach(([k,v])=>L.push(['','','',k,v.subnet,'',v.vlan,v.note].map(ndCSVcell).join(',')));
  return L.join('\r\n')+'\r\n';}
 function ndToJSON(d){return {format:ND_FORMAT,version:1,network:d.network,saved:new Date().toISOString(),tool:'Mobile Network Navigator v'+VERSION,
- instances:d.instances.map(I=>({element:I.element,name:I.name,site:I.site,note:I.note,addresses:I.addresses.map(A=>({interface:A.interface,ip:A.ip,port:A.port,vlan:A.vlan,note:A.note}))})),interfaces:d.interfaces};}
+ instances:d.instances.map(I=>({element:I.element,name:I.name,site:I.site,note:I.note,addresses:I.addresses.map(A=>({interface:A.interface,ip:A.ip,port:A.port,vlan:A.vlan,note:A.note}))})),interfaces:d.interfaces,
+ ports:(d.ports||[]).map(r=>({protocol:r.proto,transport:r.tr||'any',ports:r.ports,note:r.note}))};}
 
 /* ---------- encryption: AES-256-GCM, key derived from the passphrase with PBKDF2-SHA256 ---------- */
 const ndCryptoOK=()=>!!(window.crypto&&crypto.subtle&&crypto.getRandomValues);
@@ -4333,7 +4443,7 @@ function ndLinkHTML(L){if(!ND)return '';const info=ndKeys(L).filter(k=>ND.interf
   `<div class="ndsides">${sides}</div><div class="paneltools"><button data-nd="ifedit:${ndCanon(L)}">${info.length?'Edit':'Add'} interface info (subnet, VLAN)</button></div>`;}
 function ndHint(){return ND?'':`<p class="ndmuted ndhint">Your own IP plan can be shown here: <button class="ndlink" data-nd="menu">◆ Network data</button></p>`;}
 function ndOverviewHTML(){if(!ND)return '';const by={};ndInst().forEach(I=>{by[I.element]=(by[I.element]||0)+1;});
- return ndHead()+`<div class="ifcs">${ELS.filter(e=>by[e.id]).map(e=>`<button class="ifc" data-sel="el:${e.id}" style="font-family:var(--sans)">${esc(e.n)} <i>${by[e.id]}</i></button>`).join('')||(ndFiltered()?'<span class="ndmuted">No instances in the selected sites.</span>':'<span class="ndmuted">Empty dataset – select an element and use “+ Add instance”.</span>')}</div>${NDwarn.length?`<p><button class="ndlink" data-nd="warn">⚠ ${NDwarn.length} data warning${NDwarn.length>1?'s':''}</button></p>`:''}`;}
+ return ndHead()+`<div class="ifcs">${ELS.filter(e=>by[e.id]).map(e=>`<button class="ifc" data-sel="el:${e.id}" style="font-family:var(--sans)">${esc(e.n)} <i>${by[e.id]}</i></button>`).join('')||(ndFiltered()?'<span class="ndmuted">No instances in the selected sites.</span>':'<span class="ndmuted">Empty dataset – select an element and use “+ Add instance”.</span>')}</div>${ndPortRules().length?`<p class="ndmuted ndpov">Protocol ports: ${esc(ndPortsText(ndPortRules()))} <button class="ndlink" data-nd="ports">Edit</button></p>`:''}${NDwarn.length?`<p><button class="ndlink" data-nd="warn">⚠ ${NDwarn.length} data warning${NDwarn.length>1?'s':''}</button></p>`:''}`;}
 function ndTip(type,id){if(!ND)return '';if(type==='el'){const n=ndCount(id);return n?`<span class="s">IP plan: ${n} instance${n>1?'s':''} in ${esc(ND.network)}</span>`:'';}
  const L=LM[id];const n=ndLinkEps(L).reduce((a,x)=>a+x.ad.length,0);return n?`<span class="s">IP plan: ${n} address${n>1?'es':''} in ${esc(ND.network)}</span>`:'';}
 
@@ -4357,7 +4467,7 @@ function ndWarnHTML(w){return w&&w.length?`<ul class="ndwarn">${w.slice(0,300).m
 function ndShowWarnings(){ndModal('Data check'+(ND?' – '+ND.network:''),ndWarnHTML(NDwarn),[{label:'Close',primary:true}]);}
 
 /* ---------- apply / load ---------- */
-function ndRefresh(){if(TR_ON&&TR)trResolve();ndFilterClean();ndIndex();ndBadges();ndPersist();ndStatus();apply();renderPanel();}
+function ndRefresh(){if(TR_ON)trPortsCheck();if(TR_ON&&TR)trResolve();ndFilterClean();ndIndex();ndBadges();ndPersist();ndStatus();apply();renderPanel();}
 function ndSet(d,src,warn,dirty){ND=d;NDsrc=src||NDsrc;NDwarn=warn||[];NDdirty=!!dirty;ndRefresh();}
 function ndTouch(){NDdirty=true;NDwarn=ndValidate(ND);ndRefresh();}
 async function ndUnlock(j,label,note){if(!ndCryptoOK()){await ndAsk('Cannot decrypt','<p>This browser does not offer Web Crypto here. Open the file in a current Chrome, Edge, Firefox or Safari.</p>',[{label:'Close',primary:true}]);return null;}
@@ -4371,7 +4481,7 @@ async function ndLoadText(text,fname){let parsed;fname=fname||'the file';
   else if(/^<(!doctype|html)/i.test(t)){const m=t.match(/<script[^>]*id="mnn-netdata"[^>]*>([\s\S]*?)<\/script>/i);if(!m)throw new Error('This HTML file contains no network data.');return ndLoadText(m[1],fname);}
   else parsed=ndParseCSV(text);}
  catch(e){await ndAsk('Could not read '+fname,`<p>${esc(e.message)}</p><p class="ndmuted">Expected a CSV file (header: element, instance, site, interface, ip, port, vlan, note), a JSON export, an encrypted JSON export or an HTML file saved with data.</p>`,[{label:'Close',primary:true}]);return;}
- if(!parsed.d.instances.length&&!Object.keys(parsed.d.interfaces).length){await ndAsk('Nothing to load',`<p>No usable rows in ${esc(fname)}.</p>${ndWarnHTML(parsed.w)}`,[{label:'Close',primary:true}]);return;}
+ if(!parsed.d.instances.length&&!Object.keys(parsed.d.interfaces).length&&!(parsed.d.ports||[]).length){await ndAsk('Nothing to load',`<p>No usable rows in ${esc(fname)}.</p>${ndWarnHTML(parsed.w)}`,[{label:'Close',primary:true}]);return;}
  let mode='replace';
  if(ND){mode=await ndAsk('Network data already loaded',`<p>“${esc(ND.network)}” is loaded${NDdirty?' and has <b>unsaved changes</b>':''}. Replace it with ${esc(fname)}, or merge the new data into it (instances with the same element and name are combined)?</p>`,[{label:'Cancel',v:null},{label:'Merge',v:'merge'},{label:'Replace',v:'replace',primary:true}]);if(!mode)return;}
  const merge=mode==='merge';if(!merge)ndFilterReset();const d=merge?ndMerge(ND,parsed.d):parsed.d;const w=merge?ndValidate(d):parsed.w;
@@ -4415,6 +4525,7 @@ function ndMenu(){const m=$('#ndmenu');if(!m.hidden){m.hidden=true;return;}const
  <button data-ndm="load">Load file… <small>CSV · JSON · encrypted JSON · saved HTML – or drop a file on the page</small></button>
  <button data-ndm="new">New empty dataset…</button>
  ${has?`<button data-ndm="rename">Rename network…</button><button data-ndm="warn">Data check <small>${NDwarn.length} warning${NDwarn.length===1?'':'s'}</small></button>`:''}
+ <button data-ndm="ports">Protocol ports… <small>${has&&ndPortRules().length?esc(ndPortsText(ndPortRules())):'non-standard ports of your network, e.g. Diameter on TCP 3870 – for the trace analysis'}</small></button>
  <hr>
  ${has&&ndFiltered()?`<label class="ndm-chk"><input type="checkbox" id="ndexpf" ${NDexpf?'checked':''}><span>Export only the filtered sites<small>${ndInst().length} of ${ND.instances.length} instances (${esc(ndFilterLabel())}); interface info is always included</small></span></label>`:''}
  <button data-ndm="csv" ${has?'':'disabled'}>Export CSV</button>
@@ -4433,6 +4544,7 @@ async function ndMenuAction(a){$('#ndmenu').hidden=true;
   ndModal('New dataset','<label>Network name<input id="ndname" placeholder="e.g. Operator X – lab"></label>',[{label:'Cancel'},{label:'Create',primary:true,onClick:m=>{ndFilterReset();ndSet(ndEmpty(m.querySelector('#ndname').value.trim()||'Unnamed network'),{kind:'new',enc:false},[],true);}}]);}
  else if(a==='rename')ndModal('Rename network',`<label>Network name<input id="ndname" value="${esc(ND.network)}"></label>`,[{label:'Cancel'},{label:'Save',primary:true,onClick:m=>{ND.network=m.querySelector('#ndname').value.trim()||ND.network;ndTouch();}}]);
  else if(a==='warn')ndShowWarnings();
+ else if(a==='ports')ndPortsDialog();
  else if(['csv','json','json-enc','html','html-enc'].includes(a))ndSave(a);
  else if(a==='template')ndDownload('netdata-template.csv','﻿'+ND_TEMPLATE_CSV,'text/csv;charset=utf-8');
  else if(a==='clear'){if(!await ndAsk('Remove network data?',`<p>Removes “${esc(ND.network)}” from this page${ndRemember()?' and from this browser’s storage':''}. ${NDdirty?'<b>Changes not saved to a file will be lost.</b>':'Your files are not affected.'}</p>`,[{label:'Cancel',v:false},{label:'Remove',v:true,danger:true}]))return;
@@ -4500,7 +4612,7 @@ function ndEditIf(k){const v=ND.interfaces[k]||{subnet:'',vlan:'',note:''};
   {label:'Save',primary:true,onClick:m=>{const sub=m.querySelector('#nd-sub').value.trim();if(sub&&ndAddrKind(sub)==='bad'&&m.dataset.ack!==sub){m.dataset.ack=sub;m.querySelector('#nderr').textContent=`“${sub}” is not a valid subnet. Click Save again to keep it.`;return false;}
    ND.interfaces[k]={subnet:sub,vlan:m.querySelector('#nd-vl').value.trim(),note:m.querySelector('#nd-in').value.trim()};ndTouch();}}],m=>{delete m.dataset.ack;});}
 panel.addEventListener('click',ev=>{const b=ev.target.closest('[data-nd]');if(!b)return;ev.stopPropagation();const i=b.dataset.nd.indexOf(':');const a=i<0?b.dataset.nd:b.dataset.nd.slice(0,i),x=i<0?'':b.dataset.nd.slice(i+1);
- if(a==='menu'){ndMenu();return;}if(a==='warn'){ndShowWarnings();return;}
+ if(a==='menu'){ndMenu();return;}if(a==='warn'){ndShowWarnings();return;}if(a==='ports'){ndPortsDialog();return;}
  if(a==='siteclear'){NDF.sel=null;ndSiteApply();return;}if(a==='sites'){ndSiteMenu();return;}if(!ND){ndMenuAction('new');return;}
  if(a==='add')ndEditInstance(x,null);else if(a==='edit')ndEditInstance(null,x);else if(a==='ifedit')ndEditIf(x);});
 
@@ -5979,26 +6091,45 @@ function trPlain(R,d,s,t,vl,fi,ol,so,to,pn){const k=vl+'|'+fi;let g=R.plain.get(
  return g;}
 
 /* ---------- transport and application classification ---------- */
+/* Ports → traffic class. Standard ports first (on UDP and TCP the lower code wins when both ports are known – the order of the checks);
+   then the non-standard ports of your network data (R.pm, built from its protocol ports when the reading starts); then infrastructure; else plain IP.
+   A standard port whose header check fails gets a second chance with your ports. */
+const TR_PC=['','gtpu','gtpc','pfcp','radius','ike','gtpp','dia','diatls','s1ap','ngap','x2ap','xnap','f1ap','e1ap','sgsap','nbap','m3ua','rua','hnbap','gtpp'];
+const trUdpStd=x=>x===2152?1:x===2123?2:x===8805?3:TR_RADPORT[x]?4:x===500||x===4500?5:x===3386?6:0;
+const trTcpStd=x=>x===3868?7:x===5868?8:x===3386?20:0;
+const trMinC=(a,b)=>a&&b?(a<b?a:b):a||b;
+/* the port of each end that matched the class – what the address listens on (shown in suggestions for your network data) */
+function trSv(f,s,sp,t,dp,a,b){if(!f||!f.x)return;let v=f.x.sv;if(!v)v=f.x.sv=new Set();if(v.size>=24)return;if(a)v.add(s+'|'+sp);if(b)v.add(t+'|'+dp);}
+function trUdpAs(R,c,d,q,e,s,t,vl,fi,ol,sp,dp){
+ if(c===1)return q+8<=e&&(d[q]>>5)===1&&(d[q]&0x10)?trGTPU(R,d,q,e,s,t,vl,fi,ol):null;
+ if(c===2){if(q+8<=e){const v=d[q]>>5;if(v===1&&(d[q]&0x10))return trGTPC1(R,d,q,e,s,t,vl,fi,ol);if(v===2)return trGTPC2(R,d,q,e,s,t,vl,fi,ol);}return null;}
+ if(c===3)return q+8<=e&&(d[q]>>5)===1?trPFCP(R,d,q,e,s,t,vl,fi,ol):null;
+ if(c===4)return q+20<=e?trRADIUS(R,d,q,e,s,t,vl,fi,ol):null;
+ if(c===5)return trIKE(R,d,q,e,s,t,vl,fi,ol,sp===4500||dp===4500);
+ if(c===6)return trCount(R,'gtpp',s,t,vl,fi,ol);
+ return null;}
 function trL4(R,d,o,end,p,s,t,vl,fi,ol,so,to){
  if(p===17){if(o+8>end){R.trunc++;return null;}const sp=(d[o]<<8)|d[o+1],dp=(d[o+2]<<8)|d[o+3],ul=(d[o+4]<<8)|d[o+5];const q=o+8,e=ul>=8?Math.min(end,o+ul):end;
-  if(sp===2152||dp===2152){if(q+8<=e&&(d[q]>>5)===1&&(d[q]&0x10))return trGTPU(R,d,q,e,s,t,vl,fi,ol);}
-  else if(sp===2123||dp===2123){if(q+8<=e){const v=d[q]>>5;if(v===1&&(d[q]&0x10))return trGTPC1(R,d,q,e,s,t,vl,fi,ol);if(v===2)return trGTPC2(R,d,q,e,s,t,vl,fi,ol);}}
-  else if(sp===8805||dp===8805){if(q+8<=e&&(d[q]>>5)===1)return trPFCP(R,d,q,e,s,t,vl,fi,ol);}
-  else if(TR_RADPORT[sp]||TR_RADPORT[dp]){if(q+20<=e)return trRADIUS(R,d,q,e,s,t,vl,fi,ol);}
-  else if(sp===500||dp===500||sp===4500||dp===4500)return trIKE(R,d,q,e,s,t,vl,fi,ol,sp===4500||dp===4500);
-  else if(sp===3386||dp===3386)return trCount(R,'gtpp',s,t,vl,fi,ol);
-  else if(TR_INFRA_UDP[sp]||TR_INFRA_UDP[dp])return trBucket(R.infra,TR_INFRA_UDP[sp]||TR_INFRA_UDP[dp],ol);
+  const pm=R.pm,c0=trMinC(trUdpStd(sp),trUdpStd(dp));let c=c0,f=c0?trUdpAs(R,c0,d,q,e,s,t,vl,fi,ol,sp,dp):null;
+  if(!f&&pm){const c1=trMinC(pm.u[sp],pm.u[dp]);if(c1&&c1!==c0){c=c1;f=trUdpAs(R,c1,d,q,e,s,t,vl,fi,ol,sp,dp);}}
+  if(f){const m=x=>trUdpStd(x)===c||(!!pm&&pm.u[x]===c);trSv(f,s,sp,t,dp,m(sp),m(dp));return f;}
+  if(!c0&&(TR_INFRA_UDP[sp]||TR_INFRA_UDP[dp]))return trBucket(R.infra,TR_INFRA_UDP[sp]||TR_INFRA_UDP[dp],ol);
   return trPlain(R,d,s,t,vl,fi,ol,so,to,'UDP');}
  if(p===6){if(o+20>end){R.trunc++;return null;}const sp=(d[o]<<8)|d[o+1],dp=(d[o+2]<<8)|d[o+3];
-  if(sp===3868||dp===3868)return trDiaTCP(R,d,o,end,s,t,sp,dp,vl,fi,ol);
-  if(sp===5868||dp===5868)return trCount(R,'diatls',s,t,vl,fi,ol);
-  if(sp===3386||dp===3386)return trCount(R,'gtpp',s,t,vl,fi,ol);
+  const pm=R.pm,c=trMinC(trTcpStd(sp),trTcpStd(dp))||(pm?trMinC(pm.t[sp],pm.t[dp]):0);
+  if(c){const f=c===7?trDiaTCP(R,d,o,end,s,t,sp,dp,vl,fi,ol):trCount(R,c===8?'diatls':'gtpp',s,t,vl,fi,ol);
+   const m=x=>trTcpStd(x)===c||(!!pm&&pm.t[x]===c);trSv(f,s,sp,t,dp,m(sp),m(dp));return f;}
   if(TR_INFRA_TCP[sp]||TR_INFRA_TCP[dp])return trBucket(R.infra,TR_INFRA_TCP[sp]||TR_INFRA_TCP[dp],ol);
   return trPlain(R,d,s,t,vl,fi,ol,so,to,'TCP');}
  if(p===132)return trSCTP(R,d,o,end,s,t,vl,fi,ol);
  if(p===50)return trCount(R,'esp',s,t,vl,fi,ol);
  if(TR_INFRA_IP[p])return trBucket(R.infra,TR_INFRA_IP[p],ol);
  return trPlain(R,d,s,t,vl,fi,ol,so,to,TR_IPP[p]||'IP protocol '+p);}
+/* the protocol ports of the network data as lookup tables per transport (port → class code); the first rule wins on overlaps */
+function trPortMap(rules){if(!rules||!rules.length)return null;const pm={u:new Uint8Array(65536),t:new Uint8Array(65536),s:new Uint8Array(65536)};
+ rules.forEach(r=>r.trs.forEach(tr=>{const c=tr==='tcp'&&r.c==='gtpp'?20:TR_PC.indexOf(r.c);if(c<1)return;const a=tr==='udp'?pm.u:tr==='tcp'?pm.t:pm.s;
+  r.ranges.forEach(([lo,hi])=>{for(let x=lo;x<=hi;x++)if(!a[x])a[x]=c;});}));
+ return pm;}
 
 /* GTP-U (TS 29.281) */
 function trGTPU(R,d,q,e,s,t,vl,fi,ol){
@@ -6126,16 +6257,18 @@ function trIKE(R,d,q,e,s,t,vl,fi,ol,natt){
 function trSCTP(R,d,o,end,s,t,vl,fi,ol){
  if(o+12>end){R.trunc++;return null;}const sp=(d[o]<<8)|d[o+1],dp=(d[o+2]<<8)|d[o+3];
  const ak=(s<t?s+':'+sp+'|'+t+':'+dp:t+':'+dp+'|'+s+':'+sp)+'|'+vl;let cls=R.sctpA.get(ak)||null;const dia=[];let p=o+12,g=0;
+ const pm=R.pm,cu=x=>pm&&pm.s[x]?TR_PC[pm.s[x]]:null,pdia=TR_SCTPPORT[sp]==='dia'||TR_SCTPPORT[dp]==='dia'||cu(sp)==='dia'||cu(dp)==='dia';
  while(p+4<=end&&g++<64){const ty=d[p],cf=d[p+1],L=(d[p+2]<<8)|d[p+3];if(L<4)break;
-  if(ty===0&&L>=16){const c=TR_PPID[trU32(d,p+12)]||null;if(c&&!cls)cls=c;if((c==='dia'||(!c&&(sp===3868||dp===3868)))&&(cf&2))dia.push([p+16,Math.min(end,p+L)]);}
+  if(ty===0&&L>=16){const c=TR_PPID[trU32(d,p+12)]||null;if(c&&!cls)cls=c;if((c==='dia'||(!c&&pdia))&&(cf&2))dia.push([p+16,Math.min(end,p+L)]);}
   p+=(L+3)&~3;}
- if(!cls)cls=TR_SCTPPORT[sp]||TR_SCTPPORT[dp]||null;
+ if(!cls)cls=TR_SCTPPORT[sp]||TR_SCTPPORT[dp]||cu(sp)||cu(dp)||null;
  if(cls){if(R.sctpA.size<20000)R.sctpA.set(ak,cls);}else cls='sctp';
+ const sv=x=>TR_SCTPPORT[x]===cls||cu(x)===cls;   /* the port of the protocol: standard or one of yours */
  if(cls==='dia'){let f0=null;
   dia.forEach(([a,b])=>{if(b-a>=20&&d[a]===1){const f=trFlow(R,'dia',trU32(d,a+8),s,t,vl,fi);trDiaMsg(R,f,d.subarray(a,b),s);if(!f0)f0=f;}});
-  const f=f0||R.sctpL.get(ak)||trFlow(R,'dia',0,s,t,vl,fi);if(f0)R.sctpL.set(ak,f0);trAdd(f,s,ol);return f;}
+  const f=f0||R.sctpL.get(ak)||trFlow(R,'dia',0,s,t,vl,fi);if(f0)R.sctpL.set(ak,f0);trAdd(f,s,ol);trSv(f,s,sp,t,dp,sv(sp),sv(dp));return f;}
  const f=trFlow(R,cls,null,s,t,vl,fi);trAdd(f,s,ol);
- const srv=TR_SCTPPORT[dp]===cls?t:TR_SCTPPORT[sp]===cls?s:null;if(srv!=null)trTally(f.x.srv||(f.x.srv={}),trIPs(srv));
+ const srv=sv(dp)?t:sv(sp)?s:null;if(srv!=null)trTally(f.x.srv||(f.x.srv={}),trIPs(srv));trSv(f,s,sp,t,dp,sv(sp),sv(dp));
  return f;}
 
 /* Diameter over TCP (RFC 6733): messages are re-assembled per direction; the first 16 kB of each are decoded */
@@ -6245,7 +6378,7 @@ function trFinish(R,files,name){
  R.flows.forEach(f=>{if(f.cls==='dia'&&f.app!==0){const k=f.a+'|'+f.b+'|'+f.vlan,c=best.get(k);if(!c||c.pk<f.pk)best.set(k,f);}});
  R.flows.forEach((f,k)=>{if(f.cls!=='dia'||f.app!==0)return;const t=best.get(f.a+'|'+f.b+'|'+f.vlan);if(!t)return;
   t.pk+=f.pk;t.by+=f.by;t.d[0]+=f.d[0];t.d[1]+=f.d[1];for(const m in f.m)trTally(t.m,m,f.m[m]);
-  if(f.x.adv)t.x.adv=Object.assign(t.x.adv||{},f.x.adv);if(f.x.oh)for(const q in f.x.oh)trTally(t.x.oh||(t.x.oh={}),q,f.x.oh[q]);
+  if(f.x.adv)t.x.adv=Object.assign(t.x.adv||{},f.x.adv);if(f.x.sv)f.x.sv.forEach(k=>(t.x.sv||(t.x.sv=new Set())).add(k));if(f.x.oh)for(const q in f.x.oh)trTally(t.x.oh||(t.x.oh={}),q,f.x.oh[q]);
   const add=i=>{if(i!==t.ifi)(t.ifo||(t.ifo=new Set([t.ifi]))).add(i);};add(f.ifi);if(f.ifo)f.ifo.forEach(add);
   f.di.forEach((c,i)=>{if(!c)return;const q=t.di[i]||(t.di[i]=[0,0,0,0]);for(let j=0;j<4;j++)q[j]+=c[j];});
   R.flows.delete(k);});
@@ -6501,23 +6634,25 @@ function trEnter(){if(state.procMode)pdClose();if(!state.trMode&&!trSavedVB)trSa
 function trExit(keep){if(!state.trMode)return;state.trMode=false;state.trHover=null;state.trReturn=!!(keep&&TR);trSync();}
 function trOpenPanel(){trEnter();apply();renderPanel();updateHash();}
 function trLeave(){trExit(false);apply();renderPanel();}
-function trClose(){if(trJob)trJob.cancel=true;trJob=null;TR=null;trErr=null;state.trSel=null;state.trHover=null;state.trReturn=false;const v=trSavedVB;trSavedVB=null;if(v&&state.view==='arch')pdTween(v);trExit(false);trSync();apply();renderPanel();}
+function trClose(){if(trJob)trJob.cancel=true;trJob=null;TR=null;trFiles=null;trErr=null;state.trSel=null;state.trHover=null;state.trReturn=false;const v=trSavedVB;trSavedVB=null;if(v&&state.view==='arch')pdTween(v);trExit(false);trSync();apply();renderPanel();}
 function trPick(){const i=document.createElement('input');i.type='file';i.multiple=true;i.accept='.pcap,.pcapng,.cap,.ntar,.gz';i.style.display='none';document.body.appendChild(i);
  i.addEventListener('change',()=>{const fs=[...(i.files||[])];i.remove();if(fs.length)trOpenFiles(fs);});i.click();}
 async function trIsCapture(f){if(!f)return false;if(/\.(pcap|pcapng|cap|ntar)(\.gz)?$/i.test(f.name)||/\.gz$/i.test(f.name))return true;
  try{const h=new Uint8Array(await f.slice(0,4).arrayBuffer()),m=((h[0]<<24)|(h[1]<<16)|(h[2]<<8)|h[3])>>>0;return [0x0a0d0d0a,0xa1b2c3d4,0xd4c3b2a1,0xa1b23c4d,0x4d3cb2a1,0xa1b2cd34,0x34cdb2a1].includes(m)||(h[0]===0x1f&&h[1]===0x8b);}catch(e){return false;}}
 const trOpenFile=f=>trOpenFiles([f]);
 /* one analysis over one or several files – e.g. one file per probe port; a file that cannot be read is reported and skipped */
-async function trOpenFiles(files){if(!files||!files.length)return;if(trJob)trJob.cancel=true;trErr=null;TR=null;state.trSel=null;state.trHover=null;trShowAllEnds=false;
- const name=files.length>1?files.length+' files':files[0].name;
- const job=trJob={cancel:false,name,size:files.reduce((a,f)=>a+f.size,0),read:0,R:null};trEnter();apply();renderPanel();updateHash();
- const R=trNew(),info=[];
+let trFiles=null;   /* the File objects of the open trace – in memory only, so that a change of your protocol ports can read them again */
+async function trOpenFiles(files,opt){if(!files||!files.length)return;opt=opt||{};if(trJob)trJob.cancel=true;trErr=null;TR=null;state.trSel=null;state.trHover=null;trShowAllEnds=false;trFiles=[...files];
+ const name=files.length>1?files.length+' files':files[0].name,pmr=ndPortRules(),sig=ndPortsSig(pmr);
+ const job=trJob={cancel:false,name,size:files.reduce((a,f)=>a+f.size,0),read:0,R:null,pmSig:sig};
+ if(opt.quiet&&!state.trMode){apply();renderPanel();}else{trEnter();apply();renderPanel();updateHash();}
+ const R=trNew(),info=[];R.pm=trPortMap(pmr);
  for(const f of files){if(job.cancel||trJob!==job)return;const before=R.pk;
   try{if(!await trRead(f,job,R))return;info.push({name:f.name,size:f.size,fmt:R.fmt||'?',gz:!!R.gz,cut:!!R.cut,pk:R.pk-before});}
   catch(e){if(job.cancel||trJob!==job)return;info.push({name:f.name,size:f.size,err:String(e&&e.message||e)});}}
  if(job.cancel||trJob!==job)return;trJob=null;
  if(info.every(x=>x.err)){TR=null;trErr=info.map(x=>(files.length>1?x.name+': ':'')+x.err).join(' · ');}
- else{TR=trFinish(R,info,name);trResolve();if(state.trMode)trFit();}
+ else{TR=trFinish(R,info,name);TR.pm={sig,rules:pmr};if(opt.manual)TR.manual={...opt.manual};trResolve();if(state.trMode&&!opt.quiet)trFit();}
  trSync();if(state.trMode){apply();renderPanel();}}
 function trProgress(){const j=trJob;if(!j||!state.trMode)return;const i=panel.querySelector('.trprog i');if(!i)return;const pc=j.size?Math.min(100,j.read/j.size*100):0;
  i.style.width=pc.toFixed(1)+'%';panel.querySelector('.trpc').textContent=pc.toFixed(0)+' %';panel.querySelector('.trpk').textContent=trNum(j.R?j.R.pk:0);}
@@ -6542,6 +6677,7 @@ function trIntroHTML(){return `<p>Open a Wireshark capture to see which interfac
  <li><b>Plain IP</b> (Gi / SGi / N6) – recognised when its addresses also appear inside GTP-U or as Framed-IP-Address in Gx or RADIUS</li></ul>
  <p><button class="ndlink" data-hp="tr-overview">How the trace analysis identifies the traffic – step by step</button></p>
  <h3>How sure is each result?</h3><div class="trlegend">${trBadge('sure')} the protocol or explicit signalling identifies the interface<br>${trBadge('likely')} inferred – please check<br>${trBadge('manual')} assigned by you<br>${trBadge(null)} choose from the candidates</div>
+ <p class="ndmuted">Protocols are recognised by their standard ports. If your network uses others – Diameter on 3870, RADIUS on 31812, say – add them under <button class="ndlink" data-nd="ports">◆ Network data → Protocol ports</button>; they are saved with your network data.${ND&&ndPortRules().length?` In use: ${esc(ndPortsText(ndPortRules()))}.`:''}</p>
  <p class="ndmuted">Formats: pcap and pcapng (also with several capture interfaces), optionally gzip-compressed. Link types: Ethernet with VLAN / QinQ / MPLS, Linux cooked (SLL / SLL2), raw IP. Your <button class="ndlink" data-nd="menu">◆ Network data</button> names the elements and settles ambiguous cases.</p>`;}
 function trWhy(o){const k=trTop(o);const n=Object.keys(o).length;return k?esc(k)+(n>1?` <span class="trmore" title="${esc(Object.keys(o).filter(x=>x!==k).join('\n'))}">+${n-1}</span>`:''):'';}
 function trResultHTML(){const F=TR.file,dur=F.t1>F.t0?trDur(F.t1-F.t0):'',out=[];
@@ -6551,6 +6687,7 @@ function trResultHTML(){const F=TR.file,dur=F.t1>F.t0?trDur(F.t1-F.t0):'',out=[]
  F.files.filter(x=>x.err).forEach(x=>out.push(`<div class="trerr"><b>${esc(x.name)}</b> could not be read: ${esc(x.err)}</div>`));
  if(F.cut)out.push(`<div class="trnote">The file ends in the middle of a record – it may be truncated. The part that could be read is analysed.</div>`);
  out.push(`<p class="trpriv">Read in this browser only – not uploaded, not stored, not in links or saved files.</p>`);
+ if(TR.pm&&TR.pm.rules.length)out.push(`<div class="trpm"><b>Your protocol ports</b> were used besides the standard ones: ${esc(ndPortsText(TR.pm.rules))} <button class="ndlink" data-nd="ports">Edit</button></div>`);
  const hid=TR.rows.filter(r=>!trShown(r).length),cups=hid.filter(r=>LM[r.canon]&&LM[r.canon].cups&&!state.cups),plane=TR.rows.filter(r=>trShown(r).some(id=>!linkVisible(LM[id])));
  if(cups.length)out.push(`<div class="trnote">${cups.map(r=>esc(trShortN(r.canon))).join(' and ')} exist only in the CUPS view of the EPC. <button data-ta="cups">Switch EPC to CUPS</button></div>`);
  if(plane.length)out.push(`<div class="trnote">${plane.map(r=>esc(trShortN(r.canon))).join(', ')} hidden by the plane filter in the toolbar.</div>`);
@@ -6645,18 +6782,24 @@ function trPortsHTML(){const P=(TR.ports||[]).filter(p=>p.pk);if(!P.length)retur
   ${pairs.length?`<div class="trnote">${pairs.join('<br>')}</div>`:''}
   <table class="trt trports"><thead><tr><th>Capture interface</th><th>Direction</th><th>Interfaces on it</th></tr></thead><tbody>${body}</tbody></table>`;}
 
+/* the protocol ports decide how packets are classified while reading: when they change, the trace is read again */
+function trPortsCheck(){if(!trFiles)return;const cur=trJob?trJob.pmSig:TR&&TR.pm?TR.pm.sig:null;if(cur==null)return;const sig=ndPortsSig(ndPortRules());if(sig===cur)return;
+ toast('Protocol ports changed – reading the trace again');trOpenFiles(trFiles,{quiet:true,manual:TR?TR.manual:null});}
+
 /* ---------- suggestions for the network data ---------- */
 const TR_WKPORT={gtpu:'2152',gtpc1:'2123',gtpc2:'2123',pfcp:'8805'};
+/* per address of a flow: the ports on which it used the protocol (standard or yours), as recorded while reading */
+function trSvPorts(f){if(f._sv)return f._sv;const m=new Map();(f.x.sv||[]).forEach(k=>{const i=k.lastIndexOf('|'),a=k.slice(0,i),ip=/^\d+$/.test(a)?trIPs(+a):a,p=+k.slice(i+1);(m.get(ip)||m.set(ip,[]).get(ip)).push(p);});
+ m.forEach(v=>v.sort((a,b)=>a-b));return f._sv=m;}
 const trSameEl=(a,b)=>a===b||(ND_ELALIAS[a]||[]).includes(b)||(ND_ELALIAS[b]||[]).includes(a);
 function trSuggest(){if(!TR)return [];const nd=TR.nd,out=new Map();
  TR.flows.forEach(f=>{const r=f.res;if(!r.links.length||r.none||r.conf==='off')return;
   r.links.forEach(l=>{const E=f.E&&f.E.get(l);if(!E)return;
    [f.A,f.B].forEach(ip=>{const v=E[ip];if(!v||!v.el||v.el==='ue')return;const el=ndResolveEl(v.el);if(!el)return;
     const key=ndResolveIf(l,el);if(!key||!ndElKeys(el).has(key))return;
-    const cl=trTop(f.cls==='pfcp'?(f.x.req||{}):(f.x.cl||{}));let port=TR_WKPORT[f.cls]||'';
-    if(f.cls==='dia'&&cl&&cl!==ip)port='3868';
-    else if(f.cls==='radius'&&cl&&cl!==ip)port=Object.keys(f.m).some(m=>/^Access-/.test(m))?'1812':'1813';
-    else if(f.x.srv&&f.x.srv[ip]){const q=Object.keys(TR_SCTPPORT).find(k=>TR_SCTPPORT[k]===f.cls);if(q)port=q;}
+    const sv=trSvPorts(f);let port=(sv.get(ip)||[]).join(';');
+    /* GTP-U, GTP-C and PFCP listen on the same port at both ends: an end seen only sending from another port gets its peer's */
+    if(!port&&TR_WKPORT[f.cls]){const o=sv.get(ip===f.A?f.B:f.A);port=o&&o.length?o.join(';'):TR_WKPORT[f.cls];}
     const conf=r.conf==='sure'&&v.src!=='fan-out'?'sure':r.conf==='manual'?'manual':'likely';
     const names=[...(TR.names.get(ip)||new Map()).keys()].filter(n=>/[a-z]/i.test(n)&&!/^[\d.:]+$/.test(n)),host=names[0]||'',nm=host?host.split('.')[0]:'';
     const ik=el+'|'+(nm||ip);let S=out.get(ik);if(!S)out.set(ik,S={el,name:nm||(EM[el]?EM[el].n:el)+' '+ip,host,addrs:new Map()});
@@ -6811,7 +6954,7 @@ ${hpNote(`<b>Private by design.</b> The file is read in this browser only, as a 
 <h4>How the analysis works</h4>
 <ol class="hpol">
 <li>${hpA('tr-read','Read the capture')} – file format, link layer (VLAN, MPLS, PPPoE …), IPv4 / IPv6 with extension headers and fragments.</li>
-<li>${hpA('tr-classify','Classify each packet')} into a traffic class by its transport protocol and well-known port, SCTP payload protocol identifier or IP protocol.</li>
+<li>${hpA('tr-classify','Classify each packet')} into a traffic class by its transport protocol and well-known port (or one of your ${hpA('nd-ports','protocol ports')}), SCTP payload protocol identifier or IP protocol.</li>
 <li>${hpA('tr-decode','Decode the signalling')} for evidence – F-TEIDs, PFCP interface types, Diameter applications and AVPs, RADIUS attributes – and collect the traffic into ${hpA('tr-flows','flows')}.</li>
 <li>When the file is read, ${hpA('tr-evidence','decide the interface of every flow')} from that evidence, your ${hpA('tr-nd','network data')} and your own choices.</li>
 <li>${hpA('tr-ends','Find which element each address is')}, and ${hpA('tr-dir','the direction')} of the user plane per capture interface.</li>
@@ -6844,7 +6987,7 @@ ${hpTblLinkTypes()}
 <li><b>Tunnels other than GTP-U</b> – GRE, IP-in-IP, IPv6-in-IPv4, IPv4 AH – are not unwrapped: they count as plain IP with that protocol. VXLAN (UDP 4789) is an infrastructure protocol; its inner frames are not analysed.</li>
 <li>Packets shorter than their own headers (a short snap length) are counted as <b>Truncated packets</b>, invalid IP headers as <b>Malformed packets</b>.</li></ul>`);
  add('tr-classify','Trace analysis','2 · Classifying packets by protocol',`
-<p>Every IP packet is put into one <b>traffic class</b> by its transport protocol and port numbers – the source or the destination port, so both directions of a conversation land in the same class. The checks run from top to bottom; the first match decides. The analysis looks at ports, PPIDs and headers only – <b>a protocol on a non-standard port is not recognised</b> (GTP-U on another UDP port is plain IP).</p>
+<p>Every IP packet is put into one <b>traffic class</b> by its transport protocol and port numbers – the source or the destination port, so both directions of a conversation land in the same class. The checks run from top to bottom; the first match decides. The analysis looks at ports, PPIDs and headers only – <b>a protocol on a non-standard port is recognised only when you add the port</b> to your network data under ${hpA('nd-ports','Protocol ports')}; otherwise GTP-U on another UDP port, say, is plain IP. Standard ports keep their meaning: your ports are used when neither port of a packet is a standard port, and on UDP also when a packet fails the header check of the standard protocol.</p>
 ${hpT(['Transport','Port or identifier','Traffic class'],[
  ['UDP','2152','<b>GTP-U</b> – if the header is GTP version 1 with the protocol-type bit set; otherwise plain IP'],
  ['UDP','2123','<b>GTPv1-C</b> (version 1 with the protocol-type bit) or <b>GTPv2-C</b> (version 2); otherwise plain IP'],
@@ -6853,18 +6996,20 @@ ${hpT(['Transport','Port or identifier','Traffic class'],[
  ['UDP','500','<b>IKEv2</b>'],
  ['UDP','4500','<b>IKEv2</b> after the 4-byte non-ESP marker; a single 0xFF byte is a NAT-T keepalive (IKE); anything else is <b>IPsec ESP</b> in UDP (RFC 3948)'],
  ['UDP / TCP','3386','<b>GTP′</b> (CDR transfer) – counted, not decoded'],
+ ['UDP','your protocol ports','the protocol you set for the port, with the same header check'],
  ['UDP',Object.entries(TR_INFRA_UDP).map(([p,n])=>esc(n)+' '+p).join(', '),'Network infrastructure – Not mapped'],
  ['TCP','3868','<b>Diameter</b> – messages re-assembled per direction'],
  ['TCP','5868','<b>Diameter over TLS</b> – counted, not decoded'],
+ ['TCP','your protocol ports','the protocol you set for the port (Diameter, Diameter over TLS, GTP′)'],
  ['TCP',Object.entries(TR_INFRA_TCP).map(([p,n])=>esc(n)+' '+p).join(', '),'Network infrastructure – Not mapped'],
- ['SCTP','PPID of the DATA chunks, else the port','see the table below'],
+ ['SCTP','PPID of the DATA chunks, else the standard port, else your protocol ports','see the table below'],
  ['IP protocol','50','<b>IPsec ESP</b>'],
  ['IP protocol',Object.entries(TR_INFRA_IP).map(([p,n])=>esc(n)+' '+p).join(', '),'Network infrastructure – Not mapped'],
  ['anything else','other UDP and TCP, ICMP, ICMPv6, GRE …','<b>Plain IP</b>']])}
 <h4>SCTP</h4>
-<p>An SCTP association (both address and port pairs plus the VLAN) gets its class from the first DATA chunk with a known payload protocol identifier (PPID), else from the well-known port of either side; the class is remembered for the association’s other packets (SACK, HEARTBEAT …). Associations with neither are “SCTP (other)” – Not mapped.</p>
+<p>An SCTP association (both address and port pairs plus the VLAN) gets its class from the first DATA chunk with a known payload protocol identifier (PPID), else from the well-known port of either side, else from your protocol ports; the class is remembered for the association’s other packets (SACK, HEARTBEAT …). Associations with neither are “SCTP (other)” – Not mapped.</p>
 ${hpTblSctp()}
-<p>The <b>listening side</b> – the address using the well-known port – tells the element: an eNodeB connects to the MME on 36412, so the address on 36412 is the MME.</p>`);
+<p>The <b>listening side</b> – the address using the well-known port, or your port for the protocol – tells the element: an eNodeB connects to the MME on 36412, so the address on 36412 is the MME.</p>`);
  add('tr-decode','Trace analysis','3 · What is decoded',`
 <p>Signalling is decoded only as far as needed for evidence, names and counts. User-plane payload is counted, never kept.</p>
 ${hpT(['Protocol','Read from each message'],[
@@ -6985,7 +7130,8 @@ ${hpNote('A group is one VLAN on one capture interface, and its decision applies
  <li>exactly one candidate interface among the interfaces of the two addresses → ${trBadge('likely')}, but only if the protocol left the interface open, agrees, or lists it as a candidate – one listed address never overrides protocol evidence, because one address often serves several interfaces (an OCS on Gy and Ro);</li>
  <li>otherwise the VLAN of exactly one candidate interface (any tag of a QinQ stack) → ${trBadge('likely')}.</li></ul></li>
 <li><b>Element</b> – an address listed for an element at one end of the interface is that element; this comes before the signalling (${hpA('tr-ends','next section')}).</li>
-<li><b>Names</b> – instance names are shown next to the addresses, with their site.</li></ul>
+<li><b>Names</b> – instance names are shown next to the addresses, with their site.</li>
+<li><b>Protocol ports</b> – non-standard ports of your network are recognised while the capture is read (${hpA('nd-ports','Protocol ports')}).</li></ul>
 ${hpNote('The analysis treats your network data as fact: a wrong entry gives a wrong result. Add suggestions from a trace only when you know they are right.')}`);
  add('tr-ends','Trace analysis','6 · Which element is which',`
 <p>For every flow and its interface, each address gets one of the interface’s two ends. The first rule that applies wins:</p>
@@ -6995,7 +7141,7 @@ ${hpNote('The analysis treats your network data as fact: a wrong entry gives a w
 <li><b>The client</b> – the address that sends most client requests on the interface:</li></ol>
 ${hpTblClient()}
 <ol class="hpol" start="4">
-<li><b>The listening side</b> of SCTP – the address on the well-known port: ${Object.entries(TR_SCTPSRV).map(([c,e])=>esc(TR_CLS[c].n)+' → '+hpE(e)).join(', ')}.</li>
+<li><b>The listening side</b> of SCTP – the address on the well-known port or on your port for the protocol: ${Object.entries(TR_SCTPSRV).map(([c,e])=>esc(TR_CLS[c].n)+' → '+hpE(e)).join(', ')}.</li>
 <li><b>The other end</b> – when one address is known, the other is the element at the opposite end of the interface.</li>
 <li><b>Fan-out</b> – when nothing is known on a RAN interface (${hpIfs(Object.keys(TR_UPSIDE).filter(k=>TR_RAN.includes(TR_UPSIDE[k])).concat(['s1mme','n2']),', ')}): an address with at least 3 peers on it while its peer has at most 2 is the core side, its peers are RAN nodes. Suggestions based on this rule are never pre-selected.</li></ol>
 <p>Elements and addresses lists each address with the element it has for most packets; hover the element for the rule that set it. An element of the classic view and its CUPS functions (SGW and SGW-C / SGW-U, PGW and PGW-C / PGW-U) count as the same element.</p>`);
@@ -7028,7 +7174,7 @@ ${hpT(['Part','What it shows'],[
 <p><b>◆ Add to network data…</b> (in Elements and addresses) turns the identified addresses into suggestions for your network data, grouped into instances:</p>
 <ul class="hpul">
 <li><b>Instance</b> – one per element and name. The name is the first label of the Diameter Origin-Host, PFCP Node ID or RADIUS NAS-Identifier when there is one, else <i>element address</i>; it can be edited.</li>
-<li><b>Address</b> – with the interface as the network-data editor names it for that element (only interfaces the element has there), the well-known port – GTP-U 2152, GTP-C 2123, PFCP 8805 on both ends; Diameter 3868 and RADIUS 1812 / 1813 only on the server; the SCTP port on the listening side – and the VLAN (a QinQ stack goes into the note). The evidence becomes the address note.</li>
+<li><b>Address</b> – with the interface as the network-data editor names it for that element (only interfaces the element has there), the VLAN (a QinQ stack goes into the note) and the <b>port</b>: the port(s) on which the address was seen using the protocol, standard or one of your protocol ports – typically the server of Diameter and RADIUS (a RADIUS client that receives CoA-Requests gets 3799), both ends of GTP-U, GTP-C and PFCP, the listening side of SCTP. An address seen only on other (ephemeral) ports gets none, except for GTP-U, GTP-C and PFCP, which listen on the same port at both ends: there it gets its peer’s port. The evidence becomes the address note.</li>
 <li><b>Selection</b> – certain addresses are selected; likely and assigned ones are left to you. Addresses already in your network data are marked: <i>already in your network data</i> (cannot be added again), <i>in your network data as …</i> another instance, or <i>within the range of …</i>.</li>
 <li>A <b>site</b> can be chosen for the new instances. Without network data a new dataset is started.</li></ul>
 <p>Nothing is stored or saved until you export your network data from <b>◆ Network data</b>.</p>`);
@@ -7036,7 +7182,7 @@ ${hpT(['Part','What it shows'],[
 <h4>Not decoded</h4>
 <ul class="hpul">
 <li>Diameter over TLS (port 5868) or DTLS, HTTP/2 SBI, SIP, DNS and IPsec payloads; inner packets of GRE, IP-in-IP, VXLAN and Ethernet over MPLS; Zstandard- or LZ4-compressed files.</li>
-<li>Protocols on non-standard ports.</li>
+<li>Protocols on non-standard ports that are not in your ${hpA('nd-ports','protocol ports')}.</li>
 <li>Signalling beyond what is listed in ${hpA('tr-decode','What is decoded')}: the first ${trNum(TR_DIA_CAP/1024)} kB of each Diameter message, the first SCTP DATA chunk of a Diameter message, the first fragment of a fragmented IP packet. A lost or reordered TCP segment of a Diameter connection skips to the next segment that starts with a message.</li>
 <li>Inner GTP-U addresses are sampled (the first 512 G-PDUs of each tunnel address pair, then every 64th).</li></ul>
 <h4>For good results</h4>
@@ -7053,6 +7199,7 @@ ${hpT(['In ◆ Network data','Result'],[
  ['<b>Load file…</b> (or drop a file on the page)','Reads a CSV, a JSON export, an encrypted JSON export, or an HTML file saved with data. With data already loaded you can replace it or merge into it (instances with the same element and name are combined).'],
  ['<b>New empty dataset…</b>','Start from scratch and enter instances in the tool.'],
  ['<b>Rename network…</b>, <b>Data check</b>','Change the dataset name; list all validation warnings (the count is shown as ⚠ n next to the menu button).'],
+ ['<b>Protocol ports…</b>','Non-standard ports of your network for Diameter, RADIUS, GTP, PFCP and the SCTP protocols – '+hpA('nd-ports','see Protocol ports')+'.'],
  ['<b>Export CSV</b> / <b>Export JSON</b>','<code>&lt;network&gt;.netdata.csv</code> / <code>.netdata.json</code>'],
  ['<b>Export JSON, encrypted</b>','<code>&lt;network&gt;.netdata.enc.json</code>, protected by a passphrase'],
  ['<b>Save tool + data as one HTML file</b> (also encrypted)','A copy of the tool with your data inside; opening it loads the data (asking for the passphrase if encrypted).'],
@@ -7078,7 +7225,24 @@ ${hpT(['Column','Content'],[
  ['<code>ip</code>','IPv4 or IPv6 address, a CIDR range (zero host bits, e.g. <code>198.51.100.0/26</code>) or a host name. An address with its prefix length and host bits set (<code>198.51.100.2/26</code>) is that one address.'],
  ['<code>port</code>','One port, a list (<code>2123;2152</code>) or a range (<code>30000-30100</code>).'],
  ['<code>vlan</code>, <code>note</code>','Optional.']])}
-<p>JSON (<code>"format": "mobile-network-navigator/netdata"</code>) holds the same: <code>instances</code> with their <code>addresses</code>, and <code>interfaces</code> with subnet, VLAN and note. The data check reports unknown elements (skipped), unknown or foreign interfaces, invalid addresses and ports, and one address used by different instances.</p>`);
+<p>Lines <code># ports: …</code> before the header hold your ${hpA('nd-ports','protocol ports')}.</p>
+<p>JSON (<code>"format": "mobile-network-navigator/netdata"</code>) holds the same: <code>instances</code> with their <code>addresses</code>, <code>interfaces</code> with subnet, VLAN and note, and <code>ports</code>. The data check reports unknown elements (skipped), unknown or foreign interfaces, invalid addresses and ports, and one address used by different instances.</p>`);
+ add('nd-ports','Network data','Protocol ports',`
+<p>Some networks run a protocol on other ports than the standard ones – Diameter on TCP 3870, RADIUS on UDP 31812–31813, SGsAP on SCTP 29200. Add them in <b>◆ Network data → Protocol ports…</b> and the trace analysis recognises the protocol on them too. They belong to your network, so they are saved with your network data – in CSV, JSON, encrypted JSON and the saved HTML file – and every capture of the network is read correctly wherever the data is loaded.</p>
+${hpT(['Field','Content'],[['Protocol',Object.values(ND_PROTO).map(P=>esc(P.n)).join(', ')],['Transport','The transport the protocol runs over; for Diameter and Diameter over TLS / DTLS (TCP and SCTP) and GTP′ (UDP and TCP) both, or one of them.'],['Ports','One port, a list or ranges: <code>3870;3900-3910</code>.'],['Note','Optional – where the port is used.']])}
+<ul class="hpul">
+<li><b>Standard ports keep their meaning</b> and are always recognised (the dialog lists them). Your ports are used when neither port of a packet is a standard port of a mobile-core protocol; on UDP also when a packet on a standard port fails the protocol’s header check. On SCTP the PPID comes first, then the standard ports, then yours.</li>
+<li>Your ports also tell the <b>listening side</b> of SCTP (an MME connects to the VLR on its SGsAP port) and appear in the ${hpA('tr-sug','suggestions')} for your network data.</li>
+<li>The <b>header checks</b> still apply: a packet on your GTP-U port that is not GTP version 1 stays plain IP.</li>
+<li>When the protocol ports change – edited, or with other network data loaded or removed – an <b>open trace is read again</b> with the new ports; your choices in Check and decide are kept. The result lists the ports that were used.</li>
+<li>The <b>data check</b> warns when a rule cannot be used (unknown protocol, wrong transport, invalid ports), when it covers a standard port of another protocol (the standard protocol keeps it) or the port of an infrastructure protocol such as BFD (your rule takes it over), when two rules give the same port to different protocols (the rule listed first is used), and when a range is wider than 1000 ports – a client’s ephemeral port in it would be taken for the protocol too.</li></ul>
+<p><b>In CSV</b> each rule is a comment line before the header: <code># ports: &lt;protocol&gt; [&lt;transport&gt;] &lt;ports&gt; [– &lt;note&gt;]</code> – without a transport, the rule covers every transport the protocol runs over.</p>
+<pre class="hppre"># network: Example network
+# ports: diameter tcp 3870;3900-3910 – Gx and Gy peers
+# ports: radius 31812-31813
+# ports: sgsap sctp 29200
+element,instance,site,interface,ip,port,vlan,note</pre>
+<p>Protocol names: ${Object.keys(ND_PROTO).map(k=>`<code>${esc(k)}</code>`).join(', ')} (also <code>gtp-c</code>, <code>gtpv2-c</code>, <code>gtp'</code> …). <b>In JSON</b>: <code>"ports": [{"protocol": "diameter", "transport": "tcp", "ports": "3870;3900-3910", "note": "Gx and Gy peers"}]</code>, transport <code>"any"</code> for all.</p>`);
  add('nd-privacy','Network data','Privacy and encryption',`
 <ul class="hpul">
 <li>Loading reads the file in the browser; nothing is uploaded. The page’s Content-Security-Policy allows no network access (<code>connect-src 'none'</code>) and no external resources – also for the online copy.</li>

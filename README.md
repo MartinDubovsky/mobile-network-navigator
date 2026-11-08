@@ -1,12 +1,12 @@
 # Mobile Network Navigator
 
-**Version 2026.11.08.2** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.08.3** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
 It is meant for network engineers who need to get their bearings quickly while troubleshooting or discussing a topic with colleagues.
 
-- **File:** `index.html` (about 750 KB) – the whole application
+- **File:** `index.html` (about 780 KB) – the whole application
 - **Online:** https://martindubovsky.github.io/mobile-network-navigator/ (once GitHub Pages is enabled for this repository)
 - **Dependencies:** none – no external scripts, fonts or network access; works offline from disk
 - **Your captures:** a pcap / pcapng opens in the tool and shows its interfaces and elements on the map – read in the browser, never uploaded (see [Trace analysis](#trace-analysis))
@@ -170,6 +170,8 @@ The flows follow the clauses named under each title (TS 23.401, 23.502, 23.060, 
 
 **Formats:** pcap (µs and ns, either byte order) and pcapng with several capture interfaces (their names are shown, and decisions can be made per capture interface – useful for probes that split traffic over several ports), optionally gzip-compressed. **Several files** – one per probe port, say – can be opened or dropped together and are analysed as one capture, each file a capture interface (gzip needs Safari 16.4+ or any current Chrome, Edge or Firefox). Link types Ethernet (with 802.1Q / QinQ VLANs, MPLS, PPPoE), Linux cooked SLL / SLL2, raw IP and loopback; IPv4 and IPv6 with extension headers and fragments. Large files are read as a stream: about 650 000 packets per second in our tests, with memory bounded because user-plane traffic is counted, not kept.
 
+**Ports:** protocols are recognised by their standard ports (and SCTP by its PPID). If your network uses other ports – Diameter on 3870, say – add them to your network data under [Protocol ports](#protocol-ports); an open trace is read again when they change.
+
 **How each interface is identified** – from the traffic itself, in this order:
 
 | Traffic | Evidence | Result |
@@ -226,6 +228,7 @@ Everything is in the **◆ Network data** menu at the right end of the toolbar:
 | **Load file…** (or drop a file anywhere on the page) | Reads a CSV, a JSON export, an encrypted JSON export, or an HTML file saved with data. If data is already loaded you can **replace** it or **merge** into it (instances with the same element and name are combined). |
 | **New empty dataset…** | Start from scratch and enter instances in the tool. |
 | **Rename network…**, **Data check** | Change the dataset name; list all validation warnings. |
+| **Protocol ports…** | Non-standard ports of your network for a protocol – see [Protocol ports](#protocol-ports). |
 | **Export CSV** / **Export JSON** | `<network>.netdata.csv` / `<network>.netdata.json` |
 | **Export JSON, encrypted** | `<network>.netdata.enc.json`, protected by a passphrase |
 | **Save tool + data as one HTML file** | `mobile-network-navigator-<network>-with-data.html` – a copy of the tool with your data inside; opening it loads the data automatically. Handy for a laptop in the field or for sharing with a colleague. |
@@ -278,7 +281,29 @@ gnbcucp,*,*,n2,2001:db8:100::/48,38412,121,IPv6 example
 | `port` | Optional: one port, a list (`2123;2152` – separated by `;`, `,`, `/` or spaces) or a range (`30000-30100`). If the separator is also the CSV delimiter, quote the field (`"2123;2152"`) or use another separator. Saved as `2123;2152`, shown as `2123, 2152`. |
 | `vlan`, `note` | Optional. |
 
-Header names are case-insensitive and some alternatives are recognised (`ports` for port, `name`/`hostname`/`node` for instance, `address`/`ip address`/`subnet` for ip, `comment`/`description` for note). Lines starting with `#` are comments; `# network: <name>` names the dataset.
+Header names are case-insensitive and some alternatives are recognised (`ports` for port, `name`/`hostname`/`node` for instance, `address`/`ip address`/`subnet` for ip, `comment`/`description` for note). Lines starting with `#` are comments; `# ports: …` lines hold the [protocol ports](#protocol-ports); `# network: <name>` names the dataset.
+
+### Protocol ports
+
+Some networks run a protocol on other ports than the standard ones – Diameter on TCP 3870, RADIUS on UDP 31812–31813, SGsAP on SCTP 29200. Add them under **◆ Network data → Protocol ports…** (one port, a list or ranges per rule, with an optional note) and the [trace analysis](#trace-analysis) recognises the protocol on them too. They belong to the network, so they are saved with the network data – CSV, JSON, encrypted JSON and the saved HTML file.
+
+- Protocols: Diameter (TCP / SCTP), Diameter over TLS / DTLS (TCP / SCTP), RADIUS, GTP-C (v1 and v2), PFCP, GTP′ (UDP / TCP), GTP-U, and on SCTP S1AP, NGAP, X2AP, XnAP, F1AP, E1AP, SGsAP, NBAP, M3UA, RUA, HNBAP. Without a transport a rule covers every transport the protocol runs over.
+- **Standard ports keep their meaning** and are always recognised (the dialog lists them). Your ports are used when neither port of a packet is a standard port; on UDP also when a packet on a standard port fails that protocol’s header check. On SCTP the PPID comes first, then the standard ports, then yours. Your ports take over ports of infrastructure protocols (BFD, VXLAN …). The header checks still apply to your ports.
+- Your SCTP ports also tell the listening side (the MME connects to the VLR on its SGsAP port), and suggestions from a trace carry the ports actually seen.
+- When the ports change while a trace is open – edited, or with other network data loaded or removed – the trace is read again with the new ports; choices in Check and decide are kept.
+- The data check warns about rules that cannot be used (unknown protocol, wrong transport, invalid ports), rules covering a standard port of another protocol, one port given to two protocols (the rule listed first is used), and ranges wider than 1000 ports (a client’s ephemeral port in such a range would be taken for the protocol).
+
+In CSV each rule is a comment line before the header – `# ports: <protocol> [<transport>] <ports> [– <note>]`:
+
+```csv
+# network: Example network
+# ports: diameter tcp 3870;3900-3910 – Gx and Gy peers
+# ports: radius 31812-31813
+# ports: sgsap sctp 29200
+element,instance,site,interface,ip,port,vlan,note
+```
+
+Protocol names: `diameter`, `diameter-tls`, `radius`, `gtpc`, `pfcp`, `gtpp`, `gtpu`, `s1ap`, `ngap`, `x2ap`, `xnap`, `f1ap`, `e1ap`, `sgsap`, `nbap`, `m3ua`, `rua`, `hnbap` (also `gtp-c`, `gtpv2-c`, `gtp'` …). In JSON: `"ports": [{"protocol": "diameter", "transport": "tcp", "ports": "3870;3900-3910", "note": "Gx and Gy peers"}]`, with `"any"` for every transport.
 
 ### JSON format
 
@@ -289,7 +314,8 @@ Header names are case-insensitive and some alternatives are recognised (`ports` 
     { "element": "mme", "name": "MME01", "site": "Site-A", "note": "",
       "addresses": [ { "interface": "s1mme", "ip": "192.0.2.11", "port": "36412", "vlan": "101", "note": "" } ] }
   ],
-  "interfaces": { "s1mme": { "subnet": "192.0.2.0/28", "vlan": "101", "note": "S1-MME core VLAN" } }
+  "interfaces": { "s1mme": { "subnet": "192.0.2.0/28", "vlan": "101", "note": "S1-MME core VLAN" } },
+  "ports": [ { "protocol": "diameter", "transport": "tcp", "ports": "3870", "note": "" } ]
 }
 ```
 
@@ -333,7 +359,7 @@ The page address updates with the current selection, so a link can be sent to a 
 
 Generation IDs: `2g`, `3g`, `hspa`, `4g`, `nsa`, `sa`, `wifi` (Wi-Fi access via ePDG), `iw` (interworking).
 
-Help sections: `start`, `views`, `filters`, `panel`, `procs`; trace analysis `tr-overview`, `tr-read`, `tr-classify`, `tr-decode`, `tr-flows`, `tr-evidence`, `tr-gtpu`, `tr-gtpc`, `tr-pfcp`, `tr-dia`, `tr-radius`, `tr-plain`, `tr-sctp`, `tr-nd`, `tr-ends`, `tr-dir`, `tr-results`, `tr-sug`, `tr-limits`; network data `nd`, `nd-format`, `nd-privacy`; `keys`, `links`, `about`.
+Help sections: `start`, `views`, `filters`, `panel`, `procs`; trace analysis `tr-overview`, `tr-read`, `tr-classify`, `tr-decode`, `tr-flows`, `tr-evidence`, `tr-gtpu`, `tr-gtpc`, `tr-pfcp`, `tr-dia`, `tr-radius`, `tr-plain`, `tr-sctp`, `tr-nd`, `tr-ends`, `tr-dir`, `tr-results`, `tr-sug`, `tr-limits`; network data `nd`, `nd-format`, `nd-ports`, `nd-privacy`; `keys`, `links`, `about`.
 
 The **Copy link to this item** button in the panel copies the current address to the clipboard. Some browsers block the clipboard for `file://` pages; in that case copy the address bar instead.
 
@@ -450,6 +476,13 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.08.3
+- Network data – **Protocol ports**: non-standard ports your network uses for a protocol – Diameter on TCP 3870, RADIUS on UDP 31812–31813, SGsAP on SCTP 29200 – as single ports, lists or ranges, for Diameter (TCP, SCTP), Diameter over TLS / DTLS, RADIUS, GTP-C, GTP-U, PFCP, GTP′ and the SCTP protocols (S1AP, NGAP, X2AP, XnAP, F1AP, E1AP, SGsAP, NBAP, M3UA, RUA, HNBAP). Edit them under **◆ Network data → Protocol ports…**; the dialog also lists the standard ports.
+- The protocol ports are **saved with your network data** – CSV (`# ports: diameter tcp 3870;3900-3910 – note` lines), JSON (`ports`), encrypted JSON and the saved HTML file – so captures of the network are read correctly wherever the data is loaded.
+- Trace analysis: protocols on your ports are recognised like on their standard ports – also the listening side of SCTP. Standard ports keep their meaning (on UDP your port also gets a packet whose standard-port header check fails); on SCTP the PPID still comes first. When the ports change – edited, or with other network data loaded – an open trace is **read again** with them, keeping your choices in Check and decide; the result lists the ports that were used.
+- **Add to network data…** now suggests the ports each address was actually seen using – standard or yours (Diameter 3870 on the PCRF, RADIUS 1812 and 1813 on the AAA, 3799 on a NAS receiving CoA) – instead of the standard ones.
+- The data check warns about protocol-port rules that cannot be used, that cover a standard port of another protocol, that give one port to two protocols, or whose range is wider than 1000 ports. The help has a new section **Protocol ports** (`#help=nd-ports`).
 
 ### 2026.11.08.2
 - **Help** – **? Help** in the toolbar, the `?` key or a `#help` link opens a searchable help: the map and its views, filters and search, the details panel and message flows, end-to-end procedures, network data, keyboard and deep links.
