@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.08** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.08.1** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
@@ -163,7 +163,7 @@ The flows follow the clauses named under each title (TS 23.401, 23.502, 23.060, 
 
 **Private by design.** The file is read in this browser only, as a stream – it is never uploaded, stored (not in `localStorage` either), put in the link or included in “Save with data”. **Close trace**, or closing the page, discards it. No subscriber identities (IMSI, MSISDN, user names, Subscription-Id) are read; UE addresses are kept in memory only to recognise plain-IP traffic and are shown as counts. `.gitignore` excludes capture files (`*.pcap`, `*.pcapng`, `*.cap`, `*.ntar`, also gzipped).
 
-**Formats:** pcap (µs and ns, either byte order) and pcapng with several capture interfaces (their names are shown, and decisions can be made per capture interface – useful for probes that split traffic over several ports), optionally gzip-compressed (gzip needs Safari 16.4+ or any current Chrome, Edge or Firefox). Link types Ethernet (with 802.1Q / QinQ VLANs, MPLS, PPPoE), Linux cooked SLL / SLL2, raw IP and loopback; IPv4 and IPv6 with extension headers and fragments. Large files are read as a stream: about 700 000 packets per second in our tests, with memory bounded because user-plane traffic is counted, not kept.
+**Formats:** pcap (µs and ns, either byte order) and pcapng with several capture interfaces (their names are shown, and decisions can be made per capture interface – useful for probes that split traffic over several ports), optionally gzip-compressed. **Several files** – one per probe port, say – can be opened or dropped together and are analysed as one capture, each file a capture interface (gzip needs Safari 16.4+ or any current Chrome, Edge or Firefox). Link types Ethernet (with 802.1Q / QinQ VLANs, MPLS, PPPoE), Linux cooked SLL / SLL2, raw IP and loopback; IPv4 and IPv6 with extension headers and fragments. Large files are read as a stream: about 650 000 packets per second in our tests, with memory bounded because user-plane traffic is counted, not kept.
 
 **How each interface is identified** – from the traffic itself, in this order:
 
@@ -184,12 +184,14 @@ Messages are re-assembled per TCP direction (retransmissions are not counted twi
 
 **The panel:**
 - **Interfaces in this trace** – packets, bytes, protocols and the evidence (**✔ certain**, **◐ likely**, **✎ assigned**). Hovering a row highlights it on the map; clicking zooms to it; the interface name opens its details, where **In the trace** shows the addresses on each side (with **← Back to trace analysis**).
+- **Capture interfaces and direction** – for each capture interface (DPDK port, pcapng interface or file): **↑ uplink**, **↓ downlink** or both, the share per interface, and for signalling the sending element (“PGW → PCRF”). Uplink is from the UE side towards the core and the data network: eNodeB → S-GW on S1-U, gNB → UPF on N3, SGSN → GGSN on Gn, UE → server on SGi / Gi / N6. The direction is known where the ends of a tunnel are identified (by signalling, network data, or – on RAN interfaces – the address with many peers being the core side), and for plain IP where its UE addresses are: the inner source of uplink GTP-U packets. Two capture interfaces that carry the opposite directions of the same links are pointed out. Interface rows show their ↑ / ↓ share.
 - **Check and decide** – traffic that is not certain, grouped by protocol, VLAN and capture interface, with the reason and a selector of candidate interfaces (or *Not a mobile-network interface*). A choice assigns the whole group and is forgotten with the trace.
 - **Elements and addresses** – every address with its element, names (from [network data](#network-data-your-own-ip-addresses) and from the protocols) and interfaces; element panels list their addresses from the trace.
+- **◆ Add to network data…** – the identified addresses as suggestions for your network data, grouped into instances: element, name (first label of the Diameter Origin-Host, PFCP Node ID or RADIUS NAS-Identifier – editable), interface, address, well-known port (2152, 2123, 8805, 3868 on the server, SCTP ports on the listening side) and VLAN, with the evidence as the address note. Certain ones are selected, likely ones are left to you, addresses already in your network data are marked, and a site can be chosen for the new instances. Without network data a new one is started. Nothing is stored or saved until you export it – the trace analysis, and anyone you share the file with, treats your network data as fact.
 - **Not mapped** – Diameter applications not drawn on the map, non-IP frames (ARP, LLDP…), routing protocols (OSPF, BFD, BGP…), truncated or malformed packets; **Protocol details** – message counts, rejected responses and error answers, F-TEID and 3GPP interface types, IP-CAN-Type, RAT-Type, Service-Context-Id.
 - Sxa / Sxb exist only in the CUPS view of the EPC; the panel offers to switch.
 
-**Network data** makes the results more precise: an address listed on an interface in your IP plan decides traffic that the protocols leave open (both ends listed – certain, one end or the interface’s VLAN – likely), and instance names are shown next to the addresses.
+**Network data** makes the results more precise: an address listed on an interface in your IP plan decides traffic that the protocols leave open (both ends listed – certain, one end or the interface’s VLAN – likely; one listed address never overrides protocol evidence, because one address often serves several interfaces), and instance names are shown next to the addresses.
 
 **Not decoded:** Diameter over TLS (port 5868) or DTLS, HTTP/2 SBI, SIP, IPsec payloads, zstd / lz4-compressed pcapng. These are listed but not identified.
 
@@ -434,6 +436,13 @@ To release a new version, change `VERSION` (and the `<meta name="version">` tag)
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.08.1
+- Trace analysis – **direction per capture interface**: uplink and downlink of the user plane are worked out (eNodeB → S-GW on S1-U, gNB → UPF on N3, UE → server on SGi / Gi / N6…) and shown per capture interface (DPDK port, pcapng interface or file) as ↑ uplink, ↓ downlink or both, with the share per interface and the sending element of the signalling. Two ports that carry the opposite directions of the same links are pointed out; interface rows show their ↑ / ↓ share.
+- UE addresses are now told from server addresses by the direction they travel inside GTP-U (the inner source of uplink packets is the UE), so plain IP on SGi, Gi and N6 is matched and its direction counted precisely.
+- Trace analysis – **several files at once**: open or drop the files of several probe ports together; they are analysed as one capture with one capture interface per file. A file that cannot be read is reported and skipped; a PFCP response read before its request (directions in separate files) is still paired.
+- Trace analysis – **Add to network data…**: the addresses identified in a trace are offered as instances for your network data – element, name (from Diameter Origin-Host, PFCP Node ID or RADIUS NAS-Identifier), interface, address, well-known port and VLAN, with the evidence as a note. Certain ones are pre-selected, likely ones are yours to decide; addresses already in your network data are marked. Nothing is saved until you export.
+- Trace analysis: on RAN interfaces without signalling, the address with many peers is taken as the core side (S-GW, UPF, MME…) and its peers as RAN nodes (likely). An address listed in your network data no longer overrides protocol evidence for another interface of the same address (an OCS on Gy and Ro).
 
 ### 2026.11.08
 - Trace analysis: plain IP on SGi, Gi and N6 is now recognised only by addresses that sit behind one data-network side (the UE addresses). Internet servers, which appear inside GTP-U on S1-U, N3 and Gn alike, no longer make N6 or Gi traffic look partly like SGi.
