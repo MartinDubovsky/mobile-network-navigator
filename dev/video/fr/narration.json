@@ -1,0 +1,28 @@
+[
+ ["intro",[
+  "Tout ingénieur des réseaux mobiles connaît ce moment.",
+  "Une trace dans une fenêtre, une spécification dans une autre, et toutes les générations, de la 2G à la 5G, en tête.",
+  "Mobile Network Navigator réunit tout cela sur une seule carte."]],
+ ["map",[
+  "Du GSM à la 5G autonome, jusqu'aux appels Wi-Fi, chaque élément et chaque interface y figure.",
+  "Un clic suffit pour filtrer une génération, un plan ou un protocole."]],
+ ["details",[
+  "Sélectionnez une interface pour voir sa pile protocolaire, ses ports, ses messages clés et ses flux de messages,",
+  "ainsi que les spécifications de référence et des aides au dépannage, codes de cause compris."]],
+ ["flows",[
+  "Trente-neuf procédures de bout en bout se déroulent pas à pas sur la carte.",
+  "De la mise à jour de localisation GSM au handover 5G, chaque message emprunte les interfaces réelles, et le message NAS est nommé sur son porteur."]],
+ ["trace",[
+  "Ouvrez maintenant une capture Wireshark.",
+  "L'analyse de trace décode GTP, PFCP, Diameter et RADIUS directement dans votre navigateur, et met en lumière chaque interface trouvée, avec son nombre de paquets.",
+  "Chaque résultat indique son degré de certitude, et pourquoi. Par exemple, les F-TEID signalés en GTPv2-C et en PFCP distinguent S1-U, S5 et N3.",
+  "Ce qui reste ouvert, vous le tranchez en un clic, par VLAN ou par port de sonde."]],
+ ["privacy",[
+  "Et votre réseau reste le vôtre.",
+  "Chargez votre propre plan d'adressage IP : les vraies adresses apparaissent sur chaque élément, chaque interface et chaque flux de messages.",
+  "Ce plan reste dans votre propre fichier, jamais dans l'outil ni dans son dépôt, et peut être chiffré en AES-256.",
+  "Les captures sont lues localement et ne quittent jamais votre navigateur."]],
+ ["outro",[
+  "Un seul fichier HTML. Sans installation, sans serveur, et utilisable hors ligne.",
+  "Mobile Network Navigator. Votre réseau mobile, sur une seule carte."]]
+]

@@ -1,0 +1,12 @@
+const E=require('../env');
+const { chromium } = require('playwright');
+(async()=>{const b=await chromium.launch();const p=await b.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.goto(E.APP);await p.waitForTimeout(200);
+const cases=[['mgw','A','aup'],['mscs','A','acp'],['sgw','S8','s5'],['sgsn','Gp','gn'],['ggsn','Ga','gy3g'],['ggsn','Gx','gx3g'],['pgw','Gx','gx'],['pgw','Gz','gy4g'],['ims','Rx','rx'],['ims','Rf','rorf'],['hss','Cx','cxsh'],['mscs','D','cd'],['sgwc','S11','s11'],['sgwu','S1-U','s1u'],['engnb','S1-U','s1unsa'],['ngenb','N2','n2'],['gnb','N3','n3'],['amf','Namf','sbi'],['enb','X2','x2lte'],['rnc','Iu-CS','iucscp'],['mgw','Iu-CS','iucsup'],['sepp','N32','n32'],['upf','N9','n9'],['pgwu','SGi','sgi'],['mme','s1mme','s1mme'],['smf','N7','n7'],['mme','Gi','gi']];
+const r=await p.evaluate(c=>c.map(([e,v,exp])=>{const got=ndResolveIf(v,e);return (got===exp?'ok  ':'BAD ')+e+' '+v+' -> '+got+' (exp '+exp+')';}),cases);
+console.log(r.join('\n'));
+await p.evaluate(async()=>{await ndLoadText(ND_TEMPLATE_CSV,'t.csv');});
+const s=await p.evaluate(()=>{state.q='192.0.2.11';apply();const c=compute();return {el:[...c.elOn],ln:[...c.linkOn]};});console.log(JSON.stringify(s));
+const s2=await p.evaluate(()=>{state.q='192.0.2.1';apply();const c=compute();return {el:[...c.elOn].length,ln:[...c.linkOn]};});console.log(JSON.stringify(s2));
+const s3=await p.evaluate(()=>{state.q='2001:db8:100';apply();const c=compute();return {el:[...c.elOn],ln:[...c.linkOn]};});console.log(JSON.stringify(s3));
+console.log(errs.join('\n')||'no errors');await b.close();})();

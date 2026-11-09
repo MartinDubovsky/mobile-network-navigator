@@ -1,0 +1,28 @@
+[
+ ["intro",[
+  "Every mobile network engineer knows the moment.",
+  "A trace in one window, a spec in another, and every generation from 2G to 5G in your head.",
+  "Mobile Network Navigator puts it all on one map."]],
+ ["map",[
+  "From GSM to 5G standalone and Wi-Fi calling, every element and interface is drawn.",
+  "One click filters a generation, a plane, or a protocol."]],
+ ["details",[
+  "Select an interface to see its protocol stack, ports, key messages and message flows,",
+  "plus the specs behind it, and troubleshooting references, cause codes included."]],
+ ["flows",[
+  "Thirty-nine end-to-end procedures play step by step on the map.",
+  "From a GSM location update to a 5G handover, every message travels over the real interfaces, with the NAS payload named on its carrier."]],
+ ["trace",[
+  "Now, open a Wireshark capture.",
+  "Trace analysis decodes GTP, PFCP, Diameter and RADIUS right in your browser, and lights up every interface it finds, with packet counts.",
+  "Each result shows how certain it is, and why. For example, F-TEIDs signalled in GTPv2-C and PFCP tell S1-U apart from S5 and N3.",
+  "Anything left open, you decide in one click, per V-LAN or probe port."]],
+ ["privacy",[
+  "And your network stays yours.",
+  "Load your own IP plan, and real addresses appear on every element, interface and message flow.",
+  "It lives in your own file, never in the tool or its repository, and it can be encrypted with AES-256.",
+  "Captures are read locally, and never uploaded."]],
+ ["outro",[
+  "One HTML file. No installation, no server, and it works offline.",
+  "Mobile Network Navigator. Your mobile network, on one map."]]
+]

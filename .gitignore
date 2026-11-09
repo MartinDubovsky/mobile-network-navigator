@@ -16,3 +16,15 @@ private/
 *.ntar
 *.pcap.gz
 *.pcapng.gz
+
+# development tooling (see CLAUDE.md): dependencies, generated captures, test and video output
+dev/node_modules/
+dev/package-lock.json
+dev/out/
+dev/trcap/
+dev/video/tts/
+dev/video/*/vo/
+dev/video/*/out/
+dev/video/*/stills/
+__pycache__/
+!dev/video/example-lab.netdata.csv

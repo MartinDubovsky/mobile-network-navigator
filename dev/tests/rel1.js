@@ -1,0 +1,21 @@
+const E=require('../env');
+const { chromium } = require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1920,height:1080}});const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+const ok=(c,m)=>console.log((c?'PASS ':'FAIL ')+m);
+await p.goto(E.APP);await p.waitForTimeout(300);
+ok(!(await p.evaluate(()=>$('#ver').classList.contains('new'))),'first visit: no dot');
+await p.click('#ver');await p.waitForTimeout(100);
+ok(await p.evaluate(()=>ndModalOpen()&&document.querySelectorAll('#modal .rel').length===RELEASES.length),'modal lists all releases');
+ok((await p.textContent('#modal .rel h4'))?.includes('current'),'current marked');
+ok(await p.evaluate(()=>document.querySelector('#modal .rel b')&&document.querySelector('#modal .rel code')),'bold / code formatting');
+await p.screenshot({path:E.OUT+'/rel.png'});
+await p.keyboard.press('Escape');ok(!(await p.evaluate(()=>ndModalOpen())),'Esc closes');
+await p.evaluate(()=>localStorage.setItem('mnn-seen-version','2026.11.05.6'));await p.reload();await p.waitForTimeout(300);
+ok(await p.evaluate(()=>$('#ver').classList.contains('new')),'dot after an update');
+await p.click('#ver');await p.keyboard.press('Escape');ok(await p.evaluate(()=>!$('#ver').classList.contains('new')&&localStorage.getItem('mnn-seen-version')===VERSION),'dot cleared after viewing');
+await p.click('#panel [data-act="releases"]');ok(await p.evaluate(()=>ndModalOpen()),'overview link opens it');await p.keyboard.press('Escape');
+const q=await ctx.newPage();await q.goto(E.APP+'#releases');await q.waitForTimeout(300);ok(await q.evaluate(()=>ndModalOpen()&&document.querySelector('#modal h3').textContent==='Release history'),'#releases deep link');
+// README and app in sync
+const rd=fs.readFileSync(E.ROOT+'/README.md','utf8');const vs=[...rd.slice(rd.indexOf('## Changelog')).matchAll(/^### (\S+)/gm)].map(m=>m[1]);
+const av=await p.evaluate(()=>RELEASES.map(r=>r.v));ok(JSON.stringify(vs)===JSON.stringify(av),'README changelog versions = app versions '+vs.length+'/'+av.length);
+console.log(errs.join('\n')||'no errors');await b.close();})();

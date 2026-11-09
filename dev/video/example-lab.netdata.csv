@@ -1,0 +1,45 @@
+# network: Lab network
+# Documentation addresses only (RFC 5737 / RFC 3849) - replace them with your own. Keep files with real addresses out of git.
+# One row per address. element = element ID or name; instance = your node name ("*" = all instances, e.g. a RAN range);
+# site = site name ("*" = the entry belongs to every site);
+# interface = interface ID or name, or oam / sbi / other. Rows with an empty element describe the interface itself (subnet, VLAN).
+# port = one port, a list (2123;2152 - separated by ; , / or spaces) or a range (30000-30100).
+element,instance,site,interface,ip,port,vlan,note
+mme,MME01,Site-A,s1mme,192.0.2.11,36412,101,SCTP multihoming - primary path
+mme,MME01,Site-A,s1mme,192.0.2.12,36412,101,SCTP multihoming - secondary path
+mme,MME01,Site-A,s11,192.0.2.21,2123,102,
+mme,MME01,Site-A,n26,192.0.2.21,2123,102,shared with S11
+mme,MME01,Site-A,s6a,192.0.2.31,3868,103,Diameter host mme01.epc.example
+mme,MME01,Site-A,sgs,192.0.2.41,29118,104,
+mme,MME01,Site-A,oam,192.0.2.250,,900,
+sgw,SGW01,Site-A,s11,198.51.100.5,2123,102,
+sgw,SGW01,Site-A,s1u,198.51.100.6,2152,110,
+sgw,SGW01,Site-A,s5,198.51.100.7,2123;2152,111,GTP-C and GTP-U
+pgw,PGW01,Site-A,s5,198.51.100.17,,111,
+pgw,PGW01,Site-A,gx,198.51.100.18,3868,103,
+pgw,PGW01,Site-A,sgi,203.0.113.1,,200,SGi next hop
+hss,HSS01,Site-A,s6a,192.0.2.51,3868,103,
+pcrf,PCRF01,Site-A,gx,192.0.2.55,3868,103,
+amf,AMF01,Site-A,n2,192.0.2.61,38412,121,
+amf,AMF01,Site-A,sbi,192.0.2.62,443;8080,122,TLS and plain HTTP/2
+smf,SMF01,Site-A,sbi,192.0.2.71,443,122,
+smf,SMF01,Site-A,n4,192.0.2.72,8805,123,
+upf,UPF01,Site-A,n4,198.51.100.33,8805,123,
+upf,UPF01,Site-A,n3,198.51.100.34,2152,124,
+upf,UPF01,Site-A,n6,203.0.113.33,,201,
+nrf,NRF01,Site-A,sbi,192.0.2.81,443,122,
+ims,P-CSCF01,Site-A,n5ims,192.0.2.91,443,130,N5 / Rx towards PCF
+mscs,MSS01,Site-A,acp,192.0.2.101,2905,140,M3UA
+mscs,MSS01,Site-A,iucscp,192.0.2.102,2905,140,M3UA
+sgsn,SGSN01,Site-A,gb,192.0.2.111,,141,Gb over IP (NS-IP)
+sgsn,SGSN01,Site-A,gn,192.0.2.112,,142,
+enb,*,*,s1mme,198.51.100.128/26,36412,101,eNodeB signalling range
+enb,*,*,s1u,203.0.113.128/25,2152,110,eNodeB user-plane range
+gnbcucp,*,*,n2,2001:db8:100::/48,38412,121,IPv6 example
+gnbcuup,*,*,n3,2001:db8:200::/48,2152,124,IPv6 example
+mme,MME02,Site-B,s1mme,198.51.100.41,36412,201,
+mme,MME02,Site-B,s11,198.51.100.42,2123,202,
+upf,UPF02,Site-B,n3,203.0.113.70,2152,224,
+upf,UPF02,Site-B,n6,203.0.113.71,,225,
+,,,s1mme,192.0.2.0/28,,101,S1-MME core VLAN
+,,,s11,192.0.2.16/28,,102,S11 / N26 VLAN

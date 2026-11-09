@@ -1,0 +1,15 @@
+const E=require('../env');
+const { chromium } = require('playwright');
+let fails=0;const ok=(c,m)=>{console.log((c?'ok   ':'FAIL ')+m);if(!c)fails++;};
+const load=async(p,f)=>{const [fc]=await Promise.all([p.waitForEvent('filechooser'),p.evaluate(()=>trPick())]);await fc.setFiles(f);await p.waitForFunction(()=>!trJob,null,{timeout:30000});await p.waitForTimeout(300);};
+(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1600,height:950}});const errs=[];p.on('pageerror',e=>errs.push(String(e)));
+await p.goto(E.APP);await p.waitForTimeout(200);await p.click('#trbtn');
+await load(p,E.CAP+'/e-s11u.pcap');
+const r=await p.evaluate(()=>TR.rows.map(r=>({c:r.canon,cls:Object.keys(r.cls),conf:Object.keys(r.conf),pk:r.pk,ul:r.ul,dl:r.dl})));console.log(JSON.stringify(r));
+const s11=r.find(x=>x.c==='s11');
+ok(s11&&s11.cls.includes('GTP-U')&&s11.cls.includes('GTPv2-C')&&s11.conf.length===1&&s11.conf[0]==='sure','S11 carries GTPv2-C and GTP-U (S11-U), certain');
+ok(s11&&s11.ul===6&&s11.dl===6,'S11-U direction: MME → SGW uplink 6 / downlink 6');
+ok(await p.evaluate(()=>TR.groups.length===0),'nothing to decide');
+const e=await p.evaluate(()=>[...TR.ends.values()].map(e=>e.ip+'='+Object.keys(e.els).join('/')).sort());console.log(e.join(' '));
+ok(e.includes('192.0.2.22=mme')&&e.includes('198.51.100.6=sgw'),'S11-U ends: MME and SGW');
+ok(errs.length===0,'errors '+errs.join('|'));console.log(fails?fails+' FAILED':'ALL PASSED');await b.close();process.exit(fails?1:0);})();
