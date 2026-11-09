@@ -38,7 +38,7 @@ Search for the banner comments (`/* ====` … `*/`) – the order in the file:
 
 - **Dialog CSS:** `#modal .mbody label{display:flex;flex-direction:column}` – scope dialog rules under `#modal …`.
 - **Toolbar width:** the toolbar must stay on one row at 1440 px with network data loaded and a site filter set (it wraps at 1366 – accepted). Breakpoints at 1800 / 1760 / 1700 / 1560 / 1500 / 1440 px hide labels and narrow the search box. `pd1`, `ndt8` and `tbw3` check it; any new toolbar item needs a re-check.
-- **Precision rules in the trace analysis** (each documented in the help): one network-data address never overrides protocol evidence; standard ports keep their meaning over the network's protocol ports; plain IP gets a direction only once its interface is SGi / Gi / N6; UE addresses learned inside GTP-U count only when all their tunnels lead to the same data-network side; heuristics are *likely*, never *certain*.
+- **Precision rules in the trace analysis** (each documented in the help): one network-data address never overrides protocol evidence; standard ports keep their meaning over the network's protocol ports; plain IP gets a direction only once its interface is SGi / Gi / N6; GTP-U ends from the inner TCP set-up (`trHsUl`, `x.hs`, counted on every G-PDU) come only after network data and signalling and before fan-out, and are never *certain* (`trWeakSrc`); UE addresses learned inside GTP-U count only when all their tunnels lead to the same data-network side; heuristics are *likely*, never *certain*.
 - When a trace rule changes: update the help text (`hpSections`), the README section *Trace analysis*, add or extend a test with a generated capture, and mention it in the release notes.
 - UI and docs use British spelling (recognised, behaviour, analyse), en dashes with spaces, `·` as a separator.
 
@@ -58,7 +58,7 @@ node dev/tools/audit-mentions.js      # interface / element names mentioned in t
 
 `dev/env.js` (required first by every test) gives `E.APP` (file URL of `index.html`), `E.ROOT`, `E.CAP` (`dev/trcap`), `E.OUT` (`dev/out`), and marks a test failed when it prints a line containing `FAIL` or a page throws. Some tests also print values for a human look (layout sizes, counts); the runner only judges FAIL lines, page errors and the exit code.
 
-Test captures are generated, never committed: `dev/gen/trgen.py` (a.pcapng – two interfaces, many protocols; b.pcap – big-endian ns, Linux cooked; c.pcap – raw IP, 2.5 MB; not-a-capture.pcap), `trgen2.py` (d.pcapng and port-ul / port-dl.pcap – direction per probe port), `trgen3.py` (S11-U), `trgen4.py` (non-standard ports), `trgen5.py` (SGi without signalling – direction from TCP set-up), `big.py` (performance). `dev/run-tests.js` runs them when files are missing; delete `dev/trcap/` after changing a generator. The helpers at the top of `trgen.py` (`eth`, `v4`, `udp`, `tcp`, `sctp`/`sdata`, `gtpu`, `gtpv2`/`fteid`/`ie2`, `pfcp`/`pie`, `dia`/`avp`, `rad`, `Pcap`, `PcapNG` …) build any packet – reuse them for new cases.
+Test captures are generated, never committed: `dev/gen/trgen.py` (a.pcapng – two interfaces, many protocols; b.pcap – big-endian ns, Linux cooked; c.pcap – raw IP, 2.5 MB; not-a-capture.pcap), `trgen2.py` (d.pcapng and port-ul / port-dl.pcap – direction per probe port), `trgen3.py` (S11-U), `trgen4.py` (non-standard ports), `trgen5.py` (SGi without signalling – direction from TCP set-up), `trgen6.py` (GTP-U without signalling – tunnels oriented by the TCP set-up inside them), `big.py` (performance). `dev/run-tests.js` runs them when files are missing; delete `dev/trcap/` after changing a generator. The helpers at the top of `trgen.py` (`eth`, `v4`, `udp`, `tcp`, `sctp`/`sdata`, `gtpu`, `gtpv2`/`fteid`/`ie2`, `pfcp`/`pie`, `dia`/`avp`, `rad`, `Pcap`, `PcapNG` …) build any packet – reuse them for new cases.
 
 | Tests | Cover |
 |---|---|
@@ -71,6 +71,7 @@ Test captures are generated, never committed: `dev/gen/trgen.py` (a.pcapng – t
 | `tr1`, `tr3`, `tr6`, `tr7` | Trace: dump of a.pcapng; formats, link layers, classification, manual decisions; direction per capture interface, several files, suggestions; S11-U |
 | `pt1`, `pt2` | Protocol ports: classification and re-reading; CSV / JSON / encrypted / HTML round trips, data check, dialog |
 | `dr1` | Direction on SGi / Gi / N6 from TCP connection set-up |
+| `tr8` | GTP-U without signalling: ends and direction from the inner TCP set-up (minimum, mixed, fragments, IPv6), N6 following it, suggestions, network data precedence |
 | `tbw3` | Toolbar widths (printed) |
 | `tr4` | Performance (`--perf`; ≈ 400–700 k packets/s here) |
 
@@ -96,4 +97,4 @@ A ~2-minute narrated screen recording of the app, rendered frame by frame (Engli
 
 ## Ideas not done yet
 
-- Orient GTP-U tunnels without signalling from the TCP handshakes inside them (inner SYN travels uplink) – would also tell the RAN end from the core end on S1-U / N3. Inner packets are sampled today (`trUE`), so the handshake flags would need their own pass.
+(none listed)
