@@ -25,25 +25,27 @@ await p.click('[data-ta=collapse]');ok(await p.evaluate(()=>[...document.querySe
 await p.click('[data-ta=expand]');ok(await p.evaluate(()=>[...document.querySelectorAll('details.trsec')].every(d=>d.open)),'Expand all');
 /* filters */
 const n=await p.evaluate(()=>document.querySelectorAll('#panel [data-ws]').length);ok(n>=40,'filter buttons: '+n);
-let w=await ws(p,'if:s1u');ok(w.f==='udp.port==2152 && (ip.addr==192.0.2.70 && ip.addr==198.51.100.10)'&&!w.notes.length,'S1-U: '+w.f);
-w=await ws(p,'if:gx');ok(w.f==='(diameter.applicationId==16777238 || diameter.applicationId==0) && (ip.addr==192.0.2.10 && ip.addr==192.0.2.20)','Gx: '+w.f);
+let w=await ws(p,'if:s1u');ok(w.f==='(udp.port==2152 || (ip.flags.mf==1 || ip.frag_offset>0)) && (ip.addr==192.0.2.70 && ip.addr==198.51.100.10)'&&/IP fragments/.test(w.notes[0]),'S1-U, with its IP fragments: '+w.f);
+w=await ws(p,'if:gx');ok(w.f==='tcp.port==3868 && (ip.addr==192.0.2.10 && ip.addr==192.0.2.20)','Gx, the only Diameter application of the pair: the whole TCP connection: '+w.f);
 w=await ws(p,'if:gn');ok(w.f==='((gtp && udp.port==2123) && (ip.addr==192.0.2.100 && ip.addr==192.0.2.110)) || (udp.port==2152 && (ip.addr==192.0.2.101 && ip.addr==192.0.2.111))','Gn: GTPv1-C and GTP-U: '+w.f);
-w=await ws(p,'if:s6a');ok(w.f==='(diameter.applicationId==16777251 || diameter.applicationId==0) && (ipv6.addr==2001:db8::80 && ipv6.addr==2001:db8::85)','S6a over IPv6: '+w.f);
+w=await ws(p,'if:s6a');ok(w.f==='sctp && (ipv6.addr==2001:db8::80 && ipv6.addr==2001:db8::85)','S6a over SCTP / IPv6: the whole association: '+w.f);
 w=await ws(p,'if:s1mme');ok(w.f==='sctp && (ip.addr==192.0.2.80 && ip.addr==198.51.100.10)','S1-MME: whole SCTP association');
-w=await ws(p,'grp:gtpu|10.400|1');ok(w.f==='(vlan.id==10 && vlan.id==400) && (udp.port==2152 && (ip.addr==192.0.2.120 && ip.addr==198.51.100.30))','group with QinQ: '+w.f);
+w=await ws(p,'grp:gtpu|10.400|1');ok(w.f==='((vlan.id==10 || ieee8021ad.id==10) && (vlan.id==400 || ieee8021ad.id==400)) && (udp.port==2152 && (ip.addr==192.0.2.120 && ip.addr==198.51.100.30))','group with QinQ (802.1ad outer tag): '+w.f);
 w=await ws(p,'port:1');ok(w.f==='frame.interface_id==1','capture interface');
 w=await ws(p,'el:2001:db8::80');ok(w.f==='ipv6.addr==2001:db8::80','element IPv6');
-w=await ws(p,'if:n6');ok(/^\(vlan\.id==306 && frame\.interface_id==1\) && \(\(ip \|\| ipv6\) && !\(udp\.port==2152 \|\| /.test(w.f)&&/ipv6\.nxt==89/.test(w.f)&&w.notes.some(x=>/approximate/.test(x)),'N6 plain IP: approximate, says so');
+w=await ws(p,'if:n6');ok(/^\(\(vlan\.id==306 \|\| ieee8021ad\.id==306\) && frame\.interface_id==1\) && \(\(ip \|\| ipv6\) && !\(udp\.port==2152 \|\| /.test(w.f)&&/ipv6\.nxt==89/.test(w.f)&&w.notes.some(x=>/approximate/.test(x)),'N6 plain IP: approximate, says so');
 const bal=await p.evaluate(()=>[...document.querySelectorAll('#panel [data-ws]')].map(b=>trWsFor(b.dataset.ws)).filter(Boolean).every(w=>{let d=0;for(const c of w.f){if(c==='(')d++;if(c===')')d--;if(d<0)return false;}return d===0&&!/&& \|\||\|\| &&|\(\)/.test(w.f);}));
 ok(bal,'every filter has balanced brackets');
 const pairs=await p.evaluate(()=>{const fl=[];for(let i=0;i<4;i++)fl.push({cls:'gtpu',app:null,A:'198.51.100.1',B:'192.0.2.'+(10+i),x:{}});fl.push({cls:'gtpu',A:'198.51.100.2',B:'192.0.2.99',x:{}});return trWsMix(fl,[]).f;});
 ok(pairs==='udp.port==2152 && ((ip.addr==198.51.100.1 && (ip.addr==192.0.2.10 || ip.addr==192.0.2.11 || ip.addr==192.0.2.12 || ip.addr==192.0.2.13)) || (ip.addr==198.51.100.2 && ip.addr==192.0.2.99))','pairs grouped around the shared address: '+pairs);
+const two=await p.evaluate(()=>{const f1={cls:'dia',app:16777238,A:'192.0.2.1',B:'192.0.2.2',x:{tcp:1}},f2={cls:'dia',app:4,A:'192.0.2.1',B:'192.0.2.2',x:{tcp:1}};const keep=TR.flows;TR.flows=[f1,f2];const r=trWsMix([f1],[]);TR.flows=keep;return r;});
+ok(two.f==='(diameter.applicationId==16777238 || diameter.applicationId==0) && (ip.addr==192.0.2.1 && ip.addr==192.0.2.2)'&&/messages only/.test(two.notes.join()),'two Diameter applications on one pair: by application, messages only (says so)');
 const cut=await p.evaluate(()=>{const fl=[];for(let i=0;i<1600;i++)fl.push({cls:'pfcp',A:'198.51.100.1',B:'192.0.2.'+(i%250)+'x'+i,x:{}});return trWsMix(fl,[]);});
 ok(cut.f==='pfcp'&&/too many/.test(cut.notes[0]),'over 1 500 pairs: protocol only, with a note');
 /* the button copies */
 await ctx.grantPermissions(['clipboard-read','clipboard-write']).catch(()=>{});
 await p.click('tr[data-trr="gx"] .trws');await p.waitForTimeout(150);
-ok(await p.evaluate(()=>TR.wsLast)===(await ws(p,'if:gx')).f&&await p.evaluate(()=>/Wireshark filter copied/.test(document.querySelector('.toast')?.textContent||'')),'⧉ filter copies, toast shown');
+ok(await p.evaluate(()=>TR.wsLast)==='('+(await ws(p,'if:gx')).f+')'&&await p.evaluate(()=>/Wireshark filter copied/.test(document.querySelector('.toast')?.textContent||'')),'⧉ filter copies, toast shown');
 ok(await p.evaluate(()=>state.trSel!=='gx'),'the button does not select the row');
 /* save: JSON and CSV */
 await p.evaluate(()=>{const s=document.querySelector('select[data-tg="plain|205|0"]');s.value='none';s.dispatchEvent(new Event('change',{bubbles:true}));
@@ -80,7 +82,7 @@ await p.click('#modal .mbtns .primary');await p.waitForTimeout(400);
 ok(await p.evaluate(()=>ND&&ND.network==='Ports test'&&ND.ports.length===2&&TR.manual['dia:4|102|0']==='rorf'),'network data loaded, decisions kept');
 /* custom ports: filter by port number */
 await load(p,E.CAP+'/f-ports.pcap');w=await ws(p,'if:gx');
-ok(w&&/^\(tcp\.port==3870 \|\| sctp\.port==3870\) && /.test(w.f)&&w.notes.some(x=>/non-standard/.test(x)),'Gx on TCP 3870: by port number: '+(w&&w.f));
+ok(w&&/^tcp\.port==3870 && /.test(w.f)&&w.notes.some(x=>/non-standard/.test(x)),'Gx on TCP 3870: by port number: '+(w&&w.f));
 const pl=await p.evaluate(()=>trWsPlain());ok(/\(udp\.srcport>=31812 && udp\.srcport<=31813\) \|\| \(udp\.dstport>=31812 && udp\.dstport<=31813\)/.test(pl)&&/tcp\.port==3870/.test(pl),'plain IP excludes your protocol ports too');
 /* privacy text and help */
 ok(/Nothing is saved unless you/.test(await p.textContent('#panel .trpriv')),'privacy line names the exception');

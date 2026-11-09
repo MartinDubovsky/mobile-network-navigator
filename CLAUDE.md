@@ -39,7 +39,7 @@ Search for the banner comments (`/* ====` … `*/`) – the order in the file:
 - **Dialog CSS:** `#modal .mbody label{display:flex;flex-direction:column}` – scope dialog rules under `#modal …`.
 - **Toolbar width:** the toolbar must stay on one row at 1440 px with network data loaded and a site filter set (it wraps at 1366 – accepted). Breakpoints at 1800 / 1760 / 1700 / 1560 / 1500 / 1440 px hide labels and narrow the search box. `pd1`, `ndt8` and `tbw3` check it; any new toolbar item needs a re-check.
 - **Precision rules in the trace analysis** (each documented in the help): one network-data address never overrides protocol evidence; standard ports keep their meaning over the network's protocol ports; plain IP gets a direction only once its interface is SGi / Gi / N6; GTP-U ends from the inner TCP set-up (`trHsUl`, `x.hs`, counted on every G-PDU) come only after network data and signalling and before fan-out, and are never *certain* (`trWeakSrc`); UE addresses learned inside GTP-U count only when all their tunnels lead to the same data-network side; heuristics are *likely*, never *certain*.
-- **Wireshark filters** must match what the row counts: dissector names only at standard ports, port numbers otherwise; always bracket sub-expressions (`trWsAnd` / `trWsOr`); plain IP is approximate and must say so.
+- **Wireshark filters** must match what the row counts: dissector names only at standard ports, port numbers otherwise; always bracket sub-expressions (`trWsAnd` / `trWsOr`); plain IP is approximate and must say so. `tr10` runs every filter of every test capture through tshark (accepted, same packet count); it skips without tshark (`apt-get install tshark`). Wireshark field names to remember: 802.1ad outer tags are `ieee8021ad.id`, not `vlan.id`; reassembled IP fragments show the protocol only on the last fragment.
 - When a trace rule changes: update the help text (`hpSections`), the README section *Trace analysis*, add or extend a test with a generated capture, and mention it in the release notes.
 - UI and docs use British spelling (recognised, behaviour, analyse), en dashes with spaces, `·` as a separator.
 
@@ -74,6 +74,7 @@ Test captures are generated, never committed: `dev/gen/trgen.py` (a.pcapng – t
 | `dr1` | Direction on SGi / Gi / N6 from TCP connection set-up |
 | `tr8` | GTP-U without signalling: ends and direction from the inner TCP set-up (minimum, mixed, fragments, IPv6), N6 following it, suggestions, network data precedence |
 | `tr9` | Trace panel: collapsible sections, Wireshark filters (per row, pairs, custom ports, plain IP), Save results JSON / CSV / encrypted, re-applying decisions, results with network data |
+| `tr10` | Wireshark filters checked by tshark on all test captures (skipped without tshark) |
 | `tbw3` | Toolbar widths (printed) |
 | `tr4` | Performance (`--perf`; ≈ 400–700 k packets/s here) |
 
