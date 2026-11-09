@@ -1,13 +1,13 @@
 # Mobile Network Navigator
 
-**Version 2026.11.09.3** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.09.4** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
 It is meant for network engineers who need to get their bearings quickly while troubleshooting or discussing a topic with colleagues.
 
 - **File:** `index.html` (about 820 KB) – the whole application
-- **Online:** https://martindubovsky.github.io/mobile-network-navigator/ (once GitHub Pages is enabled for this repository)
+- **Online:** https://martindubovsky.github.io/mobile-network-navigator/ (once GitHub Pages is enabled for this repository) – **installable as an app** from there, then also offline (see [Install as an app](#install-as-an-app))
 - **Dependencies:** none – no external scripts, fonts or network access; works offline from disk
 - **Your captures:** a pcap / pcapng opens in the tool and shows its interfaces and elements on the map – read in the browser, never uploaded (see [Trace analysis](#trace-analysis))
 - **Your own IP plan:** can be loaded from a local CSV/JSON file and is shown in the element and interface details – it never becomes part of this repository (see [Network data](#network-data-your-own-ip-addresses))
@@ -21,6 +21,17 @@ It is meant for network engineers who need to get their bearings quickly while t
 2. Click any box (network element) or line/label (interface) to open its details in the right-hand panel.
 3. Use the generation chips at the top to highlight what belongs to 3G, HSPA, 4G, 5G NSA, 5G SA or interworking.
 4. Press `?` or **? Help** in the toolbar for the in-app help – including a detailed explanation of how the trace analysis categorises the traffic.
+
+### Install as an app
+
+From the GitHub Pages copy (HTTPS) the navigator installs like an app – its own window and icon, in the start menu / dock or on a phone's home screen – and then starts **offline**:
+
+- **Chrome / Edge:** the install icon in the address bar, or *Install as an app* in the release history (click the version next to the title).
+- **Safari (macOS):** *File → Add to Dock* · **iPhone / iPad:** *Share → Add to Home Screen* · **Android:** *Install app* in the browser menu.
+
+How it works: `index.html` stays the whole application. Next to it, `manifest.webmanifest` (name, colours, icons), `icons/` and `sw.js` (a service worker) make it installable; the page links them only when it is served over HTTPS (or from `localhost`) – opened from disk nothing of this runs, and a copy saved with network data never registers the worker. The service worker caches only the app's own files (page, manifest, icons) and answers only requests for them; network data and captures never reach it, and the page's Content-Security-Policy still allows no network access (`connect-src 'none'`). It refreshes the cached copy in the background when the app starts online, and the app then offers **Reload** – never forced.
+
+To publish: *Settings → Pages → Deploy from a branch → `main` / root*. Browsers install only pages served over HTTPS (or from `localhost` for testing, e.g. `python3 -m http.server` in the repository folder).
 
 ---
 
@@ -490,6 +501,10 @@ python3 dev/tools/check-ips.py
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.09.4
+- **Installable as an app**: opened from the web copy (GitHub Pages), the navigator can be installed – its own window and icon, in the start menu or dock, on a phone's home screen – and then starts **offline**. Chrome / Edge: the install icon in the address bar, or *Install as an app* in the release history; Safari: *Add to Dock* / *Add to Home Screen*.
+- The installed app keeps only its own files for offline use; your network data and captures are still read locally and never reach it, and the page still has no network access. New versions are downloaded in the background and offered with **Reload** – never forced. Opened from disk, nothing changes: it is the same single offline file. New app icon (also the browser-tab icon).
 
 ### 2026.11.09.3
 - Trace analysis – **Wireshark filters corrected and checked against Wireshark**: every ⧉ filter of the test captures is now run through Wireshark 4.2 – it is accepted and selects exactly the packets the row counts. Fixed: QinQ outer tags (Wireshark names them `ieee8021ad.id`, so such groups matched nothing), IP fragments of fragmented flows (now included), Diameter (the whole TCP connection or SCTP association where two addresses carry one application, instead of the messages only), and decision groups (no longer include flows that were already certain).

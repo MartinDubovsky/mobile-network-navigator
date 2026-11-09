@@ -1,0 +1,20 @@
+{
+ "name": "Mobile Network Navigator",
+ "short_name": "MN Navigator",
+ "description": "Offline reference of 3GPP mobile networks (2G – 5G SA, Wi-Fi via ePDG): elements and interfaces, protocol stacks, message flows, procedures, your IP plan and an in-browser Wireshark trace analysis.",
+ "id": "./",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#0e1319",
+ "theme_color": "#0e1319",
+ "categories": ["utilities", "productivity", "education"],
+ "icons": [
+  {"src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+  {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+  {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+  {"src": "icons/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable"},
+  {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+ ]
+}

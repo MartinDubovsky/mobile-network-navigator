@@ -10,6 +10,7 @@ A single-file, offline reference of 3GPP mobile networks (2G … 5G SA, Wi-Fi vi
    - Captures (`*.pcap*`), network-data files (`*.netdata.*`, `*-with-data.html`) and `private/` are git-ignored. Keep it that way.
    - The app itself: network data and traces are read locally, never uploaded, never put in links; traces are never stored or saved – only the results (counts, element addresses and names, decisions; never packets, UE / plain-IP addresses or subscriber identities) when the user asks (*Save results…*, `trResultsData`). Saved results are git-ignored (`*.trace-results.*`).
 3. **The app is one offline file.** `index.html` holds all HTML, CSS and JS; no build step, no dependencies, no external resources. The Content-Security-Policy forbids network access (`connect-src 'none'`); keep it.
+   - **Installable app (optional companions):** `manifest.webmanifest`, `sw.js` and `icons/` make the GitHub Pages copy installable and offline. `index.html` links the manifest and registers `sw.js` only when served over HTTPS / localhost (`pwaInit`, after `PRISTINE_DOC` is taken, never with embedded network data); from disk it stays the single file. The CSP allows only same-origin `manifest-src` / `worker-src` / `img-src 'self'` for this. `sw.js` caches and answers only the files in its `FILES` list – keep that list in step with the manifest icons (`pwa1` checks); new releases are offered by the page (`#pwaupd`), never forced.
 
 ## Repository
 
@@ -18,6 +19,7 @@ A single-file, offline reference of 3GPP mobile networks (2G … 5G SA, Wi-Fi vi
 | `index.html` | The whole application (~820 KB). The only source – edit it directly. |
 | `README.md` | User documentation and the changelog (must list the same versions as `RELEASES` in the app). |
 | `netdata-template.csv` / `.json` | Network-data templates. The CSV must stay identical to `ND_TEMPLATE_CSV` in `index.html` (the app offers it for download). |
+| `manifest.webmanifest`, `sw.js`, `icons/` | Installable app (web app manifest, service worker, icons – `icon.svg` / `icon-maskable.svg` are the sources of the PNGs). Used only by the HTTPS copy. |
 | `CLAUDE.md` | This file. |
 | `dev/` | Tests, capture generators, tools and the video pipeline (below). Nothing in `dev/` is loaded by the app. |
 
@@ -75,6 +77,7 @@ Test captures are generated, never committed: `dev/gen/trgen.py` (a.pcapng – t
 | `tr8` | GTP-U without signalling: ends and direction from the inner TCP set-up (minimum, mixed, fragments, IPv6), N6 following it, suggestions, network data precedence |
 | `tr9` | Trace panel: collapsible sections, Wireshark filters (per row, pairs, custom ports, plain IP), Save results JSON / CSV / encrypted, re-applying decisions, results with network data |
 | `tr10` | Wireshark filters checked by tshark on all test captures (skipped without tshark) |
+| `pwa1` | Installable app: manifest and icons, Chromium installability, service worker cache, offline start, update offer, nothing from `file://` |
 | `tbw3` | Toolbar widths (printed) |
 | `tr4` | Performance (`--perf`; ≈ 400–700 k packets/s here) |
 
