@@ -8,14 +8,14 @@ A single-file, offline reference of 3GPP mobile networks (2G … 5G SA, Wi-Fi vi
 2. **IP addresses stay private – none may ever be part of the repository.** Only documentation addresses are allowed anywhere in the repo (code, docs, tests, generators, video assets): `192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24` (RFC 5737) and `2001:db8::/32` (RFC 3849). Also use generic names (Site-A, DC1, MME01 …), never the owner's node or site names. Never copy real data from a file the user shows you into a test or an example – rewrite it with documentation addresses.
    - Run `python3 dev/tools/check-ips.py` before every commit (`--all` scans the whole repo). Spec clause numbers like `§5.3.2.1` are skipped; a line with `ip-check: ok` is skipped (only for synthetic data that cannot fit the ranges, see `dev/tests/ndt5.js`).
    - Captures (`*.pcap*`), network-data files (`*.netdata.*`, `*-with-data.html`) and `private/` are git-ignored. Keep it that way.
-   - The app itself: network data and traces are read locally, never uploaded, never put in links; traces are never stored or saved.
+   - The app itself: network data and traces are read locally, never uploaded, never put in links; traces are never stored or saved – only the results (counts, element addresses and names, decisions; never packets, UE / plain-IP addresses or subscriber identities) when the user asks (*Save results…*, `trResultsData`). Saved results are git-ignored (`*.trace-results.*`).
 3. **The app is one offline file.** `index.html` holds all HTML, CSS and JS; no build step, no dependencies, no external resources. The Content-Security-Policy forbids network access (`connect-src 'none'`); keep it.
 
 ## Repository
 
 | Path | What |
 |---|---|
-| `index.html` | The whole application (~780 KB). The only source – edit it directly. |
+| `index.html` | The whole application (~820 KB). The only source – edit it directly. |
 | `README.md` | User documentation and the changelog (must list the same versions as `RELEASES` in the app). |
 | `netdata-template.csv` / `.json` | Network-data templates. The CSV must stay identical to `ND_TEMPLATE_CSV` in `index.html` (the app offers it for download). |
 | `CLAUDE.md` | This file. |
@@ -31,7 +31,7 @@ Search for the banner comments (`/* ====` … `*/`) – the order in the file:
 - **MESSAGE FLOWS** – `MF[interface]` sequence diagrams, grouped by generation.
 - **NETWORK DATA** – the user's IP plan: `ND` = `{network, instances[], interfaces{}, ports[]}`; `ndSet`, `ndTouch` (after an edit), `ndRefresh` (redraw; also re-resolves an open trace and re-reads it when the protocol ports changed), `ndClean` / `ndValidate` / `ndMerge`, CSV (`ndParseCSV`, `ndToCSV`), JSON (`ndToJSON`), encryption (AES-256-GCM, PBKDF2-SHA256 600 000), `ndModal(title, body, buttons, onOpen)`, the site filter `NDF`. **Protocol ports** (`ND_PROTO`, `ndPortRules`, `ndPortsDialog`): non-standard ports per protocol, saved with the data (`# ports:` lines in CSV, `ports` in JSON).
 - **END-TO-END PROCEDURES** – `PROC` (stepped call flows), `PD_*`, `pd*` functions; mode flag `state.proc`.
-- **TRACE ANALYSIS** – reference tables `TR_*` (link types, classes `TR_CLS`, SCTP PPIDs / ports, F-TEID types, PFCP interface types, Diameter applications, RAT types, UL side `TR_UPSIDE`, client side `TR_CLIENT` …, each verified against the table named next to it); reader (`trParser`, pcap / pcapng / gzip, streamed); link layer and IP (`trPkt`, `trIP`); classification (`trL4`: standard ports → the network's protocol ports (`R.pm`) → infrastructure → plain IP; `trSCTP`); decoders (`trGTPU`, `trGTPC1`, `trGTPC2`, `trPFCP`, `trRADIUS`, `trIKE`, Diameter over TCP / SCTP); then the UI part: `trFinish`, evidence (`trEvid`, `trSig`, `trResFlow`, `trResPlain`), elements (`trEnds`), direction (`trPorts`, TCP set-up roles `TR.hs`), panel (`trRender`), suggestions for network data (`trSuggest`). Mode flag `state.trMode` (wide panel: `body.trwide`).
+- **TRACE ANALYSIS** – reference tables `TR_*` (link types, classes `TR_CLS`, SCTP PPIDs / ports, F-TEID types, PFCP interface types, Diameter applications, RAT types, UL side `TR_UPSIDE`, client side `TR_CLIENT` …, each verified against the table named next to it); reader (`trParser`, pcap / pcapng / gzip, streamed); link layer and IP (`trPkt`, `trIP`); classification (`trL4`: standard ports → the network's protocol ports (`R.pm`) → infrastructure → plain IP; `trSCTP`); decoders (`trGTPU`, `trGTPC1`, `trGTPC2`, `trPFCP`, `trRADIUS`, `trIKE`, Diameter over TCP / SCTP); then the UI part: `trFinish`, evidence (`trEvid`, `trSig`, `trResFlow`, `trResPlain`), elements (`trEnds`), direction (`trPorts`, TCP set-up roles `TR.hs`), panel (`trRender`; collapsible colour-coded sections `trSec` / `TR_SEC`, open state `trSecOpen`), suggestions for network data (`trSuggest`), Wireshark display filters per row (`trWsFor` / `trWsB`, `data-ws` keys `if:` `port:` `grp:` `el:` `oth:`), saving and re-applying results (`trResultsData`, `trResultsCSV`, `trSaveDialog`, `trResultsLoad` – also reached from `ndLoadText`). Mode flag `state.trMode` (wide panel: `body.trwide`).
 - **HELP** – `hpSections()` holds the text; the tables of the trace chapter are generated from the `TR_*` / `ND_PROTO` tables, so they cannot drift. Overlay `#help`, `hpOpen(section)`, deep link `#help=<section>`.
 
 ### Things that bite
@@ -39,6 +39,7 @@ Search for the banner comments (`/* ====` … `*/`) – the order in the file:
 - **Dialog CSS:** `#modal .mbody label{display:flex;flex-direction:column}` – scope dialog rules under `#modal …`.
 - **Toolbar width:** the toolbar must stay on one row at 1440 px with network data loaded and a site filter set (it wraps at 1366 – accepted). Breakpoints at 1800 / 1760 / 1700 / 1560 / 1500 / 1440 px hide labels and narrow the search box. `pd1`, `ndt8` and `tbw3` check it; any new toolbar item needs a re-check.
 - **Precision rules in the trace analysis** (each documented in the help): one network-data address never overrides protocol evidence; standard ports keep their meaning over the network's protocol ports; plain IP gets a direction only once its interface is SGi / Gi / N6; GTP-U ends from the inner TCP set-up (`trHsUl`, `x.hs`, counted on every G-PDU) come only after network data and signalling and before fan-out, and are never *certain* (`trWeakSrc`); UE addresses learned inside GTP-U count only when all their tunnels lead to the same data-network side; heuristics are *likely*, never *certain*.
+- **Wireshark filters** must match what the row counts: dissector names only at standard ports, port numbers otherwise; always bracket sub-expressions (`trWsAnd` / `trWsOr`); plain IP is approximate and must say so.
 - When a trace rule changes: update the help text (`hpSections`), the README section *Trace analysis*, add or extend a test with a generated capture, and mention it in the release notes.
 - UI and docs use British spelling (recognised, behaviour, analyse), en dashes with spaces, `·` as a separator.
 
@@ -72,6 +73,7 @@ Test captures are generated, never committed: `dev/gen/trgen.py` (a.pcapng – t
 | `pt1`, `pt2` | Protocol ports: classification and re-reading; CSV / JSON / encrypted / HTML round trips, data check, dialog |
 | `dr1` | Direction on SGi / Gi / N6 from TCP connection set-up |
 | `tr8` | GTP-U without signalling: ends and direction from the inner TCP set-up (minimum, mixed, fragments, IPv6), N6 following it, suggestions, network data precedence |
+| `tr9` | Trace panel: collapsible sections, Wireshark filters (per row, pairs, custom ports, plain IP), Save results JSON / CSV / encrypted, re-applying decisions, results with network data |
 | `tbw3` | Toolbar widths (printed) |
 | `tr4` | Performance (`--perf`; ≈ 400–700 k packets/s here) |
 

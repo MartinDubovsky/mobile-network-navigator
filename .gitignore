@@ -7,6 +7,8 @@ Thumbs.db
 # Network data with real (private) addresses – never commit
 *.netdata.*
 *-with-data.html
+# saved trace-analysis results (element addresses and names)
+*.trace-results.*
 private/
 
 # Packet captures contain real addresses and subscriber traffic – never commit

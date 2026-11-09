@@ -36,6 +36,7 @@ await load(p,E.CAP+'/a.pcapng');
 await p.click('tr[data-trr="gx"] .trif');await p.waitForTimeout(250);
 r=await p.evaluate(()=>[state.trMode,state.sel&&state.sel.join(':'),!!panel.querySelector('[data-ta="back"]'),/In the trace/.test(panel.textContent)]);ok(!r[0]&&r[1]==='if:gx'&&r[2]&&r[3],'interface panel with “in the trace” and back: '+r);
 await p.click('[data-ta="back"]');await p.waitForTimeout(250);ok(await p.evaluate(()=>state.trMode&&panel.dataset.tr==='1'),'back to trace analysis');
+await p.evaluate(()=>{const d=document.querySelector('details[data-sec=els]');if(d)d.open=true;});   /* folded by default above 20 addresses */
 await p.click('.trends-t button[data-sel="el:pgw"]');await p.waitForTimeout(250);
 ok(await p.evaluate(()=>state.sel&&state.sel[1]==='pgw'&&/192\.0\.2\.10/.test(panel.textContent)),'element panel lists the P-GW address from the trace');
 await p.click('[data-ta="back"]');await p.waitForTimeout(250);
