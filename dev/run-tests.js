@@ -9,7 +9,7 @@ const {spawnSync}=require('child_process'),fs=require('fs'),path=require('path')
 const D=__dirname,CAP=path.join(D,'trcap'),OUT=path.join(D,'out');fs.mkdirSync(OUT,{recursive:true});
 const args=process.argv.slice(2),perf=args.includes('--perf'),only=args.filter(a=>!a.startsWith('--'));
 const PY=process.platform==='win32'?'python':'python3';
-const need=[['trgen.py',['a.pcapng','b.pcap','c.pcap','not-a-capture.pcap']],['trgen2.py',['d.pcapng','port-ul.pcap','port-dl.pcap']],['trgen3.py',['e-s11u.pcap']],['trgen4.py',['f-ports.pcap']],['trgen5.py',['g-sgi.pcapng']],['trgen6.py',['h-gtpu-tcp.pcapng']]];
+const need=[['trgen.py',['a.pcapng','b.pcap','c.pcap','not-a-capture.pcap']],['trgen2.py',['d.pcapng','port-ul.pcap','port-dl.pcap']],['trgen3.py',['e-s11u.pcap']],['trgen4.py',['f-ports.pcap']],['trgen5.py',['g-sgi.pcapng']],['trgen6.py',['h-gtpu-tcp.pcapng']],['trgen7.py',['i-sctp.pcap']]];
 if(perf||only.includes('tr4'))need.push(['big.py',['big.pcap']]);
 for(const [g,files] of need)if(files.some(f=>!fs.existsSync(path.join(CAP,f)))){process.stdout.write(`generating ${files.join(', ')} … `);
  const r=spawnSync(PY,[path.join(D,'gen',g)],{encoding:'utf8'});if(r.status){console.log('FAILED\n'+r.stdout+r.stderr);process.exit(1);}console.log('ok');}

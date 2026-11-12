@@ -1,12 +1,12 @@
 # Mobile Network Navigator
 
-**Version 2026.11.09.5** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.12** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
 It is meant for network engineers who need to get their bearings quickly while troubleshooting or discussing a topic with colleagues.
 
-- **File:** `index.html` (about 820 KB) – the whole application
+- **File:** `index.html` (about 850 KB) – the whole application
 - **Online:** https://martindubovsky.github.io/mobile-network-navigator/ (once GitHub Pages is enabled for this repository) – **installable as an app** from there, then also offline (see [Install as an app](#install-as-an-app))
 - **Dependencies:** none – no external scripts, fonts or network access; works offline from disk
 - **Your captures:** a pcap / pcapng opens in the tool and shows its interfaces and elements on the map – read in the browser, never uploaded (see [Trace analysis](#trace-analysis))
@@ -72,15 +72,15 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 
 | Control | Behaviour |
 |---|---|
-| **Generation chips** (2G GSM, 3G UMTS, HSPA, 4G LTE/EPC, 5G NSA, 5G SA, Wi-Fi, Interworking) | Click to toggle, and click several to combine. Double-click to show one generation only. **All** clears the filter. Elements that only take part through another generation’s interface (e.g., the MSC Server under 4G via SGs/Sv) are shown half-dimmed. With no item selected, the panel shows an overview of the most recently chosen generation. |
-| **Search** (toolbar, left) | Free text over names, descriptions, protocols, procedures, ports and specs, e.g. `S1-MME`, `Diameter`, `2152`, `PFCP`, `29.274`. Several words are combined with AND. The match count is shown next to the box. |
+| **Generation chips** (2G GSM, 3G UMTS, HSPA, 4G LTE/EPC, 5G NSA, 5G SA, Wi-Fi, Interworking) | Click to toggle, and click several to combine. Double-click (keyboard: Shift+Enter) to show one generation only. **All** clears the filter. Elements that only take part through another generation’s interface (e.g., the MSC Server under 4G via SGs/Sv) are shown half-dimmed. With no item selected, the panel shows an overview of the most recently chosen generation. |
+| **Search** (toolbar, left) | Free text over names, descriptions, protocols, procedures, ports and specs, e.g. `S1-MME`, `Diameter`, `2152`, `PFCP`, `29.274`. Several words are combined with AND. The match count is shown under the box and the matches are listed at the top of the panel, exact names first; **Enter** opens the first one. |
 | **Planes** | Show/hide control-plane, user-plane and SBI interfaces. Interfaces that carry both planes stay visible while either plane is on. |
 | **5GC view** | *Service-based*: NFs attached to the SBI bus (Namf, Nsmf …). *Reference points*: point-to-point N5, N7, N8, N10, N11, N12, N13, N15, N22, N23, N28, N33, N34, N35, N36, N37, N40. |
 | **EPC view** | *Classic*: SGW and PGW as single nodes. *CUPS*: R14 control/user-plane split – SGW-C, SGW-U, PGW-C, PGW-U with **Sxa** and **Sxb** (PFCP), and the attached interfaces split accordingly (S11 → SGW-C, S1-U/S12/S4-U → SGW-U, S5-C/S5-U, Gx and Gy/Gz → PGW-C, SGi → PGW-U). |
 | **Protocol** (dropdown) | Highlight all interfaces using GTP-U, GTPv1-C, GTPv2-C, PFCP, Diameter, MAP/SS7, SCTP, HTTP/2 SBI or ATM transport. |
 | **▶ Procedures** | Opens the [end-to-end procedures](#end-to-end-procedures) in the panel. While one is open, the map shows only the nodes and interfaces it uses. |
 | **? Help** | Opens the [in-app help](#help): searchable, with a table of contents and links to each section. |
-| **Theme** | Dark/light; the choice is remembered in the browser. |
+| **Theme** | Dark/light. Follows the system setting until you choose one; the choice is remembered in the browser, as are the 5GC and EPC view switches. |
 
 ### Mouse, touch and keyboard
 
@@ -91,6 +91,9 @@ The top bar is two rows at 1920 px width: title + version, generation chips and 
 | Mouse wheel / pinch | Zoom around the pointer |
 | Drag | Pan |
 | `+` / `−` / `⤢` buttons | Zoom in / out / fit |
+| `⇥` button | Hide / show the details panel (more room for the map) |
+| `Enter` in the search | Open the first search result |
+| Browser Back / Forward | Previous / next element, interface or procedure you opened |
 | `/` | Focus search |
 | `Esc` | Clear search (if focused) or selection; leave the procedure view |
 | `←` / `→` | Previous / next message of the open end-to-end procedure |
@@ -196,6 +199,7 @@ The flows follow the clauses named under each title (TS 23.401, 23.502, 23.060, 
 | RADIUS (1812 / 1813 / 3799) | 3GPP-RAT-Type (TS 29.061): E-UTRAN → SGi, NR → N6, UTRAN / GERAN → Gi | **likely** |
 | Plain IP | its addresses also appear inside GTP-U, or as Framed-IP-Address in Gx CCR or RADIUS | SGi, Gi or N6 – **likely** |
 | SCTP | PPID or port: S1AP, NGAP, XnAP, F1AP, E1AP, SGsAP, NBAP (X2AP: LTE or EN-DC X2) | **certain** |
+| SCTP, not drawn | SBc-AP (PPID 24, port 29168), RUA and HNBAP on Iuh (PPID 19 / 20, one association on port 29169), M3UA | listed under Not mapped |
 | IKEv2 / ESP | the protocol | SWu – **likely** (RAN backhaul IPsec looks the same) |
 
 Messages are re-assembled per TCP direction (retransmissions are not counted twice); the first 16 kB of each Diameter message are decoded. Element roles come from the same evidence (the F-TEID owner, the sender of Session Establishment or CCR requests, the side on the well-known SCTP port), and names from Diameter Origin-Host, PFCP Node ID and RADIUS NAS-Identifier.
@@ -302,7 +306,7 @@ Header names are case-insensitive and some alternatives are recognised (`ports` 
 
 Some networks run a protocol on other ports than the standard ones – Diameter on TCP 3870, RADIUS on UDP 31812–31813, SGsAP on SCTP 29200. Add them under **◆ Network data → Protocol ports…** (one port, a list or ranges per rule, with an optional note) and the [trace analysis](#trace-analysis) recognises the protocol on them too. They belong to the network, so they are saved with the network data – CSV, JSON, encrypted JSON and the saved HTML file.
 
-- Protocols: Diameter (TCP / SCTP), Diameter over TLS / DTLS (TCP / SCTP), RADIUS, GTP-C (v1 and v2), PFCP, GTP′ (UDP / TCP), GTP-U, and on SCTP S1AP, NGAP, X2AP, XnAP, F1AP, E1AP, SGsAP, NBAP, M3UA, RUA, HNBAP. Without a transport a rule covers every transport the protocol runs over.
+- Protocols: Diameter (TCP / SCTP), Diameter over TLS / DTLS (TCP / SCTP), RADIUS, GTP-C (v1 and v2), PFCP, GTP′ (UDP / TCP), GTP-U, and on SCTP S1AP, NGAP, X2AP, XnAP, F1AP, E1AP, SGsAP, NBAP, SBc-AP, M3UA, RUA, HNBAP. Without a transport a rule covers every transport the protocol runs over.
 - **Standard ports keep their meaning** and are always recognised (the dialog lists them). Your ports are used when neither port of a packet is a standard port; on UDP also when a packet on a standard port fails that protocol’s header check. On SCTP the PPID comes first, then the standard ports, then yours. Your ports take over ports of infrastructure protocols (BFD, VXLAN …). The header checks still apply to your ports.
 - Your SCTP ports also tell the listening side (the MME connects to the VLR on its SGsAP port), and suggestions from a trace carry the ports actually seen.
 - When the ports change while a trace is open – edited, or with other network data loaded or removed – the trace is read again with the new ports; choices in Check and decide are kept.
@@ -318,7 +322,7 @@ In CSV each rule is a comment line before the header – `# ports: <protocol> [<
 element,instance,site,interface,ip,port,vlan,note
 ```
 
-Protocol names: `diameter`, `diameter-tls`, `radius`, `gtpc`, `pfcp`, `gtpp`, `gtpu`, `s1ap`, `ngap`, `x2ap`, `xnap`, `f1ap`, `e1ap`, `sgsap`, `nbap`, `m3ua`, `rua`, `hnbap` (also `gtp-c`, `gtpv2-c`, `gtp'` …). In JSON: `"ports": [{"protocol": "diameter", "transport": "tcp", "ports": "3870;3900-3910", "note": "Gx and Gy peers"}]`, with `"any"` for every transport.
+Protocol names: `diameter`, `diameter-tls`, `radius`, `gtpc`, `pfcp`, `gtpp`, `gtpu`, `s1ap`, `ngap`, `x2ap`, `xnap`, `f1ap`, `e1ap`, `sgsap`, `nbap`, `m3ua`, `rua`, `hnbap`, `sbcap` (also `gtp-c`, `gtpv2-c`, `gtp'` …). In JSON: `"ports": [{"protocol": "diameter", "transport": "tcp", "ports": "3870;3900-3910", "note": "Gx and Gy peers"}]`, with `"any"` for every transport.
 
 ### JSON format
 
@@ -501,6 +505,17 @@ python3 dev/tools/check-ips.py
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.12
+- Trace analysis – **SCTP port 29168 is now SBc-AP** (MME – CBC, public warning; PPID 24), not HNBAP. Iuh uses one association on **port 29169** for RUA (PPID 19) and HNBAP (PPID 20): the PPID tells them apart, and an association seen without DATA chunks is listed as RUA. SBc-AP can also be given a non-standard port under Protocol ports (`sbcap`). **SCTP port 5868** is recognised as Diameter over DTLS, like TCP 5868. OpenFlow (6633, 6653) is an infrastructure protocol on TCP, no longer on UDP.
+- Reference content: signalling over IP on the A interface is **Release 7** (the user plane, A over IP, Release 8); release numbers that could not be confirmed were replaced by what the specifications say – Modify Access Bearers is optional, a child SA per dedicated bearer on SWu needs support in UE and ePDG. TR 23.919 is named as a TR. The help no longer says that TCP set-up inside GTP-U is not used, and lists GERAN among the map areas.
+- Map: labels no longer cover each other or the boxes – N26 and S5 / S8, and N7, N12, N13, N28, N33, N35 in the reference-point view of the 5GC, which hid their own lines; the NG-RAN title is clear of the radio lines.
+- **Search** lists its matches at the top of the panel, exact names first, and **Enter** opens the first one; with no match it says so. The match count sits under the search box, so the toolbar no longer jumps to two rows while you type.
+- **Back and Forward** of the browser move between the elements, interfaces and procedures you opened. The 5GC and EPC view switches are remembered, and the theme follows your system setting until you choose one.
+- More room: the header is two rows instead of three on screens below 1900 px; the **E2E stacks** use the full width; a new **⇥** button under the zoom buttons hides the details panel (selecting something brings it back).
+- End-to-end procedures keep the **lane names** visible while you scroll; the tables of the trace analysis keep their header row. The ⧉ filter buttons and the certain / likely badges of the light theme are easier to read.
+- Keyboard: the generation chips are real buttons (Shift+Enter shows one generation only), dialogs keep the focus inside and give it back, a focused box on the map is clearly marked, and *Skip the diagram* jumps to the details panel. On tablets and phones the page scrolls to the details after a selection. Animations respect the system’s reduced-motion setting.
+- Fixes: the release history showed literal asterisks around some words; a link to the release history left the help open behind it; a link to an unknown element or interface now says so.
 
 ### 2026.11.09.5
 - Trace analysis – **Check and decide: several groups at once.** Tick the groups (Shift-click ticks a range, the box in the header all of them, or *select all · undecided · likely*), choose one interface in the bar above the table and **Apply** – the candidates of the ticked groups come first, then the other interfaces of their plane, *Not a mobile-network interface*, or *automatic* to remove your choices.

@@ -7,6 +7,6 @@ const a=process.argv.slice(2),flags=a.filter(x=>x.startsWith('--')),pos=a.filter
 const frag=pos[0]||'',W=+pos[1]||1440,file=path.resolve(E.OUT,pos[2]||'shot.png');
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:W,height:Math.round(W*0.6)},colorScheme:flags.includes('--light')?'light':'dark'});
  await p.goto(E.APP+(frag&&!frag.startsWith('#')?'#':'')+frag);await p.waitForTimeout(500);
- if(flags.includes('--light'))await p.evaluate(()=>{if(!document.body.classList.contains('light'))document.getElementById('theme').click();});
+ if(flags.includes('--light'))await p.evaluate(()=>{if(!document.body.classList.contains('light'))document.getElementById('theme').click();});await p.waitForTimeout(400);
  if(flags.includes('--panel')){const r=await p.evaluate(()=>{const x=document.getElementById('panel').getBoundingClientRect();return {x:x.left,y:x.top,width:x.width,height:x.height};});await p.screenshot({path:file,clip:r});}
  else await p.screenshot({path:file});console.log(file);await b.close();})();
