@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.12** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.12.1** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
@@ -505,6 +505,12 @@ python3 dev/tools/check-ips.py
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.12.1
+- Trace analysis – **Capture interfaces and direction**: the hint about probe ports is now a small table – per interface, the ports that carry its uplink and the ports that carry its downlink – instead of one sentence per pair of ports, which became unreadable with many ports.
+- Trace analysis – **Check and decide**: the bar with the selected groups stays readable while the list scrolls under it (it was translucent).
+- **E2E stacks**: every scenario now fits a 1920 px screen without scrolling sideways (3G PS user plane and both 5G SA scenarios did not), and no layer name overflows its box (the application layer of the Wi-Fi user plane did).
+- Map, reference-point view of the 5GC: the labels N7, N12, N13, N28, N33 and N35 are back on the short line between the neighbouring functions.
 
 ### 2026.11.12
 - Trace analysis – **SCTP port 29168 is now SBc-AP** (MME – CBC, public warning; PPID 24), not HNBAP. Iuh uses one association on **port 29169** for RUA (PPID 19) and HNBAP (PPID 20): the PPID tells them apart, and an association seen without DATA chunks is listed as RUA. SBc-AP can also be given a non-standard port under Protocol ports (`sbcap`). **SCTP port 5868** is recognised as Diameter over DTLS, like TCP 5868. OpenFlow (6633, 6653) is an infrastructure protocol on TCP, no longer on UDP.

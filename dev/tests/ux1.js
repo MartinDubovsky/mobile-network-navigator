@@ -33,11 +33,11 @@ const ov=()=>p.evaluate(()=>{const vis=g=>getComputedStyle(g).display!=='none'&&
  const I=(a,b)=>Math.max(0,Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+a.height,b.y+b.height)-Math.max(a.y,b.y));
  const N=[...document.querySelectorAll('#map .node')].filter(vis).filter(g=>!g.classList.contains('container')).map(g=>[g.dataset.id,bb(g.querySelector('.nb'))]);
  const L=[...document.querySelectorAll('#map .lbl')].filter(vis).map(g=>[g.dataset.id,bb(g.querySelector('rect'))]);const out=[];
- for(let i=0;i<L.length;i++){for(let j=i+1;j<L.length;j++)if(I(L[i][1],L[j][1])>1)out.push(L[i][0]+'×'+L[j][0]);for(const n of N)if(I(L[i][1],n[1])>1)out.push(L[i][0]+'×'+n[0]);}
+ for(let i=0;i<L.length;i++){for(let j=i+1;j<L.length;j++)if(I(L[i][1],L[j][1])>1)out.push(L[i][0]+'×'+L[j][0]);for(const n of N)if(I(L[i][1],n[1])>1&&!(LM[L[i][0]].rp&&(LM[L[i][0]].a===n[0]||LM[L[i][0]].b===n[0])))out.push(L[i][0]+'×'+n[0]);}
  const zs=[...document.querySelectorAll('#map .zone text')].map(t=>bb(t));
  document.querySelectorAll('#map .link').forEach(g=>{if(!vis(g))return;const q=g.querySelector('path.v');if(!q)return;const tl=q.getTotalLength();for(let s=0;s<=tl;s+=2){const c=q.getPointAtLength(s);if(zs.some(z=>c.x>z.x&&c.x<z.x+z.width&&c.y>z.y+1&&c.y<z.y+z.height-1)){out.push(g.dataset.id+'×zone title');break;}}});
  return out;});
-for(const [n,f] of [['classic, service-based',async()=>{}],['classic, ref. points',async()=>p.click('[data-rp="1"]')],['CUPS, ref. points',async()=>p.click('[data-cups="1"]')],['CUPS, service-based',async()=>p.click('[data-rp="0"]')]]){await f();await p.waitForTimeout(200);const o=await ov();ok(!o.length,'map '+n+': no label on another label, on a box or line on a zone title'+(o.length?' – '+o.join(', '):''));}
+for(const [n,f] of [['classic, service-based',async()=>{}],['classic, ref. points',async()=>p.click('[data-rp="1"]')],['CUPS, ref. points',async()=>p.click('[data-cups="1"]')],['CUPS, service-based',async()=>p.click('[data-rp="0"]')]]){await f();await p.waitForTimeout(200);const o=await ov();ok(!o.length,'map '+n+': no label on another label or on a box (reference points of neighbouring NFs sit on their short line), no line on a zone title'+(o.length?' – '+o.join(', '):''));}
 // ---- view toggles are remembered
 await p.reload();await p.waitForTimeout(300);ok(await p.evaluate(()=>state.cups&&!state.rp),'CUPS / service-based remembered after a reload');
 await p.goto('about:blank');await p.goto(E.APP+'#if=s11');await p.waitForTimeout(300);ok(await p.evaluate(()=>!state.cups&&state.sel[1]==='s11'),'a deep link to a classic-only interface still opens the classic view');

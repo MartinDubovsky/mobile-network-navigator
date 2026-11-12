@@ -13,7 +13,7 @@ ok(P[1].name==='dpdk1'&&P[1].v==='down'&&P[1].ul===0,'dpdk1: downlink only');
 ok(P[0].cv==='one'&&P[1].cv==='one','signalling: one direction per port');
 ok(/s1u ul300\/dl0\/\?0/.test(P[0].links)&&/sgi ul300\/dl0\/\?0/.test(P[0].links),'per interface on dpdk0: S1-U 300 up, SGi 300 up, nothing unknown');
 ok(/gx PGW → PCRF/.test(P[0].links)&&/gx PCRF → PGW/.test(P[1].links)&&/s11 MME → SGW/.test(P[0].links)&&/n4 SMF → UPF/.test(P[0].links),'signalling: PGW → PCRF, MME → SGW, SMF → UPF on dpdk0; the reverse on dpdk1');
-ok(await p.evaluate(()=>/dpdk0<\/b> \(uplink\) and <b>dpdk1<\/b> \(downlink\) carry the two directions of S1-U, SGi/.test(panel.innerHTML)),'pairing note: dpdk0 / dpdk1 carry the two directions of S1-U, SGi');
+ok(await p.evaluate(()=>/<td>S1-U, SGi<\/td><td>↑ <b>[^<]*dpdk0<\/b><\/td><td>↓ <b>[^<]*dpdk1<\/b><\/td>/.test(panel.innerHTML)),'pairing note: dpdk0 / dpdk1 carry the two directions of S1-U, SGi');
 ok(await p.evaluate(()=>{const r=TR.rows.find(r=>r.canon==='s1u');return r.ul===300&&r.dl===300&&/↑ 50 % · ↓ 50 %/.test(panel.querySelector('tr[data-trr="s1u"]').textContent);}),'S1-U row shows ↑ 50 % · ↓ 50 %');
 ok(await p.evaluate(()=>{const u=TR.ue;return u.get(trV4(new Uint8Array([203,0,113,1]),0)).ue===true&&u.get(trV4(new Uint8Array([203,0,113,200]),0)).ue===false;}),'UE address vs server told apart by direction inside GTP-U');
 ok(await p.evaluate(()=>TR.roles.has('192.0.2.62')),'PFCP Created PDR paired across the two ports');

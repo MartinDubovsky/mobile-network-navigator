@@ -21,7 +21,7 @@ ok(g('eth2').v==='both'&&g('eth2').ul===24&&g('eth2').dl===24,'eth2 → both, 24
 ok(P.every(x=>x.tcp>=.5*(x.ul+x.dl)),'marked as from TCP set-up');
 const txt=await p.evaluate(()=>document.querySelector('#panel').textContent);
 ok(/mostly from TCP connection set-up/.test(txt)&&/↑ Uplink/.test(txt)&&/↓ Downlink/.test(txt),'panel shows the verdicts and the method');
-ok(/dpdk0.*\(uplink\) and .*dpdk1.*\(downlink\) carry the two directions of SGi/.test(await p.evaluate(()=>document.querySelector('#panel .trnote')?.textContent||'')),'pair hint dpdk0 / dpdk1');
+ok(/SGi\s*↑ .*dpdk0\s*↓ .*dpdk1/.test(await p.evaluate(()=>document.querySelector('#panel .trpairs tbody')?.innerText||'')),'pair hint dpdk0 / dpdk1');
 const row=await p.evaluate(()=>{const R=TR.rows.find(r=>r.canon==='sgi');return [R.ul,R.dl];});ok(row[0]===136&&row[1]===206,'SGi row ↑136 ↓206: '+row);
 // marked as not a mobile-network interface → no direction
 await p.evaluate(()=>{TR.groups.filter(g=>g.plain).forEach(g=>TR.manual[g.gk]='none');trResolve();});P=await ports(p);ok(P.every(x=>x.ul+x.dl===0),'not a mobile-network interface → no direction');
