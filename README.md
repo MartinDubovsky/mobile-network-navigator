@@ -1,6 +1,6 @@
 # Mobile Network Navigator
 
-**Version 2026.11.12.1** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
+**Version 2026.11.19** (date-based: `YYYY.MM.DD`, with `.N` appended for further releases on the same day; shown next to the page title – click it for the release history – and in the overview panel)
 
 An interactive, single-file HTML reference of 3GPP mobile network architectures: **2G GSM/GPRS/EDGE, 3G UMTS, HSPA/HSPA+, 4G LTE/EPC, 5G NSA (EN-DC) and 5G SA**, plus **Wi-Fi access via ePDG** (untrusted non-3GPP access, VoWiFi). It shows the network elements, the interfaces between them, the protocol stacks used on each interface, message-flow diagrams of the main procedures on every interface, and **end-to-end procedures** (attach, PDU session, handovers …) that can be stepped through on the map.
 
@@ -215,6 +215,8 @@ Messages are re-assembled per TCP direction (retransmissions are not counted twi
 
 **⧉ filter – Wireshark display filters.** Interfaces, capture interfaces, decision groups, elements and the Diameter / SCTP rows of Not mapped copy a display filter for the same packets, to paste into Wireshark on the same capture. It is built from what the analysis saw: the address pairs of the flows (`ip.addr==A && ip.addr==B`, grouped around a shared address), the protocol at its standard port (`udp.port==2152`, `gtpv2`, `pfcp`, `sctp`, Diameter as its TCP connection or SCTP association – or by `diameter.applicationId` where two addresses carry several applications – or the port numbers where your protocol ports were used), the IP fragments of fragmented flows, the VLAN (`vlan.id` / `ieee8021ad.id`) and the capture interface (`frame.interface_id==`). The copied filter is bracketed as a whole – paste it in place of the current one. Checked with Wireshark 4.2: every filter of the test captures is accepted and selects exactly the packets the row counts. Plain IP has no protocol of its own: its filter is “IP that is none of the recognised protocols” and **approximate**, and the message after copying says so. Above 1 500 address pairs the filter keeps the protocol only.
 
+**Captures from Capture Tool.** Capture Tool (the web console that starts and downloads captures on the probes) can open the navigator and hand over the files of a capture (*Analyse in Navigator*). The files arrive as a window message from the window that opened the page – the navigator still has no network access, accepts nothing from anyone else, never stores the files and sends back only a receipt. Files of one probe (rotated parts) share their capture interfaces, so direction is shown per probe port; the panel names the source. Capture Tool serves its copy sandboxed, so nothing is kept in browser storage there (load your network data each time). Message format: `CAPTURE-TOOL.md`.
+
 **Save results…** writes what the analysis found – interfaces, capture interfaces and directions, your decisions, elements with addresses, names and the rule that set them, Not mapped, protocol details – as **JSON**, **CSV** (one block per table, for a spreadsheet) or **encrypted JSON** (AES-256-GCM with a passphrase). The JSON can include your network data with its protocol ports, so one file holds all your data. Packets, plain-IP / UE addresses and subscriber identities are never saved; nothing is written unless you ask. To use your decisions again, open the same capture and load the JSON (*Check and decide → Apply decisions from a file…*, or drop it on the page): each decision applies to the group with the same protocol, VLAN and capture interface. `.gitignore` excludes `*.trace-results.*`.
 
 **Network data** makes the results more precise: an address listed on an interface in your IP plan decides traffic that the protocols leave open (both ends listed – certain, one end or the interface’s VLAN – likely; one listed address never overrides protocol evidence, because one address often serves several interfaces), and instance names are shown next to the addresses.
@@ -378,7 +380,7 @@ The page address updates with the current selection, so a link can be sent to a 
 
 Generation IDs: `2g`, `3g`, `hspa`, `4g`, `nsa`, `sa`, `wifi` (Wi-Fi access via ePDG), `iw` (interworking).
 
-Help sections: `start`, `views`, `filters`, `panel`, `procs`; trace analysis `tr-overview`, `tr-read`, `tr-classify`, `tr-decode`, `tr-flows`, `tr-evidence`, `tr-gtpu`, `tr-gtpc`, `tr-pfcp`, `tr-dia`, `tr-radius`, `tr-plain`, `tr-sctp`, `tr-nd`, `tr-ends`, `tr-dir`, `tr-results`, `tr-sug`, `tr-save`, `tr-limits`; network data `nd`, `nd-format`, `nd-ports`, `nd-privacy`; `keys`, `links`, `about`.
+Help sections: `start`, `views`, `filters`, `panel`, `procs`; trace analysis `tr-overview`, `tr-read`, `tr-classify`, `tr-decode`, `tr-flows`, `tr-evidence`, `tr-gtpu`, `tr-gtpc`, `tr-pfcp`, `tr-dia`, `tr-radius`, `tr-plain`, `tr-sctp`, `tr-nd`, `tr-ends`, `tr-dir`, `tr-results`, `tr-sug`, `tr-save`, `tr-ct`, `tr-limits`; network data `nd`, `nd-format`, `nd-ports`, `nd-privacy`; `keys`, `links`, `about`.
 
 The **Copy link to this item** button in the panel copies the current address to the clipboard. Some browsers block the clipboard for `file://` pages; in that case copy the address bar instead.
 
@@ -505,6 +507,10 @@ python3 dev/tools/check-ips.py
 ## Changelog
 
 The same list is shown in the app: click the version number next to the title (or open `index.html#releases`). After an update, a small dot on the version number marks a release you have not looked at yet.
+
+### 2026.11.19
+- Trace analysis – **captures from Capture Tool**: Capture Tool (the console that starts and downloads captures on the probes) can open the navigator and hand over all files of a capture – every probe, rotated parts included. The files arrive from the window that opened the page; the navigator still has no network access, accepts nothing from anyone else, never stores the files and sends back only a receipt. The panel names the source.
+- Files of one probe (a capture split into parts by size or time) now share their capture interfaces, so the direction per capture interface is shown per probe port, not per part; capture interfaces are named *probe · interface*.
 
 ### 2026.11.12.1
 - Trace analysis – **Capture interfaces and direction**: the hint about probe ports is now a small table – per interface, the ports that carry its uplink and the ports that carry its downlink – instead of one sentence per pair of ports, which became unreadable with many ports.
